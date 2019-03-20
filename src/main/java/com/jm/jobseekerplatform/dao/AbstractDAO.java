@@ -4,35 +4,43 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.Serializable;
 import java.util.List;
 
 @Repository("abstractDAO")
-public abstract class AbstractDAO {
+public abstract class AbstractDAO<T extends Serializable> {
+
+    private Class<T> clazz;
+
     @PersistenceContext
     private EntityManager entityManager;
 
-
-    public void add(Object o) {
-        entityManager.persist(o);
+    public final void setClazz(Class<T> clazzToSet) {
+        this.clazz = clazzToSet;
     }
 
-    public void update(Object o) {
-        entityManager.merge(o);
-
+    public void add(T entity) {
+        entityManager.persist(entity);
     }
 
-
-    public abstract List getAll();
-
-
-    public Object getById(Long id) {
-        return entityManager.find(Object.class, id);
+    public void update(T entity) {
+        entityManager.merge(entity);
     }
 
+    public List<T> getAll() {
+        return entityManager.createQuery("SELECT e FROM " + clazz.getName() + " e", clazz).getResultList();
+    }
+
+    public T getById(Long id) {
+        return entityManager.find(clazz, id);
+    }
+
+    public void delete(T entity) {
+        entityManager.remove(entity);
+    }
 
     public void deleteById(Long id) {
-        Object obj = getById(id);
-        entityManager.remove(obj);
-
+        T entity = getById(id);
+        entityManager.remove(entity);
     }
 }
