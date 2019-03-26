@@ -9,7 +9,7 @@ import java.util.List;
 public abstract class AbstractService <T extends Serializable> {
 
     @Autowired
-    private AbstractDAO abstractDAO;
+    private AbstractDAO<T> abstractDAO;
 
     public void add(T entity) {
         abstractDAO.add(entity);

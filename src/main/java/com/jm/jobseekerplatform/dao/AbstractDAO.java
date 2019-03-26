@@ -1,10 +1,12 @@
 package com.jm.jobseekerplatform.dao;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 @Repository("abstractDAO")
@@ -15,8 +17,8 @@ public abstract class AbstractDAO<T extends Serializable> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public final void setClazz(Class<T> clazzToSet) {
-        this.clazz = clazzToSet;
+    public AbstractDAO() {
+        this.clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
     public void add(T entity) {
