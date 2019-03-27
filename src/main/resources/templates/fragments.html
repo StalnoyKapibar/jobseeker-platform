@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<th:block th:fragment="head">
+    <meta charset="UTF-8"/>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <base href="/"/>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</th:block>
+
+<th:block th:fragment="nav">
+    <nav class="navbar navbar-inverse" style="margin-bottom: 0px;">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">JobSeeker</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/user"><span class="glyphicon glyphicon-user"> [[${#httpServletRequest.remoteUser}]]</span></a>
+                </li>
+                <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+</th:block>
+
+<th:block th:fragment="rolsfunc">
+    <div sec:authorize="isAuthenticated()">
+        <div sec:authorize="hasRole('ROLE_ADMIN')">
+            This content is only shown to administrators.
+        </div>
+        <div sec:authorize="hasRole('ROLE_USER')">
+            This content is only shown to users.
+        </div>
+        <div sec:authorize="hasRole('ROLE_EMPLOYER')">
+            This content is only shown to employers.
+        </div>
+    </div>
+</th:block>
+
+</body>
+</html>
