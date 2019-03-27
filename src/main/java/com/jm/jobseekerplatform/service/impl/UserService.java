@@ -16,4 +16,7 @@ public class UserService extends AbstractService<User> {
     @Qualifier("userDAO")
     private UserDAO dao;
 
+    public User findByLogin(String login) {
+        return dao.findByLogin(login);
+    }
 }
