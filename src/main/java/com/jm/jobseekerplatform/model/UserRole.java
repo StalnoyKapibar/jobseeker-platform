@@ -1,10 +1,11 @@
 package com.jm.jobseekerplatform.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "userroles")
-public class UserRole {
+public class UserRole implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
