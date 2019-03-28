@@ -15,4 +15,8 @@ public class UserRoleService extends AbstractService<UserRole> {
     @Autowired
     @Qualifier("userRoleDAO")
     private UserRoleDAO dao;
+
+    public UserRole findByAuthority(String authority) {
+        return dao.findByAuthority(authority);
+    }
 }
