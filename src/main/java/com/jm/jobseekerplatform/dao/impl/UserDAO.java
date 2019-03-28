@@ -10,9 +10,6 @@ import javax.persistence.PersistenceContext;
 @Repository("userDAO")
 public class UserDAO extends AbstractDAO<User> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     public User findByLogin(String login) {
         return entityManager
                 .createQuery("SELECT r FROM User As r WHERE r.login = :param", User.class)
