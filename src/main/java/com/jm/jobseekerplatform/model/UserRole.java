@@ -1,11 +1,13 @@
 package com.jm.jobseekerplatform.model;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "userroles")
-public class UserRole implements Serializable {
+public class UserRole implements Serializable, GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
