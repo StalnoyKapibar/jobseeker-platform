@@ -1,9 +1,6 @@
 package com.jm.jobseekerplatform.config;
 
-import com.jm.jobseekerplatform.service.impl.UserRoleService;
-import com.jm.jobseekerplatform.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -21,18 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    @Qualifier("userDetailsService")
     private UserDetailsService userDetailsService;
 
     private PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    @Autowired
-    @Qualifier("userRoleService")
-    private UserRoleService userRoleService;
-
-    @Autowired
-    @Qualifier("userService")
-    private UserService userService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
