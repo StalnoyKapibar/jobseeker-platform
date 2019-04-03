@@ -1,5 +1,7 @@
 package com.jm.jobseekerplatform.model;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -12,16 +14,17 @@ public class EmployerProfile implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "companyname", nullable = false)
+    @Column(name = "companyname")
     private String companyName;
 
-    @Column(name = "website", nullable = false)
+    @Column(name = "website")
     private String website;
 
-    @Column(name = "description", nullable = false, length = 10000)
+    @Column(name = "description", columnDefinition = "mediumtext")
     private String description;
 
     @Column(name = "logo")
+    @Type(type = "image")
     private byte[] logo;
 
     @OneToMany(fetch = FetchType.EAGER)

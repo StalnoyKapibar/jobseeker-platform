@@ -20,7 +20,7 @@ public class Vacancy implements Serializable {
     @Column(name = "isremote", nullable = false)
     private Boolean isRemote;
 
-    @Column(name = "description", nullable = false, length = 10000)
+    @Column(name = "description", nullable = false, columnDefinition = "mediumtext")
     private String description;
 
     @Column(name = "salarymin")
