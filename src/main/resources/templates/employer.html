@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <th:block th:include="fragments :: head"></th:block>
+    <meta charset="UTF-8">
+    <title>Employer's profile</title>
+</head>
+<body>
+<th:block th:include="fragments :: nav"></th:block>
+
+<div id="eprofilediv" class="container-fluid">
+    <div class="row">
+        <div class="col-lg-2">
+        </div>
+        <div class="col-lg-4">
+            <span th:text="${eprofile.companyName}"></span> <br/>
+            <a th:href="@{'http://' + ${eprofile.website}}" th:text="${eprofile.website}"></a>
+        </div>
+        <div class="col-lg-4">
+            <img src="https://www.w3schools.com/bootstrap/sanfran.jpg" class="img-rounded" alt="Logo of company">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+
+        </div>
+        <div class="col-lg-6">
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
