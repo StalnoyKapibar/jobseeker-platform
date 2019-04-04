@@ -84,7 +84,29 @@ public class InitData {
         Set<Vacancy> vacancies = new HashSet<>();
         vacancies.add(vacancyService.getById(1L));
         vacancies.add(vacancyService.getById(2L));
-        employerProfileService.add(new EmployerProfile("Рога и копыта", "www.roga.ru", "Мы - классная команда", new byte[]{1,2,3}, vacancies));
+        employerProfileService.add(new EmployerProfile("Рога и копыта", "www.roga.ru", "Мы продуктовая компания, которая разрабатывает высокотехнологичные продукты в области электротранспорта, роботизации, автоматизации и биотехнологий.\n" +
+                "В России базируется отдел исследований и разработок. \n" +
+                "Стек: Java8, J2ee, Spring. Клиентская часть: ES6, React, React Native. Облака AWS, Docker, NodeJS (+ Express/Koa/Hapi).\n" +
+                "\n" +
+                "Миссия - улучшать жизнь людей с помощью технологий.\n" +
+                "\n" +
+                "Что мы предлагаем:\n" +
+                "\n" +
+                "- Футуристические в масштабах планеты проекты. \n" +
+                "\n" +
+                "- Офисы в центре Москвы и Санкт-Петербурга. \n" +
+                "\n" +
+                "- Частичный \"home office\".\n" +
+                "\n" +
+                "- Профессиональная команда Тим Лидеров с четким видением развития продуктов.\n" +
+                "\n" +
+                "- Новые технологии без legacy кода. \n" +
+                "\n" +
+                "- Открытая атмосфера, без корпоративного \"булшита\". \n" +
+                "\n" +
+                "- Официальное оформление по ТК РФ. \n" +
+                "\n" +
+                "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ", new byte[]{1,2,3}, vacancies));
 
         vacancies.clear();
         vacancies.add(vacancyService.getById(3L));
