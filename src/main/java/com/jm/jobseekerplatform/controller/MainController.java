@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Base64;
+
 @Controller
 public class MainController {
 
@@ -23,6 +25,7 @@ public class MainController {
     public String employerProfilePage(@PathVariable Long employerProfileId, Model model) {
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
         model.addAttribute("eprofile", employerProfile);
+        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
         return "employer";
     }
 }
