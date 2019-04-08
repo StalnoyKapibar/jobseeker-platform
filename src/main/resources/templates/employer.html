@@ -21,8 +21,7 @@
             <h2><a th:href="@{'http://' + ${eprofile.website}}" th:text="${eprofile.website}"></a></h2>
         </div>
         <div class="col-lg-3" align="center">
-            <img src="https://rat.in.ua/wp-content/uploads/2014/07/2838-Black-Cat-Eyes-200x200.png" class="img-rounded"
-                 alt="Logo of company">
+            <img th:src="@{'data:image/png;base64,' + ${logoimg}}" class="img-rounded" alt="Logo of company">
         </div>
     </div>
     <div class="row">
