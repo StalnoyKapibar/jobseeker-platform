@@ -4,13 +4,14 @@ import com.jm.jobseekerplatform.model.EmployerProfile;
 import com.jm.jobseekerplatform.model.User;
 import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.Vacancy;
-import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
-import com.jm.jobseekerplatform.service.impl.UserRoleService;
-import com.jm.jobseekerplatform.service.impl.UserService;
-import com.jm.jobseekerplatform.service.impl.VacancyService;
+import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,6 +29,9 @@ public class InitData {
 
     @Autowired
     private EmployerProfileService employerProfileService;
+
+    @Autowired
+    private ImageService imageService;
 
     public void initData() {
         initUserRoles();
@@ -68,49 +72,50 @@ public class InitData {
                 "Английский язык (на уровне intermediate)\n" +
                 "Опыт работы в проектах с Docker, Kubernetes;\n" +
                 "Условия:\n" +
-                "\n" +
                 "Белая заработная плата, официальное трудоустройство\n" +
                 "Гибкий график работы\n" +
                 "Лояльное отношение к сотрудникам\n" +
                 "Дружный коллектив\n" +
                 "Дополнительная информация:\n" +
-                "\n" +
                 "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!", 110000, 140000));
         vacancyService.add(new Vacancy("Java Developer", "Санкт-Петербург", false,"Участвовать в проектировании сервисов, оптимизировать высоконагруженный проект, внедрять новые технологии и Big Data хранилищ. Участвовать в формулировании и декомпозиции продуктовых...\n" +
                 "Имеете опыт работы со Spring Boot, Spring Data JPA, Rabbit MQ. Знаете и понимаете шаблоны проектирования, клиент-серверные технологии.", 90000, 120000));
     }
 
     public void initEmployerProfiles() {
+        BufferedImage image = null;
         Set<Vacancy> vacancies = new HashSet<>();
         vacancies.add(vacancyService.getById(1L));
         vacancies.add(vacancyService.getById(2L));
+        try {
+            URL url = new URL("https://wiki.godville.net/images/2/2d/RiK-lens.png");
+            image = ImageIO.read(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         employerProfileService.add(new EmployerProfile("Рога и копыта", "www.roga.ru", "Мы продуктовая компания, которая разрабатывает высокотехнологичные продукты в области электротранспорта, роботизации, автоматизации и биотехнологий.\n" +
                 "В России базируется отдел исследований и разработок. \n" +
                 "Стек: Java8, J2ee, Spring. Клиентская часть: ES6, React, React Native. Облака AWS, Docker, NodeJS (+ Express/Koa/Hapi).\n" +
-                "\n" +
                 "Миссия - улучшать жизнь людей с помощью технологий.\n" +
-                "\n" +
                 "Что мы предлагаем:\n" +
-                "\n" +
                 "- Футуристические в масштабах планеты проекты. \n" +
-                "\n" +
                 "- Офисы в центре Москвы и Санкт-Петербурга. \n" +
-                "\n" +
                 "- Частичный \"home office\".\n" +
-                "\n" +
                 "- Профессиональная команда Тим Лидеров с четким видением развития продуктов.\n" +
-                "\n" +
                 "- Новые технологии без legacy кода. \n" +
-                "\n" +
                 "- Открытая атмосфера, без корпоративного \"булшита\". \n" +
-                "\n" +
                 "- Официальное оформление по ТК РФ. \n" +
-                "\n" +
-                "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ", new byte[]{1,2,3}, vacancies));
+                "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ", imageService.resizeLogoEmployer(image), vacancies));
 
         vacancies.clear();
         vacancies.add(vacancyService.getById(3L));
-        employerProfileService.add(new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", new byte[]{1,2,3}, vacancies));
+        try {
+            URL url = new URL("https://0oq.ru/reshebnik-onlajn/ru.onlinemschool.com/pictures/vector/points-to-vector.png");
+            image = ImageIO.read(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        employerProfileService.add(new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image), vacancies));
 
     }
 
