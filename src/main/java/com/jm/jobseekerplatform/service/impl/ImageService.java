@@ -16,12 +16,26 @@ public class ImageService {
     }
 
     public byte[] resizeImage(BufferedImage img, int height, int width) {
+        int type = img.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : img.getType();
+        int finalHeight;
+        int finalWidth;
 
-        
+        if (img.getHeight() > height || img.getWidth() > width) {
+            finalHeight = height;
+            int wid = width;
+            float sum = (float)img.getWidth() / (float)img.getHeight();
+            finalWidth = Math.round(finalHeight * sum);
+            if (finalWidth > wid) {
+                finalHeight = Math.round(wid/sum);
+                finalWidth = wid;
+            }
+        } else {
+            finalHeight = height;
+            finalWidth = width;
+        }
 
-
-        Image tmp = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Image tmp = img.getScaledInstance(finalWidth, finalHeight, Image.SCALE_SMOOTH);
+        BufferedImage resized = new BufferedImage(finalWidth, finalHeight, type);
         Graphics2D g2d = resized.createGraphics();
         g2d.drawImage(tmp, 0, 0, null);
         g2d.dispose();
