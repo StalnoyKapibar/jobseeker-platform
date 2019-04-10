@@ -96,4 +96,32 @@ public class Vacancy implements Serializable {
     public void setRemote(Boolean remote) {
         isRemote = remote;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Vacancy vacancy = (Vacancy) o;
+
+        if (id != null ? !id.equals(vacancy.id) : vacancy.id != null) return false;
+        if (headline != null ? !headline.equals(vacancy.headline) : vacancy.headline != null) return false;
+        if (city != null ? !city.equals(vacancy.city) : vacancy.city != null) return false;
+        if (isRemote != null ? !isRemote.equals(vacancy.isRemote) : vacancy.isRemote != null) return false;
+        if (description != null ? !description.equals(vacancy.description) : vacancy.description != null) return false;
+        if (salaryMin != null ? !salaryMin.equals(vacancy.salaryMin) : vacancy.salaryMin != null) return false;
+        return salaryMax != null ? salaryMax.equals(vacancy.salaryMax) : vacancy.salaryMax == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (headline != null ? headline.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (isRemote != null ? isRemote.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (salaryMin != null ? salaryMin.hashCode() : 0);
+        result = 31 * result + (salaryMax != null ? salaryMax.hashCode() : 0);
+        return result;
+    }
 }
