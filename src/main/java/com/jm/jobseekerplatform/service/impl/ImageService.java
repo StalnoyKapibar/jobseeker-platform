@@ -15,6 +15,10 @@ public class ImageService {
         return resizeImage(img, 200, 200);
     }
 
+    public byte[] resizePhotoSeeker(BufferedImage img) {
+        return resizeImage(img, 300, 300);
+    }
+
     public byte[] resizeImage(BufferedImage img, int height, int width) {
         int type = img.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : img.getType();
         int finalHeight;
