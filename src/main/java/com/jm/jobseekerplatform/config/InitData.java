@@ -1,9 +1,6 @@
 package com.jm.jobseekerplatform.config;
 
-import com.jm.jobseekerplatform.model.EmployerProfile;
-import com.jm.jobseekerplatform.model.User;
-import com.jm.jobseekerplatform.model.UserRole;
-import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,11 +30,19 @@ public class InitData {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private PortfolioService portfolioService;
+
+    @Autowired
+    private SeekerProfileService seekerProfileService;
+
     public void initData() {
         initUserRoles();
         initUsers();
         initVacancies();
         initEmployerProfiles();
+        initPortfolio();
+
     }
 
     public void initUserRoles() {
@@ -119,5 +124,24 @@ public class InitData {
 
     }
 
+    public void initPortfolio(){
+        portfolioService.add(new Portfolio("https://github.com/StalnoyKapibar/jobseeker-platform","Создавал модели, сервисы. Использовал Java 8, Spring"));
+        portfolioService.add(new Portfolio("https://github.com/romanX1/SportGames/","Прикручивал Spring Security. Использовал Java 8, Spring"));
+    }
+
+    public void initSeekerProfile(){
+        BufferedImage image = null;
+        Set<Portfolio> portfolios = new HashSet<>();
+        portfolios.add(portfolioService.getById(1L));
+        portfolios.add(portfolioService.getById(2L));
+        try {
+            URL url = new URL("https://zapravka-kartridzhej-spb.ru/wp-content/uploads/2016/10/spezialist-zapravka-kartridzhej-spb-10.png");
+            image = ImageIO.read(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        seekerProfileService.add(new SeekerProfile("Вася Игоревич Пупкин", "Java 8, Spring, Git, Maven", "Ищу крутую команду", imageService.resizePhotoSeeker(image), portfolios));
+    }
 
 }
