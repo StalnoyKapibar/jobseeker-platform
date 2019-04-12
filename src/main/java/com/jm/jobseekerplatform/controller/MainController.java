@@ -18,6 +18,7 @@ public class MainController {
     @Autowired
     private EmployerProfileService employerProfileService;
 
+    @Autowired
     private SeekerProfileService seekerProfileService;
 
     @RequestMapping("/")

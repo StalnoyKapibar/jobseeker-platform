@@ -42,7 +42,7 @@ public class InitData {
         initVacancies();
         initEmployerProfiles();
         initPortfolio();
-
+        initSeekerProfile();
     }
 
     public void initUserRoles() {
@@ -125,8 +125,8 @@ public class InitData {
     }
 
     public void initPortfolio(){
-        portfolioService.add(new Portfolio("https://github.com/StalnoyKapibar/jobseeker-platform","Создавал модели, сервисы. Использовал Java 8, Spring"));
-        portfolioService.add(new Portfolio("https://github.com/romanX1/SportGames/","Прикручивал Spring Security. Использовал Java 8, Spring"));
+        portfolioService.add(new Portfolio("Jobseeker-platform","https://github.com/StalnoyKapibar/jobseeker-platform","Создавал модели, сервисы. Использовал Java 8, Spring"));
+        portfolioService.add(new Portfolio("SportGames","https://github.com/romanX1/SportGames/","Прикручивал Spring Security. Использовал Java 8, Spring"));
     }
 
     public void initSeekerProfile(){

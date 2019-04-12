@@ -18,13 +18,13 @@ public class VacancyRestController {
 
     @RequestMapping("/")
     public List<Vacancy> getAllEmployerProfiles() {
-        List<Vacancy> employerprofiles = vacancyService.getAll();
-        return employerprofiles;
+        List<Vacancy> vacancies = vacancyService.getAll();
+        return vacancies;
     }
 
     @RequestMapping("/{vacancyId}")
     public Vacancy getUserById(@PathVariable Long vacancyId){
-        Vacancy employerProfile = vacancyService.getById(vacancyId);
-        return employerProfile;
+        Vacancy vacancy = vacancyService.getById(vacancyId);
+        return vacancy;
     }
 }
