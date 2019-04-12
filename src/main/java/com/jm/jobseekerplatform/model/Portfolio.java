@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "portfolios")
@@ -10,6 +11,9 @@ public class Portfolio implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "projectname")
+    private String projectName;
 
     @Column(name = "link")
     private String link;
@@ -20,7 +24,8 @@ public class Portfolio implements Serializable {
     public Portfolio() {
     }
 
-    public Portfolio(String link, String description) {
+    public Portfolio(String projectName, String link, String description) {
+        this.projectName = projectName;
         this.link = link;
         this.description = description;
     }
@@ -49,23 +54,27 @@ public class Portfolio implements Serializable {
         this.description = description;
     }
 
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Portfolio portfolio = (Portfolio) o;
-
-        if (id != null ? !id.equals(portfolio.id) : portfolio.id != null) return false;
-        if (link != null ? !link.equals(portfolio.link) : portfolio.link != null) return false;
-        return description != null ? description.equals(portfolio.description) : portfolio.description == null;
+        return Objects.equals(id, portfolio.id) &&
+                Objects.equals(projectName, portfolio.projectName) &&
+                Objects.equals(link, portfolio.link) &&
+                Objects.equals(description, portfolio.description);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (link != null ? link.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
+        return Objects.hash(id, projectName, link, description);
     }
 }
