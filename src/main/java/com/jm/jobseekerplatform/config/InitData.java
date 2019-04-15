@@ -1,9 +1,6 @@
 package com.jm.jobseekerplatform.config;
 
-import com.jm.jobseekerplatform.model.EmployerProfile;
-import com.jm.jobseekerplatform.model.User;
-import com.jm.jobseekerplatform.model.UserRole;
-import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,11 +30,23 @@ public class InitData {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private PortfolioService portfolioService;
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private SeekerProfileService seekerProfileService;
+
     public void initData() {
         initUserRoles();
         initUsers();
         initVacancies();
         initEmployerProfiles();
+        initPortfolio();
+        initTags();
+        initSeekerProfile();
     }
 
     public void initUserRoles() {
@@ -48,17 +57,17 @@ public class InitData {
 
     public void initUsers() {
         UserRole roleAdmin = userRoleService.findByAuthority("ROLE_ADMIN");
-        userService.add(new User("admin", userService.encodePassword("admin"), "admin@mail.ru", roleAdmin, null));
+        userService.add(new User("admin", userService.encodePassword("admin"), "admin@mail.ru", roleAdmin));
 
         UserRole roleUser = userRoleService.findByAuthority("ROLE_USER");
-        userService.add(new User("user", userService.encodePassword("user"), "user@mail.ru", roleUser, null));
+        userService.add(new User("user", userService.encodePassword("user"), "user@mail.ru", roleUser));
 
         UserRole roleEmployer = userRoleService.findByAuthority("ROLE_EMPLOYER");
-        userService.add(new User("employer", userService.encodePassword("employer"), "employer@mail.ru", roleEmployer, null));
+        userService.add(new User("employer", userService.encodePassword("employer"), "employer@mail.ru", roleEmployer));
     }
 
     public void initVacancies() {
-        vacancyService.add(new Vacancy("Инженер-погромист", "Москва", false,"Платим деньги за работу", 100000, 120000));
+        vacancyService.add(new Vacancy("Инженер-погромист", "Москва", false,"Платим деньги за работу", null, 120000));
         vacancyService.add(new Vacancy("Java программист", "Москва", false,"Обязанности:\n" +
                 "\n" +
                 "Разработка новых модулей системы\n" +
@@ -77,7 +86,7 @@ public class InitData {
                 "Лояльное отношение к сотрудникам\n" +
                 "Дружный коллектив\n" +
                 "Дополнительная информация:\n" +
-                "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!", 110000, 140000));
+                "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!", 110000, null));
         vacancyService.add(new Vacancy("Java Developer", "Санкт-Петербург", false,"Участвовать в проектировании сервисов, оптимизировать высоконагруженный проект, внедрять новые технологии и Big Data хранилищ. Участвовать в формулировании и декомпозиции продуктовых...\n" +
                 "Имеете опыт работы со Spring Boot, Spring Data JPA, Rabbit MQ. Знаете и понимаете шаблоны проектирования, клиент-серверные технологии.", 90000, 120000));
     }
@@ -119,5 +128,37 @@ public class InitData {
 
     }
 
+    public void initPortfolio(){
+        portfolioService.add(new Portfolio("Jobseeker-platform","https://github.com/StalnoyKapibar/jobseeker-platform","Создавал модели, сервисы. Использовал Java 8, Spring"));
+        portfolioService.add(new Portfolio("SportGames","https://github.com/romanX1/SportGames/","Прикручивал Spring Security. Использовал Java 8, Spring"));
+    }
+
+    public void initTags(){
+        tagService.add(new Tag("Java 8"));
+        tagService.add(new Tag("Spring"));
+        tagService.add(new Tag("Git"));
+        tagService.add(new Tag("Maven"));
+    }
+
+    public void initSeekerProfile(){
+        BufferedImage image = null;
+        Set<Portfolio> portfolios = new HashSet<>();
+        portfolios.add(portfolioService.getById(1L));
+        portfolios.add(portfolioService.getById(2L));
+        try {
+            URL url = new URL("https://zapravka-kartridzhej-spb.ru/wp-content/uploads/2016/10/spezialist-zapravka-kartridzhej-spb-10.png");
+            image = ImageIO.read(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Set<Tag> tags = new HashSet<>();
+        tags.add(tagService.getById(1L));
+        tags.add(tagService.getById(2L));
+        tags.add(tagService.getById(3L));
+        tags.add(tagService.getById(4L));
+
+        seekerProfileService.add(new SeekerProfile("Вася Игоревич Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), tags, portfolios));
+    }
 
 }

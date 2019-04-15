@@ -27,21 +27,17 @@ public class User implements Serializable, UserDetails {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private UserRole authority;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    private UserProfile userProfile;
 
     public User() {
     }
 
-    public User(String login, String password, String email, UserRole authority, UserProfile userProfile) {
+    public User(String login, String password, String email, UserRole authority) {
         this.login = login;
         this.password = password;
         this.email = email;
         this.authority = authority;
-        this.userProfile = userProfile;
     }
 
     public Long getId() {
@@ -112,13 +108,5 @@ public class User implements Serializable, UserDetails {
 
     public void setAuthority(UserRole authority) {
         this.authority = authority;
-    }
-
-    public UserProfile getUserProfile() {
-        return userProfile;
-    }
-
-    public void setUserProfile(UserProfile userProfile) {
-        this.userProfile = userProfile;
     }
 }

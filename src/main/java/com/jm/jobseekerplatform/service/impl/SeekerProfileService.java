@@ -1,16 +1,16 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.impl.UserProfileDAO;
-import com.jm.jobseekerplatform.model.UserProfile;
+import com.jm.jobseekerplatform.dao.impl.SeekerProfileDAO;
+import com.jm.jobseekerplatform.model.SeekerProfile;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("userProfileService")
+@Service("seekerProfileService")
 @Transactional
-public class UserProfileService extends AbstractService<UserProfile> {
+public class SeekerProfileService extends AbstractService<SeekerProfile> {
 
     @Autowired
-    private UserProfileDAO dao;
+    private SeekerProfileDAO dao;
 }
