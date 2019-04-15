@@ -34,6 +34,9 @@ public class InitData {
     private PortfolioService portfolioService;
 
     @Autowired
+    private TagService tagService;
+
+    @Autowired
     private SeekerProfileService seekerProfileService;
 
     public void initData() {
@@ -42,6 +45,7 @@ public class InitData {
         initVacancies();
         initEmployerProfiles();
         initPortfolio();
+        initTags();
         initSeekerProfile();
     }
 
@@ -129,6 +133,13 @@ public class InitData {
         portfolioService.add(new Portfolio("SportGames","https://github.com/romanX1/SportGames/","Прикручивал Spring Security. Использовал Java 8, Spring"));
     }
 
+    public void initTags(){
+        tagService.add(new Tag("Java 8"));
+        tagService.add(new Tag("Spring"));
+        tagService.add(new Tag("Git"));
+        tagService.add(new Tag("Maven"));
+    }
+
     public void initSeekerProfile(){
         BufferedImage image = null;
         Set<Portfolio> portfolios = new HashSet<>();
@@ -141,7 +152,13 @@ public class InitData {
             e.printStackTrace();
         }
 
-        seekerProfileService.add(new SeekerProfile("Вася Игоревич Пупкин", "Java 8, Spring, Git, Maven", "Ищу крутую команду", imageService.resizePhotoSeeker(image), portfolios));
+        Set<Tag> tags = new HashSet<>();
+        tags.add(tagService.getById(1L));
+        tags.add(tagService.getById(2L));
+        tags.add(tagService.getById(3L));
+        tags.add(tagService.getById(4L));
+
+        seekerProfileService.add(new SeekerProfile("Вася Игоревич Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), tags, portfolios));
     }
 
 }

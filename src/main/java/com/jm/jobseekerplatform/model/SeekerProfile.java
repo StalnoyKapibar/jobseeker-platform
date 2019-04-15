@@ -16,9 +16,6 @@ public class SeekerProfile implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "stack")
-    private String stack;
-
     @Column(name = "description", columnDefinition = "mediumtext")
     private String description;
 
@@ -26,17 +23,20 @@ public class SeekerProfile implements Serializable {
     @Type(type = "image")
     private byte[] photo;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Tag> tags;
+
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Portfolio> portfolios;
 
     public SeekerProfile() {
     }
 
-    public SeekerProfile(String name, String stack, String description, byte[] photo, Set<Portfolio> portfolios) {
+    public SeekerProfile(String name, String description, byte[] photo, Set<Tag> tags, Set<Portfolio> portfolios) {
         this.name = name;
-        this.stack = stack;
         this.description = description;
         this.photo = photo;
+        this.tags = tags;
         this.portfolios = portfolios;
     }
 
@@ -54,14 +54,6 @@ public class SeekerProfile implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getStack() {
-        return stack;
-    }
-
-    public void setStack(String stack) {
-        this.stack = stack;
     }
 
     public String getDescription() {
@@ -86,5 +78,13 @@ public class SeekerProfile implements Serializable {
 
     public void setPortfolios(Set<Portfolio> portfolios) {
         this.portfolios = portfolios;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }

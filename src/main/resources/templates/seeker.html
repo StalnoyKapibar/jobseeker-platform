@@ -17,7 +17,7 @@
         </div>
         <div class="col-lg-3">
             <h1><span th:text="${sprofile.name}"></span></h1>
-            <h3><span th:text="${sprofile.stack}"></span></h3>
+            <h3><span th:each="tag : ${sprofile.tags}"th:text="${tag.name} + ' '"></span></h3>
             <span>Мои проекты:</span><br/>
             <div class="list-group">
                 <a th:each="portfolio, index: ${sprofile.portfolios}" class="list-group-item" th:text="${portfolio.projectName}" data-toggle="modal" data-target="#portfolioModal" th:onclick="'showPortfolio('+${portfolio.id}+')'"></a>
