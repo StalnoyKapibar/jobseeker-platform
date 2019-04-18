@@ -22,7 +22,7 @@ public class User implements Serializable, UserDetails {
     private String login;
 
     @Column(name = "password", nullable = false)
-    private String password;
+    private char[] password;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -33,7 +33,7 @@ public class User implements Serializable, UserDetails {
     public User() {
     }
 
-    public User(String login, String password, String email, UserRole authority) {
+    public User(String login, char[] password, String email, UserRole authority) {
         this.login = login;
         this.password = password;
         this.email = email;
@@ -62,7 +62,7 @@ public class User implements Serializable, UserDetails {
     }
 
     public String getPassword() {
-        return password;
+        return new String(password);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class User implements Serializable, UserDetails {
         return true;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(char[] password) {
         this.password = password;
     }
 
