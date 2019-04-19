@@ -4,7 +4,7 @@ import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.SeekerProfile;
 import org.springframework.stereotype.Repository;
 
-@Repository("seekerDAO")
+@Repository("seekerProfileDAO")
 public class SeekerProfileDAO extends AbstractDAO<SeekerProfile> {
 
 }
