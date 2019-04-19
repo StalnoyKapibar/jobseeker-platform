@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,12 +41,12 @@ public class InitData {
     private SeekerProfileService seekerProfileService;
 
     public void initData() {
+        initTags();
         initUserRoles();
         initUsers();
         initVacancies();
         initEmployerProfiles();
         initPortfolio();
-        initTags();
         initSeekerProfile();
     }
 
@@ -67,7 +68,7 @@ public class InitData {
     }
 
     public void initVacancies() {
-        vacancyService.add(new Vacancy("Инженер-погромист", "Москва", false,"Платим деньги за работу", null, 120000));
+        vacancyService.add(new Vacancy("Инженер-погромист", "Москва", false,"Платим деньги за работу", null, 120000,new HashSet<Tag>(Arrays.asList(tagService.getById(1L),tagService.getById(2L),tagService.getById(3L),tagService.getById(4L)))));
         vacancyService.add(new Vacancy("Java программист", "Москва", false,"Обязанности:\n" +
                 "\n" +
                 "Разработка новых модулей системы\n" +
@@ -86,9 +87,9 @@ public class InitData {
                 "Лояльное отношение к сотрудникам\n" +
                 "Дружный коллектив\n" +
                 "Дополнительная информация:\n" +
-                "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!", 110000, null));
+                "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!", 110000, null,new HashSet<Tag>(Arrays.asList(tagService.getById(2L),tagService.getById(4L)))));
         vacancyService.add(new Vacancy("Java Developer", "Санкт-Петербург", false,"Участвовать в проектировании сервисов, оптимизировать высоконагруженный проект, внедрять новые технологии и Big Data хранилищ. Участвовать в формулировании и декомпозиции продуктовых...\n" +
-                "Имеете опыт работы со Spring Boot, Spring Data JPA, Rabbit MQ. Знаете и понимаете шаблоны проектирования, клиент-серверные технологии.", 90000, 120000));
+                "Имеете опыт работы со Spring Boot, Spring Data JPA, Rabbit MQ. Знаете и понимаете шаблоны проектирования, клиент-серверные технологии.", 90000, 120000, new HashSet<Tag>(Arrays.asList(tagService.getById(1L),tagService.getById(3L)))));
     }
 
     public void initEmployerProfiles() {

@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name = "vacancies")
@@ -29,16 +30,20 @@ public class Vacancy implements Serializable {
     @Column(name = "salarymax")
     private Integer salaryMax;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Tag> tags;
+
     public Vacancy() {
     }
 
-    public Vacancy(String headline, String city, Boolean isRemote, String description, Integer salaryMin, Integer salaryMax) {
+    public Vacancy(String headline, String city, Boolean isRemote, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags) {
         this.headline = headline;
         this.city = city;
         this.isRemote = isRemote;
         this.description = description;
         this.salaryMin = salaryMin;
         this.salaryMax = salaryMax;
+        this.tags = tags;
     }
 
     public Long getId() {
@@ -95,6 +100,14 @@ public class Vacancy implements Serializable {
 
     public void setRemote(Boolean remote) {
         isRemote = remote;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 
     @Override

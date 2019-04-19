@@ -4,6 +4,11 @@ function showVacancy(id) {
         type: "GET",
         async: false,
         success: function (data) {
+            var tags = "";
+            $.each(data.tags, function (key, value) {
+                tags += value.name + " "
+            });
+            $("#VMTags").text(tags);
             $("#VMHeadline").text(data.headline);
             $("#VMCity").text(data.city);
             $("#VMDescription").text(data.description);
