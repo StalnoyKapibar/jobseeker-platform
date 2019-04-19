@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service("employerService")
 @Transactional
-public class EmployerService extends AbstractService<Employer> {
+public class EmployerService extends UserService {
 
     @Autowired
     private EmployerDAO dao;

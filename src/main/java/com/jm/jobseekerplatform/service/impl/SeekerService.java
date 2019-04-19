@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service("seekerService")
 @Transactional
-public class SeekerService extends AbstractService<Seeker> {
+public class SeekerService extends UserService {
 
     @Autowired
     private SeekerDAO dao;
