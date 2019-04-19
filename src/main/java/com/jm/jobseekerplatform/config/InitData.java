@@ -39,20 +39,28 @@ public class InitData {
     @Autowired
     private SeekerProfileService seekerProfileService;
 
+    @Autowired
+    private EmployerService employerService;
+
+    @Autowired
+    private SeekerService seekerService;
+
+
     public void initData() {
         initUserRoles();
+        initEmployerProfiles();
+        initSeekerProfile();
         initUsers();
         initVacancies();
-        initEmployerProfiles();
         initPortfolio();
         initTags();
-        initSeekerProfile();
     }
 
     public void initUserRoles() {
         userRoleService.add(new UserRole("ROLE_ADMIN"));
         userRoleService.add(new UserRole("ROLE_USER"));
         userRoleService.add(new UserRole("ROLE_EMPLOYER"));
+        userRoleService.add(new UserRole("ROLE_SEEKER"));
     }
 
     public void initUsers() {
@@ -63,7 +71,11 @@ public class InitData {
         userService.add(new User("user", userService.encodePassword("user").toCharArray(), "user@mail.ru", roleUser));
 
         UserRole roleEmployer = userRoleService.findByAuthority("ROLE_EMPLOYER");
-        userService.add(new User("employer", userService.encodePassword("employer").toCharArray(), "employer@mail.ru", roleEmployer));
+        employerService.add(new Employer("employer", userService.encodePassword("employer").toCharArray(), "employer@mail.ru", roleEmployer, employerProfileService.getById(1L)));
+
+        UserRole roleSeeker = userRoleService.findByAuthority("ROLE_SEEKER");
+        seekerService.add(new Seeker("seeker", userService.encodePassword("seeker").toCharArray(), "seeker@mail.ru", roleSeeker, seekerProfileService.getById(1L)));
+
     }
 
     public void initVacancies() {
