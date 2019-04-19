@@ -1,10 +1,13 @@
 package com.jm.jobseekerplatform.controller;
 
-import com.jm.jobseekerplatform.model.EmployerProfile;
-import com.jm.jobseekerplatform.model.SeekerProfile;
+import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.EmployerService;
 import com.jm.jobseekerplatform.service.impl.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.SeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Base64;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -22,6 +27,12 @@ public class MainController {
 
     @Autowired
     private SeekerProfileService seekerProfileService;
+
+    @Autowired
+    private SeekerService seekerService;
+
+    @Autowired
+    private EmployerService employerService;
 
     @RequestMapping("/")
     public String mainPage() {
@@ -47,9 +58,27 @@ public class MainController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "logout", required = false) String logout,
-                        Model model){
+                        Model model) {
         model.addAttribute("error", error != null);
         model.addAttribute("logout", logout != null);
         return "login";
+    }
+
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    public String filterProfilePage(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            Long id = ((User) authentication.getPrincipal()).getId();
+            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
+            if (roles.contains("ROLE_EMPLOYER")) {
+                Employer employer = (Employer) employerService.getById(id);
+                return "redirect:/employer/" + employer.getEmployerProfile().getId();
+            } else if (roles.contains("ROLE_SEEKER")) {
+                Seeker seeker = (Seeker) seekerService.getById(id);
+                return "redirect:/seeker/" + seeker.getSeekerProfile().getId();
+            } else if (roles.contains("ROLE_ADMIN")) {
+                return "redirect:/admin";
+            }
+        }
+        return "index";
     }
 }
