@@ -2,9 +2,8 @@ package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
-import com.jm.jobseekerplatform.service.impl.EmployerService;
 import com.jm.jobseekerplatform.service.impl.SeekerProfileService;
-import com.jm.jobseekerplatform.service.impl.SeekerService;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Base64;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,13 +29,23 @@ public class MainController {
     private SeekerProfileService seekerProfileService;
 
     @Autowired
-    private SeekerService seekerService;
-
-    @Autowired
-    private EmployerService employerService;
+    private VacancyService vacancyService;
 
     @RequestMapping("/")
-    public String mainPage() {
+    public String mainPage(Authentication authentication, Model model) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            List<Vacancy> vacancies = vacancyService.getAll();
+            model.addAttribute("vacMess", "Доступные вакансии:");
+            model.addAttribute("vacancies", vacancies);
+        } else {
+            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
+            if (roles.contains("ROLE_SEEKER")) {
+                Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
+                Set<Vacancy> vacancies = vacancyService.getByTags(tags);
+                model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
+                model.addAttribute("vacancies", vacancies);
+            }
+        }
         return "index";
     }
 
@@ -58,27 +68,9 @@ public class MainController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "logout", required = false) String logout,
-                        Model model) {
+                        Model model){
         model.addAttribute("error", error != null);
         model.addAttribute("logout", logout != null);
         return "login";
-    }
-
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public String filterProfilePage(Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            Long id = ((User) authentication.getPrincipal()).getId();
-            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
-            if (roles.contains("ROLE_EMPLOYER")) {
-                Employer employer = (Employer) employerService.getById(id);
-                return "redirect:/employer/" + employer.getEmployerProfile().getId();
-            } else if (roles.contains("ROLE_SEEKER")) {
-                Seeker seeker = (Seeker) seekerService.getById(id);
-                return "redirect:/seeker/" + seeker.getSeekerProfile().getId();
-            } else if (roles.contains("ROLE_ADMIN")) {
-                return "redirect:/admin";
-            }
-        }
-        return "index";
     }
 }
