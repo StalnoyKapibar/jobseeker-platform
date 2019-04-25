@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.config;
 
+import com.github.javafaker.Faker;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 @Component
@@ -46,6 +47,7 @@ public class InitData {
     @Autowired
     private SeekerService seekerService;
 
+    private Faker faker = new Faker(new Locale("ru"));
 
     public void initData() {
         initTags();
@@ -80,8 +82,8 @@ public class InitData {
     }
 
     public void initVacancies() {
-        vacancyService.add(new Vacancy("Инженер-погромист", "Москва", false,"Платим деньги за работу", null, 120000,new HashSet<Tag>(Arrays.asList(tagService.getById(1L),tagService.getById(2L),tagService.getById(3L),tagService.getById(4L)))));
-        vacancyService.add(new Vacancy("Java программист", "Москва", false,"Обязанности:\n" +
+        String shortDescr = "Ищем талантливого разработчика, умеющего все и немного больше";
+        String description = "Обязанности:\n" +
                 "\n" +
                 "Разработка новых модулей системы\n" +
                 "Перевод существующих модулей на микросервисную архитектуру\n" +
@@ -99,9 +101,11 @@ public class InitData {
                 "Лояльное отношение к сотрудникам\n" +
                 "Дружный коллектив\n" +
                 "Дополнительная информация:\n" +
-                "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!", 110000, null,new HashSet<Tag>(Arrays.asList(tagService.getById(2L),tagService.getById(4L)))));
-        vacancyService.add(new Vacancy("Java Developer", "Санкт-Петербург", false,"Участвовать в проектировании сервисов, оптимизировать высоконагруженный проект, внедрять новые технологии и Big Data хранилищ. Участвовать в формулировании и декомпозиции продуктовых...\n" +
-                "Имеете опыт работы со Spring Boot, Spring Data JPA, Rabbit MQ. Знаете и понимаете шаблоны проектирования, клиент-серверные технологии.", 90000, 120000, new HashSet<Tag>(Arrays.asList(tagService.getById(1L),tagService.getById(3L)))));
+                "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!";
+
+        for (int i = 0; i < 30; i++) {
+            vacancyService.add(new Vacancy(faker.job().title(), faker.address().city(), Math.random() < 0.5, shortDescr, description, Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), randomTags()));
+        }
     }
 
     public void initEmployerProfiles() {
@@ -141,19 +145,27 @@ public class InitData {
 
     }
 
-    public void initPortfolio(){
-        portfolioService.add(new Portfolio("Jobseeker-platform","https://github.com/StalnoyKapibar/jobseeker-platform","Создавал модели, сервисы. Использовал Java 8, Spring"));
-        portfolioService.add(new Portfolio("SportGames","https://github.com/romanX1/SportGames/","Прикручивал Spring Security. Использовал Java 8, Spring"));
+    public void initPortfolio() {
+        portfolioService.add(new Portfolio("Jobseeker-platform", "https://github.com/StalnoyKapibar/jobseeker-platform", "Создавал модели, сервисы. Использовал Java 8, Spring"));
+        portfolioService.add(new Portfolio("SportGames", "https://github.com/romanX1/SportGames/", "Прикручивал Spring Security. Использовал Java 8, Spring"));
     }
 
-    public void initTags(){
+    public void initTags() {
         tagService.add(new Tag("Java 8"));
-        tagService.add(new Tag("Spring"));
+        tagService.add(new Tag("Spring Framework"));
         tagService.add(new Tag("Git"));
         tagService.add(new Tag("Maven"));
+        tagService.add(new Tag("Apache Tomcat"));
+        tagService.add(new Tag("Java Servlets"));
+        tagService.add(new Tag("JSF"));
+        tagService.add(new Tag("PostgreSQL"));
+        tagService.add(new Tag("Oracle Pl/SQL"));
+        tagService.add(new Tag("JMS"));
+        tagService.add(new Tag("Azure"));
+        tagService.add(new Tag("React"));
     }
 
-    public void initSeekerProfile(){
+    public void initSeekerProfile() {
         BufferedImage image = null;
         Set<Portfolio> portfolios = new HashSet<>();
         portfolios.add(portfolioService.getById(1L));
@@ -172,6 +184,14 @@ public class InitData {
         tags.add(tagService.getById(4L));
 
         seekerProfileService.add(new SeekerProfile("Вася Игоревич Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), tags, portfolios));
+    }
+
+    public Set<Tag> randomTags() {
+        Set<Tag> tags = new HashSet<>();
+        for (int i = 0; i < Math.round(Math.random() * 3) + 1; i++) {
+            tags.add(tagService.getById(Math.round(Math.random() * 11) + 1));
+        }
+        return tags;
     }
 
 }
