@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -21,6 +22,9 @@ public class Vacancy implements Serializable {
     @Column(name = "isremote", nullable = false)
     private Boolean isRemote;
 
+    @Column(name = "shortdescription")
+    private String shortDescription;
+
     @Column(name = "description", nullable = false, columnDefinition = "mediumtext")
     private String description;
 
@@ -36,10 +40,11 @@ public class Vacancy implements Serializable {
     public Vacancy() {
     }
 
-    public Vacancy(String headline, String city, Boolean isRemote, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags) {
+    public Vacancy(String headline, String city, Boolean isRemote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags) {
         this.headline = headline;
         this.city = city;
         this.isRemote = isRemote;
+        this.shortDescription = shortDescription;
         this.description = description;
         this.salaryMin = salaryMin;
         this.salaryMax = salaryMax;
@@ -114,27 +119,20 @@ public class Vacancy implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Vacancy vacancy = (Vacancy) o;
-
-        if (id != null ? !id.equals(vacancy.id) : vacancy.id != null) return false;
-        if (headline != null ? !headline.equals(vacancy.headline) : vacancy.headline != null) return false;
-        if (city != null ? !city.equals(vacancy.city) : vacancy.city != null) return false;
-        if (isRemote != null ? !isRemote.equals(vacancy.isRemote) : vacancy.isRemote != null) return false;
-        if (description != null ? !description.equals(vacancy.description) : vacancy.description != null) return false;
-        if (salaryMin != null ? !salaryMin.equals(vacancy.salaryMin) : vacancy.salaryMin != null) return false;
-        return salaryMax != null ? salaryMax.equals(vacancy.salaryMax) : vacancy.salaryMax == null;
+        return Objects.equals(id, vacancy.id) &&
+                Objects.equals(headline, vacancy.headline) &&
+                Objects.equals(city, vacancy.city) &&
+                Objects.equals(isRemote, vacancy.isRemote) &&
+                Objects.equals(shortDescription, vacancy.shortDescription) &&
+                Objects.equals(description, vacancy.description) &&
+                Objects.equals(salaryMin, vacancy.salaryMin) &&
+                Objects.equals(salaryMax, vacancy.salaryMax) &&
+                Objects.equals(tags, vacancy.tags);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (headline != null ? headline.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (isRemote != null ? isRemote.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (salaryMin != null ? salaryMin.hashCode() : 0);
-        result = 31 * result + (salaryMax != null ? salaryMax.hashCode() : 0);
-        return result;
+        return Objects.hash(id, headline, city, isRemote, shortDescription, description, salaryMin, salaryMax, tags);
     }
 }
