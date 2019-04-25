@@ -41,7 +41,7 @@ public class MainController {
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_SEEKER")) {
                 Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
-                Set<Vacancy> vacancies = vacancyService.getByTags(tags);
+                Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
                 model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
                 model.addAttribute("vacancies", vacancies);
             }

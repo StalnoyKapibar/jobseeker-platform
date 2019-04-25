@@ -18,7 +18,7 @@ public class VacancyService extends AbstractService<Vacancy> {
     @Autowired
     private VacancyDAO dao;
 
-    public Set<Vacancy> getByTags(Set<Tag> tags) {
-        return  dao.getByTags(tags);
+    public Set<Vacancy> getByTags(Set<Tag> tags, int limit) {
+        return  dao.getByTags(tags, limit);
     }
 }

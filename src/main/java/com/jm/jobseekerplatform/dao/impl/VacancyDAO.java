@@ -13,13 +13,13 @@ import java.util.Set;
 @Repository("vacancyDAO")
 public class VacancyDAO extends AbstractDAO<Vacancy> {
 
-    public Set<Vacancy> getByTags(Set<Tag> tags) {
+    public Set<Vacancy> getByTags(Set<Tag> tags, int limit) {
         Set<Vacancy> vacancies = new HashSet<>();
-        for (Tag tag : tags) {
-            vacancies.addAll(entityManager
-                    .createQuery("SELECT v FROM Vacancy v JOIN v.tags t WHERE t.id = :param", Vacancy.class)
-                    .setParameter("param", tag.getId()).getResultList());
-        }
+        vacancies.addAll(entityManager
+                .createQuery("SELECT v FROM Vacancy v JOIN v.tags t WHERE t IN (:param)", Vacancy.class)
+                .setParameter("param", tags)
+                .setMaxResults(limit)
+                .getResultList());
         return vacancies;
     }
 }
