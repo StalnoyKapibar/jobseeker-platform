@@ -25,6 +25,10 @@ public abstract class AbstractService <T extends Serializable> {
         return abstractDAO.getAll();
     }
 
+    public List<T> getAllWithLimit(int limit) {
+        return abstractDAO.getAllWithLimit(limit);
+    }
+
     public T getById(Long id) {
         return (T) abstractDAO.getById(id);
     }
