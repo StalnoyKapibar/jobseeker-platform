@@ -41,7 +41,7 @@ public class MainController {
     @RequestMapping("/")
     public String mainPage(Authentication authentication, Model model) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            List<Vacancy> vacancies = vacancyService.getAll();
+            List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
             model.addAttribute("vacMess", "Доступные вакансии:");
             model.addAttribute("vacancies", vacancies);
         } else {
