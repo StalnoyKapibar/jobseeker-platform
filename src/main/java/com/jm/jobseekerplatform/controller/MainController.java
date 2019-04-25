@@ -3,8 +3,10 @@ package com.jm.jobseekerplatform.controller;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
@@ -31,6 +33,11 @@ public class MainController {
     @Autowired
     private VacancyService vacancyService;
 
+    @Autowired
+    private UserRoleService userRoleService;
+
+    private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
+
     @RequestMapping("/")
     public String mainPage(Authentication authentication, Model model) {
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -38,8 +45,7 @@ public class MainController {
             model.addAttribute("vacMess", "Доступные вакансии:");
             model.addAttribute("vacancies", vacancies);
         } else {
-            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
-            if (roles.contains("ROLE_SEEKER")) {
+            if (authentication.getAuthorities().contains(roleSeeker)) {
                 Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
                 Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
                 model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
