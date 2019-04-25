@@ -4,9 +4,53 @@
     <th:block th:include="fragments :: head"></th:block>
     <meta charset="UTF-8">
     <title>Hello</title>
+    <script type="text/javascript" src="/js/index.js"></script>
 </head>
 <body>
 <th:block th:include="fragments :: nav"></th:block>
-<th:block th:include="fragments :: rolsfunc"></th:block>
+
+<div id="vacancyDiv" class="container-fluid">
+    <br/>
+    <br/>
+    <div class="row">
+        <div class="col-lg-4">
+        </div>
+        <div class="col-lg-4">
+            <span th:text="${vacMess}"></span><br/>
+            <div class="list-group">
+                <a th:each="vacancy: ${vacancies}" class="list-group-item" th:text="${vacancy.headline}" data-toggle="modal"
+                   data-target="#vacancyModal" th:onclick="'showVacancy('+${vacancy.id}+')'"></a>
+            </div>
+        </div>
+        <div class="col-lg-4">
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="vacancyModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h2 class="modal-title" th:text="Вакансия"></h2>
+            </div>
+            <div class="modal-body">
+                <h3><span id="VMTags"></span><br></h3>
+                <h3><span id="VMHeadline"></span><br/></h3>
+                <span id="VMCity"></span>
+                <span id="VMRemote"> (Удаленная работа)</span><br/>
+                <span id="VMSalary"></span><br/>
+                <div class="well well-sm">
+                    <span id="VMDescription"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
