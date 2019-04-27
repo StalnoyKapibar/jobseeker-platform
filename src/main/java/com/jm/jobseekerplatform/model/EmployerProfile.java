@@ -5,6 +5,7 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "employerprofiles")
@@ -29,6 +30,9 @@ public class EmployerProfile implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Vacancy> vacancies;
+
+    @OneToMany(mappedBy = "employerProfiles", fetch = FetchType.EAGER)
+    private Set<EmployerReviews> reviews;
 
     public EmployerProfile() {
     }
@@ -87,5 +91,17 @@ public class EmployerProfile implements Serializable {
 
     public void setVacancies(Set<Vacancy> vacancies) {
         this.vacancies = vacancies;
+    }
+
+    public Set<EmployerReviews> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(Set<EmployerReviews> reviews) {
+        this.reviews = reviews;
+    }
+
+    public Double getAverageRating(){
+        return reviews.stream().mapToInt(EmployerReviews::getEvaluation).average().orElse(0);
     }
 }

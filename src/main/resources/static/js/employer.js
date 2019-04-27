@@ -35,3 +35,5 @@ function showVacancy(id) {
         }
     });
 }
+
+$("#input-id").rating();

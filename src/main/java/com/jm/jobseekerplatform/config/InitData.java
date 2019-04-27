@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,6 +47,9 @@ public class InitData {
     @Autowired
     private SeekerService seekerService;
 
+    @Autowired
+    private EmployerReviewsService employerReviewsService;
+
 
     public void initData() {
         initTags();
@@ -55,6 +59,38 @@ public class InitData {
         initEmployerProfiles();
         initSeekerProfile();
         initUsers();
+        initReviews();
+    }
+
+    public void initReviews(){
+        EmployerReviews reviewsOne = new EmployerReviews();
+        reviewsOne.setDateReviews(new Date());
+        reviewsOne.setEmployerProfiles(employerProfileService.getById(1L));
+        reviewsOne.setSeeker(seekerProfileService.getById(1L));
+        reviewsOne.setEvaluation(4);
+        reviewsOne.setReviews("Хорошая контора. Отличный коллектив, только директор придурковатый");
+        EmployerReviews reviewsTwo = new EmployerReviews();
+        reviewsTwo.setDateReviews(new Date());
+        reviewsTwo.setEmployerProfiles(employerProfileService.getById(2L));
+        reviewsTwo.setSeeker(seekerProfileService.getById(1L));
+        reviewsTwo.setEvaluation(1);
+        reviewsTwo.setReviews("Неадекватное руководство. Уволился через месяц");
+        EmployerReviews reviewsThree = new EmployerReviews();
+        reviewsThree.setDateReviews(new Date());
+        reviewsThree.setEmployerProfiles(employerProfileService.getById(1L));
+        reviewsThree.setSeeker(seekerProfileService.getById(1L));
+        reviewsThree.setEvaluation(1);
+        reviewsThree.setReviews("Неадекватное руководство. Уволился через месяц");
+        EmployerReviews reviewsFour = new EmployerReviews();
+        reviewsFour.setDateReviews(new Date());
+        reviewsFour.setEmployerProfiles(employerProfileService.getById(2L));
+        reviewsFour.setSeeker(seekerProfileService.getById(1L));
+        reviewsFour.setEvaluation(4);
+        reviewsFour.setReviews("Хорошая контора. Отличный коллектив, только директор придурковатый");
+        employerReviewsService.add(reviewsOne);
+        employerReviewsService.add(reviewsTwo);
+        employerReviewsService.add(reviewsThree);
+        employerReviewsService.add(reviewsFour);
     }
 
     public void initUserRoles() {
