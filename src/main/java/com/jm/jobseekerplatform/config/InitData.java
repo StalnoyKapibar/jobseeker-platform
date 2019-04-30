@@ -61,7 +61,6 @@ public class InitData {
 
     public void initUserRoles() {
         userRoleService.add(new UserRole("ROLE_ADMIN"));
-        userRoleService.add(new UserRole("ROLE_USER"));
         userRoleService.add(new UserRole("ROLE_EMPLOYER"));
         userRoleService.add(new UserRole("ROLE_SEEKER"));
     }
@@ -69,9 +68,6 @@ public class InitData {
     public void initUsers() {
         UserRole roleAdmin = userRoleService.findByAuthority("ROLE_ADMIN");
         userService.add(new User("admin", userService.encodePassword("admin").toCharArray(), "admin@mail.ru", roleAdmin));
-
-        UserRole roleUser = userRoleService.findByAuthority("ROLE_USER");
-        userService.add(new User("user", userService.encodePassword("user").toCharArray(), "user@mail.ru", roleUser));
 
         UserRole roleEmployer = userRoleService.findByAuthority("ROLE_EMPLOYER");
         employerService.add(new Employer("employer", userService.encodePassword("employer").toCharArray(), "employer@mail.ru", roleEmployer, employerProfileService.getById(1L)));
