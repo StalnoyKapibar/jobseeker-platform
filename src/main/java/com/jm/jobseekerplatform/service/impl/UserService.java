@@ -22,7 +22,7 @@ public class UserService extends AbstractService<User> {
         return dao.findByLogin(login);
     }
 
-    public String encodePassword(String password) {
-        return passwordEncoder.encode(password);
+    public char[] encodePassword(char[] password) {
+        return passwordEncoder.encode(password.toString()).toCharArray();
     }
 }
