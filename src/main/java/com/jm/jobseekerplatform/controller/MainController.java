@@ -79,4 +79,9 @@ public class MainController {
         model.addAttribute("logout", logout != null);
         return "login";
     }
+
+    @RequestMapping(value = "/registration", method = RequestMethod.GET)
+    public String reg(){
+        return "registration";
+    }
 }
