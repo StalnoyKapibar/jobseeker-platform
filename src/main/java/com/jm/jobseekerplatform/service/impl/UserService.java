@@ -25,4 +25,12 @@ public class UserService extends AbstractService<User> {
     public char[] encodePassword(char[] password) {
         return passwordEncoder.encode(password.toString()).toCharArray();
     }
+
+    public boolean isExistLogin(String login) {
+        return dao.isExistLogin(login);
+    }
+
+    public boolean isExistEmail(String email) {
+        return dao.isExistEmail(email);
+    }
 }

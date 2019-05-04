@@ -13,4 +13,20 @@ public class UserDAO extends AbstractDAO<User> {
                 .setParameter("param", login)
                 .getSingleResult();
     }
+
+    public boolean isExistLogin(String login) {
+        Long count = (Long) entityManager
+                .createQuery("SELECT COUNT(r) FROM User As r WHERE r.login = :param")
+                .setParameter("param", login)
+                .getSingleResult();
+        return count > 0;
+    }
+
+    public boolean isExistEmail(String email) {
+        Long count = (Long) entityManager
+                .createQuery("SELECT COUNT(r) FROM User As r WHERE r.email = :param")
+                .setParameter("param", email)
+                .getSingleResult();
+        return count > 0;
+    }
 }
