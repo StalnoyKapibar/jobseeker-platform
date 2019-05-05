@@ -6,7 +6,8 @@ $(document).ready(function () {
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-            user_name: {
+            user_login: {
+                message: 'The username is not valid',
                 validators: {
                     stringLength: {
                         min: 3,
@@ -19,6 +20,13 @@ $(document).ready(function () {
                     regexp: {
                         regexp: /^[a-zA-Z0-9_]+$/,
                         message: 'Логин может содержать только строчные и заглавные латинские буквы, цифры и нижнее подчеркивание'
+                    },
+                    remote: {
+                        url: function() {
+                            return '/api/users/login/' + $("#user_login").val();
+                        },
+                        delay: 2000,
+                        message: 'Логин не доступен'
                     }
                 }
             },
@@ -53,6 +61,13 @@ $(document).ready(function () {
                     },
                     emailAddress: {
                         message: 'Введите корректный Email адрес'
+                    },
+                    remote: {
+                        url: function() {
+                            return '/api/users/email/' + $("#email").val();
+                        },
+                        delay: 2000,
+                        message: 'Данный Email уже используется'
                     }
                 }
             },
@@ -71,7 +86,7 @@ $(document).ready(function () {
 function addUser() {
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
-    var userLogin = $("#user_name").val();
+    var userLogin = $("#user_login").val();
     var userPass = $("#user_password").val();
     var userEmail = $("#email").val();
     var role ={'authority': $("#role").val()};
@@ -96,12 +111,12 @@ function addUser() {
                 console.log(data);
                 $('#email_ver').text(userEmail);
                 $('#success_message').slideDown({opacity: "show"}, "slow");
-                $('#contact_form')[0].reset();  //data('bootstrapValidator').resetForm();
+                $('#contact_form')[0].reset();
                 $('#contact_form').data('bootstrapValidator').resetForm();
             },
         error: function (error) {
             console.log(error);
-            alert("Ошибка");
+            alert(error.responseJSON.message);
         }
     });
 
