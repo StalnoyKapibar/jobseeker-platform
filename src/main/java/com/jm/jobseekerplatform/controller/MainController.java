@@ -1,25 +1,19 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
-import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
-import com.jm.jobseekerplatform.service.impl.SeekerProfileService;
-import com.jm.jobseekerplatform.service.impl.UserRoleService;
-import com.jm.jobseekerplatform.service.impl.VacancyService;
+import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import javax.persistence.NoResultException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -34,7 +28,7 @@ public class MainController {
     private VacancyService vacancyService;
 
     @Autowired
-    private UserRoleService userRoleService;
+    private VerificationTokenService verificationTokenService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
@@ -74,14 +68,32 @@ public class MainController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "logout", required = false) String logout,
-                        Model model){
+                        Model model) {
         model.addAttribute("error", error != null);
         model.addAttribute("logout", logout != null);
         return "login";
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
-    public String reg(){
+    public String reg() {
         return "registration";
+    }
+
+    @RequestMapping(value = "/confirm_reg/{token}", method = RequestMethod.GET)
+    public String confirmRegistration(@PathVariable String token, Model model) {
+        try {
+            VerificationToken verificationToken = verificationTokenService.findByToken(token);
+            boolean complete = verificationTokenService.tokenIsNonExpired(verificationToken);
+            model.addAttribute("complete", complete);
+            if (complete) {
+                verificationTokenService.completeRegistration(verificationToken);
+            }
+        } catch (NoResultException e) {
+            e.printStackTrace();
+            model.addAttribute("complete", false);
+        } finally {
+            return "confirm_reg";
+        }
+
     }
 }
