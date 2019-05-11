@@ -18,4 +18,11 @@ public class MailService {
         msg.setText(text);
         javaMailSender.send(msg);
     }
+
+    public void sendVerificationEmail(String address, String token){
+        String subject = "Confirm your E-mail address and complete registration";
+        String text = "Вы зарегистрировались на платформе JobSekeer. Для подтверждения адреса электронной почты пройдите по ссылке (действительна в течении суток):\n"
+                +"http://localhost:7070/confirm_reg/" + token;
+        sendEmail(address, subject, text);
+    }
 }
