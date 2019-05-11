@@ -29,6 +29,9 @@ public class User implements Serializable, UserDetails {
     @ManyToOne(fetch = FetchType.EAGER)
     private UserRole authority;
 
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled;
+
     public User() {
     }
 
@@ -37,6 +40,7 @@ public class User implements Serializable, UserDetails {
         this.password = password;
         this.email = email;
         this.authority = authority;
+        this.enabled = false;
     }
 
     public Long getId() {
@@ -90,7 +94,7 @@ public class User implements Serializable, UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     public void setPassword(char[] password) {
@@ -111,5 +115,9 @@ public class User implements Serializable, UserDetails {
 
     public void setAuthority(UserRole authority) {
         this.authority = authority;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
