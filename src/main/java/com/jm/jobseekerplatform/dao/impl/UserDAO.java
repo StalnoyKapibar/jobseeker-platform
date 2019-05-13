@@ -15,18 +15,16 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     public boolean isExistLogin(String login) {
-        Long count = (Long) entityManager
-                .createQuery("SELECT COUNT(u) FROM User u WHERE EXISTS (SELECT r FROM User r WHERE r.login = :param)")
+        return (boolean) entityManager
+                .createQuery("SELECT CASE WHEN EXISTS (SELECT r FROM User r WHERE r.login = :param) THEN true ELSE false END FROM User")
                 .setParameter("param", login)
                 .getSingleResult();
-        return count > 0;
     }
 
     public boolean isExistEmail(String email) {
-        Long count = (Long) entityManager
-                .createQuery("SELECT COUNT(u) FROM User u WHERE EXISTS (SELECT r FROM User r WHERE r.email = :param)")
+        return (boolean) entityManager
+                .createQuery("SELECT CASE WHEN EXISTS (SELECT r FROM User r WHERE r.email = :param) THEN true ELSE false END FROM User")
                 .setParameter("param", email)
                 .getSingleResult();
-        return count > 0;
     }
 }
