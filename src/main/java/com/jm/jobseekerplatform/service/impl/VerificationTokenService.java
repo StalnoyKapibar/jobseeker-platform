@@ -49,7 +49,7 @@ public class VerificationTokenService extends AbstractService<VerificationToken>
     }
 
     public void completeRegistration(VerificationToken token) {
-        token.getUser().setEnabled(true);
+        token.getUser().setConfirm(true);
         dao.delete(token);
     }
 }

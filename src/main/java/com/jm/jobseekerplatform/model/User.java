@@ -32,6 +32,9 @@ public class User implements Serializable, UserDetails {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
+    @Column(name = "confirm", nullable = false)
+    private boolean confirm;
+
     public User() {
     }
 
@@ -40,7 +43,8 @@ public class User implements Serializable, UserDetails {
         this.password = password;
         this.email = email;
         this.authority = authority;
-        this.enabled = false;
+        this.enabled = true;
+        this.confirm = false;
     }
 
     public Long getId() {
@@ -94,7 +98,7 @@ public class User implements Serializable, UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return confirm && enabled;
     }
 
     public void setPassword(char[] password) {
@@ -119,5 +123,13 @@ public class User implements Serializable, UserDetails {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public boolean isConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(boolean confirm) {
+        this.confirm = confirm;
     }
 }

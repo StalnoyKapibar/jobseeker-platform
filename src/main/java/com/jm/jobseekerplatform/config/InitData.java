@@ -73,17 +73,17 @@ public class InitData {
 
         role = userRoleService.findByAuthority("ROLE_ADMIN");
         user = new User("admin", userService.encodePassword("admin".toCharArray()), "admin@mail.ru", role);
-        user.setEnabled(true);
+        user.setConfirm(true);
         userService.add(user);
 
         role = userRoleService.findByAuthority("ROLE_EMPLOYER");
         employer = new Employer("employer", userService.encodePassword("employer".toCharArray()), "employer@mail.ru", role, employerProfileService.getById(1L));
-        employer.setEnabled(true);
+        employer.setConfirm(true);
         employerService.add(employer);
 
         role = userRoleService.findByAuthority("ROLE_SEEKER");
         seeker = new Seeker("seeker", userService.encodePassword("seeker".toCharArray()), "seeker@mail.ru", role, seekerProfileService.getById(1L));
-        seeker.setEnabled(true);
+        seeker.setConfirm(true);
         seekerService.add(seeker);
 
     }
