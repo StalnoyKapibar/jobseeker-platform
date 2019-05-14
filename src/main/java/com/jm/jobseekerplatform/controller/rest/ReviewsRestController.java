@@ -52,7 +52,7 @@ public class ReviewsRestController {
         }
     }
 
-    @RequestMapping("/{reviewId}")
+    @RequestMapping("/delete/{reviewId}")
     @ResponseBody
     public ResponseEntity<String> getUserById(@PathVariable Long reviewId) {
         try {
