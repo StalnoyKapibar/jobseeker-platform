@@ -71,6 +71,11 @@ public class MainController {
         return "seeker";
     }
 
+    @RequestMapping("/admin")
+    public String adminPage() {
+        return "admin";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "logout", required = false) String logout,
