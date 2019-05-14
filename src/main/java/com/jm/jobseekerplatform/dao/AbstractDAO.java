@@ -31,6 +31,10 @@ public abstract class AbstractDAO<T extends Serializable> {
         return entityManager.createQuery("SELECT e FROM " + clazz.getName() + " e", clazz).getResultList();
     }
 
+    public List<T> getAllWithLimit(int limit) {
+        return entityManager.createQuery("SELECT e FROM " + clazz.getName() + " e", clazz).setMaxResults(limit).getResultList();
+    }
+
     public T getById(Long id) {
         return entityManager.find(clazz, id);
     }
