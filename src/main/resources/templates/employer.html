@@ -73,18 +73,18 @@
                            th:value="${minReviewsEvaluation.evaluation}">
                     <p th:text="${minReviewsEvaluation.reviews}"></p>
                 </div>
-                <div>
-                    <div>
-                        <button type="button" class="btn btn-primary btn-sm " data-toggle="modal"
-                                data-target="#reviewsModal">
-                            Оставить свой отзыв
-                        </button>
-                    </div>
-                    <div th:if="${eprofile.getReviews().size() > 2}" class="col">
-                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                data-target="#allReviewsModal">
-                            Все отзывы
-                        </button>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="modal"
+                                    data-target="#reviewsModal">Оставить отзыв
+                            </button>
+                        </div>
+                        <div class="col-md-6" th:if="${eprofile.getReviews().size() > 2}">
+                            <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="modal"
+                                    data-target="#allReviewsModal">Все отзывы
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -120,7 +120,7 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">Оцените</h4>
                 <input id="review_evaluation" th:attr="data-id-employer=${eprofile.id}, data-id-seeker=${seekerId}"
-                       name="input-name" type="number" class="rating" min=1 max=5 step=1 data-size="lg">
+                       name="input-name" type="number" class="rating" min=0 max=5 step=1 data-size="lg">
             </div>
             <div class="modal-body">
                 <label for="reviewsText">Описание:</label>
