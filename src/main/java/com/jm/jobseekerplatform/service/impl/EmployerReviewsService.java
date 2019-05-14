@@ -13,4 +13,8 @@ public class EmployerReviewsService extends AbstractService<EmployerReviews> {
 
     @Autowired
     private EmployerReviewsDAO dao;
+
+    public EmployerReviews findReviewsBySeekerId(Long seekerId){
+        return dao.findBySeekerId(seekerId);
+    }
 }

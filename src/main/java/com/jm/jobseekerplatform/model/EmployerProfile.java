@@ -4,8 +4,8 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "employerprofiles")
@@ -31,7 +31,8 @@ public class EmployerProfile implements Serializable {
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Vacancy> vacancies;
 
-    @OneToMany(mappedBy = "employerProfiles", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "employer_id")
     private Set<EmployerReviews> reviews;
 
     public EmployerProfile() {
@@ -101,7 +102,16 @@ public class EmployerProfile implements Serializable {
         this.reviews = reviews;
     }
 
-    public Double getAverageRating(){
+    public void addNewReview(EmployerReviews employerReview) {
+        if (reviews != null) {
+            reviews.add(employerReview);
+        } else {
+            reviews = new HashSet<>();
+            reviews.add(employerReview);
+        }
+    }
+
+    public Double getAverageRating() {
         return reviews.stream().mapToInt(EmployerReviews::getEvaluation).average().orElse(0);
     }
 }

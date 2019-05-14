@@ -43,65 +43,95 @@
             </div>
         </div>
     </div>
-    <div sec:authorize="hasRole('ROLE_EMPLOYER')">
+    <div sec:authorize="hasRole('ROLE_SEEKER')">
         <div class="row">
             <div class="col-lg-3">
             </div>
             <div class="col-lg-3">
                 <h5><span>Отзывы о компании: </span>
-                    <span th:text="${eprofile.getAverageRating()}"></span>
-                    <input id="input-id" name="input-name" type="number" class="rating" min=1 max=10 step=2 data-size="lg" data-rtl="true">
+                    <input name="reviews-fix" type="number" class="rating fixed-rating"
+                           readonly="true" data-size="xs" data-rtl="false" th:value="${eprofile.getAverageRating()}">
                 </h5>
-                <div th:if="${eprofile.reviews==null and eprofile.reviews.empty}">
-                    <p>Нет отзывов</p>
+                <div th:if="${reviewStatus == false}">
+                    <p>Еще нет отзывов</p>
                 </div>
-                <div id="carousel" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="item active" th:each="reviews, index: ${eprofile.reviews}">
-                            <a th:href="@{'/seeker/' + ${reviews.seekerProfile.id}}"
-                               th:text="${reviews.seekerProfile.name}"></a>
-                            <span th:text="${reviews.evaluation}"></span>
-
-                            <p th:text="${reviews.reviews}"></p>
-                        </div>
-                    </div>
+                <div th:if="${maxReviewsEvaluation != null}" class="panel panel-default">
+                    <a th:href="@{'/seeker/' + ${maxReviewsEvaluation.seekerProfile.id}}"
+                       th:text="${maxReviewsEvaluation.seekerProfile.name}"></a> <span
+                        th:text="${#dates.format(maxReviewsEvaluation.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
+                    <input name="reviews-fix" type="number" class="rating fixed-rating"
+                           readonly="true" data-size="xs" data-rtl="false"
+                           th:value="${maxReviewsEvaluation.evaluation}">
+                    <p th:text="${maxReviewsEvaluation.reviews}"></p>
+                </div>
+                <div th:if="${minReviewsEvaluation != null}" class="panel panel-default">
+                    <a th:href="@{'/seeker/' + ${minReviewsEvaluation.seekerProfile.id}}"
+                       th:text="${minReviewsEvaluation.seekerProfile.name}"></a> <span
+                        th:text="${#dates.format(minReviewsEvaluation.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
+                    <input name="reviews-fix" type="number" class="rating fixed-rating"
+                           readonly="true" data-size="xs" data-rtl="false"
+                           th:value="${minReviewsEvaluation.evaluation}">
+                    <p th:text="${minReviewsEvaluation.reviews}"></p>
                 </div>
                 <div>
-                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                            data-target="#reviewsModal">
-                        Оставить отзыв
-                    </button>
+                    <div class="text-left">
+                        <button type="button" class="btn btn-primary btn-sm " data-toggle="modal"
+                                data-target="#reviewsModal">
+                            Оставить свой отзыв
+                        </button>
+                    </div>
+                    <div th:if="${eprofile.getReviews().size() > 2}" class="text-right">
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                data-target="#allReviewsModal">
+                            Все отзывы
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal -->
+<!--allReviewsModal-->
+<div class="modal fade" id="allReviewsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content form-group">
+            <div class="modal-body">
+                <div th:each="review : ${eprofile.getReviews()}" class="panel panel-default">
+                    <a th:href="@{'/seeker/' + ${review.seekerProfile.id}}"
+                       th:text="${review.seekerProfile.name}"></a> <span
+                        th:text="${#dates.format(review.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
+                    <input name="reviews-fix" type="number" class="rating fixed-rating"
+                           readonly="true" data-size="xs" data-rtl="false"
+                           th:value="${review.evaluation}">
+                    <p th:text="${review.reviews}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- reviewsModal -->
 <div class="modal fade" id="reviewsModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <!-- Modal content-->
-        <div class="modal-content">
+        <div class="modal-content form-group">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">Оставте свой отзыв</h4>
+                <h4 class="modal-title" id="myModalLabel">Оцените</h4>
+                <input id="review_evaluation" th:attr="data-id-employer=${eprofile.id}, data-id-seeker=${seekerId}"
+                       name="input-name" type="number" class="rating" min=1 max=5 step=1 data-size="lg">
             </div>
-            <div class="form-group">
-                <label for="exampleFormControlTextarea2"></label>
-                <textarea class="form-control rounded-0" id="exampleFormControlTextarea2" rows="3"></textarea>
+            <div class="modal-body">
+                <label for="reviewsText">Описание:</label>
+                <textarea class="form-control rounded-0" id="reviewsText"></textarea>
             </div>
-                <div class="star-rating">
-                    <span class="fa fa-star-o" data-rating="1" checked></span>
-                    <span class="fa fa-star-o" data-rating="2"></span>
-                    <span class="fa fa-star-o" data-rating="3"></span>
-                    <span class="fa fa-star-o" data-rating="4"></span>
-                    <span class="fa fa-star-o" data-rating="5"></span>
-                    <input type="hidden" name="whatever1" class="rating-value" value="3.0">
-                </div>
             <div class="modal-footer">
+                <input name="_csrf" type="hidden" th:value="${_csrf.token}"/>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                <button type="button" class="btn btn-primary">Сохранить</button>
+                <button type="button" class="btn btn-primary postReview">Сохранить</button>
             </div>
         </div>
     </div>

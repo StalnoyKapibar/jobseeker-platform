@@ -9,10 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class InitData {
@@ -62,35 +59,46 @@ public class InitData {
         initReviews();
     }
 
-    public void initReviews(){
-        EmployerReviews reviewsOne = new EmployerReviews();
-        reviewsOne.setDateReviews(new Date());
-        reviewsOne.setEmployerProfiles(employerProfileService.getById(1L));
-        reviewsOne.setSeeker(seekerProfileService.getById(1L));
-        reviewsOne.setEvaluation(4);
-        reviewsOne.setReviews("Хорошая контора. Отличный коллектив, только директор придурковатый");
-        EmployerReviews reviewsTwo = new EmployerReviews();
-        reviewsTwo.setDateReviews(new Date());
-        reviewsTwo.setEmployerProfiles(employerProfileService.getById(2L));
-        reviewsTwo.setSeeker(seekerProfileService.getById(1L));
-        reviewsTwo.setEvaluation(1);
-        reviewsTwo.setReviews("Неадекватное руководство. Уволился через месяц");
-        EmployerReviews reviewsThree = new EmployerReviews();
-        reviewsThree.setDateReviews(new Date());
-        reviewsThree.setEmployerProfiles(employerProfileService.getById(1L));
-        reviewsThree.setSeeker(seekerProfileService.getById(1L));
-        reviewsThree.setEvaluation(1);
-        reviewsThree.setReviews("Неадекватное руководство. Уволился через месяц");
-        EmployerReviews reviewsFour = new EmployerReviews();
-        reviewsFour.setDateReviews(new Date());
-        reviewsFour.setEmployerProfiles(employerProfileService.getById(2L));
-        reviewsFour.setSeeker(seekerProfileService.getById(1L));
-        reviewsFour.setEvaluation(4);
-        reviewsFour.setReviews("Хорошая контора. Отличный коллектив, только директор придурковатый");
-        employerReviewsService.add(reviewsOne);
-        employerReviewsService.add(reviewsTwo);
-        employerReviewsService.add(reviewsThree);
-        employerReviewsService.add(reviewsFour);
+    public void initReviews() {
+        EmployerReviews reviewOne = new EmployerReviews();
+        reviewOne.setDateReviews(new Date());
+        reviewOne.setEvaluation(4);
+        reviewOne.setSeekerProfile(seekerProfileService.getById(1L));
+        reviewOne.setReviews("Хорошая контора. Отличный коллектив, только директор придурковатый");
+
+        EmployerReviews reviewTwo = new EmployerReviews();
+        reviewTwo.setDateReviews(new Date());
+        reviewTwo.setSeekerProfile(seekerProfileService.getById(1L));
+        reviewTwo.setEvaluation(1);
+        reviewTwo.setReviews("Неадекватное руководство. Уволился через месяц");
+
+        EmployerReviews reviewThree = new EmployerReviews();
+        reviewThree.setDateReviews(new Date());
+        reviewThree.setSeekerProfile(seekerProfileService.getById(1L));
+        reviewThree.setEvaluation(1);
+        reviewThree.setReviews("Неадекватное руководство. Уволился через месяц");
+
+        EmployerReviews reviewFour = new EmployerReviews();
+        reviewFour.setDateReviews(new Date());
+        reviewFour.setSeekerProfile(seekerProfileService.getById(1L));
+        reviewFour.setEvaluation(4);
+        reviewFour.setReviews("Хорошая контора. Отличный коллектив, только директор придурковатый");
+
+        Set<EmployerReviews> reviewsOne = new HashSet<>();
+        reviewsOne.add(reviewOne);
+        reviewsOne.add(reviewTwo);
+
+        Set<EmployerReviews> reviewsTwo = new HashSet<>();
+        reviewsTwo.add(reviewThree);
+        reviewsTwo.add(reviewFour);
+
+        EmployerProfile employerProfileOne = employerProfileService.getById(1L);
+        employerProfileOne.setReviews(reviewsOne);
+        employerProfileService.update(employerProfileOne);
+
+        EmployerProfile employerProfileTwo = employerProfileService.getById(2L);
+        employerProfileTwo.setReviews(reviewsTwo);
+        employerProfileService.update(employerProfileTwo);
     }
 
     public void initUserRoles() {
@@ -116,8 +124,8 @@ public class InitData {
     }
 
     public void initVacancies() {
-        vacancyService.add(new Vacancy("Инженер-погромист", "Москва", false,"Платим деньги за работу", null, 120000,new HashSet<Tag>(Arrays.asList(tagService.getById(1L),tagService.getById(2L),tagService.getById(3L),tagService.getById(4L)))));
-        vacancyService.add(new Vacancy("Java программист", "Москва", false,"Обязанности:\n" +
+        vacancyService.add(new Vacancy("Инженер-погромист", "Москва", false, "Платим деньги за работу", null, 120000, new HashSet<Tag>(Arrays.asList(tagService.getById(1L), tagService.getById(2L), tagService.getById(3L), tagService.getById(4L)))));
+        vacancyService.add(new Vacancy("Java программист", "Москва", false, "Обязанности:\n" +
                 "\n" +
                 "Разработка новых модулей системы\n" +
                 "Перевод существующих модулей на микросервисную архитектуру\n" +
@@ -135,9 +143,9 @@ public class InitData {
                 "Лояльное отношение к сотрудникам\n" +
                 "Дружный коллектив\n" +
                 "Дополнительная информация:\n" +
-                "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!", 110000, null,new HashSet<Tag>(Arrays.asList(tagService.getById(2L),tagService.getById(4L)))));
-        vacancyService.add(new Vacancy("Java Developer", "Санкт-Петербург", false,"Участвовать в проектировании сервисов, оптимизировать высоконагруженный проект, внедрять новые технологии и Big Data хранилищ. Участвовать в формулировании и декомпозиции продуктовых...\n" +
-                "Имеете опыт работы со Spring Boot, Spring Data JPA, Rabbit MQ. Знаете и понимаете шаблоны проектирования, клиент-серверные технологии.", 90000, 120000, new HashSet<Tag>(Arrays.asList(tagService.getById(1L),tagService.getById(3L)))));
+                "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!", 110000, null, new HashSet<Tag>(Arrays.asList(tagService.getById(2L), tagService.getById(4L)))));
+        vacancyService.add(new Vacancy("Java Developer", "Санкт-Петербург", false, "Участвовать в проектировании сервисов, оптимизировать высоконагруженный проект, внедрять новые технологии и Big Data хранилищ. Участвовать в формулировании и декомпозиции продуктовых...\n" +
+                "Имеете опыт работы со Spring Boot, Spring Data JPA, Rabbit MQ. Знаете и понимаете шаблоны проектирования, клиент-серверные технологии.", 90000, 120000, new HashSet<Tag>(Arrays.asList(tagService.getById(1L), tagService.getById(3L)))));
     }
 
     public void initEmployerProfiles() {
@@ -145,8 +153,10 @@ public class InitData {
         Set<Vacancy> vacancies = new HashSet<>();
         vacancies.add(vacancyService.getById(1L));
         vacancies.add(vacancyService.getById(2L));
+
         try {
-            URL url = new URL("https://wiki.godville.net/images/2/2d/RiK-lens.png");
+//            URL url = new URL("https://wiki.godville.net/images/2/2d/RiK-lens.png");
+            URL url = new URL("https://www.e-reading.club/illustrations/44/44442-_34.jpg");
             image = ImageIO.read(url);
         } catch (IOException e) {
             e.printStackTrace();
@@ -177,19 +187,19 @@ public class InitData {
 
     }
 
-    public void initPortfolio(){
-        portfolioService.add(new Portfolio("Jobseeker-platform","https://github.com/StalnoyKapibar/jobseeker-platform","Создавал модели, сервисы. Использовал Java 8, Spring"));
-        portfolioService.add(new Portfolio("SportGames","https://github.com/romanX1/SportGames/","Прикручивал Spring Security. Использовал Java 8, Spring"));
+    public void initPortfolio() {
+        portfolioService.add(new Portfolio("Jobseeker-platform", "https://github.com/StalnoyKapibar/jobseeker-platform", "Создавал модели, сервисы. Использовал Java 8, Spring"));
+        portfolioService.add(new Portfolio("SportGames", "https://github.com/romanX1/SportGames/", "Прикручивал Spring Security. Использовал Java 8, Spring"));
     }
 
-    public void initTags(){
+    public void initTags() {
         tagService.add(new Tag("Java 8"));
         tagService.add(new Tag("Spring"));
         tagService.add(new Tag("Git"));
         tagService.add(new Tag("Maven"));
     }
 
-    public void initSeekerProfile(){
+    public void initSeekerProfile() {
         BufferedImage image = null;
         Set<Portfolio> portfolios = new HashSet<>();
         portfolios.add(portfolioService.getById(1L));

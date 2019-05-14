@@ -15,20 +15,20 @@ function showVacancy(id) {
 
             var str = "Зарплата: ";
 
-            if (data.salaryMin!=null ){
+            if (data.salaryMin != null) {
                 str = str + "от " + data.salaryMin + " рублей ";
             }
-            if (data.salaryMax!=null ){
+            if (data.salaryMax != null) {
                 str = str + "до " + data.salaryMax + " рублей";
             }
-            if (str == "Зарплата: "){
+            if (str == "Зарплата: ") {
                 str = "Зарплата не указана";
             }
             $("#VMSalary").text(str);
 
             if (data.remote) {
                 $('#VMRemote').show();
-            }else{
+            } else {
                 $('#VMRemote').hide();
             }
 
@@ -36,4 +36,35 @@ function showVacancy(id) {
     });
 }
 
-$("#input-id").rating();
+$(document).ready(function () {
+    $(".item").first().addClass("active");
+
+    $(".fixed-rating").rating({displayOnly: true});
+
+    $("#reviews").rating();
+
+    $(".postReview").click(function () {
+        var review = {};
+        review["seekerProfiles_id"] = $("#review_evaluation").data("id-seeker");
+        review["employerProfiles_id"] = $("#review_evaluation").data("id-employer");
+        review["evaluation"] = $("#review_evaluation").val();
+        review["reviews"] = $("#reviewsText").val();
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            contentType: "application/json",
+            url: "/api/review/new",
+            data: JSON.stringify(review),
+            beforeSend: function (request) {
+                return request.setRequestHeader('X-CSRF-Token', $("input[name=_csrf]").val());
+            },
+            success: function () {
+                $("#reviewsModal").modal('hide');
+                location.reload();
+            },
+            error: function () {
+                $("#reviewsModal").modal('hide');
+            }
+        });
+    });
+});

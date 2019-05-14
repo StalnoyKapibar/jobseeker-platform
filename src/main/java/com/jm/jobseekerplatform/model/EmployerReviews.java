@@ -3,10 +3,11 @@ package com.jm.jobseekerplatform.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "employer_reviews")
-public class EmployerReviews implements Serializable {
+public class EmployerReviews implements Serializable, Comparable<EmployerReviews>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,23 +22,18 @@ public class EmployerReviews implements Serializable {
     @Column(name = "evaluation")
     private Integer evaluation;
 
-    @ManyToOne
-    @JoinColumn(name = "employerProfiles_id")
-    private EmployerProfile employerProfiles;
-
-    @ManyToOne
-    @JoinColumn(name = "seekerProfiles_id")
+    @OneToOne(cascade=CascadeType.REFRESH, fetch=FetchType.EAGER)
+    @JoinColumn(name="seekerProfile")
     private SeekerProfile seekerProfile;
 
     public EmployerReviews() {
     }
 
-    public EmployerReviews(String reviews, Date dateReviews, Integer evaluation, EmployerProfile employerProfiles, SeekerProfile seeker) {
+    public EmployerReviews(String reviews, Date dateReviews, Integer evaluation, SeekerProfile seekerProfile) {
         this.reviews = reviews;
         this.dateReviews = dateReviews;
         this.evaluation = evaluation;
-        this.employerProfiles = employerProfiles;
-        this.seekerProfile = seeker;
+        this.seekerProfile = seekerProfile;
     }
 
     public Long getId() {
@@ -72,19 +68,11 @@ public class EmployerReviews implements Serializable {
         this.evaluation = evaluation;
     }
 
-    public EmployerProfile getEmployerProfiles() {
-        return employerProfiles;
-    }
-
-    public void setEmployerProfiles(EmployerProfile employerProfiles) {
-        this.employerProfiles = employerProfiles;
-    }
-
     public SeekerProfile getSeekerProfile() {
         return seekerProfile;
     }
 
-    public void setSeeker(SeekerProfile seekerProfile) {
+    public void setSeekerProfile(SeekerProfile seekerProfile) {
         this.seekerProfile = seekerProfile;
     }
 
@@ -92,26 +80,27 @@ public class EmployerReviews implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         EmployerReviews that = (EmployerReviews) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (reviews != null ? !reviews.equals(that.reviews) : that.reviews != null) return false;
-        if (dateReviews != null ? !dateReviews.equals(that.dateReviews) : that.dateReviews != null) return false;
-        if (evaluation != null ? !evaluation.equals(that.evaluation) : that.evaluation != null) return false;
-        if (employerProfiles != null ? !employerProfiles.equals(that.employerProfiles) : that.employerProfiles != null)
-            return false;
-        return seekerProfile != null ? seekerProfile.equals(that.seekerProfile) : that.seekerProfile == null;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(reviews, that.reviews) &&
+                Objects.equals(dateReviews, that.dateReviews) &&
+                Objects.equals(evaluation, that.evaluation) &&
+                Objects.equals(seekerProfile, that.seekerProfile);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (reviews != null ? reviews.hashCode() : 0);
-        result = 31 * result + (dateReviews != null ? dateReviews.hashCode() : 0);
-        result = 31 * result + (evaluation != null ? evaluation.hashCode() : 0);
-        result = 31 * result + (employerProfiles != null ? employerProfiles.hashCode() : 0);
-        result = 31 * result + (seekerProfile != null ? seekerProfile.hashCode() : 0);
-        return result;
+        return Objects.hash(id, reviews, dateReviews, evaluation, seekerProfile);
+    }
+
+    @Override
+    public int compareTo(EmployerReviews o) {
+        if (this.getEvaluation().equals(o.getEvaluation())){
+            return 0;
+        }else if (this.getEvaluation() > o.getEvaluation()){
+            return -1;
+        }else {
+            return 1;
+        }
     }
 }

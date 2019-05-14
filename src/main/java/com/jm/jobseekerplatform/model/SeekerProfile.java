@@ -26,9 +26,6 @@ public class SeekerProfile implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Tag> tags;
 
-    @OneToMany(mappedBy = "seekerProfile", fetch = FetchType.EAGER)
-    private Set<EmployerReviews> reviews;
-
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Portfolio> portfolios;
 
@@ -89,13 +86,5 @@ public class SeekerProfile implements Serializable {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
-    }
-
-    public Set<EmployerReviews> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(Set<EmployerReviews> reviews) {
-        this.reviews = reviews;
     }
 }
