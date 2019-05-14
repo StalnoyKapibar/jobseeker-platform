@@ -112,6 +112,11 @@ public class EmployerProfile implements Serializable {
     }
 
     public Double getAverageRating() {
-        return reviews.stream().mapToInt(EmployerReviews::getEvaluation).average().orElse(0);
+        if (reviews != null){
+            return reviews.stream().mapToInt(EmployerReviews::getEvaluation).average().orElse(0);
+        }else {
+            return 0d;
+        }
+
     }
 }

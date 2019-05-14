@@ -43,7 +43,7 @@
             </div>
         </div>
     </div>
-    <div sec:authorize="hasRole('ROLE_SEEKER')">
+    <div sec:authorize="hasAnyRole('ROLE_SEEKER','ROLE_ADMIN')">
         <div class="row">
             <div class="col-lg-3">
             </div>
@@ -74,13 +74,13 @@
                     <p th:text="${minReviewsEvaluation.reviews}"></p>
                 </div>
                 <div>
-                    <div class="text-left">
+                    <div>
                         <button type="button" class="btn btn-primary btn-sm " data-toggle="modal"
                                 data-target="#reviewsModal">
                             Оставить свой отзыв
                         </button>
                     </div>
-                    <div th:if="${eprofile.getReviews().size() > 2}" class="text-right">
+                    <div th:if="${eprofile.getReviews().size() > 2}" class="col">
                         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                                 data-target="#allReviewsModal">
                             Все отзывы
@@ -118,8 +118,6 @@
         <!-- Modal content-->
         <div class="modal-content form-group">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
                 <h4 class="modal-title" id="myModalLabel">Оцените</h4>
                 <input id="review_evaluation" th:attr="data-id-employer=${eprofile.id}, data-id-seeker=${seekerId}"
                        name="input-name" type="number" class="rating" min=1 max=5 step=1 data-size="lg">
@@ -131,7 +129,7 @@
             <div class="modal-footer">
                 <input name="_csrf" type="hidden" th:value="${_csrf.token}"/>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                <button type="button" class="btn btn-primary postReview">Сохранить</button>
+                <button type="button" class="btn btn-primary postReview">Добавить отзыв</button>
             </div>
         </div>
     </div>

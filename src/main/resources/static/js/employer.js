@@ -67,4 +67,25 @@ $(document).ready(function () {
             }
         });
     });
+
+    $("#reviewsModal").on('show.bs.modal', function(){
+        var review = {};
+        review["seekerProfiles_id"] = $("#review_evaluation").data("id-seeker");
+        review["employerProfiles_id"] = $("#review_evaluation").data("id-employer");
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            contentType: "application/json",
+            url: "/api/review/find",
+            data: JSON.stringify(review),
+            beforeSend: function (request) {
+                return request.setRequestHeader('X-CSRF-Token', $("input[name=_csrf]").val());
+            },
+            success: function (data){
+                $("#reviewsText").val(data.reviews);
+                $("#review_evaluation").rating('update', data.evaluation);
+                $(".postReview").html('Редактировать');
+            }
+        });
+    });
 });
