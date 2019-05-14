@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <th:block th:include="fragments :: head"></th:block>
+    <meta charset="UTF-8">
+    <title>Employer's profile</title>
+    <script type="text/javascript" src="/js/employer.js"></script>
+</head>
+<body>
+<th:block th:include="fragments :: nav"></th:block>
+
+<div id="eProfileDiv" class="container-fluid">
+    <br/>
+    <br/>
+    <div class="row">
+        <div class="col-lg-3">
+        </div>
+        <div class="col-lg-3">
+            <h1><span th:text="${eprofile.companyName}"></span></h1>
+            <h2><a th:href="@{'http://' + ${eprofile.website}}" th:text="${eprofile.website}"></a></h2>
+        </div>
+        <div class="col-lg-3" align="center">
+            <img th:src="@{'data:image/png;base64,' + ${logoimg}}" class="img-rounded" alt="Logo of company">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3">
+        </div>
+        <div class="col-lg-3">
+            <span>О нас:</span><br/>
+            <div class="well well-sm">
+                <span th:text="${eprofile.description}"></span>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <span>Наши вакансии:</span><br/>
+            <div class="list-group">
+                <a th:each="vacancy, index: ${eprofile.vacancies}" class="list-group-item" th:text="${vacancy.headline}" data-toggle="modal" data-target="#vacancyModal" th:onclick="'showVacancy('+${vacancy.id}+')'"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="vacancyModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h2 class="modal-title" th:text="'Вакансия в компании ' + ${eprofile.companyName}"></h2>
+            </div>
+            <div class="modal-body">
+                <h3><span id="VMTags"></span><br></h3>
+                <h3><span id="VMHeadline"></span><br/></h3>
+                <span id="VMCity"></span>
+                <span id="VMRemote"> (Удаленная работа)</span><br/>
+                <span id="VMSalary"></span><br/>
+                <div class="well well-sm">
+                    <span id="VMDescription"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
