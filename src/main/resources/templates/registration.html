@@ -7,9 +7,8 @@
     <style>#success_message {
         display: none;
     }</style>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
     <script type="text/javascript" src="/js/registration.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"
-            type="text/javascript"></script>
 </head>
 <body>
 <th:block th:include="fragments :: nav"></th:block>
@@ -98,7 +97,7 @@
                 <label class="col-md-4 control-label"></label>
                 <div class="col-md-4"><br>
                     &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                    <button type="submit" class="btn btn-warning" onclick="event.preventDefault(); addUser()">
+                    <button type="button" class="btn btn-warning" onclick="validateAndReg()">
                         &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspЗарегистрироваться <span
                             class="glyphicon glyphicon-send"></span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                     </button>

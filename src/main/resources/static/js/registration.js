@@ -5,8 +5,10 @@ $(document).ready(function () {
             invalid: 'glyphicon glyphicon-remove',
             validating: 'glyphicon glyphicon-refresh'
         },
+        live: 'enabled',
         fields: {
             user_login: {
+                trigger: 'blur',
                 message: 'The username is not valid',
                 validators: {
                     stringLength: {
@@ -22,10 +24,10 @@ $(document).ready(function () {
                         message: 'Логин может содержать только строчные и заглавные латинские буквы, цифры и нижнее подчеркивание'
                     },
                     remote: {
-                        url: function() {
+                        url: function () {
                             return '/api/users/login/' + $("#user_login").val();
                         },
-                        delay: 2000,
+                        type: 'GET',
                         message: 'Логин не доступен'
                     }
                 }
@@ -51,10 +53,14 @@ $(document).ready(function () {
                     identical: {
                         field: 'user_password',
                         message: 'Пароли не совпадают'
+                    },
+                    notEmpty: {
+                        message: 'Введите пароль'
                     }
                 }
             },
             email: {
+                trigger: 'blur',
                 validators: {
                     notEmpty: {
                         message: 'Введите Ваш Email адрес'
@@ -63,10 +69,9 @@ $(document).ready(function () {
                         message: 'Введите корректный Email адрес'
                     },
                     remote: {
-                        url: function() {
+                        url: function () {
                             return '/api/users/email/' + $("#email").val();
                         },
-                        delay: 2000,
                         message: 'Данный Email уже используется'
                     }
                 }
@@ -79,9 +84,16 @@ $(document).ready(function () {
                 }
             }
         }
-
     })
 });
+
+function validateAndReg() {
+    var bootstrapValidator = $('#contact_form').data('bootstrapValidator');
+    bootstrapValidator.validate();
+    if (bootstrapValidator.isValid()) {
+        addUser();
+    }
+}
 
 function addUser() {
     var token = $("meta[name='_csrf']").attr("content");
@@ -89,7 +101,7 @@ function addUser() {
     var userLogin = $("#user_login").val();
     var userPass = $("#user_password").val();
     var userEmail = $("#email").val();
-    var role ={'authority': $("#role").val()};
+    var role = {'authority': $("#role").val()};
 
     var newuser = {
         'login': userLogin,
