@@ -37,10 +37,14 @@ public class Vacancy implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Tag> tags;
 
+    @Column(name = "state", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private State state;
+
     public Vacancy() {
     }
 
-    public Vacancy(String headline, String city, Boolean isRemote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags) {
+    public Vacancy(String headline, String city, Boolean isRemote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags, State state) {
         this.headline = headline;
         this.city = city;
         this.isRemote = isRemote;
@@ -49,6 +53,7 @@ public class Vacancy implements Serializable {
         this.salaryMin = salaryMin;
         this.salaryMax = salaryMax;
         this.tags = tags;
+        this.state = state;
     }
 
     public Long getId() {
@@ -115,6 +120,14 @@ public class Vacancy implements Serializable {
         this.tags = tags;
     }
 
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -128,11 +141,12 @@ public class Vacancy implements Serializable {
                 Objects.equals(description, vacancy.description) &&
                 Objects.equals(salaryMin, vacancy.salaryMin) &&
                 Objects.equals(salaryMax, vacancy.salaryMax) &&
-                Objects.equals(tags, vacancy.tags);
+                Objects.equals(tags, vacancy.tags) &&
+                Objects.equals(state, vacancy.state);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, headline, city, isRemote, shortDescription, description, salaryMin, salaryMax, tags);
+        return Objects.hash(id, headline, city, isRemote, shortDescription, description, salaryMin, salaryMax, tags, state);
     }
 }

@@ -9,7 +9,8 @@ $(document).ready (function () {
             {"mData": "headline"},
             {"mData": "city"},
             {"mData": "salaryMin"},
-            {"mData": "salaryMax"}
+            {"mData": "salaryMax"},
+            {"mData": "state"}
         ]
     })
 })
