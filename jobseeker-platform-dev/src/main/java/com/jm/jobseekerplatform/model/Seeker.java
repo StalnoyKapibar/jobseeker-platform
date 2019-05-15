@@ -15,10 +15,14 @@ public class Seeker extends User{
     public Seeker() {
     }
 
-    public Seeker(String login, char[] password, String email, UserRole authority, SeekerProfile seekerProfile) {
-        super(login, password, email, authority);
+    public Seeker(String name, String surname, char[] password, String email, UserRole authority, SeekerProfile seekerProfile) {
+        super(name, surname, password, email, authority);
         this.seekerProfile = seekerProfile;
     }
+/*public Seeker(String login, char[] password, String email, UserRole authority, SeekerProfile seekerProfile) {
+        super(login, password, email, authority);
+        this.seekerProfile = seekerProfile;
+    }*/
 
     public SeekerProfile getSeekerProfile() {
         return seekerProfile;

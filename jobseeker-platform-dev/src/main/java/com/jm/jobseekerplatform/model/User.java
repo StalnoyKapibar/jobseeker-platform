@@ -17,8 +17,15 @@ public class User implements Serializable, UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "login", nullable = false, unique = true)
-    private String login;
+   /* @Column(name = "login", nullable = false, unique = true)
+    private String login;*/
+
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
+
+    @Column(name = "surname", nullable = false, unique = true)
+    private String surname;
+
 
     @Column(name = "password", nullable = false)
     private char[] password;
@@ -32,12 +39,19 @@ public class User implements Serializable, UserDetails {
     public User() {
     }
 
-    public User(String login, char[] password, String email, UserRole authority) {
-        this.login = login;
+    public User(String name, String surname, char[] password, String email, UserRole authority) {
+        this.name = name;
+        this.surname = surname;
         this.password = password;
         this.email = email;
         this.authority = authority;
     }
+    /*public User(String login, char[] password, String email, UserRole authority) {
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.authority = authority;
+    }*/
 
     public Long getId() {
         return id;
@@ -47,12 +61,28 @@ public class User implements Serializable, UserDetails {
         this.id = id;
     }
 
-    public String getLogin() {
+   /* public String getLogin() {
         return login;
     }
 
     public void setLogin(String login) {
         this.login = login;
+    }*/
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     @Override
@@ -66,7 +96,10 @@ public class User implements Serializable, UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return getNameAndSurname();
+    }
+    public String getNameAndSurname(){
+        return name + " " + surname;
     }
 
     @Override

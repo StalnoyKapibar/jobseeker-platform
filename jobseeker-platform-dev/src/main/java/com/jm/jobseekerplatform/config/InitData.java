@@ -68,16 +68,16 @@ public class InitData {
 
     public void initUsers() {
         UserRole roleAdmin = userRoleService.findByAuthority("ROLE_ADMIN");
-        userService.add(new User("admin", userService.encodePassword("admin").toCharArray(), "admin@mail.ru", roleAdmin));
+        userService.add(new User("admin", "Ivanov", userService.encodePassword("admin").toCharArray(), "admin@mail.ru", roleAdmin));
 
         UserRole roleUser = userRoleService.findByAuthority("ROLE_USER");
-        userService.add(new User("user", userService.encodePassword("user").toCharArray(), "user@mail.ru", roleUser));
+        userService.add(new User("user", "Petrov", userService.encodePassword("user").toCharArray(), "user@mail.ru", roleUser));
 
         UserRole roleEmployer = userRoleService.findByAuthority("ROLE_EMPLOYER");
-        employerService.add(new Employer("employer", userService.encodePassword("employer").toCharArray(), "employer@mail.ru", roleEmployer, employerProfileService.getById(1L)));
+        employerService.add(new Employer("employer", "Ptichkin", userService.encodePassword("employer").toCharArray(), "employer@mail.ru", roleEmployer, employerProfileService.getById(1L)));
 
         UserRole roleSeeker = userRoleService.findByAuthority("ROLE_SEEKER");
-        seekerService.add(new Seeker("seeker", userService.encodePassword("seeker").toCharArray(), "seeker@mail.ru", roleSeeker, seekerProfileService.getById(1L)));
+        seekerService.add(new Seeker("seeker", "Pupkin", userService.encodePassword("seeker").toCharArray(), "seeker@mail.ru", roleSeeker, seekerProfileService.getById(1L)));
 
     }
 
@@ -114,7 +114,7 @@ public class InitData {
         vacancies.add(vacancyService.getById(1L));
         vacancies.add(vacancyService.getById(2L));
         try {
-            URL url = new URL("https://wiki.godville.net/images/2/2d/RiK-lens.png");
+            URL url = new URL("https://wiki.godville.net/images/2/25/%D0%A0%D0%BE%D0%B3%D0%B0_%D0%B8_%D0%9A%D0%BE%D0%BF%D1%8B%D1%82%D0%B0_%28%D0%BB%D0%BE%D0%B3%D0%BE%29.png");
             image = ImageIO.read(url);
         } catch (IOException e) {
             e.printStackTrace();

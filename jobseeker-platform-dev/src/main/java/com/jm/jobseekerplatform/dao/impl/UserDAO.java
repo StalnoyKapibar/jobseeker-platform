@@ -7,10 +7,10 @@ import org.springframework.stereotype.Repository;
 @Repository("userDAO")
 public class UserDAO extends AbstractDAO<User> {
 
-    public User findByLogin(String login) {
+    public User findByName(String name) {
         return entityManager
-                .createQuery("SELECT r FROM User As r WHERE r.login = :param", User.class)
-                .setParameter("param", login)
+                .createQuery("SELECT r FROM User As r WHERE r.name = :param", User.class)
+                .setParameter("param", name)
                 .getSingleResult();
     }
 }

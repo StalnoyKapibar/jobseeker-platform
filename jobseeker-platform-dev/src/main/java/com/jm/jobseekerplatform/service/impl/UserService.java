@@ -18,8 +18,8 @@ public class UserService extends AbstractService<User> {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User findByLogin(String login) {
-        return dao.findByLogin(login);
+    public User findByName(String name) {
+        return dao.findByName(name);
     }
 
     public String encodePassword(String password) {

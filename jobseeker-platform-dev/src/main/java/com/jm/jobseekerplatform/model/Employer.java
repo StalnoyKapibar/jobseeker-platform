@@ -15,10 +15,14 @@ public class Employer extends User {
     public Employer() {
     }
 
-    public Employer(String login, char[] password, String email, UserRole authority, EmployerProfile employerProfile) {
-        super(login, password, email, authority);
+    public Employer(String name, String surname, char[] password, String email, UserRole authority, EmployerProfile employerProfile) {
+        super(name, surname, password, email, authority);
         this.employerProfile = employerProfile;
     }
+    /* public Employer(String login, char[] password, String email, UserRole authority, EmployerProfile employerProfile) {
+        super(login, password, email, authority);
+        this.employerProfile = employerProfile;
+    }*/
 
     public EmployerProfile getEmployerProfile() {
         return employerProfile;
