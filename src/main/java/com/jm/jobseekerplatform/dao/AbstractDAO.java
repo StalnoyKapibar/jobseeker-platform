@@ -48,5 +48,3 @@ public abstract class AbstractDAO<T extends Serializable> {
         entityManager.remove(entity);
     }
 }
-
-
