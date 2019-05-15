@@ -15,8 +15,8 @@ public class Seeker extends User{
     public Seeker() {
     }
 
-    public Seeker(String login, char[] password, String email, UserRole authority, SeekerProfile seekerProfile) {
-        super(login, password, email, authority);
+    public Seeker(String login, char[] password, UserRole authority, SeekerProfile seekerProfile) {
+        super(login, password, authority);
         this.seekerProfile = seekerProfile;
     }
 

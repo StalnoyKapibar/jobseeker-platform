@@ -7,7 +7,6 @@ import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,9 +17,6 @@ public class VerificationTokenService extends AbstractService<VerificationToken>
 
     @Autowired
     private VerificationTokenDAO dao;
-
-    @Autowired
-    private UserService userService;
 
     private Date calculateExpiryDate() {
         int expiryTimeInMinutes = 60 * 24;

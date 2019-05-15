@@ -37,24 +37,4 @@ public class UserRestController {
             };
         }
     }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/email/{email}")
-    public Object isExistEmail(@PathVariable String email) {
-        if (userService.isExistEmail(email)) {
-            return new Object() {
-                String valid = "false";
-                public String getValid() {
-                    return valid;
-                }
-            };
-        } else {
-            return new Object() {
-                String valid = "true";
-                public String getValid() {
-                    return valid;
-                }
-            };
-        }
-    }
-
 }

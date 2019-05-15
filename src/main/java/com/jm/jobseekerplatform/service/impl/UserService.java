@@ -52,35 +52,30 @@ public class UserService extends AbstractService<User> {
         return dao.isExistLogin(login);
     }
 
-    public boolean isExistEmail(String email) {
-        return dao.isExistEmail(email);
-    }
-
     public void registerNewUser (User user) {
         String userLogin = user.getLogin();
         char[] userPass = encodePassword(user.getPasswordChar());
-        String userEmail = user.getEmail();
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
 
         if (userRole.equals(roleSeeker)) {
-            Seeker seeker = new Seeker(userLogin, userPass, userEmail, userRole, null);
+            Seeker seeker = new Seeker(userLogin, userPass, userRole, null);
             seekerService.add(seeker);
         } else if (userRole.equals(roleEmployer)) {
-            Employer employer = new Employer(userLogin, userPass, userEmail, userRole, null);
+            Employer employer = new Employer(userLogin, userPass, userRole, null);
             employerService.add(employer);
         }
 
         User registeredUser = findByLogin(userLogin);
         String token = UUID.randomUUID().toString();
         verificationTokenService.createVerificationToken(token, registeredUser);
-        mailService.sendVerificationEmail(userEmail, token);
+        mailService.sendVerificationEmail(userLogin, token);
     }
 
     public boolean validateNewUser(User user) {
-        if (user.getLogin().isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty() || user.getAuthority().getAuthority().isEmpty()) {
+        if (user.getLogin().isEmpty() || user.getPassword().isEmpty() || user.getAuthority().getAuthority().isEmpty()) {
             throw new IllegalArgumentException("Some fields is empty");
         }
-        if (isExistLogin(user.getLogin()) || isExistEmail(user.getEmail())) {
+        if (isExistLogin(user.getLogin())) {
             throw new IllegalArgumentException("User's login or email already exist");
         }
         if (false) { //add validate fields

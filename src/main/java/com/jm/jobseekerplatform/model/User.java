@@ -17,14 +17,12 @@ public class User implements Serializable, UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //login is e-mail
     @Column(name = "login", nullable = false, unique = true)
     private String login;
 
     @Column(name = "password", nullable = false)
     private char[] password;
-
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private UserRole authority;
@@ -38,10 +36,9 @@ public class User implements Serializable, UserDetails {
     public User() {
     }
 
-    public User(String login, char[] password, String email, UserRole authority) {
+    public User(String login, char[] password, UserRole authority) {
         this.login = login;
         this.password = password;
-        this.email = email;
         this.authority = authority;
         this.enabled = true;
         this.confirm = false;
@@ -103,14 +100,6 @@ public class User implements Serializable, UserDetails {
 
     public void setPassword(char[] password) {
         this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public UserRole getAuthority() {

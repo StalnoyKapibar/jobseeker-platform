@@ -20,11 +20,4 @@ public class UserDAO extends AbstractDAO<User> {
                 .setParameter("param", login)
                 .getSingleResult();
     }
-
-    public boolean isExistEmail(String email) {
-        return (boolean) entityManager
-                .createQuery("SELECT CASE WHEN EXISTS (SELECT r FROM User r WHERE r.email = :param) THEN true ELSE false END FROM User")
-                .setParameter("param", email)
-                .getSingleResult();
-    }
 }

@@ -5,7 +5,6 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -72,17 +71,17 @@ public class InitData {
         Seeker seeker;
 
         role = userRoleService.findByAuthority("ROLE_ADMIN");
-        user = new User("admin", userService.encodePassword("admin".toCharArray()), "admin@mail.ru", role);
+        user = new User("admin@mail.ru", userService.encodePassword("admin".toCharArray()), role);
         user.setConfirm(true);
         userService.add(user);
 
         role = userRoleService.findByAuthority("ROLE_EMPLOYER");
-        employer = new Employer("employer", userService.encodePassword("employer".toCharArray()), "employer@mail.ru", role, employerProfileService.getById(1L));
+        employer = new Employer("employer@mail.ru", userService.encodePassword("employer".toCharArray()), role, employerProfileService.getById(1L));
         employer.setConfirm(true);
         employerService.add(employer);
 
         role = userRoleService.findByAuthority("ROLE_SEEKER");
-        seeker = new Seeker("seeker", userService.encodePassword("seeker".toCharArray()), "seeker@mail.ru", role, seekerProfileService.getById(1L));
+        seeker = new Seeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), role, seekerProfileService.getById(1L));
         seeker.setConfirm(true);
         seekerService.add(seeker);
 
