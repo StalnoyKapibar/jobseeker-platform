@@ -45,7 +45,7 @@ public class UserService extends AbstractService<User> {
     }
 
     public char[] encodePassword(char[] password) {
-        return passwordEncoder.encode(password.toString()).toCharArray();
+        return passwordEncoder.encode(String.valueOf(password)).toCharArray();
     }
 
     public boolean isExistLogin(String login) {
@@ -75,4 +75,8 @@ public class UserService extends AbstractService<User> {
         verificationTokenService.createVerificationToken(token, registeredUser);
         mailService.sendVerificationEmail(userEmail, token);
     }
+
+    public boolean validateNewUser(User user) {
+        return true;
+        }
 }
