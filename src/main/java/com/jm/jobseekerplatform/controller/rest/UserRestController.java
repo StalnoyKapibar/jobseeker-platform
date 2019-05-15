@@ -1,12 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.Employer;
-import com.jm.jobseekerplatform.model.Seeker;
 import com.jm.jobseekerplatform.model.User;
-import com.jm.jobseekerplatform.model.UserRole;
-import com.jm.jobseekerplatform.service.impl.EmployerService;
-import com.jm.jobseekerplatform.service.impl.SeekerService;
-import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +14,8 @@ public class UserRestController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/add")
     public void registerNewUser(@RequestBody User user) {
-        if (user.getLogin().isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty() || user.getAuthority().getAuthority().isEmpty()) {
-            throw new RuntimeException("Some fields is empty");
-        }
-
-        if (!userService.isExistLogin(user.getLogin()) && !userService.isExistEmail(user.getEmail())) {
+        if (userService.validateNewUser(user)) {
             userService.registerNewUser(user);
-        } else {
-            throw new RuntimeException("User's login or email already exist");
         }
     }
 
