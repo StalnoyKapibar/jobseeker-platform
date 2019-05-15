@@ -77,6 +77,15 @@ public class UserService extends AbstractService<User> {
     }
 
     public boolean validateNewUser(User user) {
+        if (user.getLogin().isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty() || user.getAuthority().getAuthority().isEmpty()) {
+            throw new IllegalArgumentException("Some fields is empty");
+        }
+        if (isExistLogin(user.getLogin()) || isExistEmail(user.getEmail())) {
+            throw new IllegalArgumentException("User's login or email already exist");
+        }
+        if (false) { //add validate fields
+            throw new IllegalArgumentException("Some fields is incorrect");
+        }
         return true;
         }
 }
