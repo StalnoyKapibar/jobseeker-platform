@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.persistence.NoResultException;
 import java.util.Base64;
 import java.util.List;
@@ -40,10 +41,16 @@ public class MainController {
             model.addAttribute("vacancies", vacancies);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
-                Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
-                model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
-                model.addAttribute("vacancies", vacancies);
+                try {
+                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
+                    Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
+                    model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
+                    model.addAttribute("vacancies", vacancies);
+                } catch (NullPointerException e) {
+                    List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
+                    model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
+                    model.addAttribute("vacancies", vacancies);
+                }
             }
         }
         return "index";
