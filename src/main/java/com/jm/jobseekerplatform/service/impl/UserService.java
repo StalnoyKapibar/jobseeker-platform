@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service("userService")
 @Transactional
@@ -39,6 +41,9 @@ public class UserService extends AbstractService<User> {
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
     private UserRole roleEmployer = new UserRole("ROLE_EMPLOYER");
+
+    private Pattern pattern;
+    private Matcher matcher;
 
     public User findByLogin(String login) {
         return dao.findByLogin(login);
@@ -72,15 +77,32 @@ public class UserService extends AbstractService<User> {
     }
 
     public boolean validateNewUser(User user) {
+        UserRole userRole = user.getAuthority();
+        String email_pattern = "^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\\.)*(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$";
+        String pass_pattern = "^(?=.*[A-Z].*)(?=.*[a-z].*)(?=.*[0-9].*)[A-Za-z0-9]{8,20}$";
+        boolean isCorrect;
+
         if (user.getLogin().isEmpty() || user.getPassword().isEmpty() || user.getAuthority().getAuthority().isEmpty()) {
             throw new IllegalArgumentException("Some fields is empty");
         }
         if (isExistLogin(user.getLogin())) {
-            throw new IllegalArgumentException("User's login or email already exist");
+            throw new IllegalArgumentException("User's login already exist");
         }
-        if (false) { //add validate fields
+
+        isCorrect = (userRole.equals(roleSeeker) | userRole.equals(roleEmployer));
+
+        pattern = Pattern.compile(email_pattern);
+        matcher = pattern.matcher(user.getLogin());
+        isCorrect &= matcher.matches();
+
+        pattern = Pattern.compile(pass_pattern);
+        matcher = pattern.matcher(user.getPassword());
+        isCorrect &= matcher.matches();
+
+        if (!isCorrect) {
             throw new IllegalArgumentException("Some fields is incorrect");
         }
-        return true;
+
+        return isCorrect;
         }
 }

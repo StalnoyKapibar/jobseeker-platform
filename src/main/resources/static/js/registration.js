@@ -9,42 +9,30 @@ $(document).ready(function () {
         fields: {
             user_login: {
                 trigger: 'blur',
-                message: 'The username is not valid',
                 validators: {
-                    stringLength: {
-                        min: 3,
-                        max: 20,
-                        message: 'Логин должен состоять от 3 до 20 символов'
-                    },
                     notEmpty: {
-                        message: 'Введите логин'
+                        message: 'Введите Ваш Email-адрес'
                     },
                     regexp: {
-                        regexp: /^[a-zA-Z0-9_]+$/,
-                        message: 'Логин может содержать только строчные и заглавные латинские буквы, цифры и нижнее подчеркивание'
+                        regexp: /^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?.)*(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$/,
+                        message: 'Введите корректный Email-адрес'
                     },
                     remote: {
                         url: function () {
                             return '/api/users/login/' + $("#user_login").val();
                         },
-                        type: 'GET',
-                        message: 'Логин не доступен'
+                        message: 'Данный Email уже используется'
                     }
                 }
             },
             user_password: {
                 validators: {
-                    stringLength: {
-                        min: 8,
-                        max: 20,
-                        message: 'Пароль должен состоять от 8 до 20 символов'
-                    },
                     notEmpty: {
                         message: 'Введите пароль'
                     },
                     regexp: {
-                        regexp: /^[a-zA-Z0-9_]+$/,
-                        message: 'Пароль может содержать только строчные и заглавные латинские буквы, цифры и нижнее подчеркивание'
+                        regexp: /^(?=.*[A-Z].*)(?=.*[a-z].*)(?=.*[0-9].*)[A-Za-z0-9]{8,20}$/,
+                        message: 'Пароль должен содержать строчные и заглавные латинские буквы и цифры, от 8 до 20 символов'
                     }
                 }
             },
@@ -56,23 +44,6 @@ $(document).ready(function () {
                     },
                     notEmpty: {
                         message: 'Введите пароль'
-                    }
-                }
-            },
-            email: {
-                trigger: 'blur',
-                validators: {
-                    notEmpty: {
-                        message: 'Введите Ваш Email адрес'
-                    },
-                    emailAddress: {
-                        message: 'Введите корректный Email адрес'
-                    },
-                    remote: {
-                        url: function () {
-                            return '/api/users/email/' + $("#email").val();
-                        },
-                        message: 'Данный Email уже используется'
                     }
                 }
             },
@@ -100,13 +71,11 @@ function addUser() {
     var header = $("meta[name='_csrf_header']").attr("content");
     var userLogin = $("#user_login").val();
     var userPass = $("#user_password").val();
-    var userEmail = $("#email").val();
     var role = {'authority': $("#role").val()};
 
     var newuser = {
         'login': userLogin,
         'password': userPass,
-        'email': userEmail,
         'authority': role
     };
 
