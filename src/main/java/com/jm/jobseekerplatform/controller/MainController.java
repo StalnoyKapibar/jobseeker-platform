@@ -31,6 +31,12 @@ public class MainController {
     @Autowired
     private VerificationTokenService verificationTokenService;
 
+    @Autowired
+    private SeekerService seekerService;
+
+    @Autowired
+    private EmployerService employerService;
+
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
     @RequestMapping("/")
@@ -57,10 +63,33 @@ public class MainController {
     }
 
     @RequestMapping("/employer/{employerProfileId}")
-    public String employerProfilePage(@PathVariable Long employerProfileId, Model model) {
+    public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
         model.addAttribute("eprofile", employerProfile);
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
+        if (authentication != null && authentication.isAuthenticated()) {
+            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
+            if (roles.contains("ROLE_SEEKER") | roles.contains("ROLE_ADMIN")) {
+                Long id = ((User) authentication.getPrincipal()).getId();
+                if (roles.contains("ROLE_SEEKER")) {
+                    Seeker seeker = (Seeker) seekerService.getById(id);
+                    model.addAttribute("seekerId", seeker.getSeekerProfile().getId());
+                }
+            }
+            if (!employerProfile.getReviews().isEmpty()) {
+                Set<EmployerReviews> employerReviews = employerProfile.getReviews();
+                if (employerReviews.size() < 2) {
+                    model.addAttribute("minReviewsEvaluation", employerReviews.iterator().next());
+                } else if (employerReviews.size() >= 2) {
+                    model.addAttribute("minReviewsEvaluation", employerReviews.stream().sorted().skip(employerReviews.size() - 1).findFirst().orElse(null));
+                    model.addAttribute("maxReviewsEvaluation", employerReviews.stream().sorted().findFirst().orElse(null));
+                } else {
+                    model.addAttribute("reviewStatus", false);
+                }
+            } else {
+                model.addAttribute("reviewStatus", false);
+            }
+        }
         return "employer";
     }
 
@@ -72,6 +101,11 @@ public class MainController {
         return "seeker";
     }
 
+    @RequestMapping("/admin")
+    public String adminPage() {
+        return "admin";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "logout", required = false) String logout,
@@ -80,6 +114,7 @@ public class MainController {
         model.addAttribute("logout", logout != null);
         return "login";
     }
+
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String reg() {
@@ -101,6 +136,23 @@ public class MainController {
         } finally {
             return "confirm_reg";
         }
+    }
 
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    public String filterProfilePage(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            Long id = ((User) authentication.getPrincipal()).getId();
+            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
+            if (roles.contains("ROLE_EMPLOYER")) {
+                Employer employer = (Employer) employerService.getById(id);
+                return "redirect:/employer/" + employer.getEmployerProfile().getId();
+            } else if (roles.contains("ROLE_SEEKER")) {
+                Seeker seeker = (Seeker) seekerService.getById(id);
+                return "redirect:/seeker/" + seeker.getSeekerProfile().getId();
+            } else if (roles.contains("ROLE_ADMIN")) {
+                return "redirect:/admin";
+            }
+        }
+        return "index";
     }
 }

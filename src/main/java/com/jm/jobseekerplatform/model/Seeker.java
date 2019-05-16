@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "seekers")
-public class Seeker extends User{
+public class Seeker extends User {
 
     @OneToOne(fetch = FetchType.EAGER)
     private SeekerProfile seekerProfile;

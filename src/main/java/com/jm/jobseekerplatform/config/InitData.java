@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -46,7 +47,12 @@ public class InitData {
     @Autowired
     private SeekerService seekerService;
 
+    @Autowired
+    private EmployerReviewsService employerReviewsService;
+
     private Faker faker = new Faker(new Locale("ru"));
+
+
 
     public void initData() {
         initTags();
@@ -56,6 +62,49 @@ public class InitData {
         initEmployerProfiles();
         initSeekerProfile();
         initUsers();
+        initReviews();
+    }
+
+    public void initReviews() {
+        EmployerReviews reviewOne = new EmployerReviews();
+        reviewOne.setDateReviews(new Date());
+        reviewOne.setEvaluation(4);
+        reviewOne.setSeekerProfile(seekerProfileService.getById(1L));
+        reviewOne.setReviews("Хорошая контора. Отличный коллектив, только директор придурковатый");
+
+        EmployerReviews reviewTwo = new EmployerReviews();
+        reviewTwo.setDateReviews(new Date());
+        reviewTwo.setSeekerProfile(seekerProfileService.getById(1L));
+        reviewTwo.setEvaluation(1);
+        reviewTwo.setReviews("Неадекватное руководство. Уволился через месяц");
+
+        EmployerReviews reviewThree = new EmployerReviews();
+        reviewThree.setDateReviews(new Date());
+        reviewThree.setSeekerProfile(seekerProfileService.getById(1L));
+        reviewThree.setEvaluation(1);
+        reviewThree.setReviews("Неадекватное руководство. Уволился через месяц");
+
+        EmployerReviews reviewFour = new EmployerReviews();
+        reviewFour.setDateReviews(new Date());
+        reviewFour.setSeekerProfile(seekerProfileService.getById(1L));
+        reviewFour.setEvaluation(4);
+        reviewFour.setReviews("Хорошая контора. Отличный коллектив, только директор придурковатый");
+
+        Set<EmployerReviews> reviewsOne = new HashSet<>();
+        reviewsOne.add(reviewOne);
+        reviewsOne.add(reviewTwo);
+
+        Set<EmployerReviews> reviewsTwo = new HashSet<>();
+        reviewsTwo.add(reviewThree);
+        reviewsTwo.add(reviewFour);
+
+        EmployerProfile employerProfileOne = employerProfileService.getById(1L);
+        employerProfileOne.setReviews(reviewsOne);
+        employerProfileService.update(employerProfileOne);
+
+        EmployerProfile employerProfileTwo = employerProfileService.getById(2L);
+        employerProfileTwo.setReviews(reviewsTwo);
+        employerProfileService.update(employerProfileTwo);
     }
 
     public void initUserRoles() {

@@ -4,6 +4,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -29,6 +30,10 @@ public class EmployerProfile implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Vacancy> vacancies;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "employer_id")
+    private Set<EmployerReviews> reviews;
 
     public EmployerProfile() {
     }
@@ -87,5 +92,31 @@ public class EmployerProfile implements Serializable {
 
     public void setVacancies(Set<Vacancy> vacancies) {
         this.vacancies = vacancies;
+    }
+
+    public Set<EmployerReviews> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(Set<EmployerReviews> reviews) {
+        this.reviews = reviews;
+    }
+
+    public void addNewReview(EmployerReviews employerReview) {
+        if (reviews != null) {
+            reviews.add(employerReview);
+        } else {
+            reviews = new HashSet<>();
+            reviews.add(employerReview);
+        }
+    }
+
+    public Double getAverageRating() {
+        if (reviews != null){
+            return reviews.stream().mapToInt(EmployerReviews::getEvaluation).average().orElse(0);
+        }else {
+            return 0d;
+        }
+
     }
 }
