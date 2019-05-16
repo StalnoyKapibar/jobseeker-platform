@@ -19,9 +19,9 @@ public class UserRestController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/login/{login}")
-    public Object isExistLogin(@PathVariable String login) {
-        if (userService.isExistLogin(login)) {
+    @RequestMapping(method = RequestMethod.GET, value = "/email/{email}")
+    public Object isExistEmail(@PathVariable String email) {
+        if (userService.isExistEmail(email)) {
             return new Object() {
                 String valid = "false";
                 public String getValid() {

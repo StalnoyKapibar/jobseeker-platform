@@ -15,8 +15,8 @@ public class Employer extends User {
     public Employer() {
     }
 
-    public Employer(String login, char[] password, UserRole authority, EmployerProfile employerProfile) {
-        super(login, password, authority);
+    public Employer(String email, char[] password, UserRole authority, EmployerProfile employerProfile) {
+        super(email, password, authority);
         this.employerProfile = employerProfile;
     }
 

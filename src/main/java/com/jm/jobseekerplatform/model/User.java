@@ -17,9 +17,8 @@ public class User implements Serializable, UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //login is e-mail
-    @Column(name = "login", nullable = false, unique = true)
-    private String login;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
     @Column(name = "password", nullable = false)
     private char[] password;
@@ -36,8 +35,8 @@ public class User implements Serializable, UserDetails {
     public User() {
     }
 
-    public User(String login, char[] password, UserRole authority) {
-        this.login = login;
+    public User(String email, char[] password, UserRole authority) {
+        this.email = email;
         this.password = password;
         this.authority = authority;
         this.enabled = true;
@@ -52,12 +51,12 @@ public class User implements Serializable, UserDetails {
         this.id = id;
     }
 
-    public String getLogin() {
-        return login;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
@@ -75,7 +74,7 @@ public class User implements Serializable, UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return email;
     }
 
     @Override

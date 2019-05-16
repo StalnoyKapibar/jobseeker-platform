@@ -7,17 +7,17 @@ import org.springframework.stereotype.Repository;
 @Repository("userDAO")
 public class UserDAO extends AbstractDAO<User> {
 
-    public User findByLogin(String login) {
+    public User findByEmail(String email) {
         return entityManager
-                .createQuery("SELECT u FROM User u WHERE u.login = :param", User.class)
-                .setParameter("param", login)
+                .createQuery("SELECT u FROM User u WHERE u.email = :param", User.class)
+                .setParameter("param", email)
                 .getSingleResult();
     }
 
-    public boolean isExistLogin(String login) {
+    public boolean isExistEmail(String email) {
         return (boolean) entityManager
-                .createQuery("SELECT CASE WHEN EXISTS (SELECT r FROM User r WHERE r.login = :param) THEN true ELSE false END FROM User")
-                .setParameter("param", login)
+                .createQuery("SELECT CASE WHEN EXISTS (SELECT r FROM User r WHERE r.email = :param) THEN true ELSE false END FROM User")
+                .setParameter("param", email)
                 .getSingleResult();
     }
 }

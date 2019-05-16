@@ -7,7 +7,7 @@ $(document).ready(function () {
         },
         live: 'enabled',
         fields: {
-            user_login: {
+            user_email: {
                 trigger: 'blur',
                 validators: {
                     notEmpty: {
@@ -19,7 +19,7 @@ $(document).ready(function () {
                     },
                     remote: {
                         url: function () {
-                            return '/api/users/login/' + $("#user_login").val();
+                            return '/api/users/email/' + $("#user_email").val();
                         },
                         message: 'Данный Email уже используется'
                     }
@@ -69,12 +69,12 @@ function validateAndReg() {
 function addUser() {
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
-    var userLogin = $("#user_login").val();
+    var userEmail = $("#user_email").val();
     var userPass = $("#user_password").val();
     var role = {'authority': $("#role").val()};
 
-    var newuser = {
-        'login': userLogin,
+    var newUser = {
+        'email': userEmail,
         'password': userPass,
         'authority': role
     };
@@ -86,7 +86,7 @@ function addUser() {
             request.setRequestHeader(header, token);
         },
         method: "POST",
-        data: JSON.stringify(newuser),
+        data: JSON.stringify(newUser),
         success:
             function (data) {
                 console.log(data);

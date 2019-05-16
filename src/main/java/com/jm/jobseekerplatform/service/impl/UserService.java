@@ -45,35 +45,35 @@ public class UserService extends AbstractService<User> {
     private Pattern pattern;
     private Matcher matcher;
 
-    public User findByLogin(String login) {
-        return dao.findByLogin(login);
+    public User findByEmail(String email) {
+        return dao.findByEmail(email);
     }
 
     public char[] encodePassword(char[] password) {
         return passwordEncoder.encode(String.valueOf(password)).toCharArray();
     }
 
-    public boolean isExistLogin(String login) {
-        return dao.isExistLogin(login);
+    public boolean isExistEmail(String email) {
+        return dao.isExistEmail(email);
     }
 
     public void registerNewUser (User user) {
-        String userLogin = user.getLogin();
+        String userEmail = user.getEmail();
         char[] userPass = encodePassword(user.getPasswordChar());
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
 
         if (userRole.equals(roleSeeker)) {
-            Seeker seeker = new Seeker(userLogin, userPass, userRole, null);
+            Seeker seeker = new Seeker(userEmail, userPass, userRole, null);
             seekerService.add(seeker);
         } else if (userRole.equals(roleEmployer)) {
-            Employer employer = new Employer(userLogin, userPass, userRole, null);
+            Employer employer = new Employer(userEmail, userPass, userRole, null);
             employerService.add(employer);
         }
 
-        User registeredUser = findByLogin(userLogin);
+        User registeredUser = findByEmail(userEmail);
         String token = UUID.randomUUID().toString();
         verificationTokenService.createVerificationToken(token, registeredUser);
-        mailService.sendVerificationEmail(userLogin, token);
+        mailService.sendVerificationEmail(userEmail, token);
     }
 
     public boolean validateNewUser(User user) {
@@ -82,17 +82,17 @@ public class UserService extends AbstractService<User> {
         String pass_pattern = "^(?=.*[A-Z].*)(?=.*[a-z].*)(?=.*[0-9].*)[A-Za-z0-9]{8,20}$";
         boolean isCorrect;
 
-        if (user.getLogin().isEmpty() || user.getPassword().isEmpty() || user.getAuthority().getAuthority().isEmpty()) {
+        if (user.getEmail().isEmpty() || user.getPassword().isEmpty() || user.getAuthority().getAuthority().isEmpty()) {
             throw new IllegalArgumentException("Some fields is empty");
         }
-        if (isExistLogin(user.getLogin())) {
-            throw new IllegalArgumentException("User's login already exist");
+        if (isExistEmail(user.getEmail())) {
+            throw new IllegalArgumentException("User's email already exist");
         }
 
         isCorrect = (userRole.equals(roleSeeker) | userRole.equals(roleEmployer));
 
         pattern = Pattern.compile(email_pattern);
-        matcher = pattern.matcher(user.getLogin());
+        matcher = pattern.matcher(user.getEmail());
         isCorrect &= matcher.matches();
 
         pattern = Pattern.compile(pass_pattern);
