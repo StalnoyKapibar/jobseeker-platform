@@ -5,7 +5,6 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -110,23 +109,30 @@ public class InitData {
 
     public void initUserRoles() {
         userRoleService.add(new UserRole("ROLE_ADMIN"));
-        userRoleService.add(new UserRole("ROLE_USER"));
         userRoleService.add(new UserRole("ROLE_EMPLOYER"));
         userRoleService.add(new UserRole("ROLE_SEEKER"));
     }
 
     public void initUsers() {
-        UserRole roleAdmin = userRoleService.findByAuthority("ROLE_ADMIN");
-        userService.add(new User("admin", userService.encodePassword("admin").toCharArray(), "admin@mail.ru", roleAdmin));
+        UserRole role;
+        User user;
+        Employer employer;
+        Seeker seeker;
 
-        UserRole roleUser = userRoleService.findByAuthority("ROLE_USER");
-        userService.add(new User("user", userService.encodePassword("user").toCharArray(), "user@mail.ru", roleUser));
+        role = userRoleService.findByAuthority("ROLE_ADMIN");
+        user = new User("admin@mail.ru", userService.encodePassword("admin".toCharArray()), role);
+        user.setConfirm(true);
+        userService.add(user);
 
-        UserRole roleEmployer = userRoleService.findByAuthority("ROLE_EMPLOYER");
-        employerService.add(new Employer("employer", userService.encodePassword("employer").toCharArray(), "employer@mail.ru", roleEmployer, employerProfileService.getById(1L)));
+        role = userRoleService.findByAuthority("ROLE_EMPLOYER");
+        employer = new Employer("employer@mail.ru", userService.encodePassword("employer".toCharArray()), role, employerProfileService.getById(1L));
+        employer.setConfirm(true);
+        employerService.add(employer);
 
-        UserRole roleSeeker = userRoleService.findByAuthority("ROLE_SEEKER");
-        seekerService.add(new Seeker("seeker", userService.encodePassword("seeker").toCharArray(), "seeker@mail.ru", roleSeeker, seekerProfileService.getById(1L)));
+        role = userRoleService.findByAuthority("ROLE_SEEKER");
+        seeker = new Seeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), role, seekerProfileService.getById(1L));
+        seeker.setConfirm(true);
+        seekerService.add(seeker);
 
     }
 
@@ -163,8 +169,7 @@ public class InitData {
         vacancies.add(vacancyService.getById(1L));
         vacancies.add(vacancyService.getById(2L));
         try {
-//            URL url = new URL("https://wiki.godville.net/images/2/2d/RiK-lens.png");
-            URL url = new URL("https://www.e-reading.club/illustrations/44/44442-_34.jpg");
+            URL url = new URL("https://wiki.godville.net/images/2/25/%D0%A0%D0%BE%D0%B3%D0%B0_%D0%B8_%D0%9A%D0%BE%D0%BF%D1%8B%D1%82%D0%B0_%28%D0%BB%D0%BE%D0%B3%D0%BE%29.png");
             image = ImageIO.read(url);
         } catch (IOException e) {
             e.printStackTrace();

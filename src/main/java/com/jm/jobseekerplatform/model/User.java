@@ -17,26 +17,30 @@ public class User implements Serializable, UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "login", nullable = false, unique = true)
-    private String login;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
     @Column(name = "password", nullable = false)
     private char[] password;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
-
     @ManyToOne(fetch = FetchType.EAGER)
     private UserRole authority;
+
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled;
+
+    @Column(name = "confirm", nullable = false)
+    private boolean confirm;
 
     public User() {
     }
 
-    public User(String login, char[] password, String email, UserRole authority) {
-        this.login = login;
-        this.password = password;
+    public User(String email, char[] password, UserRole authority) {
         this.email = email;
+        this.password = password;
         this.authority = authority;
+        this.enabled = true;
+        this.confirm = false;
     }
 
     public Long getId() {
@@ -47,12 +51,12 @@ public class User implements Serializable, UserDetails {
         this.id = id;
     }
 
-    public String getLogin() {
-        return login;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
@@ -64,9 +68,13 @@ public class User implements Serializable, UserDetails {
         return new String(password);
     }
 
+    public char[] getPasswordChar() {
+        return password;
+    }
+
     @Override
     public String getUsername() {
-        return login;
+        return email;
     }
 
     @Override
@@ -86,19 +94,11 @@ public class User implements Serializable, UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return confirm && enabled;
     }
 
     public void setPassword(char[] password) {
         this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public UserRole getAuthority() {
@@ -107,5 +107,17 @@ public class User implements Serializable, UserDetails {
 
     public void setAuthority(UserRole authority) {
         this.authority = authority;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(boolean confirm) {
+        this.confirm = confirm;
     }
 }
