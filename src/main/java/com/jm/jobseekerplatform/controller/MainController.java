@@ -107,6 +107,11 @@ public class MainController {
         return "admin";
     }
 
+    @RequestMapping("/admin/vacancies")
+    public String adminPageVacancies() {
+        return "admin_vacancies";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "logout", required = false) String logout,

@@ -159,7 +159,7 @@ public class InitData {
                 "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!";
 
         for (int i = 0; i < 30; i++) {
-            vacancyService.add(new Vacancy(faker.job().title(), faker.address().city(), Math.random() < 0.5, shortDescr, description, Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), randomTags()));
+            vacancyService.add(new Vacancy(faker.job().title(), faker.address().city(), Math.random() < 0.5, shortDescr, description, Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), randomTags(), State.ACCESS));
         }
     }
 
