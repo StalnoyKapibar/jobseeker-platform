@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <th:block th:include="fragments :: head"></th:block>
+    <meta charset="UTF-8">
+    <title>Confirm registration</title>
+</head>
+<body>
+<th:block th:include="fragments :: nav"></th:block>
+<div th:if="${complete}">Регистрация завершена! Теперь вы можете зайти под своей учетной записью по <a href="/login">ссылке</a> или в меню вверху.</div>
+<div th:unless="${complete}">Код подтверждения недействителен (некорректен или истек срок действия)!</div>
+</body>
+</html>

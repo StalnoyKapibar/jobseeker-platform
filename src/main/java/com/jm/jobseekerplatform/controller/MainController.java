@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.*;
+import javax.persistence.NoResultException;
+import java.util.Base64;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -28,7 +30,7 @@ public class MainController {
     private VacancyService vacancyService;
 
     @Autowired
-    private UserRoleService userRoleService;
+    private VerificationTokenService verificationTokenService;
 
     @Autowired
     private SeekerService seekerService;
@@ -51,6 +53,16 @@ public class MainController {
             model.addAttribute("mapVacancies",mapVacancy);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
+                try {
+                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
+                    Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
+                    model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
+                    model.addAttribute("vacancies", vacancies);
+                } catch (NullPointerException e) {
+                    List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
+                    model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
+                    model.addAttribute("vacancies", vacancies);
+                }
                 Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
                 Map<Tag, List<Vacancy>> mapVacancy = vacancyService.getMapByTags(tags, 10).entrySet().stream()
                         .filter(tagListEntry -> !tagListEntry.getValue().isEmpty())
@@ -106,6 +118,11 @@ public class MainController {
         return "admin";
     }
 
+    @RequestMapping("/admin/vacancies")
+    public String adminPageVacancies() {
+        return "admin_vacancies";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "logout", required = false) String logout,
@@ -113,6 +130,29 @@ public class MainController {
         model.addAttribute("error", error != null);
         model.addAttribute("logout", logout != null);
         return "login";
+    }
+
+
+    @RequestMapping(value = "/registration", method = RequestMethod.GET)
+    public String reg() {
+        return "registration";
+    }
+
+    @RequestMapping(value = "/confirm_reg/{token}", method = RequestMethod.GET)
+    public String confirmRegistration(@PathVariable String token, Model model) {
+        try {
+            VerificationToken verificationToken = verificationTokenService.findByToken(token);
+            boolean complete = verificationTokenService.tokenIsNonExpired(verificationToken);
+            model.addAttribute("complete", complete);
+            if (complete) {
+                verificationTokenService.completeRegistration(verificationToken);
+            }
+        } catch (NoResultException e) {
+            e.printStackTrace();
+            model.addAttribute("complete", false);
+        } finally {
+            return "confirm_reg";
+        }
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
