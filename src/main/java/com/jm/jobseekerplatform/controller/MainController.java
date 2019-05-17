@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.persistence.NoResultException;
-import java.util.Base64;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -45,30 +44,21 @@ public class MainController {
 
     @RequestMapping("/")
     public String mainPage(Authentication authentication, Model model) {
+        Map<Tag, List<Vacancy>> mapVacancy = vacancyService.getMapByTags(new HashSet<>(tagService.getAll()), 10);
         if (authentication == null || !authentication.isAuthenticated()) {
-            Map<Tag, List<Vacancy>> mapVacancy = vacancyService.getMapByTags(new HashSet<>(tagService.getAll()), 10).entrySet().stream()
-                    .filter(tagListEntry -> !tagListEntry.getValue().isEmpty())
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
             model.addAttribute("vacMess", "Доступные вакансии:");
-            model.addAttribute("mapVacancies",mapVacancy);
+            model.addAttribute("mapVacancies", mapVacancy);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
                     Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
-                    Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
+                    mapVacancy = vacancyService.getMapByTags(tags, 10);
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
-                    model.addAttribute("vacancies", vacancies);
+                    model.addAttribute("mapVacancies", mapVacancy);
                 } catch (NullPointerException e) {
-                    List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
-                    model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
-                    model.addAttribute("vacancies", vacancies);
+                    model.addAttribute("vacMess", "Доступные вакансии:");
+                    model.addAttribute("mapVacancies", mapVacancy);
                 }
-                Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
-                Map<Tag, List<Vacancy>> mapVacancy = vacancyService.getMapByTags(tags, 10).entrySet().stream()
-                        .filter(tagListEntry -> !tagListEntry.getValue().isEmpty())
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-                model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
-                model.addAttribute("mapVacancies", mapVacancy);
             }
         }
         return "index";
