@@ -9,7 +9,7 @@
 <body>
 <th:block th:include="fragments :: nav"></th:block>
 
-<div id="vacancyDiv" class="container-fluid">
+<div id="vacancyMap" class="container-fluid">
     <br/>
     <br/>
     <div class="row">
@@ -17,12 +17,28 @@
         </div>
         <div class="col-lg-4">
             <span th:text="${vacMess}"></span><br/>
-            <div class="list-group">
-                <a th:each="vacancy: ${vacancies}" class="list-group-item" th:text="${vacancy.headline}" data-toggle="modal"
-                   data-target="#vacancyModal" th:onclick="'showVacancy('+${vacancy.id}+')'"></a>
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default" th:each="tagVacancy : ${mapVacancies}">
+                    <div th:if="${!tagVacancy.getValue().isEmpty()}">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" th:attr="href='#'+ ${tagVacancy.getKey().id}"
+                                   th:text="${tagVacancy.getKey().name}"></a>
+                            </h4>
+                        </div>
+                        <div th:attr="id=${tagVacancy.getKey().id}" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="list-group">
+                                    <a th:each="vacancy : ${tagVacancy.getValue()}" class="list-group-item"
+                                       th:text="${vacancy.headline}"
+                                       data-toggle="modal"
+                                       data-target="#vacancyModal" th:onclick="'showVacancy('+${vacancy.id}+')'"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-lg-4">
         </div>
     </div>
 </div>

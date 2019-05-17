@@ -115,6 +115,14 @@ public class Vacancy implements Serializable {
         this.tags = tags;
     }
 
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

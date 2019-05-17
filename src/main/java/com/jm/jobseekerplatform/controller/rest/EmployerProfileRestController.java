@@ -27,4 +27,9 @@ public class EmployerProfileRestController {
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
         return employerProfile;
     }
+
+    @RequestMapping("/vacancy/{vacancyId}")
+    public EmployerProfile getEmployerByVacancyId(@PathVariable Long vacancyId){
+        return employerProfileService.getByVacancyId(vacancyId);
+    }
 }

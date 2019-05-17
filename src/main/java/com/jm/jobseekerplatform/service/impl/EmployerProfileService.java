@@ -14,4 +14,7 @@ public class EmployerProfileService extends AbstractService<EmployerProfile> {
     @Autowired
     private EmployerProfileDAO dao;
 
+    public EmployerProfile getByVacancyId(Long vacancyId){
+        return dao.findEmployerProfileByVacancyId(vacancyId);
+    }
 }

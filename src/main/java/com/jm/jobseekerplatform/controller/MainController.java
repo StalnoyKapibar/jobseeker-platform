@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -38,20 +36,27 @@ public class MainController {
     @Autowired
     private EmployerService employerService;
 
+    @Autowired
+    private TagService tagService;
+
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
     @RequestMapping("/")
     public String mainPage(Authentication authentication, Model model) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
+            Map<Tag, List<Vacancy>> mapVacancy = vacancyService.getMapByTags(new HashSet<>(tagService.getAll()), 10).entrySet().stream()
+                    .filter(tagListEntry -> !tagListEntry.getValue().isEmpty())
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
             model.addAttribute("vacMess", "Доступные вакансии:");
-            model.addAttribute("vacancies", vacancies);
+            model.addAttribute("mapVacancies",mapVacancy);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
-                Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
+                Map<Tag, List<Vacancy>> mapVacancy = vacancyService.getMapByTags(tags, 10).entrySet().stream()
+                        .filter(tagListEntry -> !tagListEntry.getValue().isEmpty())
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
                 model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
-                model.addAttribute("vacancies", vacancies);
+                model.addAttribute("mapVacancies", mapVacancy);
             }
         }
         return "index";
