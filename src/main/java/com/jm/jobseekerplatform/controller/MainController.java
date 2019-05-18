@@ -44,7 +44,7 @@ public class MainController {
 
     @RequestMapping("/")
     public String mainPage(Authentication authentication, Model model) {
-        Map<Tag, List<Vacancy>> mapVacancy = vacancyService.getMapByTags(new HashSet<>(tagService.getAll()), 10);
+        Map<Tag, List<Vacancy>> mapVacancy = vacancyService.getMapVacancyByTags(new HashSet<>(tagService.getAll()), 10);
         if (authentication == null || !authentication.isAuthenticated()) {
             model.addAttribute("vacMess", "Доступные вакансии:");
             model.addAttribute("mapVacancies", mapVacancy);
@@ -52,7 +52,7 @@ public class MainController {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
                     Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
-                    mapVacancy = vacancyService.getMapByTags(tags, 10);
+                    mapVacancy = vacancyService.getMapVacancyByTags(tags, 10);
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
                     model.addAttribute("mapVacancies", mapVacancy);
                 } catch (NullPointerException e) {

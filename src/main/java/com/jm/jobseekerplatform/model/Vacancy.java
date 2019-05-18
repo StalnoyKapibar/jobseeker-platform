@@ -37,6 +37,8 @@ public class Vacancy implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Tag> tags;
 
+
+
     @Column(name = "state", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private State state;

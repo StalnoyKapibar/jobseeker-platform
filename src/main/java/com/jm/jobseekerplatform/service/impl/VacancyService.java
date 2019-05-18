@@ -25,15 +25,10 @@ public class VacancyService extends AbstractService<Vacancy> {
         return dao.getByTags(tags, limit);
     }
 
-    public Map<Tag, List<Vacancy>> getMapByTags(Set<Tag> tags, int limit) {
-        List<Vacancy> vacancyList = dao.getAll();
-        Map<Tag, List<Vacancy>> vacancyMap = tags.stream()
-                .map(tag -> new Pair<Tag, List<Vacancy>>(tag,
-                        vacancyList.stream()
-                                .filter(vacancy -> vacancy.getTags().contains(tag))
-                                .limit(limit)
-                                .collect(Collectors.toList())))
-                .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
-        return vacancyMap;
+    public Map<Tag, List<Vacancy>> getMapVacancyByTags(Set<Tag> tags, int limit) {
+        Map<Tag, List<Vacancy>> resultMap = dao.getListTuplesTagVacancy(tags).stream()
+                .map(tuple -> new Pair<>(tuple.get(0, Tag.class),tuple.get(1, Vacancy.class)))
+                .collect(Collectors.groupingBy(Pair::getKey, Collectors.mapping(Pair::getValue, Collectors.toList())));
+        return  resultMap;
     }
 }
