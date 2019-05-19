@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -40,6 +41,9 @@ public class Vacancy implements Serializable {
     @Column(name = "state", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private State state;
+
+    @Column(name = "expiry_block")
+    private Date expiryBlock;
 
     public Vacancy() {
     }
@@ -126,6 +130,22 @@ public class Vacancy implements Serializable {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
+    public Date getExpiryBlock() {
+        return expiryBlock;
+    }
+
+    public void setExpiryBlock(Date expiryBlock) {
+        this.expiryBlock = expiryBlock;
     }
 
     @Override
