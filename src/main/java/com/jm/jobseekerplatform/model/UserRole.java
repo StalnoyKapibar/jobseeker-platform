@@ -52,4 +52,9 @@ public class UserRole implements Serializable, GrantedAuthority {
     public int hashCode() {
         return Objects.hash(id, authority);
     }
+
+    @Override
+    public String toString() {
+        return authority;
+    }
 }
