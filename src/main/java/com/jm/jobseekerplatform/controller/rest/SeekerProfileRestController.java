@@ -31,15 +31,6 @@ public class SeekerProfileRestController {
     public SeekerProfile getSeekerProfileById(@PathVariable Long seekerProfileId) {
         return seekerProfileService.getById(seekerProfileId);
     }
-
-    @GetMapping(value = "/email/{seekerEmail}")
-    public String getSeekerProfileNameByEmail(@PathVariable String seekerEmail) {
-        Seeker seeker = (Seeker) seekerService.findByEmail(seekerEmail);
-        if (seeker.getSeekerProfile() == null) {
-            return seekerEmail;
-        }
-        return seeker.getSeekerProfile().getName() + " " + seeker.getSeekerProfile().getSurname();
-    }
 }
 
 

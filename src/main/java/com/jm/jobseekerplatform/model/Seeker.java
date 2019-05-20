@@ -20,6 +20,11 @@ public class Seeker extends User {
         this.seekerProfile = seekerProfile;
     }
 
+    @Override
+    public String getUsername() {
+        return seekerProfile.getName() + " " + seekerProfile.getSurname();
+    }
+
     public SeekerProfile getSeekerProfile() {
         return seekerProfile;
     }

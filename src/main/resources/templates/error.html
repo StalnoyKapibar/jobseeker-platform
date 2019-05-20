@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <th:block th:include="fragments :: head"></th:block>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+    <script type="text/javascript" src="/js/index.js"></script>
+</head>
+<body>
+<th:block th:include="fragments :: nav"></th:block>
+<div class="container-fluid">
+    <div align="center" class="row">
+        <div class="col-6">
+            <h1> Error Status</h1>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <td th:text="${timestamp}"/>
+                </tr>
+                <tr>
+                    <th>Error</th>
+                    <td th:text="${error}"/>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td th:text="${status}"/>
+                </tr>
+                <tr>
+                    <th>Message</th>
+                    <td th:text="${message}"/>
+                </tr>
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+</html>

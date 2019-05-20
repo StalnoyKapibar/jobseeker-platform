@@ -33,13 +33,4 @@ public class EmployerProfileRestController {
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
         return employerProfile;
     }
-
-    @GetMapping(value = "/email/{employerEmail}")
-    public String getEmployerProfileNameByEmail(@PathVariable String employerEmail) {
-        Employer employer = (Employer) employerService.findByEmail(employerEmail);
-        if (employer.getEmployerProfile() == null) {
-            return employerEmail;
-        }
-        return employer.getEmployerProfile().getCompanyName();
-    }
 }
