@@ -13,7 +13,7 @@ public class Scheduler {
     @Autowired
     VacancyService vacancyService;
 
-    @Scheduled(cron = "scheduler.deleteExpiryVacancies.cron")
+    @Scheduled(cron = "${scheduler.deleteExpiryVacancies.cron}")
     public void deleteExpiryVacancies() {
         vacancyService.deletePermanentBlockVacancies();
         vacancyService.deleteExpiryBlockVacancies();
