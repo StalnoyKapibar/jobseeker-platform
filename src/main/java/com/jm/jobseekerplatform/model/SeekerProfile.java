@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.model;
 
 import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -15,6 +16,12 @@ public class SeekerProfile implements Serializable {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "patronymic")
+    private String patronymic;
+
+    @Column(name = "surname")
+    private String surname;
 
     @Column(name = "description", columnDefinition = "mediumtext")
     private String description;
@@ -32,8 +39,10 @@ public class SeekerProfile implements Serializable {
     public SeekerProfile() {
     }
 
-    public SeekerProfile(String name, String description, byte[] photo, Set<Tag> tags, Set<Portfolio> portfolios) {
+    public SeekerProfile(String name, String patronymic, String surname, String description, byte[] photo, Set<Tag> tags, Set<Portfolio> portfolios) {
         this.name = name;
+        this.patronymic = patronymic;
+        this.surname = surname;
         this.description = description;
         this.photo = photo;
         this.tags = tags;
@@ -54,6 +63,22 @@ public class SeekerProfile implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPatronymic() {
+        return patronymic;
+    }
+
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getDescription() {

@@ -28,27 +28,45 @@
                 <a class="navbar-brand" href="/">JobSeeker</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                <li sec:authorize="!isAuthenticated()" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Войти<span class="caret"></span></a>
+                <li sec:authorize="!isAuthenticated()" class="dropdown"><a class="dropdown-toggle"
+                                                                           data-toggle="dropdown" href="#">Войти<span
+                        class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><div class="container" style="width: 330px;">
-                            <form class="form-signin" method="post" action="/login">
-                                <p>
-                                    <label for="j_username" class="sr-only">Логин:</label>
-                                    <input type="text" id="j_username" name="j_username" class="form-control" placeholder="User" required autofocus>
-                                </p>
-                                <p>
-                                    <label for="j_password" class="sr-only">Пароль:</label>
-                                    <input type="password" id="j_password" name="j_password" class="form-control" placeholder="Password" required>
-                                </p>
-                                <input name="_csrf" type="hidden" th:value="${_csrf.token}"/>
-                                <button class="btn btn-md btn-primary btn-block" type="submit" style="background-color: #333; border-color: #333">Войти</button>
-                            </form>
-                        </div>
+                        <li>
+                            <div class="container" style="width: 330px;">
+                                <form class="form-signin" method="post" action="/login">
+                                    <p>
+                                        <label for="j_username" class="sr-only">Логин:</label>
+                                        <input type="text" id="j_username" name="j_username" class="form-control"
+                                               placeholder="User" required autofocus>
+                                    </p>
+                                    <p>
+                                        <label for="j_password" class="sr-only">Пароль:</label>
+                                        <input type="password" id="j_password" name="j_password" class="form-control"
+                                               placeholder="Password" required>
+                                    </p>
+                                    <input name="_csrf" type="hidden" th:value="${_csrf.token}"/>
+                                    <button class="btn btn-md btn-primary btn-block" type="submit"
+                                            style="background-color: #333; border-color: #333">Войти
+                                    </button>
+                                </form>
+                            </div>
                             <a href="/login" th:align="right">Проблемы со входом?</a></li>
                     </ul>
-                <li sec:authorize="isAuthenticated()"><a href="/user"><span class="glyphicon glyphicon-user"></span> <span sec:authentication="name"></span></a>
+                <li sec:authorize="hasRole('ROLE_SEEKER')">
+                    <a href="/seeker"><span class="glyphicon glyphicon-user"></span>
+                        <span sec:authentication="name"></span></a>
                 </li>
-                <li sec:authorize="isAuthenticated()"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                <li sec:authorize="hasRole('ROLE_EMPLOYER')">
+                    <a href="/employer"><span class="glyphicon glyphicon-user"></span>
+                        <span sec:authentication="name"></span></a>
+                </li>
+                <li sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a href="/user"><span class="glyphicon glyphicon-user"></span>
+                        <span>Admin</span></a>
+                </li>
+                <li sec:authorize="isAuthenticated()"><a href="/logout"><span
+                        class="glyphicon glyphicon-log-out"></span> Logout</a></li>
             </ul>
         </div>
     </nav>
