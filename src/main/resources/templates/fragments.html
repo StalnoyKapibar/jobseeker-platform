@@ -12,8 +12,6 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <base href="/"/>
-    <meta name="user_email_head" th:content="${#httpServletRequest.remoteUser}"/>
-    <meta name="user_role" th:content="${#authorization.authentication.getAuthorities()}"/>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
