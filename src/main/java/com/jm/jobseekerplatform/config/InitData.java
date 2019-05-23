@@ -133,7 +133,6 @@ public class InitData {
         seeker = new Seeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), role, seekerProfileService.getById(1L));
         seeker.setConfirm(true);
         seekerService.add(seeker);
-
     }
 
     public void initVacancies() {
@@ -166,6 +165,8 @@ public class InitData {
     public void initEmployerProfiles() {
         BufferedImage image = null;
         Set<Vacancy> vacancies = new HashSet<>();
+        EmployerProfile employerProfile;
+
         vacancies.add(vacancyService.getById(1L));
         vacancies.add(vacancyService.getById(2L));
         try {
@@ -174,7 +175,7 @@ public class InitData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        employerProfileService.add(new EmployerProfile("Рога и копыта", "www.roga.ru", "Мы продуктовая компания, которая разрабатывает высокотехнологичные продукты в области электротранспорта, роботизации, автоматизации и биотехнологий.\n" +
+        employerProfile = new EmployerProfile("Рога и копыта", "www.roga.ru", "Мы продуктовая компания, которая разрабатывает высокотехнологичные продукты в области электротранспорта, роботизации, автоматизации и биотехнологий.\n" +
                 "В России базируется отдел исследований и разработок. \n" +
                 "Стек: Java8, J2ee, Spring. Клиентская часть: ES6, React, React Native. Облака AWS, Docker, NodeJS (+ Express/Koa/Hapi).\n" +
                 "Миссия - улучшать жизнь людей с помощью технологий.\n" +
@@ -186,7 +187,9 @@ public class InitData {
                 "- Новые технологии без legacy кода. \n" +
                 "- Открытая атмосфера, без корпоративного \"булшита\". \n" +
                 "- Официальное оформление по ТК РФ. \n" +
-                "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ", imageService.resizeLogoEmployer(image), vacancies));
+                "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ", imageService.resizeLogoEmployer(image), vacancies);
+        employerProfile.setState(State.ACCESS);
+        employerProfileService.add(employerProfile);
 
         vacancies.clear();
         vacancies.add(vacancyService.getById(3L));
@@ -196,8 +199,9 @@ public class InitData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        employerProfileService.add(new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image), vacancies));
-
+        employerProfile = new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image), vacancies);
+        employerProfile.setState(State.ACCESS);
+        employerProfileService.add(employerProfile);
     }
 
     public void initPortfolio() {
