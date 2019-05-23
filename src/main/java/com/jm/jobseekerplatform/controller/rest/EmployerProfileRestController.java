@@ -21,7 +21,7 @@ public class EmployerProfileRestController {
     }
 
     @RequestMapping("/{employerProfileId:\\d+}")
-    public EmployerProfile getUserById(@PathVariable Long employerProfileId){
+    public EmployerProfile getEmployerProfileById(@PathVariable Long employerProfileId){
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
         return employerProfile;
     }

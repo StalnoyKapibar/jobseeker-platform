@@ -242,7 +242,7 @@ public class InitData {
         tags.add(tagService.getById(3L));
         tags.add(tagService.getById(4L));
 
-        seekerProfileService.add(new SeekerProfile("Вася Игоревич Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), tags, portfolios));
+        seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), tags, portfolios));
     }
 
     public Set<Tag> randomTags() {
