@@ -25,6 +25,7 @@ public class VacancyService extends AbstractService<Vacancy> {
 
     public void blockPermanently(Vacancy vacancy){
         vacancy.setState(State.BLOCK_PERMANENT);
+        vacancy.setExpiryBlock(null);
         dao.update(vacancy);
     }
 
@@ -39,13 +40,8 @@ public class VacancyService extends AbstractService<Vacancy> {
     }
 
     public void blockOwn (Vacancy vacancy) {
-        int periodInDays = 30;
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, periodInDays);
-        Date expiryBlockDate = calendar.getTime();
-
         vacancy.setState(State.BLOCK_OWN);
-        vacancy.setExpiryBlock(expiryBlockDate);
+        vacancy.setExpiryBlock(null);
         dao.update(vacancy);
     }
 
