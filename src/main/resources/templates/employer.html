@@ -153,9 +153,24 @@
                 <div class="well well-sm">
                     <span id="VMDescription"></span>
                 </div>
+                <span id="VMId" hidden></span>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown">Блокировать<span
+                            class="caret"></span></button>
+                    <ul class="dropdown-menu dropdown-menu-right" style="right: 84px;">
+                        <li><a onclick="blockVacancy(1)">На сутки</a></li>
+                        <li><a onclick="blockVacancy(3)">На 3 дня</a></li>
+                        <li><a onclick="blockVacancy(7)">На 7 дней</a></li>
+                        <li><a onclick="blockVacancy(14)">На 14 дней</a></li>
+                        <li><a onclick="blockVacancy(0)">Бессрочно</a></li>
+                    </ul>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+            <div sec:authorize="!hasRole('ROLE_ADMIN')">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+            </div>
             </div>
         </div>
     </div>
