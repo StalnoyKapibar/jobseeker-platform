@@ -3,9 +3,7 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.EmployerProfile;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,9 +20,20 @@ public class EmployerProfileRestController {
         return employerprofiles;
     }
 
-    @RequestMapping("/{employerProfileId}")
-    public EmployerProfile getEmployerProfileById(@PathVariable Long employerProfileId) {
+    @RequestMapping("/{employerProfileId:\\d+}")
+    public EmployerProfile getEmployerProfileById(@PathVariable Long employerProfileId){
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
         return employerProfile;
+    }
+
+    @RequestMapping(value = "/block/{vacancyId:\\d+}", method = RequestMethod.POST)
+    public void blockEmployerProfile(@PathVariable("vacancyId") Long id, @RequestBody int periodInDays) {
+        EmployerProfile employerProfile = employerProfileService.getById(id);
+        if (periodInDays == 0){
+            employerProfileService.blockPermanently(employerProfile);
+        }
+        if (periodInDays > 0 && periodInDays < 15){
+            employerProfileService.blockTemporary(employerProfile, periodInDays);
+        }
     }
 }

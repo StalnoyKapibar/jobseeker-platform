@@ -4,11 +4,7 @@ import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Repository("vacancyDAO")
 public class VacancyDAO extends AbstractDAO<Vacancy> {
@@ -21,5 +17,18 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
                 .setMaxResults(limit)
                 .getResultList());
         return vacancies;
+    }
+
+    public int deletePermanentBlockVacancies() {
+        int deletedCount = entityManager.createQuery("DELETE FROM Vacancy v WHERE v.state = 'BLOCK_PERMANENT'").executeUpdate();
+        return deletedCount;
+    }
+
+    public int deleteExpiryBlockVacancies() {
+        Date currentDate = new Date();
+        int deletedCount = entityManager.createQuery("DELETE FROM Vacancy v WHERE v.expiryBlock <= :param")
+                .setParameter("param", currentDate)
+                .executeUpdate();
+        return deletedCount;
     }
 }

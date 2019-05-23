@@ -12,6 +12,7 @@ function showVacancy(id) {
             $("#VMHeadline").text(data.headline);
             $("#VMCity").text(data.city);
             $("#VMDescription").text(data.description);
+            $("#VMId").text(data.id);
 
             var str = "Зарплата: ";
 
@@ -31,7 +32,6 @@ function showVacancy(id) {
             } else {
                 $('#VMRemote').hide();
             }
-
         }
     });
 }
@@ -89,3 +89,43 @@ $(document).ready(function () {
         });
     });
 });
+
+function blockVacancy(period) {
+    var header = $("meta[name='_csrf_header']").attr("content");
+    var token = $("meta[name='_csrf']").attr("content");
+    var id = $("#VMId").text();
+    if (!confirm("Вы уверены?")) return;
+    $.ajax({
+        type: "POST",
+        dataType: 'json',
+        contentType: "application/json",
+        url: "/api/vacancies/block/" + id,
+        data: JSON.stringify(period),
+        beforeSend: function (request) {
+            return request.setRequestHeader(header, token);
+        },
+        success: function (data){
+           alert(data);
+        }
+    });
+}
+
+function blockEmployerProfile(period) {
+    var header = $("meta[name='_csrf_header']").attr("content");
+    var token = $("meta[name='_csrf']").attr("content");
+    var id = $("#EPId").text();
+    if (!confirm("Вы уверены?")) return;
+    $.ajax({
+        type: "POST",
+        dataType: 'json',
+        contentType: "application/json",
+        url: "/api/employerprofiles/block/" + id,
+        data: JSON.stringify(period),
+        beforeSend: function (request) {
+            return request.setRequestHeader(header, token);
+        },
+        success: function (data){
+            alert(data);
+        }
+    });
+}
