@@ -1,9 +1,18 @@
 package com.jm.jobseekerplatform.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.util.Date;
 
 @Service("mailService")
 public class MailService {
@@ -11,18 +20,36 @@ public class MailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Autowired
+    private TemplateEngine templateEngine;
+
     public void sendEmail(String address, String subject, String text) {
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(address);
-        msg.setSubject(subject);
-        msg.setText(text);
-        javaMailSender.send(msg);
+        try {
+            MimeMessage msg = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+            helper.setTo(address);
+            helper.setSubject(subject);
+            Multipart mp = new MimeMultipart();
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setContent(text, "text/html; charset=utf-8");
+            mp.addBodyPart(htmlPart);
+            msg.setContent(mp);
+            javaMailSender.send(msg);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void sendVerificationEmail(String address, String token){
-        String subject = "Confirm your E-mail address and complete registration";
-        String text = "Вы зарегистрировались на платформе JobSekeer. Для подтверждения адреса электронной почты пройдите по ссылке (действительна в течении суток):\n"
-                +"http://localhost:7070/confirm_reg/" + token;
-        sendEmail(address, subject, text);
+    public void sendVerificationEmail(String address, String token) {
+        String subject = "Подтвердите свой E-mail адрес и закончите регистрацию";
+        token = "http://localhost:7070/confirm_reg/" + token;
+        final Context ctx = new Context();
+        ctx.setVariable("name", address);
+        ctx.setVariable("token", token);
+        ctx.setVariable("subscriptionDate", new Date());
+        final String htmlContent = this.templateEngine.process("/emails/regemail.html", ctx);
+
+        sendEmail(address, subject, htmlContent);
     }
+
 }

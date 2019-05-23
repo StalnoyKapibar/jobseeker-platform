@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registration Confirm</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1>Добро Пожаловать, <span th:text="${name}"></span></h1>
+<br>
+<p>
+    Вы зарегистрировались на платформе <b>JobSeeker </b>
+    <span th:text="${#dates.format(subscriptionDate)}"></span>
+</p>
+<p>
+    Для подтверждения адреса электронной почты пройдите по
+    <a th:href="${token}"> ссылке </a>
+</p>
+<p> ссылка будет действительна в течении суток и верент вас на страницу входа</p>
+<p>
+    С наилучшими пожеланиями , <br/>
+    <em> команда JobSeeker</em>
+</p>
+</body>
+</html>
