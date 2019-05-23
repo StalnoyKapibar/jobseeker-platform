@@ -94,6 +94,7 @@ function blockVacancy(period) {
     var header = $("meta[name='_csrf_header']").attr("content");
     var token = $("meta[name='_csrf']").attr("content");
     var id = $("#VMId").text();
+    if (!confirm("Вы уверены?")) return;
     $.ajax({
         type: "POST",
         dataType: 'json',
@@ -105,6 +106,26 @@ function blockVacancy(period) {
         },
         success: function (data){
            alert(data);
+        }
+    });
+}
+
+function blockEmployerProfile(period) {
+    var header = $("meta[name='_csrf_header']").attr("content");
+    var token = $("meta[name='_csrf']").attr("content");
+    var id = $("#EPId").text();
+    if (!confirm("Вы уверены?")) return;
+    $.ajax({
+        type: "POST",
+        dataType: 'json',
+        contentType: "application/json",
+        url: "/api/employerprofiles/block/" + id,
+        data: JSON.stringify(period),
+        beforeSend: function (request) {
+            return request.setRequestHeader(header, token);
+        },
+        success: function (data){
+            alert(data);
         }
     });
 }

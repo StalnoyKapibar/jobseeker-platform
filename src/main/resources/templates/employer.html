@@ -19,6 +19,18 @@
         <div class="col-lg-3">
         </div>
         <div class="col-lg-3">
+            <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                <span id="EPId" th:text="${eprofile.id}" hidden></span>
+                <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown">Блокировать<span
+                        class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li><a onclick="blockEmployerProfile(1)">На сутки</a></li>
+                    <li><a onclick="blockEmployerProfile(3)">На 3 дня</a></li>
+                    <li><a onclick="blockEmployerProfile(7)">На 7 дней</a></li>
+                    <li><a onclick="blockEmployerProfile(14)">На 14 дней</a></li>
+                    <li><a onclick="blockEmployerProfile(0)">Бессрочно</a></li>
+                </ul>
+            </div>
             <h1><span th:text="${eprofile.companyName}"></span></h1>
             <h2><a th:href="@{'http://' + ${eprofile.website}}" th:text="${eprofile.website}"></a></h2>
         </div>
