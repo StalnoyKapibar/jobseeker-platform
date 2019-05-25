@@ -57,7 +57,7 @@ public class UserService extends AbstractService<User> {
         return dao.isExistEmail(email);
     }
 
-    public void registerNewUser (User user) {
+    public void registerNewUser(User user) {
         String userEmail = user.getEmail();
         char[] userPass = encodePassword(user.getPasswordChar());
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
@@ -104,5 +104,5 @@ public class UserService extends AbstractService<User> {
         }
 
         return isCorrect;
-        }
+    }
 }

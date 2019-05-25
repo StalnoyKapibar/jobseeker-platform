@@ -122,7 +122,6 @@ public class MainController {
         return "login";
     }
 
-
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String reg() {
         return "registration";

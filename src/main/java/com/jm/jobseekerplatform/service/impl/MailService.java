@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ public class MailService {
     @Autowired
     private TemplateEngine templateEngine;
 
+    @Value("${server.port}")
+    String port;
+
     public void sendEmail(String address, String subject, String text) {
         try {
             MimeMessage msg = javaMailSender.createMimeMessage();
@@ -42,14 +46,12 @@ public class MailService {
 
     public void sendVerificationEmail(String address, String token) {
         String subject = "Подтвердите свой E-mail адрес и закончите регистрацию";
-        token = "http://localhost:7070/confirm_reg/" + token;
+        token = "http://localhost:"+ port + "/confirm_reg/" + token;
         final Context ctx = new Context();
         ctx.setVariable("name", address);
         ctx.setVariable("token", token);
         ctx.setVariable("subscriptionDate", new Date());
-        final String htmlContent = this.templateEngine.process("/emails/regemail.html", ctx);
-
-        sendEmail(address, subject, htmlContent);
+        sendEmail(address, subject, templateEngine.process("/emails/regemail.html", ctx));
     }
 
 }
