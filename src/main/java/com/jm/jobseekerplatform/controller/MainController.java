@@ -3,6 +3,7 @@ package com.jm.jobseekerplatform.controller;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
@@ -39,6 +40,9 @@ public class MainController {
     private EmployerService employerService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
+
+    @Value("${google.maps.api.key}")
+    private String googleMapsApiKey;
 
     @RequestMapping("/")
     public String mainPage(Authentication authentication, Model model) {
@@ -91,6 +95,7 @@ public class MainController {
                 model.addAttribute("reviewStatus", false);
             }
         }
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "employer";
     }
 
