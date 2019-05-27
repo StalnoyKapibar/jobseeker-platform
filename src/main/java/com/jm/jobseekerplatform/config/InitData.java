@@ -50,6 +50,9 @@ public class InitData {
     @Autowired
     private EmployerReviewsService employerReviewsService;
 
+    @Autowired
+    private PointService pointService;
+
     private Faker faker = new Faker(new Locale("ru"));
 
 
@@ -157,8 +160,26 @@ public class InitData {
                 "Дополнительная информация:\n" +
                 "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!";
 
+        Vacancy vacancy;
+        String city;
+        Float latitudeY = 0f;
+        Float longitudeX = 0f;
         for (int i = 0; i < 30; i++) {
-            vacancyService.add(new Vacancy(faker.job().title(), faker.address().city(), Math.random() < 0.5, shortDescr, description, Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), randomTags(), State.ACCESS));
+            city = Math.random() < 0.5 ? "Москва" : "Санкт-Петербург";
+            if (city.equals("Санкт-Петербург")){
+                latitudeY = (float)(0.16 * Math.random()) + 59.88f;
+                longitudeX = (float)(0.19 * Math.random()) + 30.24f;
+            }
+            if (city.equals("Москва")){
+                latitudeY = (float)(0.2 * Math.random()) + 55.66f;
+                longitudeX = (float)(0.32 * Math.random()) + 37.45f;
+            }
+
+            Point point = new Point(latitudeY, longitudeX);
+            pointService.add(point);
+            vacancy = new Vacancy(faker.job().title(), city, Math.random() < 0.5, shortDescr, description, Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), randomTags(), point);
+            vacancy.setState(State.ACCESS);
+            vacancyService.add(vacancy);
         }
     }
 
