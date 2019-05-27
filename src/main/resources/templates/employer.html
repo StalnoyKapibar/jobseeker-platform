@@ -7,6 +7,9 @@
     <title>Employer's profile</title>
     <script type="text/javascript" src="/js/employer.js"></script>
     <script type="text/javascript" src="/js/star-rating.min.js"></script>
+    <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey}, callback='initMap')}"
+            async defer></script>
+    <script type="text/javascript" src="/js/map.js"></script>
     <link href="/css/star-rating.min.css" th:href="@{/css/star-rating.min.css}" rel="stylesheet"/>
 </head>
 <body>
@@ -160,7 +163,11 @@
                 <h3><span id="VMTags"></span><br></h3>
                 <h3><span id="VMHeadline"></span><br/></h3>
                 <span id="VMCity"></span>
-                <span id="VMRemote"> (Удаленная работа)</span><br/>
+                <span id="VMRemote"> (Удаленная работа)</span>
+                <a data-toggle="collapse" data-target="#map_collapse"> Показать на карте</a>
+                <div id="map_collapse" class="collapsed collapse">
+                    <div id="map" style="height: 300px"></div>
+                </div><br/>
                 <span id="VMSalary"></span><br/>
                 <div class="well well-sm">
                     <span id="VMDescription"></span>

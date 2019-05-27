@@ -32,6 +32,7 @@ function showVacancy(id) {
             } else {
                 $('#VMRemote').hide();
             }
+            $('#map_collapse').attr("class", "collapsed collapse");
         }
     });
 }
