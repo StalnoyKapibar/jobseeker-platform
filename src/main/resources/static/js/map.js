@@ -21,7 +21,7 @@ function showVacancyOnMap(lat, lng) {
 function getAddressByCoords(lat, lng) {
     var address;
     $.ajax({
-        url: "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+"&key=AIzaSyD4rYuGJ61GR1luiHDRlwek1ufv5-1WkwE",
+        url: "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+"&key="+$("meta[name='apiKey']").attr("content"),
         type: "GET",
         async: false,
         success: function (data) {
