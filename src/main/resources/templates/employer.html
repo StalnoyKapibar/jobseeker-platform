@@ -3,10 +3,13 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en">
 <head>
     <th:block th:include="fragments :: head"></th:block>
-    <meta charset="UTF-8">
+    <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <title>Employer's profile</title>
     <script type="text/javascript" src="/js/employer.js"></script>
     <script type="text/javascript" src="/js/star-rating.min.js"></script>
+    <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey})}"
+            async defer></script>
+    <script type="text/javascript" src="/js/map.js"></script>
     <link href="/css/star-rating.min.css" th:href="@{/css/star-rating.min.css}" rel="stylesheet"/>
 </head>
 <body>
@@ -31,7 +34,7 @@
                     <li><a onclick="blockEmployerProfile(0)">Бессрочно</a></li>
                 </ul>
             </div>
-            <h1><span th:text="${eprofile.companyName}"></span></h1>
+            <h1><span id="EPcompanyName" th:text="${eprofile.companyName}"></span></h1>
             <h2><a th:href="@{'http://' + ${eprofile.website}}" th:text="${eprofile.website}"></a></h2>
         </div>
         <div class="col-lg-3" align="center">
@@ -161,6 +164,11 @@
                 <h3><span id="VMHeadline"></span><br/></h3>
                 <span id="VMCity"></span>
                 <span id="VMRemote"> (Удаленная работа)</span><br/>
+                <span id="VMAddress"></span>
+                <a data-toggle="collapse" data-target="#map_collapse"> Показать на карте</a>
+                <div id="map_collapse" class="collapsed collapse">
+                    <div id="map" style="height: 300px"></div>
+                </div><br/>
                 <span id="VMSalary"></span><br/>
                 <div class="well well-sm">
                     <span id="VMDescription"></span>

@@ -32,6 +32,13 @@ function showVacancy(id) {
             } else {
                 $('#VMRemote').hide();
             }
+            $('#map_collapse').attr("class", "collapsed collapse");
+
+            var lat = data.coordinates.latitudeY;
+            var lng = data.coordinates.longitudeX;
+            showVacancyOnMap(lat, lng);
+            var address = getAddressByCoords(lat,lng);
+            $("#VMAddress").text(address);
         }
     });
 }
