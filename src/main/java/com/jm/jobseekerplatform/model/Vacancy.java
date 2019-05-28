@@ -61,7 +61,7 @@ public class Vacancy implements Serializable {
         this.salaryMax = salaryMax;
         this.tags = tags;
         this.coordinates = coordinates;
-        this.state = State.NO_ACCESS;
+        state = State.NO_ACCESS;
     }
 
     public Long getId() {
