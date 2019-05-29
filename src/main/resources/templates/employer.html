@@ -51,7 +51,10 @@
             </div>
         </div>
         <div class="col-lg-3">
-            <span>Наши вакансии:</span><br/>
+            <span>Наши вакансии:</span>
+            <a th:if="${isOwner}" style="float: right;color: green;" href="/new_vacancy">
+                <span class="glyphicon glyphicon-plus"></span> Добавить вакансию
+            </a><br/>
             <div class="list-group">
                 <a th:each="vacancy, index: ${eprofile.vacancies}" class="list-group-item" th:text="${vacancy.headline}"
                    data-toggle="modal" data-target="#vacancyModal" th:onclick="'showVacancy('+${vacancy.id}+')'"></a>
