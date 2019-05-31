@@ -11,6 +11,7 @@ function showVacancy(id) {
             $("#VMTags").text(tags);
             $("#VMHeadline").text(data.headline);
             $("#VMCity").text(data.city);
+            $("#VMShortDescription").text(data.shortDescription);
             $("#VMDescription").text(data.description);
             $("#VMId").text(data.id);
 
