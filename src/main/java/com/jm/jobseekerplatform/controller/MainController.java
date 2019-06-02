@@ -173,4 +173,10 @@ public class MainController {
         }
         return "index";
     }
+
+    @RequestMapping(value = "/new_vacancy", method = RequestMethod.GET)
+    public String new_vacancyPage(Model model) {
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+        return "new_vacancy";
+    }
 }
