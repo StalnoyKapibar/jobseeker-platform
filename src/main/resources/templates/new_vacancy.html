@@ -16,8 +16,6 @@
     <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey})}"
             async defer></script>
     <script type="text/javascript" src="/js/map.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/js/bootstrap-select.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/css/bootstrap-select.min.css">
 </head>
 <body>
 <th:block th:include="fragments :: nav"></th:block>
@@ -198,8 +196,7 @@
                 <h2 class="modal-title">Добавление тегов</h2>
             </div>
             <div class="modal-body">
-                <select class="selectpicker" data-live-search="true" title="Быстрый поиск" liveSearchStyle="startsWith" hideDisabled="true" id="tagsSelect">
-                </select>
+                <input id="search_tags" placeholder="Фильтр по названию">
                 <div class="well well-sm" id="tagsWell">
                 </div>
             </div>

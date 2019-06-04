@@ -77,8 +77,24 @@ $(document).ready(function () {
                 }
             }
         }
-    })
+    });
+
+    $("#search_tags").keyup(function(e){
+        e.preventDefault();
+        tags_search();
+    });
 });
+
+function tags_search() {
+    let tags_span = $("#tagsWell").find("span");
+    tags_span.hide();
+    let str = $("#search_tags").val();
+    if (str==""){
+        tags_span.show();
+    } else {
+    tags_span.filter("[value ^= '"+str+"']").show();
+    }
+}
 
 function validateAndPreview() {
     let bootstrapValidator = $('#vacancy_form').data('bootstrapValidator');
@@ -171,9 +187,7 @@ function showTags() {
             async: false,
             success: function (data) {
                 $.each(data, function (key, value) {
-                    $("#tagsWell").append("<span class='label label-success' id='tagLabel_" + value.id + "' onclick='addTag(" + value.id + ",\"" + value.name + "\")'>" + value.name + "</span>");
-                    $("#tagsSelect").append("<option>"+value.name+"</option>");
-                    $("#tagsSelect").selectpicker('refresh');
+                    $("#tagsWell").append("<span class='label label-success' value='"+ value.name +"' id='tagLabel_" + value.id + "' onclick='addTag(" + value.id + ",\"" + value.name + "\")'>" + value.name + "</span>");
                 });
                 flagTag = true;
             }
@@ -187,7 +201,7 @@ function addTag(id, name) {
 }
 
 function deleteTag(id, name) {
-    $("#tagsWell").append("<span class='label label-success' id='tagLabel_" + id + "' onclick='addTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
+    $("#tagsWell").append("<span class='label label-success' value='"+ name +"'id='tagLabel_" + id + "' onclick='addTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
     $("#v_tagLabel_" + id).remove();
 }
 
