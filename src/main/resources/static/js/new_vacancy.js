@@ -81,9 +81,9 @@ $(document).ready(function () {
 });
 
 function validateAndPreview() {
-    var bootstrapValidator = $('#vacancy_form').data('bootstrapValidator');
+    let bootstrapValidator = $('#vacancy_form').data('bootstrapValidator');
     bootstrapValidator.validate();
-    var isValid = bootstrapValidator.isValid();
+    let isValid = bootstrapValidator.isValid();
     if ($("#v_tagsWell").children().length < 2) {
         $("#v_form_group_tags").attr("class", "form-group has-feedback has-error");
         $("#v_tagsWell").css("border-color", "#a94442");
@@ -95,19 +95,19 @@ function validateAndPreview() {
         $("#v_help_block_tags").css("display", "none");
     }
     if (isValid) {
-        var headline = $("#v_headline").val();
-        var city = $("#v_city").val();
-        var remote = $("#v_remote").val() == "true";
-        var shortDescription = $("#v_shortDescription").val();
-        var description = $("#v_description").val();
-        var salaryMin = $("#v_salaryMin").val().length > 0 ? $("#v_salaryMin").val() : null;
-        var salaryMax = $("#v_salaryMax").val().length > 0 ? $("#v_salaryMax").val() : null;
-        var tags = [];
+        let headline = $("#v_headline").val();
+        let city = $("#v_city").val();
+        let remote = $("#v_remote").val() == "true";
+        let shortDescription = $("#v_shortDescription").val();
+        let description = $("#v_description").val();
+        let salaryMin = $("#v_salaryMin").val().length > 0 ? $("#v_salaryMin").val() : null;
+        let salaryMax = $("#v_salaryMax").val().length > 0 ? $("#v_salaryMax").val() : null;
+        let tags = [];
         $("#v_tagsWell").children("span").each(function (index, element) {
             tags[index] = {'name': $(element).text()}
         });
-        var loc = getCoordsByAddress($("#v_address").val());
-        var point = {'latitudeY': loc.lat, 'longitudeX': loc.lng};
+        let loc = getCoordsByAddress($("#v_address").val());
+        let point = {'latitudeY': loc.lat, 'longitudeX': loc.lng};
 
         vacancy = {
             'id' : null,
@@ -129,7 +129,7 @@ function validateAndPreview() {
         $("#VMShortDescription").text(vacancy.shortDescription);
         $("#VMDescription").text(vacancy.description);
 
-        var str = "Зарплата: ";
+        let str = "Зарплата: ";
         if (vacancy.salaryMin != null) {
             str = str + "от " + vacancy.salaryMin + " рублей ";
         }
@@ -155,10 +155,10 @@ function validateAndPreview() {
         $('#map_collapse').attr("class", "collapsed collapse");
 
         $('#vacancyModal').modal('toggle');
-        var lat = vacancy.coordinates.latitudeY;
-        var lng = vacancy.coordinates.longitudeX;
+        let lat = vacancy.coordinates.latitudeY;
+        let lng = vacancy.coordinates.longitudeX;
         showVacancyOnMap(lat, lng);
-        var address = getAddressByCoords(lat,lng);
+        let address = getAddressByCoords(lat,lng);
         $("#VMAddress").text(address);
     }
 }
@@ -192,8 +192,8 @@ function deleteTag(id, name) {
 }
 
 function sendVacancy() {
-    var header = $("meta[name='_csrf_header']").attr("content");
-    var token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
+    const token = $("meta[name='_csrf']").attr("content");
     $.ajax({
         method: "POST",
         dataType: "json",
