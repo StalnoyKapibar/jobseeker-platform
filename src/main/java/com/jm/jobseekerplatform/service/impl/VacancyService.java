@@ -94,13 +94,12 @@ public class VacancyService extends AbstractService<Vacancy> {
     }
 
     public void addNewVacancyFromRest(Vacancy vacancy){
-        Set<Tag> tags;
-        Set<Tag> tagsNew = new HashSet<>();
         vacancy.setState(State.NO_ACCESS);
         Point point = vacancy.getCoordinates();
         pointService.add(point);
         vacancy.setCoordinates(point);
-        tags = vacancy.getTags();
+        Set<Tag> tags = vacancy.getTags();;
+        Set<Tag> tagsNew = new HashSet<>();
         for (Tag tag:tags) {
             tagsNew.add(tagService.findByName(tag.getName()));
         }
