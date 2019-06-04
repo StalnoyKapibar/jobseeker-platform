@@ -13,4 +13,8 @@ public class TagService extends AbstractService<Tag> {
 
     @Autowired
     private TagDAO dao;
+
+    public Tag findByName(String name) {
+        return dao.findByName(name);
+    }
 }

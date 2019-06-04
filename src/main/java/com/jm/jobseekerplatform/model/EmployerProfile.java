@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.model;
 
 import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -29,7 +28,7 @@ public class EmployerProfile implements Serializable {
     @Type(type = "image")
     private byte[] logo;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<Vacancy> vacancies;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

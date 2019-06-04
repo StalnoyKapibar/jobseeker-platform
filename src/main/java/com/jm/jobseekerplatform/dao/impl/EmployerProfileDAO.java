@@ -21,4 +21,12 @@ public class EmployerProfileDAO extends AbstractDAO<EmployerProfile> {
                 .executeUpdate();
         return deletedCount;
     }
+
+    public void addVacancyToEmployerProfile(Long employerProfileId, Long vacancyId) {
+        entityManager
+                .createNativeQuery("INSERT INTO employerprofiles_vacancies (employer_profile_id, vacancies_id) values (?, ?)")
+                .setParameter(1, employerProfileId)
+                .setParameter(2, vacancyId)
+                .executeUpdate();
+    }
 }

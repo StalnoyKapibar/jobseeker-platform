@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head>
     <th:block th:include="fragments :: head"></th:block>
     <meta name="apiKey" th:content="${googleMapsApiKey}"/>
@@ -51,7 +51,10 @@
             </div>
         </div>
         <div class="col-lg-3">
-            <span>Наши вакансии:</span><br/>
+            <span>Наши вакансии:</span>
+            <a th:if="${isOwner}" style="float: right;color: green;" href="/new_vacancy">
+                <span class="glyphicon glyphicon-plus"></span> Добавить вакансию
+            </a><br/>
             <div class="list-group">
                 <a th:each="vacancy, index: ${eprofile.vacancies}" class="list-group-item" th:text="${vacancy.headline}"
                    data-toggle="modal" data-target="#vacancyModal" th:onclick="'showVacancy('+${vacancy.id}+')'"></a>
@@ -170,6 +173,11 @@
                     <div id="map" style="height: 300px"></div>
                 </div><br/>
                 <span id="VMSalary"></span><br/>
+                <span>Краткое описание:</span><br/>
+                <div class="well well-sm">
+                    <span id="VMShortDescription"></span>
+                </div>
+                <span>Подробное описание:</span><br/>
                 <div class="well well-sm">
                     <span id="VMDescription"></span>
                 </div>

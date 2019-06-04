@@ -3,7 +3,6 @@ package com.jm.jobseekerplatform.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -20,8 +19,8 @@ public class Vacancy implements Serializable {
     @Column(name = "city", nullable = false)
     private String city;
 
-    @Column(name = "isremote", nullable = false)
-    private Boolean isRemote;
+    @Column(name = "remote", nullable = false)
+    private Boolean remote;
 
     @Column(name = "shortdescription")
     private String shortDescription;
@@ -51,10 +50,10 @@ public class Vacancy implements Serializable {
     public Vacancy() {
     }
 
-    public Vacancy(String headline, String city, Boolean isRemote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags, Point coordinates) {
+    public Vacancy(String headline, String city, Boolean remote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags, Point coordinates) {
         this.headline = headline;
         this.city = city;
-        this.isRemote = isRemote;
+        this.remote = remote;
         this.shortDescription = shortDescription;
         this.description = description;
         this.salaryMin = salaryMin;
@@ -113,11 +112,11 @@ public class Vacancy implements Serializable {
     }
 
     public Boolean getRemote() {
-        return isRemote;
+        return remote;
     }
 
     public void setRemote(Boolean remote) {
-        isRemote = remote;
+        this.remote = remote;
     }
 
     public Set<Tag> getTags() {
@@ -170,7 +169,7 @@ public class Vacancy implements Serializable {
         if (id != null ? !id.equals(vacancy.id) : vacancy.id != null) return false;
         if (headline != null ? !headline.equals(vacancy.headline) : vacancy.headline != null) return false;
         if (city != null ? !city.equals(vacancy.city) : vacancy.city != null) return false;
-        if (isRemote != null ? !isRemote.equals(vacancy.isRemote) : vacancy.isRemote != null) return false;
+        if (remote != null ? !remote.equals(vacancy.remote) : vacancy.remote != null) return false;
         if (shortDescription != null ? !shortDescription.equals(vacancy.shortDescription) : vacancy.shortDescription != null)
             return false;
         if (description != null ? !description.equals(vacancy.description) : vacancy.description != null) return false;
@@ -187,7 +186,7 @@ public class Vacancy implements Serializable {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (headline != null ? headline.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (isRemote != null ? isRemote.hashCode() : 0);
+        result = 31 * result + (remote != null ? remote.hashCode() : 0);
         result = 31 * result + (shortDescription != null ? shortDescription.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (salaryMin != null ? salaryMin.hashCode() : 0);
