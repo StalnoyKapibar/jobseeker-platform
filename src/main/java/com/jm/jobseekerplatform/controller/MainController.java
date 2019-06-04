@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.NoResultException;
 import java.util.Base64;
 import java.util.List;
@@ -174,6 +175,7 @@ public class MainController {
         return "index";
     }
 
+    @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/new_vacancy", method = RequestMethod.GET)
     public String new_vacancyPage(Model model) {
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
