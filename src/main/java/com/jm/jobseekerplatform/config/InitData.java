@@ -50,6 +50,9 @@ public class InitData {
     @Autowired
     private EmployerReviewsService employerReviewsService;
 
+    @Autowired
+    private ChatMessageService chatMessageService;
+
     private Faker faker = new Faker(new Locale("ru"));
 
 
@@ -63,6 +66,7 @@ public class InitData {
         initSeekerProfile();
         initUsers();
         initReviews();
+        initChat();
     }
 
     public void initReviews() {
@@ -248,5 +252,21 @@ public class InitData {
         }
         return tags;
     }
+
+    public void initChat() {
+
+        for (Long i=1L; i<6L; i++){
+            Set<ChatMessage> messages = new HashSet<>();
+            for (int k=0; k<5; k++) {
+                ChatMessage chatMessage = new ChatMessage(faker.gameOfThrones().quote(), "admin@mail.ru", new Date(), "false", "true");
+                chatMessageService.add(chatMessage);
+                messages.add(chatMessage);
+            }
+            Vacancy vacancy = vacancyService.getById(i);
+            vacancy.setChatMessages(messages);
+            vacancyService.update(vacancy);
+        }
+    }
+
 
 }

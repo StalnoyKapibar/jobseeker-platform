@@ -41,6 +41,9 @@ public class Vacancy implements Serializable {
     @Enumerated(value = EnumType.STRING)
     private State state;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<ChatMessage> chatMessages;
+
     public Vacancy() {
     }
 
@@ -128,6 +131,14 @@ public class Vacancy implements Serializable {
         this.state = state;
     }
 
+    public void setChatMessages(Set<ChatMessage> chatMessages) {
+        this.chatMessages = chatMessages;
+    }
+
+    public Set<ChatMessage> getChatMessages() {
+        return chatMessages;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -142,11 +153,12 @@ public class Vacancy implements Serializable {
                 Objects.equals(salaryMin, vacancy.salaryMin) &&
                 Objects.equals(salaryMax, vacancy.salaryMax) &&
                 Objects.equals(tags, vacancy.tags) &&
-                Objects.equals(state, vacancy.state);
+                Objects.equals(state, vacancy.state) &&
+                Objects.equals(chatMessages, vacancy.chatMessages);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, headline, city, isRemote, shortDescription, description, salaryMin, salaryMax, tags, state);
+        return Objects.hash(id, headline, city, isRemote, shortDescription, description, salaryMin, salaryMax, tags, state, chatMessages);
     }
 }

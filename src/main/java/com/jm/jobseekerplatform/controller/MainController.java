@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import javax.persistence.NoResultException;
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.Base64;
 import java.util.List;
 import java.util.Set;
@@ -112,6 +114,9 @@ public class MainController {
         return "admin_vacancies";
     }
 
+    @RequestMapping("/admin/chats")
+    public String adminPageChats() { return "admin_chats"; }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "logout", required = false) String logout,
@@ -160,5 +165,15 @@ public class MainController {
             }
         }
         return "index";
+    }
+
+    @RequestMapping("/chat/{vacancyId}")
+    public String getChat(@PathVariable("vacancyId") String vacancyId,  Principal principal, Model model) {
+
+        String username = principal.getName();
+        model.addAttribute("username", username);
+        model.addAttribute("vacancyId", vacancyId);
+
+        return "chat";
     }
 }
