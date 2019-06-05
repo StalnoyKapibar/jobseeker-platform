@@ -219,7 +219,7 @@ function sendVacancy() {
         },
         success: function (data) {
             $("#vacancy_container").empty();
-            $("#vacancy_container").append("<div class='alert alert-success' role='alert'>Вакансия добавлена!<br/>Вы также можете <a href='/employer'>посмотреть свой профиль</a></div>");
+            $("#vacancy_container").append("<div class='alert alert-success' role='alert'>Вакансия добавлена!<br/>Вы также можете <a href='/user'>посмотреть свой профиль</a></div>");
         },
         error: function (error) {
             console.log(error);
