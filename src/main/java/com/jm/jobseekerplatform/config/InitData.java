@@ -53,6 +53,9 @@ public class InitData {
     @Autowired
     private ChatMessageService chatMessageService;
 
+    @Autowired
+    private PointService pointService;
+
     private Faker faker = new Faker(new Locale("ru"));
 
 
@@ -137,7 +140,6 @@ public class InitData {
         seeker = new Seeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), role, seekerProfileService.getById(1L));
         seeker.setConfirm(true);
         seekerService.add(seeker);
-
     }
 
     public void initVacancies() {
@@ -162,14 +164,34 @@ public class InitData {
                 "Дополнительная информация:\n" +
                 "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!";
 
+        Vacancy vacancy;
+        String city;
+        Float latitudeY = 0f;
+        Float longitudeX = 0f;
         for (int i = 0; i < 30; i++) {
-            vacancyService.add(new Vacancy(faker.job().title(), faker.address().city(), Math.random() < 0.5, shortDescr, description, Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), randomTags(), State.ACCESS));
+            city = Math.random() < 0.5 ? "Москва" : "Санкт-Петербург";
+            if (city.equals("Санкт-Петербург")){
+                latitudeY = (float)(0.16 * Math.random()) + 59.88f;
+                longitudeX = (float)(0.19 * Math.random()) + 30.24f;
+            }
+            if (city.equals("Москва")){
+                latitudeY = (float)(0.2 * Math.random()) + 55.66f;
+                longitudeX = (float)(0.32 * Math.random()) + 37.45f;
+            }
+
+            Point point = new Point(latitudeY, longitudeX);
+            pointService.add(point);
+            vacancy = new Vacancy(faker.job().title(), city, Math.random() < 0.5, shortDescr, description, Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), randomTags(), point);
+            vacancy.setState(State.ACCESS);
+            vacancyService.add(vacancy);
         }
     }
 
     public void initEmployerProfiles() {
         BufferedImage image = null;
         Set<Vacancy> vacancies = new HashSet<>();
+        EmployerProfile employerProfile;
+
         vacancies.add(vacancyService.getById(1L));
         vacancies.add(vacancyService.getById(2L));
         try {
@@ -178,7 +200,7 @@ public class InitData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        employerProfileService.add(new EmployerProfile("Рога и копыта", "www.roga.ru", "Мы продуктовая компания, которая разрабатывает высокотехнологичные продукты в области электротранспорта, роботизации, автоматизации и биотехнологий.\n" +
+        employerProfile = new EmployerProfile("Рога и копыта", "www.roga.ru", "Мы продуктовая компания, которая разрабатывает высокотехнологичные продукты в области электротранспорта, роботизации, автоматизации и биотехнологий.\n" +
                 "В России базируется отдел исследований и разработок. \n" +
                 "Стек: Java8, J2ee, Spring. Клиентская часть: ES6, React, React Native. Облака AWS, Docker, NodeJS (+ Express/Koa/Hapi).\n" +
                 "Миссия - улучшать жизнь людей с помощью технологий.\n" +
@@ -190,7 +212,9 @@ public class InitData {
                 "- Новые технологии без legacy кода. \n" +
                 "- Открытая атмосфера, без корпоративного \"булшита\". \n" +
                 "- Официальное оформление по ТК РФ. \n" +
-                "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ", imageService.resizeLogoEmployer(image), vacancies));
+                "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ", imageService.resizeLogoEmployer(image), vacancies);
+        employerProfile.setState(State.ACCESS);
+        employerProfileService.add(employerProfile);
 
         vacancies.clear();
         vacancies.add(vacancyService.getById(3L));
@@ -200,8 +224,9 @@ public class InitData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        employerProfileService.add(new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image), vacancies));
-
+        employerProfile = new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image), vacancies);
+        employerProfile.setState(State.ACCESS);
+        employerProfileService.add(employerProfile);
     }
 
     public void initPortfolio() {
@@ -242,7 +267,7 @@ public class InitData {
         tags.add(tagService.getById(3L));
         tags.add(tagService.getById(4L));
 
-        seekerProfileService.add(new SeekerProfile("Вася Игоревич Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), tags, portfolios));
+        seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), tags, portfolios));
     }
 
     public Set<Tag> randomTags() {

@@ -1,0 +1,122 @@
+<!DOCTIPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title></title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body>
+<style type="text/css">
+    body {
+        background-color: #F5F5F5;
+    }
+
+    li {
+        margin-top: 20px;
+        list-style-type: none; /* Убираем маркеры */
+    }
+
+    ul {
+        margin-left: 0; /* Отступ слева в браузере IE и Opera */
+        padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+    }
+
+    .logo {
+        width: 90%;
+        height: auto;
+    }
+
+    .main-block {
+        height: 135%;
+        width: 85%;
+        position: relative;
+    }
+
+    .sidebar {
+        width: 15%;
+        position: relative;
+        background-color: #a3bacc;
+        height: calc(100vh);
+    }
+
+    .right {
+        position: absolute;
+        right: 60px;
+    }
+
+    .center {
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .form-search {
+        width: 80%;
+        height: 60px;
+        margin-top: 5%;
+
+    }
+
+    .sidebar-paths {
+        margin-top: 15%;
+        width: 90%;
+
+    }
+
+    .vacancy-table {
+        width: 80%;
+        background-color: white;
+        text-align: center;
+        margin-top: 15%;
+    }
+
+    a {
+        color: white;
+        margin-left: 25%;
+    }
+
+    .navbar {
+        height: 40px;
+        width: 100%;
+        margin: 0;
+        background-color: #7295b1
+    }
+</style>
+<header>
+    <div class="navbar">
+        <div class="navbar-brand"><a href="/">JobSeeker</a>
+        </div>
+        <a class="right" href="#">Меню</a>
+    </div>
+</header>
+<div class="row">
+    <div class="sidebar">
+        <div class="sidebar-paths center">
+            <ul>
+                <li><a href="#">Все вакансии</a></li>
+                <li><a href="#">Все компании</a></li>
+                <li><a href="#">Все резюме</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-block chromeFix">
+        <div class="row" style="height: 40px">
+
+        </div>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4" align="center" style="color: #7295B1">
+                <span style="font-size: 25px">Ой, что-то пошло не так!</span><br>
+                <span th:text="${status}" style="font-size: 120px"></span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
