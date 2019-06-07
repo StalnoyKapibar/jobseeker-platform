@@ -21,8 +21,8 @@ $(document).ready (function () {
         "columnDefs": [
             {
                 "targets": [0],
-                "visible": false,
-                "searchable": false
+                "visible": true,
+                "searchable": true
             }
         ],
         "initComplete": function () {
