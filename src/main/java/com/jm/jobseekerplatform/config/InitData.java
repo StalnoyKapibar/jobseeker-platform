@@ -5,10 +5,12 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
@@ -51,7 +53,6 @@ public class InitData {
     private EmployerReviewsService employerReviewsService;
 
     private Faker faker = new Faker(new Locale("ru"));
-
 
 
     public void initData() {
@@ -118,21 +119,136 @@ public class InitData {
         User user;
         Employer employer;
         Seeker seeker;
+        Seeker seeker2;
+        Seeker seeker3;
+        Seeker seeker4;
+        Seeker seeker5;
+        Seeker seeker6;
+        Seeker seeker7;
+        Seeker seeker8;
+        Seeker seeker9;
+        Seeker seeker10;
+        Seeker seeker11;
+        Seeker seeker12;
+        Seeker seeker13;
+        Seeker seeker14;
+        Seeker seeker15;
+        Seeker seeker16;
+        Seeker seeker17;
+        Seeker seeker18;
+        Seeker seeker19;
+        Seeker seeker20;
+        Seeker seeker21;
+        Seeker seeker22;
+        Seeker seeker23;
+        Seeker seeker24;
 
         role = userRoleService.findByAuthority("ROLE_ADMIN");
-        user = new User("admin@mail.ru", userService.encodePassword("admin".toCharArray()), role);
+        user = new User("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), role);
         user.setConfirm(true);
         userService.add(user);
 
         role = userRoleService.findByAuthority("ROLE_EMPLOYER");
-        employer = new Employer("employer@mail.ru", userService.encodePassword("employer".toCharArray()), role, employerProfileService.getById(1L));
+        employer = new Employer("employer@mail.ru", userService.encodePassword("employer".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(1L));
         employer.setConfirm(true);
         employerService.add(employer);
 
         role = userRoleService.findByAuthority("ROLE_SEEKER");
-        seeker = new Seeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), role, seekerProfileService.getById(1L));
+        seeker = new Seeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
         seeker.setConfirm(true);
         seekerService.add(seeker);
+
+        seeker2 = new Seeker("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker2.setConfirm(true);
+        seekerService.add(seeker2);
+
+        seeker3 = new Seeker("seeker3@mail.ru", userService.encodePassword("seeker3".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker3.setConfirm(true);
+        seekerService.add(seeker3);
+
+        seeker4 = new Seeker("seeker4@mail.ru", userService.encodePassword("seeker4".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker4.setConfirm(true);
+        seekerService.add(seeker4);
+
+        seeker5 = new Seeker("seeker5@mail.ru", userService.encodePassword("seeker5".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker5.setConfirm(true);
+        seekerService.add(seeker5);
+
+        seeker6 = new Seeker("seeker6@mail.ru", userService.encodePassword("seeker6".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker6.setConfirm(true);
+        seekerService.add(seeker6);
+
+        seeker7 = new Seeker("seeker7@mail.ru", userService.encodePassword("seeker7".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker7.setConfirm(true);
+        seekerService.add(seeker7);
+
+        seeker8 = new Seeker("seeker8@mail.ru", userService.encodePassword("seeker8".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker8.setConfirm(true);
+        seekerService.add(seeker8);
+
+        seeker9 = new Seeker("seeker9@mail.ru", userService.encodePassword("seeker9".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker9.setConfirm(true);
+        seekerService.add(seeker9);
+
+        seeker10 = new Seeker("seeker10@mail.ru", userService.encodePassword("seeker10".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker10.setConfirm(true);
+        seekerService.add(seeker10);
+
+        seeker11 = new Seeker("seeker11@mail.ru", userService.encodePassword("seeker11".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker11.setConfirm(true);
+        seekerService.add(seeker11);
+
+        seeker12 = new Seeker("seeker12@mail.ru", userService.encodePassword("seeker12".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker12.setConfirm(true);
+        seekerService.add(seeker12);
+
+        seeker13 = new Seeker("seeker13@mail.ru", userService.encodePassword("seeker13".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker13.setConfirm(true);
+        seekerService.add(seeker13);
+
+        seeker14 = new Seeker("seeker14@mail.ru", userService.encodePassword("seeker14".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker14.setConfirm(true);
+        seekerService.add(seeker14);
+
+        seeker15 = new Seeker("seeker15@mail.ru", userService.encodePassword("seeker15".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker15.setConfirm(true);
+        seekerService.add(seeker15);
+
+        seeker16 = new Seeker("seeker16@mail.ru", userService.encodePassword("seeker16".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker16.setConfirm(true);
+        seekerService.add(seeker16);
+
+        seeker17 = new Seeker("seeker17@mail.ru", userService.encodePassword("seeker17".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker17.setConfirm(true);
+        seekerService.add(seeker17);
+
+        seeker18 = new Seeker("seeker18@mail.ru", userService.encodePassword("seeker18".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker18.setConfirm(true);
+        seekerService.add(seeker18);
+
+        seeker19 = new Seeker("seeker19@mail.ru", userService.encodePassword("seeker19".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker19.setConfirm(true);
+        seekerService.add(seeker19);
+
+        seeker20 = new Seeker("seeker20@mail.ru", userService.encodePassword("seeker20".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker20.setConfirm(true);
+        seekerService.add(seeker20);
+
+        seeker21 = new Seeker("seeker21@mail.ru", userService.encodePassword("seeker21".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker21.setConfirm(true);
+        seekerService.add(seeker21);
+
+        seeker22 = new Seeker("seeker22@mail.ru", userService.encodePassword("seeker22".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker22.setConfirm(true);
+        seekerService.add(seeker22);
+
+        seeker23 = new Seeker("seeker23@mail.ru", userService.encodePassword("seeker23".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker23.setConfirm(true);
+        seekerService.add(seeker23);
+
+        seeker24 = new Seeker("seeker24@mail.ru", userService.encodePassword("seeker24".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker24.setConfirm(true);
+        seekerService.add(seeker24);
 
     }
 
@@ -239,6 +355,7 @@ public class InitData {
         tags.add(tagService.getById(4L));
 
         seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), tags, portfolios));
+        //seekerProfileService.add(new SeekerProfile("Gq", "Po", "Qw", "Ищу крутую команду", imageService.resizePhotoSeeker(image), tags, portfolios));
     }
 
     public Set<Tag> randomTags() {
