@@ -26,27 +26,6 @@ public class UserRestController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/email/{email}")
-    public Object isExistEmail(@PathVariable String email) {
-        if (userService.isExistEmail(email)) {
-            return new Object() {
-                String valid = "false";
-
-                public String getValid() {
-                    return valid;
-                }
-            };
-        } else {
-            return new Object() {
-                String valid = "true";
-
-                public String getValid() {
-                    return valid;
-                }
-            };
-        }
-    }
-
     @RequestMapping(method = RequestMethod.GET, value = "/getUser/{id}")
     public User getUser(@PathVariable(required = false) Long id) {
         return userService.getById(id);
