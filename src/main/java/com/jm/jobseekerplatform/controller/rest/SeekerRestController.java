@@ -1,4 +1,44 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.model.Seeker;
+import com.jm.jobseekerplatform.model.SeekerProfile;
+import com.jm.jobseekerplatform.service.impl.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.SeekerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/seeker")
 public class SeekerRestController {
+    @Autowired
+    private SeekerService seekerService;
+
+    @Autowired
+    private SeekerProfileService seekerProfileService;
+
+    @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity updateSeeker(@RequestBody Seeker seeker) {
+        SeekerProfile tmpSeeker = seekerProfileService.getById(seeker.getSeekerProfile().getId());
+        seeker.getSeekerProfile().setPhoto(tmpSeeker.getPhoto());
+        seeker.getSeekerProfile().setTags(tmpSeeker.getTags());
+        seeker.getSeekerProfile().setPortfolios(tmpSeeker.getPortfolios());
+        seekerProfileService.update(seeker.getSeekerProfile());
+        seekerService.update(seeker);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/{seekerId}")
+    public ResponseEntity<SeekerProfile> getSeekerById(@PathVariable Long seekerId) {
+        return new ResponseEntity<>(seekerProfileService.getById(seekerId), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/delete/{seekerId}", method = RequestMethod.GET)
+    public ResponseEntity deleteSeekerById(@PathVariable Long seekerId) {
+        seekerService.deleteById(seekerId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
