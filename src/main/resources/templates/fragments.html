@@ -54,11 +54,11 @@
                             <a href="/login" th:align="right">Проблемы со входом?</a></li>
                     </ul>
                 <li sec:authorize="hasRole('ROLE_SEEKER')">
-                    <a href="/seeker"><span class="glyphicon glyphicon-user"></span>
+                    <a href="/user"><span class="glyphicon glyphicon-user"></span>
                         <span sec:authentication="name"></span></a>
                 </li>
                 <li sec:authorize="hasRole('ROLE_EMPLOYER')">
-                    <a href="/employer"><span class="glyphicon glyphicon-user"></span>
+                    <a href="/user"><span class="glyphicon glyphicon-user"></span>
                         <span sec:authentication="name"></span></a>
                 </li>
                 <li sec:authorize="hasRole('ROLE_ADMIN')">
