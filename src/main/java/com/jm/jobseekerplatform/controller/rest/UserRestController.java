@@ -31,6 +31,7 @@ public class UserRestController {
         if (userService.isExistEmail(email)) {
             return new Object() {
                 String valid = "false";
+
                 public String getValid() {
                     return valid;
                 }
@@ -38,10 +39,23 @@ public class UserRestController {
         } else {
             return new Object() {
                 String valid = "true";
+
                 public String getValid() {
                     return valid;
                 }
             };
         }
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/getUser/{id}")
+    public User getUser(@PathVariable(required = false) Long id) {
+        return userService.getById(id);
+    }
+
+    // отправка приглашения
+    @RequestMapping(method = RequestMethod.GET, value = "/inviteFriend/{user}/{friend}")
+    public void inviteFriend(@PathVariable String user, @PathVariable String friend) {
+        userService.inviteFriend(user, friend);
+    }
+
 }

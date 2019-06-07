@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,7 +58,7 @@ public class UserService extends AbstractService<User> {
         return dao.isExistEmail(email);
     }
 
-    public void registerNewUser (User user) {
+    public void registerNewUser(User user) {
         String userEmail = user.getEmail();
         char[] userPass = encodePassword(user.getPasswordChar());
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
@@ -104,5 +105,9 @@ public class UserService extends AbstractService<User> {
         }
 
         return isCorrect;
-        }
+    }
+
+    public void inviteFriend(String user, String friend) {
+        mailService.sendFriendInvitaionEmail(user, friend);
+    }
 }

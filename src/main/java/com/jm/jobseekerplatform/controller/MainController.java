@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.persistence.NoResultException;
 import java.util.Base64;
 import java.util.List;
@@ -121,9 +122,9 @@ public class MainController {
         return "login";
     }
 
-
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
-    public String reg() {
+    public String reg(@RequestParam(value = "email", required = false) String email, Model model) {
+        model.addAttribute("email", email);
         return "registration";
     }
 
