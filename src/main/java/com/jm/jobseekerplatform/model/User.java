@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -23,6 +24,9 @@ public class User implements Serializable, UserDetails {
     @Column(name = "password", nullable = false)
     private char[] password;
 
+    @Column(name = "date", nullable = false)
+    private LocalDateTime date;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private UserRole authority;
 
@@ -35,9 +39,10 @@ public class User implements Serializable, UserDetails {
     public User() {
     }
 
-    public User(String email, char[] password, UserRole authority) {
+    public User(String email, char[] password, LocalDateTime date, UserRole authority) {
         this.email = email;
         this.password = password;
+        this.date = date;
         this.authority = authority;
         this.enabled = true;
         this.confirm = false;
@@ -70,6 +75,14 @@ public class User implements Serializable, UserDetails {
 
     public char[] getPasswordChar() {
         return password;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
     @Override
