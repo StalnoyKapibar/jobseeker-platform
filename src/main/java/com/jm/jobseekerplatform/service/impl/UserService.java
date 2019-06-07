@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,16 +59,16 @@ public class UserService extends AbstractService<User> {
         return dao.isExistEmail(email);
     }
 
-    public void registerNewUser (User user) {
+    public void registerNewUser(User user) {
         String userEmail = user.getEmail();
         char[] userPass = encodePassword(user.getPasswordChar());
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
 
         if (userRole.equals(roleSeeker)) {
-            Seeker seeker = new Seeker(userEmail, userPass, userRole, null);
+            Seeker seeker = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
             seekerService.add(seeker);
         } else if (userRole.equals(roleEmployer)) {
-            Employer employer = new Employer(userEmail, userPass, userRole, null);
+            Employer employer = new Employer(userEmail, userPass, LocalDateTime.now(), userRole, null);
             employerService.add(employer);
         }
 
@@ -104,5 +106,5 @@ public class UserService extends AbstractService<User> {
         }
 
         return isCorrect;
-        }
+    }
 }
