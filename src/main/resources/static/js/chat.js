@@ -24,15 +24,15 @@ function disconnect() {
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
 
-    if (username!==message.author) {
-        if (username==="admin@mail.ru") {
-            message.adminTo="true";
-            updateMessage(message);
-        } else {
-            message.adminFrom="true";
-            updateMessage(message);
-        }
-    }
+    // if (username!==message.author) {
+    //     if (username==="admin@mail.ru") {
+    //         message.is="true";
+    //         updateMessage(message);
+    //     } else {
+    //         message.adminFrom="true";
+    //         updateMessage(message);
+    //     }
+    // }
 
     $(".media-list").append('<li class="media">' +
         '<div class="media-body">' +
@@ -64,28 +64,28 @@ function updateMessage(message) {
     })
 }
 
-function refreshMessages(messages) {
-    messages.reverse();
+function refreshMessages(chatMessagesList) {
+    chatMessagesList.reverse();
     $(".media-list").html("");
-    $.each(messages, function(i, message) {
-        if (username!==message.author) {
-            if (username==="admin@mail.ru") {
-                if (message.adminTo!=="true"){
-                message.adminTo="true";
-                updateMessage(message);}
-            } else {
-                if(message.adminFrom!=="true") {
-                message.adminFrom="true";
-                updateMessage(message);}
-            }
-        }
+    $.each(chatMessagesList, function(i, message) {
+        // if (username!==message.author['email']) {
+        //     if (username==="admin@mail.ru") {
+        //         if (message.adminTo!=="true"){
+        //         message.adminTo="true";
+        //         updateMessage(message);}
+        //     } else {
+        //         if(message.adminFrom!=="true") {
+        //         message.adminFrom="true";
+        //         updateMessage(message);}
+        //     }
+        // }
         $(".media-list").append('<li class="media">' +
                                 '<div class="media-body">' +
                                 '<div class="media">' +
                                 '<div class="media-body"><small>'
                                     + message.text +
                                 '</small><br/><small class="text-muted">'
-                                + message.author +
+                                + message.author['email'] +                    ///////////????????
                                 '</small><hr/></div></div></div></li>');
     });
     $container = $('.message-area');
@@ -98,10 +98,9 @@ function count_not_read_messages(url) {
         type: "GET",
         async: false,
         success: function (data) {
-            //if (data!==0){
                 var str = "   " + data;
                 document.getElementById("count_not_read_messages").textContent=str;}
-        //}
+
     })
 }
 
@@ -109,10 +108,10 @@ $(function(){
 
         connect();
 
-        $.get("/api/chatmessages/" + vacancyId, function (messages) {
-            refreshMessages(messages)});
+        $.get("/api/chatmessages/" + vacancyId, function (chatMessagesList) {
+            refreshMessages(chatMessagesList)});
 
-        $("#sendMessage").on("click", function() {sendMessage()});
+        //$("#sendMessage").on("click", function() {sendMessage()});
 
         messageForm.addEventListener('submit', sendMessage, true);
 
@@ -124,8 +123,8 @@ $(function(){
         var messageContent = messageInput.value.trim();
         if(messageContent && stompClient) {
             var chatMessage = {
-                author: username,
-                text: messageInput.value };
+                author: username,                        /////////??????????
+                text: messageInput.value };                   /////////????????????
             stompClient.send("/live/chat/" + vacancyId, {}, JSON.stringify(chatMessage));
             messageInput.value = '';
         }

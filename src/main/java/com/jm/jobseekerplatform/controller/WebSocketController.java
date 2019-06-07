@@ -1,8 +1,11 @@
 package com.jm.jobseekerplatform.controller;
 
+import com.jm.jobseekerplatform.dto.MessageDTO;
 import com.jm.jobseekerplatform.model.ChatMessage;
+import com.jm.jobseekerplatform.model.User;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.service.impl.ChatMessageService;
+import com.jm.jobseekerplatform.service.impl.UserService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.*;
@@ -21,27 +24,25 @@ public class WebSocketController {
     ChatMessageService chatMessageService;
 
     @Autowired
+    UserService userService;
+
+    @Autowired
     SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/chat/{chatId}")
-    public void sendMessage(@DestinationVariable("chatId") String id, ChatMessage chatMessage) {
+    public void sendMessage(@DestinationVariable("chatId") String id, MessageDTO messageDTO) {
         Long chatId = Long.parseLong(id);
-        String author = chatMessage.getAuthor();
-        String adminTo;
-        String adminFrom;
-        if (author.equals("admin@mail.ru")){
-            adminFrom = "false";
-            adminTo = "true";
-        } else {
-            adminFrom = "true";
-            adminTo = "false";
-        }
-        ChatMessage chatMess = new ChatMessage(chatMessage.getText(), author, new Date(), adminFrom, adminTo);
-        chatMessageService.add(chatMess);
+        User author = userService.findByEmail(messageDTO.getAuthor());
+        ChatMessage chatMessage = new ChatMessage(messageDTO.getText(), author, new Date(), false);
+        chatMessageService.add(chatMessage);
+
+
         Vacancy vacancy = vacancyService.getById(chatId);
-        vacancy.getChatMessages().add(chatMess);
+        vacancy.getChatMessages().add(chatMessage);
         vacancyService.update(vacancy);
-        Long idMessage = chatMess.getId();
+        Long idMessage = chatMessage.getId();
+
+
         ChatMessage message = chatMessageService.getById(idMessage);
         simpMessagingTemplate.convertAndSend("/topic/chat/" + chatId, message);
     }

@@ -3,6 +3,7 @@ package com.jm.jobseekerplatform.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,7 +46,7 @@ public class Vacancy implements Serializable {
     private State state;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private Set<ChatMessage> chatMessages;
+    private List<ChatMessage> chatMessages;
 
     @Column(name = "expiry_block")
     private Date expiryBlock;
@@ -138,11 +139,11 @@ public class Vacancy implements Serializable {
         this.state = state;
     }
 
-    public void setChatMessages(Set<ChatMessage> chatMessages) {
+    public void setChatMessages(List<ChatMessage> chatMessages) {
         this.chatMessages = chatMessages;
     }
 
-    public Set<ChatMessage> getChatMessages() {
+    public List<ChatMessage> getChatMessages() {
         return chatMessages;
     }
 

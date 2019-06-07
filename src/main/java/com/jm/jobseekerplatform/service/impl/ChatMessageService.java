@@ -7,11 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service("chatMessageService")
 @Transactional
 public class ChatMessageService extends AbstractService<ChatMessage> {
 
     @Autowired
     ChatMessageDAO chatMessageDAO;
+
+    //List<ChatMessage> getMessagesForAdmin() {
+//        return null;
+//    }
 
 }

@@ -20,14 +20,14 @@ $(document).ready (function () {
             {"mData": "lastMessage",
              "mRender": function(data, type, full) {
                 return '<a href="/chat/'+vacancyId+'">'+data+'</a>'}},
-            {"mData": "adminTo"}
+            {"mData": "isRead"}
         ],
         "columnDefs": [
             {"targets": [1,2], "visible": false }
         ],
         "rowCallback": function (row, data, index) {
 
-            if ((data.adminTo == 'false')) {
+            if ((data.isRead === 'false')) {
                 $(row).css("background-color", "#C6C7C8");
             }
         }
