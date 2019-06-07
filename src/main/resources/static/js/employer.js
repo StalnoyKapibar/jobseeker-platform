@@ -11,6 +11,7 @@ function showVacancy(id) {
             $("#VMTags").text(tags);
             $("#VMHeadline").text(data.headline);
             $("#VMCity").text(data.city);
+            $("#VMShortDescription").text(data.shortDescription);
             $("#VMDescription").text(data.description);
             $("#VMId").text(data.id);
 
@@ -32,6 +33,13 @@ function showVacancy(id) {
             } else {
                 $('#VMRemote').hide();
             }
+            $('#map_collapse').attr("class", "collapsed collapse");
+
+            var lat = data.coordinates.latitudeY;
+            var lng = data.coordinates.longitudeX;
+            showVacancyOnMap(lat, lng);
+            var address = getAddressByCoords(lat,lng);
+            $("#VMAddress").text(address);
         }
     });
 }

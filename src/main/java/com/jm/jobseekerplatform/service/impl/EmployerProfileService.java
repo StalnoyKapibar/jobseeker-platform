@@ -53,4 +53,8 @@ public class EmployerProfileService extends AbstractService<EmployerProfile> {
     public int deleteExpiryBlockEmployerProfiles() {
         return dao.deleteExpiryBlockEmployerProfiles();
     }
+
+    public void addVacancyToEmployerProfile(Long employerProfileId, Long vacancyId) {
+        dao.addVacancyToEmployerProfile(employerProfileId, vacancyId);
+    }
 }
