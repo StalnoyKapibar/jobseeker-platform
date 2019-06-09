@@ -24,15 +24,10 @@ function disconnect() {
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
 
-    // if (username!==message.author) {
-    //     if (username==="admin@mail.ru") {
-    //         message.is="true";
-    //         updateMessage(message);
-    //     } else {
-    //         message.adminFrom="true";
-    //         updateMessage(message);
-    //     }
-    // }
+    if (username!==message.author) {
+            message.read=true;
+            updateMessage(message);
+    }
 
     $(".media-list").append('<li class="media">' +
         '<div class="media-body">' +
@@ -51,7 +46,7 @@ function updateMessage(message) {
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
     $.ajax({
-        url: "/api/chatmessages/4",
+        url: "/api/chatmessages/change_status/"+vacancyId,
         type: "PUT",
         contentType: "application/json",
         data: JSON.stringify(message),
@@ -68,24 +63,17 @@ function refreshMessages(chatMessagesList) {
     chatMessagesList.reverse();
     $(".media-list").html("");
     $.each(chatMessagesList, function(i, message) {
-        // if (username!==message.author['email']) {
-        //     if (username==="admin@mail.ru") {
-        //         if (message.adminTo!=="true"){
-        //         message.adminTo="true";
-        //         updateMessage(message);}
-        //     } else {
-        //         if(message.adminFrom!=="true") {
-        //         message.adminFrom="true";
-        //         updateMessage(message);}
-        //     }
-        // }
+        if (username!==message.author) {
+                message.read=true;
+                updateMessage(message);
+        }
         $(".media-list").append('<li class="media">' +
                                 '<div class="media-body">' +
                                 '<div class="media">' +
                                 '<div class="media-body"><small>'
                                     + message.text +
                                 '</small><br/><small class="text-muted">'
-                                + message.author['email'] +                    ///////////????????
+                                + message.author +
                                 '</small><hr/></div></div></div></li>');
     });
     $container = $('.message-area');
@@ -111,11 +99,14 @@ $(function(){
         $.get("/api/chatmessages/" + vacancyId, function (chatMessagesList) {
             refreshMessages(chatMessagesList)});
 
-        //$("#sendMessage").on("click", function() {sendMessage()});
 
         messageForm.addEventListener('submit', sendMessage, true);
 
-        count_not_read_messages(vacancyId);
+        if (username=="admin@mail.ru") {
+            count_not_read_messages("admin");
+        } else {
+            count_not_read_messages(vacancyId);
+        }
 
         function sendMessage(event) {
         $container = $('.message-area');
@@ -123,8 +114,8 @@ $(function(){
         var messageContent = messageInput.value.trim();
         if(messageContent && stompClient) {
             var chatMessage = {
-                author: username,                        /////////??????????
-                text: messageInput.value };                   /////////????????????
+                author: username,
+                text: messageInput.value };
             stompClient.send("/live/chat/" + vacancyId, {}, JSON.stringify(chatMessage));
             messageInput.value = '';
         }

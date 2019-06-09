@@ -1,5 +1,9 @@
 package com.jm.jobseekerplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -16,8 +20,9 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "author")
-    private User author;   /////////???????
+    @ManyToOne
+    @JoinColumn(name = "author")
+    private User author;
 
     @Column(name = "date")
     private Date date;
@@ -44,6 +49,8 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         this.text = text;
     }
 
+    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="email")
+    @JsonIdentityReference(alwaysAsId=true)
     public User getAuthor() {
         return author;
     }
@@ -73,7 +80,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         return "{" +
                 "\"id\":\"" + id + '\"' +
                 ",\"text\":\"" + text + '\"' +
-                ",\"author\":\"" + author + '\"' +
+                ",\"author\":\"" + author.getEmail() + '\"' +
                 ",\"createDate\":\"" + date + "\"" +
                 '}';
     }

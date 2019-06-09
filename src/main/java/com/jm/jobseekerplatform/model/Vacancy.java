@@ -1,5 +1,7 @@
 package com.jm.jobseekerplatform.model;
 
+import org.hibernate.annotations.Fetch;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -46,6 +48,7 @@ public class Vacancy implements Serializable {
     private State state;
 
     @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = org.hibernate.annotations.FetchMode.SELECT)
     private List<ChatMessage> chatMessages;
 
     @Column(name = "expiry_block")

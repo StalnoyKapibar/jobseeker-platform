@@ -6,6 +6,10 @@ public class MessageDTO {
 
     private String text;
 
+    private Long id;
+
+    private boolean isRead;
+
     public MessageDTO(String author, String text) {
         this.author = author;
         this.text = text;
@@ -25,5 +29,21 @@ public class MessageDTO {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
     }
 }

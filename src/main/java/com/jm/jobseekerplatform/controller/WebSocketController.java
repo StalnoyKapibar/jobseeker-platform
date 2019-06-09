@@ -36,15 +36,11 @@ public class WebSocketController {
         ChatMessage chatMessage = new ChatMessage(messageDTO.getText(), author, new Date(), false);
         chatMessageService.add(chatMessage);
 
-
         Vacancy vacancy = vacancyService.getById(chatId);
         vacancy.getChatMessages().add(chatMessage);
         vacancyService.update(vacancy);
-        Long idMessage = chatMessage.getId();
 
-
-        ChatMessage message = chatMessageService.getById(idMessage);
-        simpMessagingTemplate.convertAndSend("/topic/chat/" + chatId, message);
+        simpMessagingTemplate.convertAndSend("/topic/chat/" + chatId, chatMessage);
     }
 
 

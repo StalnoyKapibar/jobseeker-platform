@@ -1,9 +1,11 @@
 package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.dto.LastMessageDTO;
+import com.jm.jobseekerplatform.dto.MessageDTO;
 import com.jm.jobseekerplatform.model.ChatMessage;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.service.impl.ChatMessageService;
+import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -21,29 +23,15 @@ public class ChatMessageRestController {
     VacancyService vacancyService;
 
     @Autowired
+    UserRoleService userRoleService;
+
+    @Autowired
     ChatMessageService chatMessageService;
 
     @GetMapping("last")
     public HttpEntity getAllLastMessages() {
-
-        List<Vacancy> vacancies = vacancyService.getAll();
-
-        List<LastMessageDTO> lastMessages = new ArrayList<>();
-
-        for (int i=0; i<vacancies.size(); i++) {
-            Vacancy vacancy = vacancies.get(i);
-
-            List<ChatMessage> chatMessages = vacancy.getChatMessages();
-
-            if (chatMessages!=null && chatMessages.size()!=0) {
-                List<ChatMessage> list = new ArrayList<>(chatMessages);
-                Collections.sort(list);
-                LastMessageDTO messageDTO = new LastMessageDTO(vacancy.getId(), vacancy.getHeadline(), list.get(0).getText(), list.get(0).getDate(), list.get(0).isRead());
-                lastMessages.add(messageDTO);
-            }
-        }
+        List<LastMessageDTO> lastMessages = chatMessageService.getAllLastMessages();
         Collections.sort(lastMessages);
-
         return new ResponseEntity(lastMessages, HttpStatus.OK);
     }
 
@@ -54,37 +42,27 @@ public class ChatMessageRestController {
         return new ResponseEntity(chatMessageList, HttpStatus.OK);
     }
 
-    @PutMapping("{messageId}")
-    public HttpEntity changeStatusMessage(@PathVariable("messageId") Long id, @RequestBody ChatMessage message) {
-
-        chatMessageService.update(message);
+    @PutMapping("change_status/{messageId}")
+    public HttpEntity changeStatusMessage(@PathVariable("messageId") Long id, @RequestBody MessageDTO message) {
+        Long idMessage = message.getId();
+        ChatMessage chatMessage = chatMessageService.getById(idMessage);
+        chatMessage.setRead(message.isRead());
+        chatMessageService.update(chatMessage);
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("count_not_read_messages/admin")
     public HttpEntity getCountNotReadMessagesForAdmin() {
-        List<ChatMessage> list = chatMessageService.getAll();
-        int count = 1;
-//        for (int i =0; i<list.size(); i++) {
-//            String s = list.get(i).getAuthor().getEmail();
-//            if (s.equals("false")) {
-//                count++;
-//            }
-//        }
+        int count = chatMessageService.getNotReadMessages().size();
         return new ResponseEntity(count, HttpStatus.OK);
     }
 
     @GetMapping("count_not_read_messages/{vacancyId}")
     public HttpEntity getCountNotReadMessagesForUser(@PathVariable("vacancyId") Long id) {
         List<ChatMessage> list = new ArrayList<>(vacancyService.getById(id).getChatMessages());
-        int count = 3;
-//        for (int i =0; i<list.size(); i++) {
-//            String s = list.get(i).getAuthor().getEmail();
-//            if (s.equals("false")) {
-//                count++;
-//            }
-//        }
+        Long count = list.stream().filter(a -> a.getAuthor().getAuthority().equals(userRoleService.findByAuthority("ROLE_ADMIN"))).filter(a -> a.isRead() == false).count();
+
         return new ResponseEntity(count, HttpStatus.OK);
     }
 }

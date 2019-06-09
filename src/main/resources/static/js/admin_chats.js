@@ -20,14 +20,13 @@ $(document).ready (function () {
             {"mData": "lastMessage",
              "mRender": function(data, type, full) {
                 return '<a href="/chat/'+vacancyId+'">'+data+'</a>'}},
-            {"mData": "isRead"}
+            {"mData": "read"}
         ],
         "columnDefs": [
-            {"targets": [1,2], "visible": false }
+            {"targets": [1,2,4], "visible": false }
         ],
         "rowCallback": function (row, data, index) {
-
-            if ((data.isRead === 'false')) {
+            if ((data.read === false) & (data.author!=="admin@mail.ru")) {
                 $(row).css("background-color", "#C6C7C8");
             }
         }
