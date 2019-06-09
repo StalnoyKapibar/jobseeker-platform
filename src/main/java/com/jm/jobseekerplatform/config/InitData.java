@@ -9,10 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class InitData {
@@ -51,6 +48,9 @@ public class InitData {
     private EmployerReviewsService employerReviewsService;
 
     @Autowired
+    private ChatMessageService chatMessageService;
+
+    @Autowired
     private PointService pointService;
 
     private Faker faker = new Faker(new Locale("ru"));
@@ -66,6 +66,7 @@ public class InitData {
         initSeekerProfile();
         initUsers();
         initReviews();
+        initChat();
     }
 
     public void initReviews() {
@@ -273,5 +274,21 @@ public class InitData {
         }
         return tags;
     }
+
+    public void initChat() {
+
+        for (Long i=1L; i<6L; i++){
+            List<ChatMessage> messages = new ArrayList<>();
+            for (int k=0; k<5; k++) {
+                ChatMessage chatMessage = new ChatMessage(faker.gameOfThrones().quote(), userService.findByEmail("admin@mail.ru"), new Date(), false);
+                chatMessageService.add(chatMessage);
+                messages.add(chatMessage);
+            }
+            Vacancy vacancy = vacancyService.getById(i);
+            vacancy.setChatMessages(messages);
+            vacancyService.update(vacancy);
+        }
+    }
+
 
 }

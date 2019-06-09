@@ -1,6 +1,8 @@
 package com.jm.jobseekerplatform.service.impl;
 
 import com.jm.jobseekerplatform.dao.impl.EmployerDAO;
+import com.jm.jobseekerplatform.model.Employer;
+import com.jm.jobseekerplatform.model.EmployerProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,4 +13,5 @@ public class EmployerService extends UserService {
 
     @Autowired
     private EmployerDAO dao;
+
 }
