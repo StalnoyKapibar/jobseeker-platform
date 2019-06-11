@@ -5,11 +5,15 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
+
 import java.util.*;
+
 
 @Component
 public class InitData {
@@ -54,7 +58,6 @@ public class InitData {
     private PointService pointService;
 
     private Faker faker = new Faker(new Locale("ru"));
-
 
 
     public void initData() {
@@ -124,19 +127,20 @@ public class InitData {
         Seeker seeker;
 
         role = userRoleService.findByAuthority("ROLE_ADMIN");
-        user = new User("admin@mail.ru", userService.encodePassword("admin".toCharArray()), role);
+        user = new User("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), role);
         user.setConfirm(true);
         userService.add(user);
 
         role = userRoleService.findByAuthority("ROLE_EMPLOYER");
-        employer = new Employer("employer@mail.ru", userService.encodePassword("employer".toCharArray()), role, employerProfileService.getById(1L));
+        employer = new Employer("employer@mail.ru", userService.encodePassword("employer".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(1L));
         employer.setConfirm(true);
         employerService.add(employer);
 
         role = userRoleService.findByAuthority("ROLE_SEEKER");
-        seeker = new Seeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), role, seekerProfileService.getById(1L));
+        seeker = new Seeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
         seeker.setConfirm(true);
         seekerService.add(seeker);
+
     }
 
     public void initVacancies() {
@@ -265,6 +269,7 @@ public class InitData {
         tags.add(tagService.getById(4L));
 
         seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), tags, portfolios));
+        //seekerProfileService.add(new SeekerProfile("Gq", "Po", "Qw", "Ищу крутую команду", imageService.resizePhotoSeeker(image), tags, portfolios));
     }
 
     public Set<Tag> randomTags() {
