@@ -1,6 +1,7 @@
 $(document).ready(function () {
     'use strict';
     feather.replace();
+
     $('#viewBy option').each(function () {
         var param = $(this);
         if (location.href.indexOf(param.val()) !== -1) {
@@ -13,18 +14,11 @@ $(document).ready(function () {
             param.prop('selected', true);
         }
     });
-
 });
 
-$("#viewBy").change(function () {
-    var size = $(this).val();
-    var direction = $("#sorBy option:selected").val();
-    location.href = '/admin/seekers?size=' + size + '&direction=' + direction;
-});
-
-$("#sorBy").change(function () {
-    var direction = $(this).val();
+$("#viewBy, #sorBy").change(function () {
     var size = $("#viewBy option:selected").val();
+    var direction = $("#sorBy option:selected").val();
     location.href = '/admin/seekers?size=' + size + '&direction=' + direction;
 });
 
@@ -41,10 +35,11 @@ function editSeeker(id) {
     location.href = '/admin/seeker/' + id
 }
 
+var token = $("meta[name='_csrf']").attr("content");
+var header = $("meta[name='_csrf_header']").attr("content");
+
 $('#editSeekerForm').click(function (event) {
     event.preventDefault();
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
 
     var id = $('#editSeeker').find("input[name='id']").val();
     var email = $('#editSeeker').find("input[name='email']").val();
@@ -54,7 +49,6 @@ $('#editSeekerForm').click(function (event) {
     var authority = $('#editSeeker').find("input[name='authority']").val();
     var enabled = $('#editSeeker').find("input[name='enabled']").val();
     var confirm = $('#editSeeker').find("input[name='confirm']").val();
-
 
     var profId = $('#editSeeker').find("input[name='profId']").val();
     var name = $('#editSeeker').find("input[name='name']").val();
@@ -67,7 +61,6 @@ $('#editSeekerForm').click(function (event) {
         'id': authorityId,
         'authority': authority
     };
-
 
     var seekerProfile = {
         'id': profId,
@@ -109,21 +102,30 @@ $('#editSeekerForm').click(function (event) {
 function uploadPhoto() {
 
     var id = $('#editPhotoForm').find("input[name='seekerId']").val();
-    var photo = $('#editPhotoForm').find("input[name='file']").val();
+
+    var data = new FormData();
+
+    $.each($("#editPhotoForm").find("input[type='file']"), function (i, tag) {
+        $.each($(tag)[0].files, function (i, file) {
+            data.append(tag.name, file);
+        });
+    });
+    data.append('id', id);
 
     $.ajax({
         url: '/api/seeker/editPhoto',
         type: 'POST',
-        data: {photo: photo},
-        success: function () {
-            location.href = '/admin/seeker/' + id
+        contentType: false,
+        processData: false,
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        data: data,
+        success: function (param) {
+            $('#sPhoto').attr('src', 'data:image/png;base64,' + param.photo)
         }
     });
 }
-
-/*function editPhoto(id) {
-
-}*/
 
 function deleteSeeker(id) {
     $.ajax({
