@@ -6,13 +6,12 @@ import com.jm.jobseekerplatform.service.impl.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.SeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
@@ -34,35 +33,34 @@ public class SeekerController {
         return "seeker";
     }
 
-    @RequestMapping(value = "/admin/seekers",method = RequestMethod.GET)
-    public String adminPageSeekers(HttpServletRequest request, Model model,
-                                   @PageableDefault(sort = {"date"}, direction = Sort.Direction.DESC) Pageable pageable) {
+    @RequestMapping(value = "/admin/seekers", method = RequestMethod.GET)
+    public String adminPageSeekers(HttpServletRequest request, Model model) {
         int page = 0;
         int size = 10;
-        Sort lastVisitSort = null;
-        if (request.getParameter("direction") != null &&
-                !request.getParameter("direction").isEmpty() &&
-                request.getParameter("direction").equals("DESC")) {
+        Sort lastVisitSort = new Sort(Sort.Direction.DESC, "date");
+        String direction = request.getParameter("direction");
+        String pageParam = request.getParameter("page");
+        String sizeParam = request.getParameter("size");
+        if (direction != null && !direction.isEmpty() && direction.equals("DESC")) {
             lastVisitSort = new Sort(Sort.Direction.DESC, "date");
         }
-        if (request.getParameter("direction") != null &&
-                !request.getParameter("direction").isEmpty() &&
-                request.getParameter("direction").equals("ASC")) {
+
+        if (direction != null && !direction.isEmpty() && direction.equals("ASC")) {
             lastVisitSort = new Sort(Sort.Direction.ASC, "date");
         }
 
-        if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
+        if (pageParam != null && !pageParam.isEmpty()) {
             page = Integer.parseInt(request.getParameter("page")) - 1;
         }
 
-        if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
+        if (sizeParam != null && !sizeParam.isEmpty()) {
             size = Integer.parseInt(request.getParameter("size"));
         }
-        model.addAttribute("seekers", seekerService.findAll(PageRequest.of(page, size, lastVisitSort != null ? lastVisitSort : pageable.getSort())));
+        model.addAttribute("seekers", seekerService.findAll(PageRequest.of(page, size, lastVisitSort)));
         return "admin_seekers";
     }
 
-    @RequestMapping(value = "/admin/seeker/{seekerId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/seeker/{seekerId}", method = RequestMethod.GET)
     public String adminPageSeekerToEdit(@PathVariable Long seekerId, Model model) {
         Seeker seeker = seekerService.getById(seekerId);
         return getString(model, seeker);
@@ -74,20 +72,4 @@ public class SeekerController {
         model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seeker.getSeekerProfile().getPhoto()));
         return "admin_seeker_edit";
     }
-
-    @RequestMapping(value = "/admin/seeker/editPhoto", method = RequestMethod.POST)
-    public String adminPageSeekerPhotoToEdit(@RequestParam("seekerId") Long seekerId, @RequestParam("file") MultipartFile file, Model model) {
-        Seeker seeker = seekerService.getById(seekerId);
-        if (!file.isEmpty()) {
-            try {
-                byte[] photo = file.getBytes();
-                seeker.getSeekerProfile().setPhoto(photo);
-                seekerProfileService.update(seeker.getSeekerProfile());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return getString(model, seeker);
-    }
-
 }
