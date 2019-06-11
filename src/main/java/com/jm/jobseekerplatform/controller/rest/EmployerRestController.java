@@ -2,17 +2,14 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.Employer;
 import com.jm.jobseekerplatform.model.EmployerProfile;
-import com.jm.jobseekerplatform.model.Seeker;
-import com.jm.jobseekerplatform.model.SeekerProfile;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.EmployerService;
-import com.jm.jobseekerplatform.service.impl.SeekerProfileService;
-import com.jm.jobseekerplatform.service.impl.SeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/employer")
@@ -35,13 +32,29 @@ public class EmployerRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/editLogo", method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<EmployerProfile> updateEmployerLogo(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("id") String id) {
+        Employer employer = employerService.getById(Long.parseLong(id));
+        if (!file.isEmpty()) {
+            try {
+                byte[] logo = file.getBytes();
+                employer.getEmployerProfile().setLogo(logo);
+                employerProfileService.update(employer.getEmployerProfile());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return new ResponseEntity<>(employer.getEmployerProfile(), HttpStatus.OK);
+    }
+
     @GetMapping("/{employerId}")
-    public ResponseEntity<EmployerProfile> getSeekerById(@PathVariable Long employerId) {
+    public ResponseEntity<EmployerProfile> getEmployerById(@PathVariable Long employerId) {
         return new ResponseEntity<>(employerProfileService.getById(employerId), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{employerId}", method = RequestMethod.GET)
-    public ResponseEntity deleteSeekerById(@PathVariable Long employerId) {
+    public ResponseEntity deleteEmployerById(@PathVariable Long employerId) {
         employerService.deleteById(employerId);
         return new ResponseEntity(HttpStatus.OK);
     }
