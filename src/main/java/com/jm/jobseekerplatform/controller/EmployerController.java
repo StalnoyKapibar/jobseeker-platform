@@ -6,9 +6,7 @@ import com.jm.jobseekerplatform.service.impl.EmployerService;
 import com.jm.jobseekerplatform.service.impl.SeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
@@ -70,24 +68,25 @@ public class EmployerController {
     public String adminPageEmployers(HttpServletRequest request, Model model) {
         int page = 0;
         int size = 10;
+
+        String pageParam = request.getParameter("page");
+        String sizeParam = request.getParameter("size");
+        String direction = request.getParameter("direction");
         Sort lastVisitSort = new Sort(Sort.Direction.DESC,"date");
-        if (request.getParameter("direction") != null && !request.getParameter("direction").isEmpty() &&
-                request.getParameter("direction").equals("ASC")) {
+        if (direction != null && !direction.isEmpty() && direction.equals("ASC")) {
             lastVisitSort = new Sort(Sort.Direction.ASC, "date");
         }
-        if ( request.getParameter("direction") != null && !request.getParameter("direction").isEmpty() &&
-                request.getParameter("direction").equals("DESC")) {
+        if (direction != null && !direction.isEmpty() && direction.equals("DESC")) {
             lastVisitSort = new Sort(Sort.Direction.DESC, "date");
         }
 
-        if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
+        if (sizeParam != null && !sizeParam.isEmpty()) {
             size = Integer.parseInt(request.getParameter("size"));
         }
 
-        if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
+        if (pageParam != null && !pageParam.isEmpty()) {
             page = Integer.parseInt(request.getParameter("page")) - 1;
         }
-
         model.addAttribute("employers", employerService.findAll(PageRequest.of(page, size, lastVisitSort)));
         return "admin_employers";
     }
@@ -103,20 +102,5 @@ public class EmployerController {
         model.addAttribute("employerprof", employer.getEmployerProfile());
         model.addAttribute("photoimg", Base64.getEncoder().encodeToString(employer.getEmployerProfile().getLogo()));
         return "admin_employer_edit";
-    }
-
-    @RequestMapping(value = "/admin/employer/editLogo", method = RequestMethod.POST)
-    public String adminPageSeekerPhotoToEdit(@RequestParam("employerId") Long employerId, @RequestParam("file") MultipartFile file, Model model) {
-        Employer employer = employerService.getById(employerId);
-        if (!file.isEmpty()) {
-            try {
-                byte[] logo = file.getBytes();
-                employer.getEmployerProfile().setLogo(logo);
-                employerProfileService.update(employer.getEmployerProfile());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return getString(model, employer);
     }
 }
