@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/seeker")
@@ -22,16 +23,32 @@ public class SeekerRestController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity updateSeeker(@RequestBody Seeker seeker) {
-        SeekerProfile tmpSeeker = seekerProfileService.getById(seeker.getSeekerProfile().getId());
-        seeker.getSeekerProfile().setPhoto(tmpSeeker.getPhoto());
-        seeker.getSeekerProfile().setTags(tmpSeeker.getTags());
-        seeker.getSeekerProfile().setPortfolios(tmpSeeker.getPortfolios());
+        SeekerProfile seekerProfile = seekerProfileService.getById(seeker.getSeekerProfile().getId());
+        seeker.getSeekerProfile().setPhoto(seekerProfile.getPhoto());
+        seeker.getSeekerProfile().setTags(seekerProfile.getTags());
+        seeker.getSeekerProfile().setPortfolios(seekerProfile.getPortfolios());
         seekerProfileService.update(seeker.getSeekerProfile());
         seekerService.update(seeker);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/{seekerId}")
+    @RequestMapping(value = "/editPhoto", method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<SeekerProfile> updateSeekerPhoto(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("id") String id) {
+        Seeker seeker = seekerService.getById(Long.parseLong(id));
+        if (!file.isEmpty()) {
+            try {
+                byte[] photo = file.getBytes();
+                seeker.getSeekerProfile().setPhoto(photo);
+                seekerProfileService.update(seeker.getSeekerProfile());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return new ResponseEntity<>(seeker.getSeekerProfile(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{seekerId}", method = RequestMethod.GET)
     public ResponseEntity<SeekerProfile> getSeekerById(@PathVariable Long seekerId) {
         return new ResponseEntity<>(seekerProfileService.getById(seekerId), HttpStatus.OK);
     }
