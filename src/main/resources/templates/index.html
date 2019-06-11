@@ -17,6 +17,7 @@
         </div>
         <div class="col-lg-4">
             <span th:text="${vacMess}"></span><br/>
+
             <div class="panel-group" id="accordion">
                 <div class="panel panel-default" th:each="tagVacancy : ${mapVacancies}">
                     <div th:if="${!tagVacancy.getValue().isEmpty()}">
@@ -38,6 +39,12 @@
                         </div>
                     </div>
                 </div>
+
+            <div class="list-group">
+                <a th:each="vacancy: ${vacancies}" class="list-group-item" th:text="${vacancy.headline}"
+                   data-toggle="modal"
+                   data-target="#vacancyModal" th:onclick="'showVacancy('+${vacancy.id}+')'"></a>
+
             </div>
         </div>
     </div>
@@ -67,6 +74,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 </body>
 </html>

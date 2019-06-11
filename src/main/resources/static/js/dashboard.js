@@ -15,13 +15,19 @@ $(document).ready (function () {
                 bSortable: false,
                 data: null,
                 className: "center",
+                defaultContent: '<a href="#">Написать</a>'
+            },
+            {
+                bSortable: false,
+                data: null,
+                className: "center",
                 defaultContent: '<button class="btn btn-primary" data-target="#editModal" data-toggle="modal" >Edit</button>'
             }
         ],
         "columnDefs": [
             {
                 "targets": [0],
-                "visible": false,
+                "visible": true,
                 "searchable": false
             }
         ],

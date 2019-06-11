@@ -1,9 +1,9 @@
 package com.jm.jobseekerplatform.model;
 
 import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,12 +28,19 @@ public class EmployerProfile implements Serializable {
     @Type(type = "image")
     private byte[] logo;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<Vacancy> vacancies;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "employer_id")
     private Set<EmployerReviews> reviews;
+
+    @Column(name = "state", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private State state;
+
+    @Column(name = "expiry_block")
+    private Date expiryBlock;
 
     public EmployerProfile() {
     }
@@ -44,6 +51,7 @@ public class EmployerProfile implements Serializable {
         this.description = description;
         this.logo = logo;
         this.vacancies = vacancies;
+        this.state = State.NO_ACCESS;
     }
 
     public Long getId() {
@@ -118,5 +126,21 @@ public class EmployerProfile implements Serializable {
             return 0d;
         }
 
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public Date getExpiryBlock() {
+        return expiryBlock;
+    }
+
+    public void setExpiryBlock(Date expiryBlock) {
+        this.expiryBlock = expiryBlock;
     }
 }

@@ -5,12 +5,19 @@ import com.jm.jobseekerplatform.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserRestController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userService.getAll();
+    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/add")
     public void registerNewUser(@RequestBody User user) {
@@ -19,22 +26,15 @@ public class UserRestController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/email/{email}")
-    public Object isExistEmail(@PathVariable String email) {
-        if (userService.isExistEmail(email)) {
-            return new Object() {
-                String valid = "false";
-                public String getValid() {
-                    return valid;
-                }
-            };
-        } else {
-            return new Object() {
-                String valid = "true";
-                public String getValid() {
-                    return valid;
-                }
-            };
-        }
+    @RequestMapping(method = RequestMethod.GET, value = "/getUser/{id}")
+    public User getUser(@PathVariable(required = false) Long id) {
+        return userService.getById(id);
     }
+
+    // отправка приглашения
+    @RequestMapping(method = RequestMethod.GET, value = "/inviteFriend/{user}/{friend}")
+    public void inviteFriend(@PathVariable String user, @PathVariable String friend) {
+        userService.inviteFriend(user, friend);
+    }
+
 }

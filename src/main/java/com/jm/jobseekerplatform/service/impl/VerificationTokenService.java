@@ -7,7 +7,6 @@ import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -19,11 +18,10 @@ public class VerificationTokenService extends AbstractService<VerificationToken>
     private VerificationTokenDAO dao;
 
     private Date calculateExpiryDate() {
-        int expiryTimeInMinutes = 60 * 24;
+        int periodInDays = 1;
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Timestamp(calendar.getTime().getTime()));
-        calendar.add(Calendar.MINUTE, expiryTimeInMinutes);
-        return new Date(calendar.getTime().getTime());
+        calendar.add(Calendar.DATE, periodInDays);
+        return calendar.getTime();
     }
 
     public void createVerificationToken(String token, User user) {
