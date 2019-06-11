@@ -17,7 +17,12 @@
 </head>
 
 <body>
-
+<style>
+    img {
+        width: 300px;
+        height: 300px;
+    }
+</style>
 
 <nav class="navbar navbar-dark fixed-top bg-dark navbar-expand-md shadow p-0">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">JobSeeker</a>
@@ -70,25 +75,24 @@
             <h2>Edit employer profile</h2>
             <div class="row" style="padding-top: 30px">
                 <div class="col-4" id="employerLogo">
-                    <img th:src="@{'data:image/png;base64,' + ${photoimg}}" name="photo" alt="" style="width: 300px;height: 300px"><br>
-                    <form class="form-inline" method="POST" enctype="multipart/form-data"
-                          th:action="@{/admin/employer/editLogo}">
+                    <form id="editLogoForm" class="form-inline">
+                        <img id="eLogo" th:src="@{'data:image/png;base64,' + ${photoimg}}" name="logo" alt=""><br>
                         <div class="custom-file mt-4">
-                            <!--<div class="input-group">-->
-                            <div class="row">
-                                <div class="col-8">
-                                    <label class="custom-file-label" for="customFile">Choose new image</label>
-                                    <input type="file" class="custom-file-input" id="customFile"
-                                           accept="image/jpeg,image/png,image/gif" name="file">
-                                    <input type="hidden" th:value="${employer.id}" name="employerId">
-                                </div>
-                                <div class="col-4">
-                                    <button class="btn btn-secondary" type="submit">
-                                        Upload
-                                    </button>
+                            <div class="input-group">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <label class="custom-file-label" for="customFile">Choose new image</label>
+                                        <input type="file" class="custom-file-input" id="customFile"
+                                               accept="image/jpeg,image/png,image/gif" name="file">
+                                        <input type="hidden" th:value="${employer.id}" name="employerId">
+                                    </div>
+                                    <div class="col-4">
+                                        <button onclick="uploadLogo()" class="btn btn-secondary" type="button">
+                                            Upload
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            <!--</div>-->
                         </div>
                     </form>
                 </div>
@@ -96,15 +100,16 @@
                     <form id="editEmployer">
                         <div class="form-group">
                             <label>Employer ID : </label> <input class="form-control" type="text"
-                                                               th:value="${employer.id}" name="id" readonly>
+                                                                 th:value="${employer.id}" name="id" readonly>
                         </div>
                         <div class="form-group">
                             <label>Employer email : </label><input class="form-control" type="text"
-                                                                 th:value="${employer.email}" name="email">
+                                                                   th:value="${employer.email}" name="email">
                         </div>
                         <div class="form-group">
                             <label>Employer last visit : </label><input class="form-control" type="text"
-                                                                      th:value="${employer.date}" name="date" readonly>
+                                                                        th:value="${employer.date}" name="date"
+                                                                        readonly>
                         </div>
                         <div class="form-group">
                             <input class="form-control" type="hidden" th:value="${employer.password}" name="password">
@@ -125,17 +130,18 @@
                         </div>
                         <div class="form-group">
                             <label>Employer profile ID : </label> <input class="form-control" type="text"
-                                                                       th:value="${employerprof.id}" name="profId"
-                                                                       readonly>
+                                                                         th:value="${employerprof.id}" name="profId"
+                                                                         readonly>
                         </div>
                         <div class="form-group">
                             <label>Profile companyName : </label> <input class="form-control" type="text"
-                                                                  th:value="${employerprof.companyName}" name="companyName">
+                                                                         th:value="${employerprof.companyName}"
+                                                                         name="companyName">
                         </div>
                         <div class="form-group">
                             <label>Profile website : </label><input class="form-control" type="text"
-                                                                       th:value="${employerprof.website}"
-                                                                       name="website">
+                                                                    th:value="${employerprof.website}"
+                                                                    name="website">
                         </div>
                         <div class="form-group">
                             <label>Profile description : </label><input class="form-control" type="text"
