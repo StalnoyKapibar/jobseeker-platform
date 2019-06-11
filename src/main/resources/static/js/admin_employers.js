@@ -1,6 +1,7 @@
 $(document).ready(function () {
     'use strict';
     feather.replace();
+
     $('#viewBy option').each(function () {
         var param = $(this);
         if (location.href.indexOf(param.val()) !== -1) {
@@ -16,16 +17,10 @@ $(document).ready(function () {
 
 });
 
-$("#viewBy").change(function () {
-    var size = $(this).val();
-    var direction = $("#sorBy option:selected").val();
-    location.href = '/admin/employers?size=' + size + '&direction=' + direction;
-});
-
-$("#sorBy").change(function () {
-    var direction = $(this).val();
+$("#viewBy, #sorBy").change(function () {
     var size = $("#viewBy option:selected").val();
-    location.href = '/admin/employers?size=' + size + '&direction=' + direction;
+    var direction = $("#sorBy option:selected").val();
+    location.href = '/admin/seekers?size=' + size + '&direction=' + direction;
 });
 
 $(function () {
@@ -36,16 +31,15 @@ $(function () {
     });
 });
 
-
 function editEmployer(id) {
     location.href = '/admin/employer/' + id
 }
 
+var token = $("meta[name='_csrf']").attr("content");
+var header = $("meta[name='_csrf_header']").attr("content");
+
 $('#editEmployerForm').click(function (event) {
     event.preventDefault();
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
-
     var id = $('#editEmployer').find("input[name='id']").val();
     var email = $('#editEmployer').find("input[name='email']").val();
     var password = $('#editEmployer').find("input[name='password']").val();
@@ -102,6 +96,34 @@ $('#editEmployerForm').click(function (event) {
         }
     });
 });
+
+function uploadLogo() {
+
+    var id = $('#editLogoForm').find("input[name='employerId']").val();
+
+    var data = new FormData();
+
+    $.each($("#editLogoForm").find("input[type='file']"), function (i, item) {
+        $.each($(item)[0].files, function (i, file) {
+            data.append(item.name, file);
+        });
+    });
+    data.append('id', id);
+
+    $.ajax({
+        url: '/api/employer/editLogo',
+        type: 'POST',
+        contentType: false,
+        processData: false,
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        data: data,
+        success: function (param) {
+            $('#eLogo').attr('src', 'data:image/png;base64,' + param.logo)
+        }
+    });
+}
 
 function deleteEmployer(id) {
     $.ajax({
