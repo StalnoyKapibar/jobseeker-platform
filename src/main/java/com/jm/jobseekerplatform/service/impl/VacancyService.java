@@ -6,7 +6,7 @@ import com.jm.jobseekerplatform.model.State;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.service.AbstractService;
-import javafx.util.Pair;
+//import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,16 +38,10 @@ public class VacancyService extends AbstractService<Vacancy> {
     private Pattern pattern;
     private Matcher matcher;
 
-    public Set<Vacancy> getByTags(Set<Tag> tags, int limit) {
+    public List<Vacancy> getByTags(Set<Tag> tags, int limit) {
         return dao.getByTags(tags, limit);
     }
 
-    public Map<Tag, List<Vacancy>> getMapVacancyByTags(Set<Tag> tags, int limit) {
-        Map<Tag, List<Vacancy>> resultMap = dao.getListTuplesTagVacancy(tags).stream()
-                .map(tuple -> new Pair<>(tuple.get(0, Tag.class), tuple.get(1, Vacancy.class)))
-                .collect(Collectors.groupingBy(Pair::getKey, Collectors.mapping(Pair::getValue, Collectors.toList())));
-        return resultMap;
-    }
 
     public void blockPermanently(Vacancy vacancy) {
         vacancy.setState(State.BLOCK_PERMANENT);

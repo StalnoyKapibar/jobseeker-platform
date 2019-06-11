@@ -53,20 +53,21 @@ public class MainController {
 
     @RequestMapping("/")
     public String mainPage(Authentication authentication, Model model) {
-        Map<Tag, List<Vacancy>> mapVacancy = vacancyService.getMapVacancyByTags(new HashSet<>(tagService.getAll()), 10);
         if (authentication == null || !authentication.isAuthenticated()) {
+            List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
             model.addAttribute("vacMess", "Доступные вакансии:");
-            model.addAttribute("mapVacancies", mapVacancy);
+            model.addAttribute("vacancies", vacancies);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
                     Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
-                    mapVacancy = vacancyService.getMapVacancyByTags(tags, 10);
+                    List<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
-                    model.addAttribute("mapVacancies", mapVacancy);
+                    model.addAttribute("vacancies", vacancies);
                 } catch (NullPointerException e) {
-                    model.addAttribute("vacMess", "Доступные вакансии:");
-                    model.addAttribute("mapVacancies", mapVacancy);
+                    List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
+                    model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
+                    model.addAttribute("vacancies", vacancies);
                 }
             }
         }

@@ -3,10 +3,9 @@ package com.jm.jobseekerplatform.dao.impl;
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
+
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Tuple;
-import javax.persistence.TypedQuery;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,20 +15,16 @@ import java.util.*;
 public class VacancyDAO extends AbstractDAO<Vacancy> {
 
 
-    public Set<Vacancy> getByTags(Set<Tag> tags, int limit) {
-        Set<Vacancy> vacancies = new HashSet<>();
-        vacancies.addAll(entityManager
-                .createQuery("SELECT v FROM Vacancy v JOIN v.tags t WHERE t IN (:param)", Vacancy.class)
-                .setParameter("param", tags)
-                .setMaxResults(limit)
-                .getResultList());
-        return vacancies;
-    }
+    public List<Vacancy> getByTags(Set<Tag> tags, int limit) {
+        List<Vacancy> vacancies = new ArrayList<>();
+        Set<Long> tagsId = new HashSet<>();
+        for (Tag tag:tags) { tagsId.add(tag.getId()); }
 
-    public List<Tuple> getListTuplesTagVacancy(Set<Tag> tags) {
-            TypedQuery<Tuple> query = entityManager.createQuery("SELECT t, v FROM Vacancy v JOIN v.tags t WHERE t IN (:param)", Tuple.class)
-                .setParameter("param", tags);
-        return query.getResultList();
+        String s = "select * from vacancies as vc inner join (select v.vacancy_id as r_id, count(v.tags_id) as count from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result on vc.id=result.r_id order by result.count desc";
+        vacancies.addAll(entityManager.createNativeQuery(s)
+                .setParameter("param", tagsId).setMaxResults(limit).getResultList());
+
+        return vacancies;
     }
 
     public int deletePermanentBlockVacancies() {
