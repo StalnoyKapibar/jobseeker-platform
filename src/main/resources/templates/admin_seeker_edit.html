@@ -17,7 +17,12 @@
 </head>
 
 <body>
-
+<style>
+    img {
+        width: 300px;
+        height: 300px;
+    }
+</style>
 
 <nav class="navbar navbar-dark fixed-top bg-dark navbar-expand-md shadow p-0">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">JobSeeker</a>
@@ -70,11 +75,10 @@
             <h2>Edit seeker profile</h2>
             <div class="row" style="padding-top: 30px">
                 <div class="col-4" id="seekerPhoto">
-                    <img th:src="@{'data:image/png;base64,' + ${photoimg}}" name="photo" alt="" style="width: 300px;height: 300px"><br>
-                    <form class="form-inline" method="POST" enctype="multipart/form-data"
-                          th:action="@{/admin/seeker/editPhoto}">
+                    <form id="editPhotoForm" class="form-inline">
+                        <img id="sPhoto" th:src="@{'data:image/png;base64,' + ${photoimg}}" name="photo" alt=""><br>
                         <div class="custom-file mt-4">
-                            <!--<div class="input-group">-->
+                            <div class="input-group">
                                 <div class="row">
                                     <div class="col-8">
                                         <label class="custom-file-label" for="customFile">Choose new image</label>
@@ -83,12 +87,12 @@
                                         <input type="hidden" th:value="${seeker.id}" name="seekerId">
                                     </div>
                                     <div class="col-4">
-                                        <button class="btn btn-secondary" type="submit">
+                                        <button onclick="uploadPhoto()" class="btn btn-secondary" type="button">
                                             Upload
                                         </button>
                                     </div>
                                 </div>
-                            <!--</div>-->
+                            </div>
                         </div>
                     </form>
                 </div>
