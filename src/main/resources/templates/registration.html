@@ -30,7 +30,7 @@
                 <div class="col-md-4 inputGroupContainer">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                        <input name="user_email" id="user_email" placeholder="Введите Ваш адрес email" class="form-control" type="text">
+                        <input name="user_email" id="user_email" th:value="${email}" placeholder="Введите ваш Email" class="form-control" type="text">
                     </div>
                 </div>
             </div>
@@ -84,11 +84,9 @@
             <!-- Button -->
             <div class="form-group">
                 <label class="col-md-4 control-label"></label>
-                <div class="col-md-4"><br>
-                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                    <button type="button" class="btn btn-warning" onclick="validateAndReg()">
-                        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspЗарегистрироваться <span
-                            class="glyphicon glyphicon-send"></span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                <div class="col-md-4" style="display: flex; justify-content: center;"><br>
+                    <button type="button" class="btn btn-warning" onclick="validateAndReg()" style="width: 250px;">
+                        Зарегистрироваться  <span class="glyphicon glyphicon-send"></span>
                     </button>
                 </div>
             </div>

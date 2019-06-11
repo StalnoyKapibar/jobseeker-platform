@@ -15,6 +15,12 @@ $(document).ready (function () {
                 bSortable: false,
                 data: null,
                 className: "center",
+                defaultContent: '<a href="#">Написать</a>'
+            },
+            {
+                bSortable: false,
+                data: null,
+                className: "center",
                 defaultContent: '<button class="btn btn-primary" data-target="#editModal" data-toggle="modal" >Edit</button>'
             }
         ],
@@ -22,7 +28,7 @@ $(document).ready (function () {
             {
                 "targets": [0],
                 "visible": true,
-                "searchable": true
+                "searchable": false
             }
         ],
         "initComplete": function () {
