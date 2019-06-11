@@ -2,9 +2,11 @@ package com.jm.jobseekerplatform.dao.impl;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.EmployerProfile;
+import com.jm.jobseekerplatform.model.Tag;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Repository("employerProfileDAO")
 public class EmployerProfileDAO extends AbstractDAO<EmployerProfile> {
@@ -28,5 +30,18 @@ public class EmployerProfileDAO extends AbstractDAO<EmployerProfile> {
                 .setParameter(1, employerProfileId)
                 .setParameter(2, vacancyId)
                 .executeUpdate();
+    }
+
+    public Optional<EmployerProfile> getByVacancyId(Long vacancyId) {
+
+        EmployerProfile employerProfile = entityManager.createQuery(
+                "select e from EmployerProfile e " +
+                        "join e.vacancies v " +
+                        "where v.id = :vacancyId", EmployerProfile.class)
+                .setParameter("vacancyId", vacancyId)
+                .getSingleResult();
+
+
+        return Optional.ofNullable(employerProfile);
     }
 }
