@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
@@ -20,7 +19,7 @@ public class EmployerProfileService extends AbstractService<EmployerProfile> {
     @Autowired
     private EmployerProfileDAO dao;
 
-    public Optional<EmployerProfile> getByVacancyId(Long vacancyId){
+    public Optional<EmployerProfile> getByVacancyId(Long vacancyId) {
         return dao.getByVacancyId(vacancyId);
     }
 

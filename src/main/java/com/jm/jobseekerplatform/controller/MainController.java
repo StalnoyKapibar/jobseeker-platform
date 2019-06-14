@@ -198,8 +198,10 @@ public class MainController {
 
     @RequestMapping(value = "/vacancy/{vacancyId}", method = RequestMethod.GET)
     public String viewVacancy(@PathVariable Long vacancyId, Model model) {
-        Vacancy vacancy= vacancyService.getById(vacancyId);
+
+        Vacancy vacancy = vacancyService.getById(vacancyId);
         EmployerProfile employerProfile = employerProfileService.getByVacancyId(vacancyId).orElseThrow(IllegalArgumentException::new);
+
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("vacancyFromServer", vacancy);
         model.addAttribute("EmployerProfileFromServer", employerProfile);

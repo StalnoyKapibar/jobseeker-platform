@@ -41,7 +41,6 @@ public class EmployerProfileDAO extends AbstractDAO<EmployerProfile> {
                 .setParameter("vacancyId", vacancyId)
                 .getSingleResult();
 
-
         return Optional.ofNullable(employerProfile);
     }
 }
