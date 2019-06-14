@@ -11,155 +11,73 @@
 
 <body>
 
-<style type="text/css">
-    textarea[readonly]{
-        background-color:#fff !important;
-    }
-</style>
-
-
 <th:block th:include="fragments :: nav"></th:block>
+
 <div class="container" id="vacancy_container">
-    <form class="well form-horizontal" id="vacancy_form">
-        <fieldset>
-            <legend>
-                <center><h2 th:utext="'<b>Вакансия '+${vacancyFromServer.getHeadline()}+'</b>'"></h2></center>
-            </legend>
 
-            <br>
-
-
-
-            <div class="form-group">
-                <h1><span id="EPcompanyName" th:text="${EmployerProfileFromServer.getCompanyName()}"></span></h1>
-                <h2><a th:href="@{'http://' + ${EmployerProfileFromServer.website}}" th:text="${EmployerProfileFromServer.website}"></a></h2>
-                <div class="col-lg-3" align="center">
-                    <img th:src="@{'data:image/png;base64,' + ${logoimg}}" class="img-rounded" alt="Logo of company">
-                </div>
-                <div class="col-lg-9">
-                    <span>О нас:</span><br/>
-                    <div class="well well-sm">
-                        <span th:text="${EmployerProfileFromServer.description}"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-md-2 control-label">Должность</label>
-                <div class="col-md-10 inputGroupContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-briefcase"></i></span>
-                        <span class="form-control" th:text="${vacancyFromServer.getHeadline()}"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-md-2 control-label">Город</label>
-                <div class="col-md-10 inputGroupContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-globe"></i></span>
-                        <span class="form-control" th:text="${vacancyFromServer.getCity()}"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-md-2 control-label">Местонахождение</label>
-                <div class="col-md-10 inputGroupContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-globe"></i></span>
-                        <span name="v_address" id="v_address"
-                               class="form-control" th:text="${vacancyFromServer.getCoordinates().getLongitudeX()} + ' ' + ${vacancyFromServer.getCoordinates().getLatitudeY()}"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-md-2 control-label">Место работы</label>
-                <div class="col-md-10 inputGroupContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-                        <span class="form-control" th:text="${vacancyFromServer.getRemote()} ? 'Удаленная работа' : 'В офисе работодателя'"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-md-2 control-label">Зарплата</label>
-                <div class="col-md-10 inputGroupContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-ruble"></i></span>
-                        <span class="form-control"
-                              th:text="(${vacancyFromServer.getSalaryMin()!=null} ? 'от ' + ${vacancyFromServer.getSalaryMin()} + ' ' : '')
+    <div class="row">
+        <div class="col-md-12">
+            <h1 th:utext="'<b>'+${vacancyFromServer.getHeadline()}+'</b>'"></h1>
+            <p th:text="(${vacancyFromServer.getSalaryMin()!=null} ? 'от ' + ${vacancyFromServer.getSalaryMin()} + ' ' : '')
                               + (${vacancyFromServer.getSalaryMax()!=null} ? ('до ' + ${vacancyFromServer.getSalaryMax()}) : '')
                               + (${vacancyFromServer.getSalaryMax()==null and vacancyFromServer.getSalaryMin()==null} ? 'не указана' : '')">
-                        </span>
-                    </div>
-                </div>
+            </p>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-4">
+            <h3><a id="EPcompanyName" th:href="@{'http://' + ${EmployerProfileFromServer.website}}" th:text="${EmployerProfileFromServer.getCompanyName()}"></a></h3>
+            <span th:text="${vacancyFromServer.getCity()}"></span>
+        </div>
+
+        <div class="col-md-4 pull-right" style="height:100px; padding-left: 0px;  padding-right: 0px;">
+            <img th:src="@{'data:image/png;base64,' + ${logoimg}}" style="max-width:100%; max-height:100%; display: block; vertical-align:center; horiz-align: center;" alt="Logo of company">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                Место работы: &nbsp;
+                <span th:text="${vacancyFromServer.getRemote()} ? 'Удаленная работа' : 'В офисе работодателя'"></span>
+            </p>
+            <p>
+                Технологии: &nbsp;
+                <th:block th:each="tag :${vacancyFromServer.getTags()}">
+                    <span class="label label-success" th:text="${tag.getName()}">}</span>
+                </th:block>
+            </p>
+            <p>
+                Краткое описание вакансии: &nbsp;
+                <span th:text="${vacancyFromServer.getShortDescription()}"></span>
+            </p>
+            <p>
+                Подробное описание вакансии:<br>
+                <span th:text="${vacancyFromServer.getDescription()}"></span>
+            </p>
+        </div>
+    </div>
+
+
+    <div clas="row">
+        Адрес: <span name="v_address" id="v_address"
+                     th:text="${vacancyFromServer.getCoordinates().getLongitudeX()} + ' ' + ${vacancyFromServer.getCoordinates().getLatitudeY()}"></span>
+        <div id="map" style="height: 300px"></div>
+    </div>
+
+    <div clas="row">
+        <div class="col-md-1 col-md-offset-5">
+            <div style="padding: 15px;">
+                <button type="button" class="btn btn-success"
+                        onclick="alert('кнопка не работает')" style="width: 150px;">Откликнуться
+                    <span class="glyphicon glyphicon-envelope"></span>
+                </button>
             </div>
-
-            <div class="form-group" id="v_form_group_tags">
-                <label class="col-md-2 control-label">Технологии</label>
-                <div class="col-md-10 inputGroupContainer">
-
-                    <div class="input-group" style="width: 100%;">
-                        <div class="well well-sm" name="v_tagsWell" id="v_tagsWell" style="margin-bottom: 0px;">
-                            <th:block th:each="tag :${vacancyFromServer.getTags()}">
-                                <span class="label label-success" th:text="${tag.getName()}">}</span>
-                            </th:block>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-md-2 control-label">Краткое описание вакансии</label>
-                <div class="col-md-10 inputGroupContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-align-center"></i></span>
-                        <textarea class="form-control"
-                                  readonly
-                                  rows="3"
-                                  th:text="${vacancyFromServer.getShortDescription()}">
-                        </textarea>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <label class="col-md-2 control-label">Подробное описание вакансии</label>
-                <div class="col-md-10 inputGroupContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-align-center"></i></span>
-                        <textarea class="form-control"
-                                  readonly
-                                  rows="15"
-                                  th:text="${vacancyFromServer.getDescription()}">
-                        </textarea>
-                    </div>
-                </div>
-            </div>
-
-            <div id="map" style="height: 600px"></div>
-
-            <!-- Button -->
-            <div class="form-group">
-                <label class="col-md-2 control-label"></label>
-                <div class="col-md-10" style="display: flex; justify-content: center;"><br>
-                    <button type="button" class="btn btn-success"
-                            onclick="alert('кнопка не работает')" style="width: 150px;"> Откликнуться
-                        <span class="glyphicon glyphicon-envelope"></span>
-                    </button>
-                </div>
-            </div>
-
-        </fieldset>
-    </form>
+        </div>
+    </div>
 </div>
-
-
 
 
 <script type="text/javascript" src="/js/map.js"></script>
@@ -172,12 +90,6 @@
 
     let address = getAddressByCoords(latitudeY,longitudeX);
     $("#v_address").text(address);
-
-
-
-
-
-
     /*]]>*/
 </script>
 
