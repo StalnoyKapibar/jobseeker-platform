@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "employers")
@@ -15,8 +16,8 @@ public class Employer extends User {
     public Employer() {
     }
 
-    public Employer(String email, char[] password, UserRole authority, EmployerProfile employerProfile) {
-        super(email, password, authority);
+    public Employer(String email, char[] password, LocalDateTime date, UserRole authority, EmployerProfile employerProfile) {
+        super(email, password, date, authority);
         this.employerProfile = employerProfile;
     }
 

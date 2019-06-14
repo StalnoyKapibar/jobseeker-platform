@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import javax.annotation.security.RolesAllowed;
 import javax.persistence.NoResultException;
+
+import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
-import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -69,6 +69,7 @@ public class MainController {
         return "index";
     }
 
+
     @RequestMapping("/employer/{employerProfileId}")
     public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {
         boolean isOwner = false;
@@ -108,13 +109,6 @@ public class MainController {
         return "employer";
     }
 
-    @RequestMapping("/seeker/{seekerProfileId}")
-    public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
-        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        model.addAttribute("sprofile", seekerProfile);
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerProfile.getPhoto()));
-        return "seeker";
-    }
 
     @RequestMapping("/admin")
     public String adminPage() {
