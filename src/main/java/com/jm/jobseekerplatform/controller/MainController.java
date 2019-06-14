@@ -16,6 +16,7 @@ import javax.persistence.NoResultException;
 
 import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
+import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
