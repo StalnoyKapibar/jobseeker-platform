@@ -2,7 +2,6 @@ package com.jm.jobseekerplatform.dao.impl;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.EmployerProfile;
-import com.jm.jobseekerplatform.model.Tag;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -36,8 +35,7 @@ public class EmployerProfileDAO extends AbstractDAO<EmployerProfile> {
 
         EmployerProfile employerProfile = entityManager.createQuery(
                 "select e from EmployerProfile e " +
-                        "join e.vacancies v " +
-                        "where v.id = :vacancyId", EmployerProfile.class)
+                        "where :vacancyId = ANY (select v.id from e.vacancies v)", EmployerProfile.class)
                 .setParameter("vacancyId", vacancyId)
                 .getSingleResult();
 
