@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 
 @Service("employerProfileService")
 @Transactional
@@ -17,6 +18,10 @@ public class EmployerProfileService extends AbstractService<EmployerProfile> {
 
     @Autowired
     private EmployerProfileDAO dao;
+
+    public Optional<EmployerProfile> getByVacancyId(Long vacancyId) {
+        return dao.getByVacancyId(vacancyId);
+    }
 
     public void blockPermanently(EmployerProfile employerProfile) {
         employerProfile.setState(State.BLOCK_PERMANENT);

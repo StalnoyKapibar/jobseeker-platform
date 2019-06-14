@@ -16,6 +16,7 @@ import javax.persistence.NoResultException;
 
 import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
+import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,6 +35,9 @@ public class MainController {
 
     @Autowired
     private EmployerService employerService;
+
+    @Autowired
+    private EmployerProfileService employerProfileService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
@@ -142,5 +146,19 @@ public class MainController {
     public String new_vacancyPage(Model model) {
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "new_vacancy";
+    }
+
+    @RequestMapping(value = "/vacancy/{vacancyId}", method = RequestMethod.GET)
+    public String viewVacancy(@PathVariable Long vacancyId, Model model) {
+
+        Vacancy vacancy = vacancyService.getById(vacancyId);
+        EmployerProfile employerProfile = employerProfileService.getByVacancyId(vacancyId).orElseThrow(IllegalArgumentException::new);
+
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+        model.addAttribute("vacancyFromServer", vacancy);
+        model.addAttribute("EmployerProfileFromServer", employerProfile);
+        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
+
+        return "vacancy";
     }
 }
