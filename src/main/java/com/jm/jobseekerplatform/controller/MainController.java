@@ -36,6 +36,9 @@ public class MainController {
     @Autowired
     private EmployerService employerService;
 
+    @Autowired
+    private EmployerProfileService employerProfileService;
+
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
     @Value("${google.maps.api.key}")
