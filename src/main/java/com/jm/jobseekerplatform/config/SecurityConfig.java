@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.config;
 
+import com.jm.jobseekerplatform.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -26,6 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private UserService userService;
+
     private PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
 
@@ -45,6 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 // указываем страницу с формой логина
                 .loginPage("/login")
+                //указываем логику обработки при логине
+                .successHandler(new LoginSuccessHandler(userService))
                 // указываем action с формы логина
                 .loginProcessingUrl("/login")
                 // указываем URL при неудачном логине

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
 
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -64,10 +65,10 @@ public class UserService extends AbstractService<User> {
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
 
         if (userRole.equals(roleSeeker)) {
-            Seeker seeker = new Seeker(userEmail, userPass, userRole, null);
+            Seeker seeker = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
             seekerService.add(seeker);
         } else if (userRole.equals(roleEmployer)) {
-            Employer employer = new Employer(userEmail, userPass, userRole, null);
+            Employer employer = new Employer(userEmail, userPass, LocalDateTime.now(), userRole, null);
             employerService.add(employer);
         }
 

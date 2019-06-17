@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "seekers")
@@ -15,8 +16,8 @@ public class Seeker extends User {
     public Seeker() {
     }
 
-    public Seeker(String email, char[] password, UserRole authority, SeekerProfile seekerProfile) {
-        super(email, password, authority);
+    public Seeker(String email, char[] password, LocalDateTime date, UserRole authority, SeekerProfile seekerProfile) {
+        super(email, password, date, authority);
         this.seekerProfile = seekerProfile;
     }
 

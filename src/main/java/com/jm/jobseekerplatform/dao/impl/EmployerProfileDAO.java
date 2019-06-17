@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.model.EmployerProfile;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Repository("employerProfileDAO")
 public class EmployerProfileDAO extends AbstractDAO<EmployerProfile> {
@@ -35,5 +36,16 @@ public class EmployerProfileDAO extends AbstractDAO<EmployerProfile> {
                 .setParameter(1, employerProfileId)
                 .setParameter(2, vacancyId)
                 .executeUpdate();
+    }
+
+    public Optional<EmployerProfile> getByVacancyId(Long vacancyId) {
+
+        EmployerProfile employerProfile = entityManager.createQuery(
+                "select e from EmployerProfile e " +
+                        "where :vacancyId = ANY (select v.id from e.vacancies v)", EmployerProfile.class)
+                .setParameter("vacancyId", vacancyId)
+                .getSingleResult();
+
+        return Optional.ofNullable(employerProfile);
     }
 }
