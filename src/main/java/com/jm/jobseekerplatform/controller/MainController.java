@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.persistence.NoResultException;
 import java.util.*;
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.Base64;
 import java.util.List;
@@ -52,7 +53,8 @@ public class MainController {
     private String googleMapsApiKey;
 
     @RequestMapping("/")
-    public String mainPage(Authentication authentication, Model model) {
+    public String mainPage(HttpServletRequest request, Authentication authentication, Model model) {
+
         if (authentication == null || !authentication.isAuthenticated()) {
             List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
             model.addAttribute("vacMess", "Доступные вакансии:");
