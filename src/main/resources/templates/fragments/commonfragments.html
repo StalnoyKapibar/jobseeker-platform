@@ -11,9 +11,9 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <base href="/"/>
-     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-   <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -24,15 +24,16 @@
 
 <th:block th:fragment="sidebar">
     <div class="sidebar">
-       <!-- <div class="sidebar-paths center fixed-left">-->
-            <ul>
-                <li><a href="#"><span>Все вакансии</span></a></li>
-                <li><a href="#"><span>Все компании</span></a></li>
-                <li><a href="#"><span>Все резюме</span></a></li>
-                <li sec:authorize="isAuthenticated()"><a class="font-color" th:href="@{'/chat/' + ${vacancyId}}" >Чат<span id="count_not_read_messages"></span></a></li>
-                <li sec:authorize="isAuthenticated()"><span id="username" th:utext="${username}"></span></li>
-                <li sec:authorize="isAuthenticated()"><span id="vacancyId" th:utext="${vacancyId}"></span></li>
-            </ul>
+        <!-- <div class="sidebar-paths center fixed-left">-->
+        <ul>
+            <li><a href="#"><span>Все вакансии</span></a></li>
+            <li><a href="#"><span>Все компании</span></a></li>
+            <li><a href="#"><span>Все резюме</span></a></li>
+            <li sec:authorize="isAuthenticated()"><a class="font-color" th:href="@{'/chat/' + ${vacancyId}}">Чат<span
+                    id="count_not_read_messages"></span></a></li>
+            <li sec:authorize="isAuthenticated()"><span id="username" th:utext="${username}"></span></li>
+            <li sec:authorize="isAuthenticated()"><span id="vacancyId" th:utext="${vacancyId}"></span></li>
+        </ul>
         <!--</div>-->
     </div>
 </th:block>
