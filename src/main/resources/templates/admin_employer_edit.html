@@ -14,6 +14,9 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <link href="/css/dashboard.css" rel="stylesheet">
+
+    <link href="/css/main.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -39,37 +42,8 @@
 
 <div class="container-fluid">
     <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-            <div class="sidebar-sticky">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#" onclick="getAdminPage()">
-                            <span data-feather="home"></span>
-                            Главная <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/employers">
-                            <span data-feather="user"></span>
-                            Работодатели
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/seekers">
-                            <span data-feather="user"></span>
-                            Соискатели
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/vacancies">
-                            <span data-feather="layers"></span>
-                            Вакансии
-                        </a>
-                    </li>
-                </ul>
 
-            </div>
-        </nav>
+        <th:block th:include="fragments :: left-nav-bar"></th:block>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main_admin_page" style="padding-top: 60px">
             <h2>Edit employer profile</h2>
@@ -173,6 +147,8 @@
         </main>
     </div>
 </div>
+
+<th:block th:include="fragments :: footer"></th:block>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
