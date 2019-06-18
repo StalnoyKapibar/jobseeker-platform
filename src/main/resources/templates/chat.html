@@ -1,65 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Чат">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Chat</title>
-    <link rel="stylesheet" th:href="@{/css/chat.css}" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/chat.css}"/>
 
     <!-- https://cdnjs.com/libraries/sockjs-client -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
     <!-- https://cdnjs.com/libraries/stomp.js/ -->
-    <script  src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 </head>
 <body>
-<header>
-    <div class="navbar">
-        <div class="navbar-brand"><a class="navtext-color" href="/">JobSeeker</a>
-        </div>
-        <a class="right navtext-color" href="#">Меню</a>
-    </div>
-</header>
-<div class="row">
-    <div class="sidebar">
-        <div class="sidebar-paths center">
-            <ul>
-                <li><a class="font-color" href="#" >Все вакансии</a></li>
-                <li><a class="font-color" href="#" >Все компании</a></li>
-                <li><a class="font-color" href="#" >Все резюме</a></li>
-                <li><a class="font-color" th:href="@{'/chat/' + ${vacancyId}}" >Чат<span id="count_not_read_messages"></span></a></li>
-                <li><span id="userId" th:utext="${userId}"></span></li>
-                <li><span id="vacancyId" th:utext="${vacancyId}"></span></li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="main-block chromeFix">
-        <div id="chat-container" class="panel-body">
-            <div class="message-area">
-            <ul id="messageArea" class="media-list">
-            </ul>
-            </div>
-
-            <form id="messageForm" name="messageForm">
-                <div class="input-message input-group">
-                    <input class="form-control" type="text" id="message" autocomplete="off"
-                           placeholder="Type a message..."/>
-                    <button class="input-group-addon" type="submit">Send</button>
+<div class="container-fluid">
+    <div class="row">
+        <div class="main-block chromeFix" layout:fragment="content">
+            <div id="chat-container" class="panel-body">
+                <div class="message-area">
+                    <ul id="messageArea" class="media-list">
+                    </ul>
                 </div>
-            </form>
 
+                <form id="messageForm" name="messageForm">
+                    <div class="input-message input-group">
+                        <input class="form-control" type="text" id="message" autocomplete="off"
+                               placeholder="Type a message..."/>
+                        <button class="input-group-addon" type="submit">Send</button>
+                    </div>
+                </form>
+            </div>
         </div>
-
     </div>
 </div>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script th:src="@{/js/chat.js}"></script>
-
 </body>
 </html>

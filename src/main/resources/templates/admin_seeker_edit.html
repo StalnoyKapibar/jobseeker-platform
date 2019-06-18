@@ -1,19 +1,8 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/adminlayouts">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Панель администратора">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-
-    <title>Панель администратора</title>
-
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-    <link href="/css/dashboard.css" rel="stylesheet">
 </head>
 
 <body>
@@ -23,167 +12,119 @@
         height: 300px;
     }
 </style>
-
-<nav class="navbar navbar-dark fixed-top bg-dark navbar-expand-md shadow p-0">
-    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">JobSeeker</a>
-
-    <ul class="navbar-nav ml-auto px-3">
-
-        <li class="nav-item text-nowrap">
-            <a class="nav-link" href="logout"><span data-feather="log-out"></span>
-            </a>
-        </li>
-
-    </ul>
-</nav>
-
 <div class="container-fluid">
     <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-            <div class="sidebar-sticky">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#" onclick="getAdminPage()">
-                            <span data-feather="home"></span>
-                            Главная <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/employers">
-                            <span data-feather="user"></span>
-                            Работодатели
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/seekers">
-                            <span data-feather="user"></span>
-                            Соискатели
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/vacancies">
-                            <span data-feather="layers"></span>
-                            Вакансии
-                        </a>
-                    </li>
-                </ul>
-
-            </div>
-        </nav>
-
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main_admin_page" style="padding-top: 60px">
-            <h2>Edit seeker profile</h2>
-            <div class="row" style="padding-top: 30px">
-                <div class="col-4" id="seekerPhoto">
-                    <form id="editPhotoForm" class="form-inline">
-                        <img id="sPhoto" th:src="@{'data:image/png;base64,' + ${photoimg}}" name="photo" alt=""><br>
-                        <div class="custom-file mt-4">
-                            <div class="input-group">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <label class="custom-file-label" for="customFile">Choose new image</label>
-                                        <input type="file" class="custom-file-input" id="customFile"
-                                               accept="image/jpeg,image/png,image/gif" name="file">
-                                        <input type="hidden" th:value="${seeker.id}" name="seekerId">
-                                    </div>
-                                    <div class="col-4">
-                                        <button onclick="uploadPhoto()" class="btn btn-secondary" type="button">
-                                            Upload
-                                        </button>
+        <div class="container-fluid" layout:fragment="content">
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main_admin_page" style="padding-top: 60px">
+                <h2>Edit seeker profile</h2>
+                <div class="row" style="padding-top: 30px">
+                    <div class="col-4" id="seekerPhoto">
+                        <form id="editPhotoForm" class="form-inline">
+                            <img id="sPhoto" th:src="@{'data:image/png;base64,' + ${photoimg}}" name="photo" alt=""
+                                 style="height: 300px;width: 300px;"><br>
+                            <div class="custom-file mt-4">
+                                <div class="input-group">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <label class="custom-file-label" for="customFile">Choose new image</label>
+                                            <input type="file" class="custom-file-input" id="customFile"
+                                                   accept="image/jpeg,image/png,image/gif" name="file">
+                                            <input type="hidden" th:value="${seeker.id}" name="seekerId">
+                                        </div>
+                                        <div class="col-4">
+                                            <button onclick="uploadPhoto()" class="btn btn-secondary" type="button">
+                                                Upload
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
+                    <div class="col-6">
+                        <form id="editSeeker">
+                            <div class="form-group">
+                                <label>Seeker ID : </label> <input class="form-control" type="text"
+                                                                   th:value="${seeker.id}" name="id" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Seeker email : </label><input class="form-control" type="text"
+                                                                     th:value="${seeker.email}" name="email">
+                            </div>
+                            <div class="form-group">
+                                <label>Seeker last visit : </label><input class="form-control" type="text"
+                                                                          th:value="${seeker.date}" name="date"
+                                                                          readonly>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="hidden" th:value="${seeker.password}" name="password">
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="hidden" th:value="${seeker.authority.id}"
+                                       name="authorityId">
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="hidden" th:value="${seeker.authority.authority}"
+                                       name="authority">
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="hidden" th:value="${seeker.confirm}" name="confirm">
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="hidden" th:value="${seeker.enabled}" name="enabled">
+                            </div>
+                            <div class="form-group">
+                                <label>Seeker profile ID : </label> <input class="form-control" type="text"
+                                                                           th:value="${seekerprof.id}" name="profId"
+                                                                           readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Profile name : </label> <input class="form-control" type="text"
+                                                                      th:value="${seekerprof.name}" name="name">
+                            </div>
+                            <div class="form-group">
+                                <label>Profile patronymic : </label><input class="form-control" type="text"
+                                                                           th:value="${seekerprof.patronymic}"
+                                                                           name="patronymic">
+                            </div>
+                            <div class="form-group">
+                                <label>Profile surname : </label><input class="form-control" type="text"
+                                                                        th:value="${seekerprof.surname}"
+                                                                        name="surname">
+                            </div>
+                            <div class="form-group">
+                                <label>Profile description : </label><input class="form-control" type="text"
+                                                                            th:value="${seeker.seekerProfile.description}"
+                                                                            name="description">
+                            </div>
+                            <div class="form-group">
+                                <label>Profile tags : </label>
+                                <select id="seekerTags" name="seekerTags">
+                                    <option th:each="tag : ${seekerprof.tags}" th:value="${tag.name}"
+                                            th:text="${tag.name}"
+                                            th:selected="${tag==0}"></option>
+                                </select>
+                                <label>Profile portfolios : </label>
+                                <select id="seekerPortfolios" name="seekerPortfolios">
+                                    <option th:each="portfolio : ${seekerprof.portfolios}"
+                                            th:value="${portfolio.projectName}"
+                                            th:text="${portfolio.projectName}"
+                                            th:selected="${portfolio==0}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button id="editSeekerForm" class="btn btn-success btn-block" type="submit">Submit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="col-6">
-                    <form id="editSeeker">
-                        <div class="form-group">
-                            <label>Seeker ID : </label> <input class="form-control" type="text"
-                                                               th:value="${seeker.id}" name="id" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Seeker email : </label><input class="form-control" type="text"
-                                                                 th:value="${seeker.email}" name="email">
-                        </div>
-                        <div class="form-group">
-                            <label>Seeker last visit : </label><input class="form-control" type="text"
-                                                                      th:value="${seeker.date}" name="date" readonly>
-                        </div>
-                        <div class="form-group">
-                            <input class="form-control" type="hidden" th:value="${seeker.password}" name="password">
-                        </div>
-                        <div class="form-group">
-                            <input class="form-control" type="hidden" th:value="${seeker.authority.id}"
-                                   name="authorityId">
-                        </div>
-                        <div class="form-group">
-                            <input class="form-control" type="hidden" th:value="${seeker.authority.authority}"
-                                   name="authority">
-                        </div>
-                        <div class="form-group">
-                            <input class="form-control" type="hidden" th:value="${seeker.confirm}" name="confirm">
-                        </div>
-                        <div class="form-group">
-                            <input class="form-control" type="hidden" th:value="${seeker.enabled}" name="enabled">
-                        </div>
-                        <div class="form-group">
-                            <label>Seeker profile ID : </label> <input class="form-control" type="text"
-                                                                       th:value="${seekerprof.id}" name="profId"
-                                                                       readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Profile name : </label> <input class="form-control" type="text"
-                                                                  th:value="${seekerprof.name}" name="name">
-                        </div>
-                        <div class="form-group">
-                            <label>Profile patronymic : </label><input class="form-control" type="text"
-                                                                       th:value="${seekerprof.patronymic}"
-                                                                       name="patronymic">
-                        </div>
-                        <div class="form-group">
-                            <label>Profile surname : </label><input class="form-control" type="text"
-                                                                    th:value="${seekerprof.surname}"
-                                                                    name="surname">
-                        </div>
-                        <div class="form-group">
-                            <label>Profile description : </label><input class="form-control" type="text"
-                                                                        th:value="${seeker.seekerProfile.description}"
-                                                                        name="description">
-                        </div>
-                        <div class="form-group">
-                            <label>Profile tags : </label>
-                            <select id="seekerTags" name="seekerTags">
-                                <option th:each="tag : ${seekerprof.tags}" th:value="${tag.name}"
-                                        th:text="${tag.name}"
-                                        th:selected="${tag==0}"></option>
-                            </select>
-                            <label>Profile portfolios : </label>
-                            <select id="seekerPortfolios" name="seekerPortfolios">
-                                <option th:each="portfolio : ${seekerprof.portfolios}"
-                                        th:value="${portfolio.projectName}"
-                                        th:text="${portfolio.projectName}"
-                                        th:selected="${portfolio==0}"></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <button id="editSeekerForm" class="btn btn-success btn-block" type="submit">Submit
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </main>
+            </main>
+        </div>
     </div>
 </div>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
-<script src="/js/admin_seekers.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
-
+<div class="container-fluid" layout:fragment="content-script">
+    <script src="/js/admin_seekers.js"></script>
+</div>
 </body>
 </html>

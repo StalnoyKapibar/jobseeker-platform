@@ -66,7 +66,6 @@ public class MainController {
         return "index";
     }
 
-
     @RequestMapping("/admin")
     public String adminPage() {
         return "admin";
