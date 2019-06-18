@@ -20,7 +20,7 @@ $(document).ready(function () {
 $("#viewBy, #sorBy").change(function () {
     var size = $("#viewBy option:selected").val();
     var direction = $("#sorBy option:selected").val();
-    location.href = '/admin/seekers?size=' + size + '&direction=' + direction;
+    location.href = '/admin/employers?size=' + size + '&direction=' + direction;
 });
 
 $(function () {
