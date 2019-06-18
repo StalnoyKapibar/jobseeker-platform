@@ -16,6 +16,7 @@ import javax.persistence.NoResultException;
 
 import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
+import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -68,47 +69,6 @@ public class MainController {
         }
         return "index";
     }
-
-
-    @RequestMapping("/employer/{employerProfileId}")
-    public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {
-        boolean isOwner = false;
-        EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
-        model.addAttribute("eprofile", employerProfile);
-        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Long userId = ((User) authentication.getPrincipal()).getId();
-            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
-            if (roles.contains("ROLE_EMPLOYER")) {
-                Employer employer = (Employer) employerService.getById(userId);
-                isOwner = employer.getEmployerProfile().getId().equals(employerProfileId);
-            }
-            if (roles.contains("ROLE_SEEKER") | roles.contains("ROLE_ADMIN")) {
-                if (roles.contains("ROLE_SEEKER")) {
-                    Seeker seeker = (Seeker) seekerService.getById(userId);
-                    model.addAttribute("seekerId", seeker.getSeekerProfile().getId());
-                }
-            }
-            if (!employerProfile.getReviews().isEmpty()) {
-                Set<EmployerReviews> employerReviews = employerProfile.getReviews();
-                if (employerReviews.size() < 2) {
-                    model.addAttribute("minReviewsEvaluation", employerReviews.iterator().next());
-                } else if (employerReviews.size() >= 2) {
-                    model.addAttribute("minReviewsEvaluation", employerReviews.stream().sorted().skip(employerReviews.size() - 1).findFirst().orElse(null));
-                    model.addAttribute("maxReviewsEvaluation", employerReviews.stream().sorted().findFirst().orElse(null));
-                } else {
-                    model.addAttribute("reviewStatus", false);
-                }
-            } else {
-                model.addAttribute("reviewStatus", false);
-            }
-        }
-        model.addAttribute("isOwner", isOwner);
-        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-        return "employer";
-    }
-
 
     @RequestMapping("/admin")
     public String adminPage() {
