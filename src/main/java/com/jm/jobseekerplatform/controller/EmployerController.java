@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.EmployerService;
 import com.jm.jobseekerplatform.service.impl.SeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
@@ -14,8 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
@@ -33,36 +32,8 @@ public class EmployerController {
     @Autowired
     private SeekerService seekerService;
 
-    @RequestMapping("/employer/{employerProfileId}")
-    public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {
-        EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
-        model.addAttribute("eprofile", employerProfile);
-        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
-        if (authentication != null && authentication.isAuthenticated()) {
-            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
-            if (roles.contains("ROLE_SEEKER") | roles.contains("ROLE_ADMIN")) {
-                Long id = ((User) authentication.getPrincipal()).getId();
-                if (roles.contains("ROLE_SEEKER")) {
-                    Seeker seeker = (Seeker) seekerService.getById(id);
-                    model.addAttribute("seekerId", seeker.getSeekerProfile().getId());
-                }
-            }
-            if (!employerProfile.getReviews().isEmpty()) {
-                Set<EmployerReviews> employerReviews = employerProfile.getReviews();
-                if (employerReviews.size() < 2) {
-                    model.addAttribute("minReviewsEvaluation", employerReviews.iterator().next());
-                } else if (employerReviews.size() >= 2) {
-                    model.addAttribute("minReviewsEvaluation", employerReviews.stream().sorted().skip(employerReviews.size() - 1).findFirst().orElse(null));
-                    model.addAttribute("maxReviewsEvaluation", employerReviews.stream().sorted().findFirst().orElse(null));
-                } else {
-                    model.addAttribute("reviewStatus", false);
-                }
-            } else {
-                model.addAttribute("reviewStatus", false);
-            }
-        }
-        return "employer";
-    }
+    @Value("${google.maps.api.key}")
+    private String googleMapsApiKey;
 
     @RequestMapping(value = "/admin/employers",method = RequestMethod.GET)
     public String adminPageEmployers(HttpServletRequest request, Model model) {
@@ -89,6 +60,45 @@ public class EmployerController {
         }
         model.addAttribute("employers", employerService.findAll(PageRequest.of(page, size, lastVisitSort)));
         return "admin_employers";
+    }
+
+    @RequestMapping("/employer/{employerProfileId}")
+    public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {
+        boolean isOwner = false;
+        EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
+        model.addAttribute("eprofile", employerProfile);
+        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Long userId = ((User) authentication.getPrincipal()).getId();
+            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
+            if (roles.contains("ROLE_EMPLOYER")) {
+                Employer employer = (Employer) employerService.getById(userId);
+                isOwner = employer.getEmployerProfile().getId().equals(employerProfileId);
+            }
+            if (roles.contains("ROLE_SEEKER") | roles.contains("ROLE_ADMIN")) {
+                if (roles.contains("ROLE_SEEKER")) {
+                    Seeker seeker = (Seeker) seekerService.getById(userId);
+                    model.addAttribute("seekerId", seeker.getSeekerProfile().getId());
+                }
+            }
+            if (!employerProfile.getReviews().isEmpty()) {
+                Set<EmployerReviews> employerReviews = employerProfile.getReviews();
+                if (employerReviews.size() < 2) {
+                    model.addAttribute("minReviewsEvaluation", employerReviews.iterator().next());
+                } else if (employerReviews.size() >= 2) {
+                    model.addAttribute("minReviewsEvaluation", employerReviews.stream().sorted().skip(employerReviews.size() - 1).findFirst().orElse(null));
+                    model.addAttribute("maxReviewsEvaluation", employerReviews.stream().sorted().findFirst().orElse(null));
+                } else {
+                    model.addAttribute("reviewStatus", false);
+                }
+            } else {
+                model.addAttribute("reviewStatus", false);
+            }
+        }
+        model.addAttribute("isOwner", isOwner);
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+        return "employer";
     }
 
     @RequestMapping(value = "/admin/employer/{employerId}",method = RequestMethod.GET)
