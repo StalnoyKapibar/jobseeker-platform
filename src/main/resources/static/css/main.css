@@ -1,0 +1,35 @@
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    margin-bottom: 80px; /* Margin bottom by footer height */
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 0px;
+     /*over left side bar*/
+    z-index: 200;
+}
+
+.left-sidebar {
+    z-index: 100;
+}
+
+/* for footer link */
+a.light-link {
+    color: #246dec;
+}
+
+a.light-link:active, a.light-link:hover {
+    color: #246dec;
+    text-decoration: none;
+}
+
+/* for left side bar*/
+.current-link-sidebar {
+
+}

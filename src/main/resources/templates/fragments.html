@@ -19,6 +19,64 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <link href="/css/main.css" rel="stylesheet">
+
+</th:block>
+
+<th:block th:fragment="left-nav-bar">
+
+    <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+        <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin" onclick="getAdminPage()" th:classappend="${#request.getRequestURI() == '/admin' ? 'active' : ''}">
+                        <span data-feather="home"></span>
+                        Главная <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/employers" th:classappend="${#request.getRequestURI() == '/admin/employers' ? 'active' : ''}">
+                        <span data-feather="user"></span>
+                        Работодатели
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/seekers" th:classappend="${#request.getRequestURI() == '/admin/seekers' ? 'active' : ''}">
+                        <span data-feather="user"></span>
+                        Соискатели
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/vacancies" th:classappend="${#request.getRequestURI() == '/admin/vacancies' ? 'active' : ''}">
+                        <span data-feather="layers"></span>
+                        Вакансии
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+
+</th:block>
+
+<th:block th:fragment="header">
+
+    <header>
+        <nav class="navbar navbar-dark fixed-top bg-dark navbar-expand-md shadow p-0">
+            <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">JobSeeker</a>
+
+            <ul class="navbar-nav ml-auto px-3">
+
+                <li class="nav-item text-nowrap">
+                    <a class="nav-link" href="logout"><span data-feather="log-out"></span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+    </header>
+
 </th:block>
 
 <th:block th:fragment="nav">
@@ -93,6 +151,16 @@
             This content is only shown to employers.
         </div>
     </div>
+</th:block>
+
+<th:block th:fragment="footer">
+    <footer class="container-fluid footer">
+        <div class="text-center py-3 bg-dark shadow-lg" style="margin-top: 15px;">
+                <span class="text-white">© 2019 Copyright:
+                    <a href="/" class="light-link" style="">Ресурс по поиску работы</a>
+                </span>
+        </div>
+    </footer>
 </th:block>
 
 </body>
