@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.persistence.NoResultException;
 
 import javax.annotation.security.RolesAllowed;
-import java.security.Principal;
 import java.util.Base64;
 import java.util.List;
 import java.util.Set;
@@ -79,7 +78,7 @@ public class MainController {
     }
 
     @RequestMapping("/admin/chats")
-    public String adminPageChats() { return "admin_chats"; }
+    public String adminPageChats() { return "admin_chats"; } //todo
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
@@ -132,10 +131,11 @@ public class MainController {
     }
 
     @RequestMapping("/chat/{vacancyId}")
-    public String getChat(@PathVariable("vacancyId") String vacancyId,  Principal principal, Model model) {
+    public String getChat(@PathVariable("vacancyId") String vacancyId,  Authentication authentication, Model model) {
 
-        String username = principal.getName();
-        model.addAttribute("username", username);
+        User user = (User)authentication.getPrincipal();
+
+        model.addAttribute("userId", user.getId());
         model.addAttribute("vacancyId", vacancyId);
 
         return "chat";

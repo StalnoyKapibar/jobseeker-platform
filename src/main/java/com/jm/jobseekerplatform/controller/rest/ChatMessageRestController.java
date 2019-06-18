@@ -1,10 +1,10 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.dto.LastMessageDTO;
+import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
 import com.jm.jobseekerplatform.dto.MessageDTO;
 import com.jm.jobseekerplatform.model.ChatMessage;
-import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.service.impl.ChatMessageService;
+import com.jm.jobseekerplatform.service.impl.ChatService;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +28,19 @@ public class ChatMessageRestController {
     @Autowired
     ChatMessageService chatMessageService;
 
-    @GetMapping("last")
-    public HttpEntity getAllLastMessages() {
-        List<LastMessageDTO> lastMessages = chatMessageService.getAllLastMessages();
+    @Autowired
+    ChatService chatService;
+
+    @GetMapping("{chatId}/last")
+    public HttpEntity getAllLastMessages(@PathVariable("chatId") Long id) {
+        List<MessageWithDateDTO> lastMessages = chatMessageService.getAllLastMessages();
         Collections.sort(lastMessages);
         return new ResponseEntity(lastMessages, HttpStatus.OK);
     }
 
-    @GetMapping("{vacancyId}")
-    public HttpEntity getAllMessages(@PathVariable("vacancyId") Long id) {
-        List<ChatMessage> chatMessageList = vacancyService.getById(id).getChatMessages();
+    @GetMapping("{chatId}")
+    public HttpEntity getAllMessagesInChat(@PathVariable("chatId") Long id) {
+        List<ChatMessage> chatMessageList = chatService.getById(id).getChatMessages();
         Collections.sort(chatMessageList);
         return new ResponseEntity(chatMessageList, HttpStatus.OK);
     }
@@ -58,10 +61,10 @@ public class ChatMessageRestController {
         return new ResponseEntity(count, HttpStatus.OK);
     }
 
-    @GetMapping("count_not_read_messages/{vacancyId}")
-    public HttpEntity getCountNotReadMessagesForUser(@PathVariable("vacancyId") Long id) {
-        List<ChatMessage> list = new ArrayList<>(vacancyService.getById(id).getChatMessages());
-        Long count = list.stream().filter(a -> a.getAuthor().getAuthority().equals(userRoleService.findByAuthority("ROLE_ADMIN"))).filter(a -> a.isRead() == false).count();
+    @GetMapping("count_not_read_messages/{chatId}")
+    public HttpEntity getCountNotReadMessagesForUser(@PathVariable("chatId") Long chatId) {
+        List<ChatMessage> list = new ArrayList<>(chatService.getById(chatId).getChatMessages());
+        Long count = list.stream().filter(a -> a.getAuthor().getAuthority().equals(userRoleService.findByAuthority("ROLE_ADMIN"))).filter(a -> a.isRead() == false).count(); //todo переделать на запрос к БД
 
         return new ResponseEntity(count, HttpStatus.OK);
     }

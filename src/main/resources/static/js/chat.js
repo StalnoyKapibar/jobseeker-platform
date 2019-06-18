@@ -1,12 +1,12 @@
 var stompClient = null;
 var vacancyId = document.querySelector('#vacancyId').innerText.trim();
-var username = null;
+var userId = null;
 
 var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
 
 function connect() {
-    username = document.querySelector('#username').innerText.trim();
+    userId = document.querySelector('#userId').innerText.trim();
     var socket = new SockJS('/chat');
     stompClient = Stomp.over(socket);
 
@@ -24,7 +24,7 @@ function disconnect() {
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
 
-    if (username!==message.author) {
+    if (userId!==message.author) {
             message.read=true;
             updateMessage(message);
     }
@@ -63,7 +63,7 @@ function refreshMessages(chatMessagesList) {
     chatMessagesList.reverse();
     $(".media-list").html("");
     $.each(chatMessagesList, function(i, message) {
-        if (username!==message.author) {
+        if (userId!==message.author) {
                 message.read=true;
                 updateMessage(message);
         }
@@ -80,16 +80,16 @@ function refreshMessages(chatMessagesList) {
     $container[0].scrollTop = $container[0].scrollHeight;
 }
 
-function count_not_read_messages(url) {
-    $.ajax({
-        url: "/api/chatmessages/count_not_read_messages/" + url,
-        type: "GET",
-        async: false,
-        success: function (data) {
-                var str = "   " + data;
-                document.getElementById("count_not_read_messages").textContent=str;}
-
-    })
+function count_not_read_messages(url) { //todo
+    // $.ajax({
+    //     url: "/api/chatmessages/count_not_read_messages/" + url,
+    //     type: "GET",
+    //     async: false,
+    //     success: function (data) {
+    //             var str = "   " + data;
+    //             document.getElementById("count_not_read_messages").textContent=str;}
+    //
+    // })
 }
 
 $(function(){
@@ -102,7 +102,7 @@ $(function(){
 
         messageForm.addEventListener('submit', sendMessage, true);
 
-        if (username=="admin@mail.ru") {
+        if (userId=="admin@mail.ru") {
             count_not_read_messages("admin");
         } else {
             count_not_read_messages(vacancyId);
@@ -114,7 +114,7 @@ $(function(){
         var messageContent = messageInput.value.trim();
         if(messageContent && stompClient) {
             var chatMessage = {
-                author: username,
+                author: userId,
                 text: messageInput.value };
             stompClient.send("/live/chat/" + vacancyId, {}, JSON.stringify(chatMessage));
             messageInput.value = '';

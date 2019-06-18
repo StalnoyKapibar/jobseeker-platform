@@ -55,6 +55,9 @@ public class InitData {
     private ChatMessageService chatMessageService;
 
     @Autowired
+    private ChatService chatService;
+
+    @Autowired
     private PointService pointService;
 
     private Faker faker = new Faker(new Locale("ru"));
@@ -280,7 +283,7 @@ public class InitData {
         return tags;
     }
 
-    public void initChat() {
+    private void initChat() {
 
         for (Long i=1L; i<6L; i++){
             List<ChatMessage> messages = new ArrayList<>();
@@ -289,9 +292,11 @@ public class InitData {
                 chatMessageService.add(chatMessage);
                 messages.add(chatMessage);
             }
-            Vacancy vacancy = vacancyService.getById(i);
-            vacancy.setChatMessages(messages);
-            vacancyService.update(vacancy);
+
+            Chat chat = new Chat();
+            chat.setChatMessages(messages);
+
+            chatService.add(chat);
         }
     }
 

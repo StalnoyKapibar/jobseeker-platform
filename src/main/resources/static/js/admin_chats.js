@@ -7,7 +7,7 @@ $(document).ready (function () {
         searching: false,
         info: false,
 
-        "sAjaxSource": "/api/chatmessages/last",
+        "sAjaxSource": "/api/chatmessages/last", //todo ChatMessageRestController.getAllLastMessages()
         "sAjaxDataProp": "",
         "order": [[1, "desc"]],
         "aoColumns": [
