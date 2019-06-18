@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
+    <th:block th:replace="fragments/adminfragments :: head"></th:block>
 </head>
 <body>
-$END$
+<th:block th:replace="fragments/adminfragments :: nav"></th:block>
+<div class="container-fluid">
+    <div class="row">
+        <th:block th:replace="fragments/adminfragments :: sidebar"></th:block>
+        <div class="container-fluid" layout:fragment="content">
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main_admin_page"></main>
+        </div>
+    </div>
+</div>
+<th:block th:replace="fragments/adminfragments :: scripts"></th:block>
+<div class="container-fluid" layout:fragment="content-script">
+</div>
 </body>
 </html>
