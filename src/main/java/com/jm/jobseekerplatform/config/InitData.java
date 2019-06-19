@@ -136,6 +136,10 @@ public class InitData {
         employer.setConfirm(true);
         employerService.add(employer);
 
+        employer = new Employer("employer2@mail.ru", userService.encodePassword("employer2".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(2L));
+        employer.setConfirm(true);
+        employerService.add(employer);
+
         role = userRoleService.findByAuthority("ROLE_SEEKER");
         seeker = new Seeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
         seeker.setConfirm(true);
@@ -190,11 +194,8 @@ public class InitData {
 
     public void initEmployerProfiles() {
         BufferedImage image = null;
-        Set<Vacancy> vacancies = new HashSet<>();
         EmployerProfile employerProfile;
 
-        vacancies.add(vacancyService.getById(1L));
-        vacancies.add(vacancyService.getById(2L));
         try {
             URL url = new URL("https://wiki.godville.net/images/2/25/%D0%A0%D0%BE%D0%B3%D0%B0_%D0%B8_%D0%9A%D0%BE%D0%BF%D1%8B%D1%82%D0%B0_%28%D0%BB%D0%BE%D0%B3%D0%BE%29.png");
             image = ImageIO.read(url);
@@ -213,19 +214,17 @@ public class InitData {
                 "- Новые технологии без legacy кода. \n" +
                 "- Открытая атмосфера, без корпоративного \"булшита\". \n" +
                 "- Официальное оформление по ТК РФ. \n" +
-                "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ", imageService.resizeLogoEmployer(image), vacancies);
+                "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ", imageService.resizeLogoEmployer(image), randomVacancies());
         employerProfile.setState(State.ACCESS);
         employerProfileService.add(employerProfile);
 
-        vacancies.clear();
-        vacancies.add(vacancyService.getById(3L));
         try {
             URL url = new URL("https://0oq.ru/reshebnik-onlajn/ru.onlinemschool.com/pictures/vector/points-to-vector.png");
             image = ImageIO.read(url);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        employerProfile = new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image), vacancies);
+        employerProfile = new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image), randomVacancies());
         employerProfile.setState(State.ACCESS);
         employerProfileService.add(employerProfile);
     }
@@ -262,22 +261,24 @@ public class InitData {
             e.printStackTrace();
         }
 
-        Set<Tag> tags = new HashSet<>();
-        tags.add(tagService.getById(1L));
-        tags.add(tagService.getById(2L));
-        tags.add(tagService.getById(3L));
-        tags.add(tagService.getById(4L));
-
-        seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), tags, portfolios));
+        seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(), portfolios));
         //seekerProfileService.add(new SeekerProfile("Gq", "Po", "Qw", "Ищу крутую команду", imageService.resizePhotoSeeker(image), tags, portfolios));
     }
 
     public Set<Tag> randomTags() {
         Set<Tag> tags = new HashSet<>();
-        for (int i = 0; i < Math.round(Math.random() * 3) + 1; i++) {
+        for (int i = 0; i < Math.round(Math.random() * 10) + 1; i++) {
             tags.add(tagService.getById(Math.round(Math.random() * 11) + 1));
         }
         return tags;
+    }
+
+    public Set<Vacancy> randomVacancies() {
+        Set<Vacancy> vacancies = new HashSet<>();
+        for (int i = 0; i < Math.round(Math.random() * 10) + 1; i++) {
+            vacancies.add(vacancyService.getById(Math.round(Math.random() * 30) + 1));
+        }
+        return vacancies;
     }
 
     public void initChat() {
