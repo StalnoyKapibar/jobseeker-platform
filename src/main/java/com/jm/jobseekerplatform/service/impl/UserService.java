@@ -42,6 +42,7 @@ public class UserService extends AbstractService<User> {
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
     private UserRole roleEmployer = new UserRole("ROLE_EMPLOYER");
+    private UserRole roleAdmin = new UserRole("ROLE_ADMIN");
 
     private Pattern pattern;
     private Matcher matcher;
@@ -77,6 +78,30 @@ public class UserService extends AbstractService<User> {
         mailService.sendVerificationEmail(userEmail, token);
     }
 
+    public void addNewUserByAdmin(User user,boolean check) {
+        String userEmail = user.getEmail();
+        char[] userPass = encodePassword(user.getPasswordChar());
+        UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
+
+        if (userRole.equals(roleSeeker)) {
+            Seeker seeker = new Seeker(userEmail, userPass, userRole, null);
+            seeker.setConfirm(true);
+            seekerService.add(seeker);
+        } else if (userRole.equals(roleEmployer)) {
+            Employer employer = new Employer(userEmail, userPass, userRole, null);
+            employer.setConfirm(true);
+            employerService.add(employer);
+        } else if (userRole.equals(roleAdmin)){
+            User newUser = new User(userEmail,userPass,userRole);
+            newUser.setConfirm(true);
+            add(newUser);
+        }
+
+        if (check) {
+            mailService.sendNotificationAboutAddEmail(userEmail, user.getPassword());
+        }
+    }
+
     public boolean validateNewUser(User user) {
         UserRole userRole = user.getAuthority();
         String email_pattern = "^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\\.)*(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$";
@@ -90,7 +115,7 @@ public class UserService extends AbstractService<User> {
             throw new IllegalArgumentException("User's email already exist");
         }
 
-        isCorrect = (userRole.equals(roleSeeker) | userRole.equals(roleEmployer));
+        isCorrect = (userRole.equals(roleSeeker) | userRole.equals(roleEmployer) | userRole.equals(roleAdmin) );
 
         pattern = Pattern.compile(email_pattern);
         matcher = pattern.matcher(user.getEmail());

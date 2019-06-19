@@ -6,7 +6,6 @@
     <meta name="description" content="Панель администратора">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-
     <title>Панель администратора</title>
 
     <!-- Bootstrap core CSS -->
@@ -67,6 +66,12 @@
                         <a class="nav-link" href="#" onclick="getAllVacancies()">
                             <span data-feather="layers"></span>
                             Вакансии
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/addUser">
+                            <span data-feather="user-plus"></span>
+                            Добавить Пользователя
                         </a>
                     </li>
                 </ul>
