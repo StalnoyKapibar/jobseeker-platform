@@ -136,7 +136,7 @@ public class MainController {
     }
 
     @RequestMapping("/chat/{vacancyId}")
-    public String getChat(@PathVariable("vacancyId") String vacancyId,  Principal principal, Model model) {
+    public String getChat(@PathVariable("vacancyId") String vacancyId, Principal principal, Model model) {
 
         String username = principal.getName();
         model.addAttribute("username", username);
