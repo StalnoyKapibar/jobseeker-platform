@@ -26,6 +26,34 @@ public class UserRestController {
         }
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/addUserByAdmin/{check}")
+    public void addNewUser(@RequestBody User user, @PathVariable boolean check) {
+        if (userService.validateNewUser(user)) {
+            userService.addNewUserByAdmin(user,check);
+        }
+    }
+    // проверка валидации user через ajax
+    @RequestMapping(method = RequestMethod.GET, value = "/email/{email}")
+    public Object isExistEmail(@PathVariable String email) {
+        if (userService.isExistEmail(email)) {
+            return new Object() {
+                String valid = "false";
+
+                public String getValid() {
+                    return valid;
+                }
+            };
+        } else {
+            return new Object() {
+                String valid = "true";
+
+                public String getValid() {
+                    return valid;
+                }
+            };
+        }
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/getUser/{id}")
     public User getUser(@PathVariable(required = false) Long id) {
         return userService.getById(id);

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registration Confirm</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1>Здравствуйте, <span th:text="${admin}"></span></h1>
+<br>
+<p>
+    Мы добавили вас на платформу <b>JobSeeker </b>
+    <span th:text="${#dates.format(subscriptionDate)}"></span>
+</p>
+<p>
+    Ваш пароль <b><span th:text="${password}"></span> </b>
+</p>
+
+<p>
+    Для ознакомления перейдите по
+    <a th:href="${href}"> ссылке </a>
+</p>
+<p>
+    С наилучшими пожеланиями , <br/>
+    <em> команда JobSeeker</em>
+</p>
+</body>
+</html>
