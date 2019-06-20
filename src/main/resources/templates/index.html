@@ -1,39 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
 <head>
-    <th:block th:include="fragments :: head"></th:block>
-    <meta charset="UTF-8">
     <title>Hello</title>
     <script type="text/javascript" src="/js/index.js"></script>
 </head>
 <body>
-<th:block th:include="fragments :: nav"></th:block>
-
-<div id="vacancyDiv" class="container-fluid">
-    <br/>
-    <br/>
+<div class="container-fluid">
     <div class="row">
-        <div class="col-lg-4">
-        </div>
-        <div class="col-lg-4">
-            <span th:text="${vacMess}"></span><br/>
-            <div class="list-group">
-                <th:block th:each="vacancy: ${vacancies}">
-                    <a class="list-group-item clearfix"
-                       data-toggle="modal" data-target="#vacancyModal"
-                       th:onclick="'showVacancy('+${vacancy.id}+')'">
-                        [[${vacancy.headline}]]
-                        <span class="pull-right">
+        <div class="main-block chromeFix" layout:fragment="content">
+            <div id="vacancyDiv" class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                    </div>
+                    <div class="col-sm-4">
+                        <span th:text="${vacMess}"></span><br/>
+                        <div class="list-group">
+                            <th:block th:each="vacancy: ${vacancies}">
+                                <a class="list-group-item clearfix"
+                                   data-toggle="modal" data-target="#vacancyModal"
+                                   th:onclick="'showVacancy('+${vacancy.id}+')'">
+                                    [[${vacancy.headline}]]
+                                    <span class="pull-right">
                             <span class="btn btn-xs btn-default"
                                   th:onclick="'window.location.href = \'' + @{/vacancy/{id}(id=${vacancy.id})} + '\''">
                                 <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
                             </span>
                         </span>
-                    </a>
-                </th:block>
+                                </a>
+                            </th:block>
+                            >>>>>>> dev
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-lg-4">
         </div>
     </div>
     <nav aria-label="Pagination" th:if="${totalPages gt 0}">
@@ -46,7 +48,6 @@
         </ul>
     </nav>
 </div>
-
 <!-- Modal -->
 <div id="vacancyModal" class="modal fade" role="dialog">
     <div class="modal-dialog">

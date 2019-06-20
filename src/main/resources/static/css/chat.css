@@ -1,23 +1,24 @@
-body {
+/*body {
     background-color:#F5F5F5;
 }
 li {
     margin-top: 20px;
-    list-style-type: none; /* Убираем маркеры */
+    list-style-type: none; !* Убираем маркеры *!
 }
 ul {
-    margin-left: 0; /* Отступ слева в браузере IE и Opera */
-    padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
-}
+    margin-left: 0; !* Отступ слева в браузере IE и Opera *!
+    padding-left: 0; !* Отступ слева в браузере Firefox, Safari, Chrome *!
+}*/
 
 #username {
     display: none;
 }
+
 #vacancyId {
     display: none;
 }
 
-.main-block {
+/*.main-block {
     background-color:#F5F5F5;
     height: calc(100vh);
     width: 85%;
@@ -47,13 +48,13 @@ ul {
     margin-top: 15%;
     width: 90%;
 
-}
+}*/
 
-.font-color {
+/*.font-color {
     color: #425e7b;
     margin-left: 25%;
-}
-.navbar {
+}*/
+/*.navbar {
     height: 50px;
     width: 100%;
     margin: 0;
@@ -61,7 +62,7 @@ ul {
 }
 .navtext-color {
     color: white;
-}
+}*/
 
 #chat-container {
     background-color: white;

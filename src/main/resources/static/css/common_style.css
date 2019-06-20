@@ -1,0 +1,97 @@
+body {
+    background-color: #F5F5F5;
+}
+
+/*Navbar style*/
+.navbar {
+    background-color: #7295b1;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+}
+
+.navbar li {
+    color: white;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.navbar a :hover {
+    color: lightgray;
+}
+
+.navbar .dropdown {
+    display: flex;
+}
+
+.navbar .dropdown-menu {
+    position: relative;
+    right: 0;
+}
+
+li {
+    list-style-type: none;
+}
+
+/*Sidebar style*/
+.sidebar {
+    width: 15%;
+    background-color: #dae3ea;
+
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 50px;
+    left: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.sidebar li {
+    margin-top: 20px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: #7295b1;
+    display: block;
+}
+
+.sidebar a :hover {
+    color: #4177A3;
+}
+
+/*Content style*/
+.main-block {
+    height: 135%;
+    margin-top: 60px;
+    width: 85%;
+}
+
+.well {
+    background-color: white;
+}
+
+/*
+
+.form-search {
+    width: 80%;
+    height: 60px;
+    margin-top: 5%;
+
+}
+
+
+.vacancy-table {
+    width: 80%;
+    background-color: white;
+    text-align: center;
+    margin-top: 15%;
+}
+
+.logo {
+width: 90%;
+height: auto;
+}*/
