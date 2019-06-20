@@ -35,3 +35,20 @@ function showVacancy(id) {
         }
     });
 }
+$(document).ready(function () {
+    $("#page-button").submit(function (event) {
+        $.ajax({
+            url: " ",
+            type: "GET",
+            success: function (data) {
+                if(data!==0){
+
+                }
+            }
+
+
+        })
+
+    })
+
+})

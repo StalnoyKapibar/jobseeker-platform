@@ -9,7 +9,7 @@
 <body>
 <th:block th:include="fragments :: nav"></th:block>
 
-<div id="vacancyMap" class="container-fluid">
+<div id="vacancyDiv" class="container-fluid">
     <br/>
     <br/>
     <div class="row">
@@ -17,12 +17,7 @@
         </div>
         <div class="col-lg-4">
             <span th:text="${vacMess}"></span><br/>
-
             <div class="list-group">
-                <a th:each="vacancy: ${vacancies}" class="list-group-item" th:text="${vacancy.headline}"
-                   data-toggle="modal"
-                   data-target="#vacancyModal" th:onclick="'showVacancy('+${vacancy.id}+')'"></a>
-
                 <th:block th:each="vacancy: ${vacancies}">
                     <a class="list-group-item clearfix"
                        data-toggle="modal" data-target="#vacancyModal"
@@ -38,7 +33,18 @@
                 </th:block>
             </div>
         </div>
+        <div class="col-lg-4">
+        </div>
     </div>
+    <nav aria-label="Pagination" th:if="${totalPages gt 0}">
+        <ul id="pagList" class="pagination justify-content-right font-weight-bold">
+            <li class="page-item" th:classappend="${i eq number + 1} ? 'active'"
+                th:each="i : ${#numbers.sequence( 1, totalPages, 1)}">
+                <a class="page-link" th:href="@{/?page={id}(id=${i})}" th:text="${i}"
+                   th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
 <!-- Modal -->
@@ -65,7 +71,6 @@
             </div>
         </div>
     </div>
-</div>
 </div>
 </body>
 </html>

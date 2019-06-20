@@ -4,8 +4,6 @@ import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 
-import org.hibernate.ScrollMode;
-import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
@@ -20,8 +18,7 @@ import java.util.*;
 public class VacancyDAO extends AbstractDAO<Vacancy> {
 
 
-    public List<Vacancy> getByTags(Set<Tag> tags, int limit) {
-        //List<Vacancy> vacancies = new ArrayList<>();
+    public List<Vacancy> getByTags(Set<Tag> tags, int limit, int page) {
         Set<Long> tagsId = new HashSet<>();
         for (Tag tag:tags) { tagsId.add(tag.getId()); }
 
@@ -29,25 +26,30 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
                 +"from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result "
                 +"on vc.id=result.r_id order by result.count desc";
 
-//        vacancies.addAll(entityManager.createNativeQuery(s, Vacancy.class)
-//                .setParameter("param", tagsId).setMaxResults(limit).getResultList());
+        Query query = entityManager.unwrap(Session.class).createSQLQuery(s).addEntity(Vacancy.class)
+                .setParameter("param", tagsId);
 
+        query.setFirstResult(page * limit);
+        query.setMaxResults(limit);
 
-        Query query = entityManager.unwrap(Session.class).createSQLQuery(s).addEntity(Vacancy.class).setParameter("param", tagsId);
-        int pageSize = 10;
+        return query.getResultList();
+    }
 
-        ScrollableResults resultScroll = ((Query) query).scroll(ScrollMode.FORWARD_ONLY);
-        resultScroll.first();
-        resultScroll.scroll(0);
-        List<Vacancy> vacancyPage = new ArrayList<>();
-        int i = 0;
-        while (pageSize > i++) {
-            vacancyPage.add((Vacancy) resultScroll.get(0));
-            if (!resultScroll.next())
-                break;
-        }
+    public int getTotalPages(Set<Tag> tags) {
+        Set<Long> tagsId = new HashSet<>();
+        for (Tag tag:tags) { tagsId.add(tag.getId()); }
 
-        return vacancyPage;
+        String s = "select * from vacancies as vc inner join (select v.vacancy_id as r_id, count(v.tags_id) as count "
+                +"from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result "
+                +"on vc.id=result.r_id order by result.count desc";
+
+        Query query = entityManager.unwrap(Session.class).createSQLQuery(s).addEntity(Vacancy.class)
+                .setParameter("param", tagsId);
+        int pageSize = 5;
+        int countResults = query.getResultList().size();
+
+        return  (int) (Math.ceil(countResults / pageSize));
+
     }
 
     public int deletePermanentBlockVacancies() {

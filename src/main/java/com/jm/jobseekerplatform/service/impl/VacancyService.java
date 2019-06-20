@@ -8,16 +8,15 @@ import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.service.AbstractService;
 //import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,8 +37,13 @@ public class VacancyService extends AbstractService<Vacancy> {
     private Pattern pattern;
     private Matcher matcher;
 
-    public List<Vacancy> getByTags(Set<Tag> tags, int limit) {
-        return dao.getByTags(tags, limit);
+    public List<Vacancy> getByTags(Set<Tag> tags, int limit, int page) {
+
+        return dao.getByTags(tags, limit, page);
+    }
+
+    public int getTotalPages(Set<Tag> tags) {
+        return dao.getTotalPages(tags);
     }
 
 

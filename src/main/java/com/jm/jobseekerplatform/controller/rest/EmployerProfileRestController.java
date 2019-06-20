@@ -26,11 +26,6 @@ public class EmployerProfileRestController {
         return employerProfile;
     }
 
-    @RequestMapping("/vacancy/{vacancyId}")
-    public EmployerProfile getEmployerByVacancyId(@PathVariable Long vacancyId) {
-        return employerProfileService.getByVacancyId(vacancyId);
-    }
-
     @RequestMapping(value = "/block/{vacancyId:\\d+}", method = RequestMethod.POST)
     public void blockEmployerProfile(@PathVariable("vacancyId") Long id, @RequestBody int periodInDays) {
         EmployerProfile employerProfile = employerProfileService.getById(id);
