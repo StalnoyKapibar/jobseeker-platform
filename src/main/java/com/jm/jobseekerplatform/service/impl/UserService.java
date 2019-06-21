@@ -85,15 +85,15 @@ public class UserService extends AbstractService<User> {
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
 
         if (userRole.equals(roleSeeker)) {
-            Seeker seeker = new Seeker(userEmail, userPass, userRole, null);
+            Seeker seeker = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
             seeker.setConfirm(true);
             seekerService.add(seeker);
         } else if (userRole.equals(roleEmployer)) {
-            Employer employer = new Employer(userEmail, userPass, userRole, null);
+            Employer employer = new Employer(userEmail, userPass, LocalDateTime.now(), userRole, null);
             employer.setConfirm(true);
             employerService.add(employer);
         } else if (userRole.equals(roleAdmin)){
-            User newUser = new User(userEmail,userPass,userRole);
+            User newUser = new User(userEmail,userPass, LocalDateTime.now(), userRole);
             newUser.setConfirm(true);
             add(newUser);
         }
