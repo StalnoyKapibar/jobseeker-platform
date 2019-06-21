@@ -32,7 +32,7 @@ public class UserRestController {
             userService.addNewUserByAdmin(user,check);
         }
     }
-    // проверка валидации user через ajax
+//     проверка валидации user через ajax
     @RequestMapping(method = RequestMethod.GET, value = "/email/{email}")
     public Object isExistEmail(@PathVariable String email) {
         if (userService.isExistEmail(email)) {
@@ -53,6 +53,15 @@ public class UserRestController {
             };
         }
     }
+    //проверка валидации user'а через ajax
+//    @RequestMapping(method = RequestMethod.GET, value = "/email/{email}")
+//    public String isExistEmail(@PathVariable String email) {
+//        if (userService.isExistEmail(email)) {
+//            return "false";
+//        } else {
+//            return "true";
+//        }
+//    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getUser/{id}")
     public User getUser(@PathVariable(required = false) Long id) {
