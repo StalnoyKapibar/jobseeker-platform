@@ -6,69 +6,53 @@
 <head>
     <title>Hello</title>
     <script type="text/javascript" src="/js/index.js"></script>
+    <style>
+        .list-group {
+            overflow-y: scroll;
+            height: 80%;
+        }
+    </style>
 </head>
 <body>
+
 <div class="container-fluid">
     <div class="row">
         <div class="main-block chromeFix" layout:fragment="content">
             <div id="vacancyDiv" class="container-fluid">
                 <div class="row">
-                    <div class="col-sm-6">
-                    </div>
                     <div class="col-sm-4">
-                        <span th:text="${vacMess}"></span><br/>
+                    </div>
+                    <div class="col-sm-6">
+                        <br/><h4 th:text="${vacMess}"></h4><br/>
+                        <!--Modal-->
+                        <div id="vacancyModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h2 class="modal-title" th:text="Вакансия"></h2>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h3><span id="VMTags"></span><br></h3>
+                                        <h3><span id="VMHeadline"></span><br/></h3>
+                                        <span id="VMCity"></span>
+                                        <span id="VMRemote"> (Удаленная работа)</span><br/>
+                                        <span id="VMSalary"></span><br/>
+                                        <div class="well well-sm">
+                                        <span id="VMDescription"></span>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="list-group">
-                            <th:block th:each="vacancy: ${vacancies}">
-                                <a class="list-group-item clearfix"
-                                   data-toggle="modal" data-target="#vacancyModal"
-                                   th:onclick="'showVacancy('+${vacancy.id}+')'">
-                                    [[${vacancy.headline}]]
-                                    <span class="pull-right">
-                            <span class="btn btn-xs btn-default"
-                                  th:onclick="'window.location.href = \'' + @{/vacancy/{id}(id=${vacancy.id})} + '\''">
-                                <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                            </span>
-                        </span>
-                                </a>
-                            </th:block>
-                            >>>>>>> dev
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <nav aria-label="Pagination" th:if="${totalPages gt 0}">
-        <ul id="pagList" class="pagination justify-content-right font-weight-bold">
-            <li class="page-item" th:classappend="${i eq number + 1} ? 'active'"
-                th:each="i : ${#numbers.sequence( 1, totalPages, 1)}">
-                <a class="page-link" th:href="@{/?page={id}(id=${i})}" th:text="${i}"
-                   th:title="${'Page '+ i}" data-toggle="tooltip"></a>
-            </li>
-        </ul>
-    </nav>
-</div>
-<!-- Modal -->
-<div id="vacancyModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h2 class="modal-title" th:text="Вакансия"></h2>
-            </div>
-            <div class="modal-body">
-                <h3><span id="VMTags"></span><br></h3>
-                <h3><span id="VMHeadline"></span><br/></h3>
-                <span id="VMCity"></span>
-                <span id="VMRemote"> (Удаленная работа)</span><br/>
-                <span id="VMSalary"></span><br/>
-                <div class="well well-sm">
-                    <span id="VMDescription"></span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

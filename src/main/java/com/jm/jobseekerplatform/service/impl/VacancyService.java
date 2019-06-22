@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
+import com.jm.jobseekerplatform.dao.VacancyDaoI;
 import com.jm.jobseekerplatform.dao.impl.VacancyDAO;
 import com.jm.jobseekerplatform.model.Point;
 import com.jm.jobseekerplatform.model.State;
@@ -29,6 +30,9 @@ public class VacancyService extends AbstractService<Vacancy> {
     private VacancyDAO dao;
 
     @Autowired
+    private VacancyDaoI vacancyDaoI;
+
+    @Autowired
     private TagService tagService;
 
     @Autowired
@@ -37,13 +41,13 @@ public class VacancyService extends AbstractService<Vacancy> {
     private Pattern pattern;
     private Matcher matcher;
 
-    public List<Vacancy> getByTags(Set<Tag> tags, int limit, int page) {
+    public Page<Vacancy> getByTags(Set<Tag> tags, int limit, int page) {
 
         return dao.getByTags(tags, limit, page);
     }
 
-    public int getTotalPages(Set<Tag> tags) {
-        return dao.getTotalPages(tags);
+    public Page<Vacancy> findAll(Pageable pageable) {
+        return vacancyDaoI.findAll(pageable);
     }
 
 
