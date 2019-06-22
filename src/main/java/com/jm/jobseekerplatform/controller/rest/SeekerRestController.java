@@ -2,12 +2,14 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.Seeker;
 import com.jm.jobseekerplatform.model.SeekerProfile;
+import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.service.impl.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.SeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +21,8 @@ public class SeekerRestController {
 
     @Autowired
     private SeekerProfileService seekerProfileService;
+
+    private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
@@ -57,5 +61,19 @@ public class SeekerRestController {
     public ResponseEntity deleteSeekerById(@PathVariable Long seekerId) {
         seekerService.deleteById(seekerId);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/seeker_id", method = RequestMethod.GET)
+    private ResponseEntity<String> getId(Authentication authentication) {
+        String id;
+        if(authentication == null || !authentication.isAuthenticated()) {
+            id = null;
+        } else {
+            if (authentication.getAuthorities().contains(roleSeeker)) {
+                id = Long.toString(((Seeker) authentication.getPrincipal()).getSeekerProfile().getId());
+            } else { id = null; }
+        }
+
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 }
