@@ -3,12 +3,15 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/vacancies")
@@ -20,10 +23,35 @@ public class VacancyRestController {
     @Autowired
     private EmployerProfileService employerProfileService;
 
+    private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
+
     @RequestMapping("/")
     public List<Vacancy> getAll() {
         List<Vacancy> vacancies = vacancyService.getAll();
         return vacancies;
+    }
+
+    @RequestMapping("/page/{page}")
+    public Page<Vacancy> getPageOfAllVacancies(@PathVariable("page") int page, Authentication authentication) {
+
+        if (page != 0 ) { page = page - 1; }
+
+        int limit = 10;
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return vacancyService.findAll(PageRequest.of(page, limit));
+        } else {
+            if (authentication.getAuthorities().contains(roleSeeker)) {
+                try {
+                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
+
+                    return vacancyService.getByTags(tags, limit, page);
+
+                } catch (NullPointerException e) {
+                    return vacancyService.findAll(PageRequest.of(page, limit));
+                }
+            }
+        } return vacancyService.findAll(PageRequest.of(page, limit));
     }
 
     @RequestMapping("/{vacancyId:\\d+}")
