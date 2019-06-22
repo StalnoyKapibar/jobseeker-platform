@@ -1,11 +1,9 @@
 package com.jm.jobseekerplatform.controller;
 
-import com.jm.jobseekerplatform.event.SeekerEvent;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
@@ -45,8 +43,6 @@ public class MainController {
     @Autowired
     private EmployerProfileService employerProfileService;
 
-    @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
 
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
@@ -55,37 +51,8 @@ public class MainController {
     private String googleMapsApiKey;
 
     @RequestMapping("/")
-    public String mainPage(HttpServletRequest request, Authentication authentication, Model model) {
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
-            model.addAttribute("vacMess", "Доступные вакансии:");
-            model.addAttribute("vacancies", vacancies);
-        } else {
-            if (authentication.getAuthorities().contains(roleSeeker)) {
-                try {
-                    int page = 0;
-                    int limit = 5;
-
-                    String pageParam = request.getParameter("page");
-                    if (pageParam != null && !pageParam.isEmpty()) {
-                        page = Integer.parseInt(request.getParameter("page")) - 1; };
-
-                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
-                    List<Vacancy> vacancies = vacancyService.getByTags(tags, limit, page);
-                    int totalPages = vacancyService.getTotalPages(tags);
-
-                    model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
-                    model.addAttribute("totalPages", totalPages);
-                    model.addAttribute("number", page);
-                    model.addAttribute("vacancies", vacancies);
-                } catch (NullPointerException e) {
-                    List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
-                    model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
-                    model.addAttribute("vacancies", vacancies);
-                }
-            }
-        }
+    public String mainPage(Model model) {
+        model.addAttribute("vacMess", "Доступные вакансии:");
         return "index";
     }
 
@@ -170,7 +137,7 @@ public class MainController {
     }
 
     @RequestMapping(value = "/vacancy/{vacancyId}", method = RequestMethod.GET)
-    public String viewVacancy(@PathVariable Long vacancyId, Model model, Authentication authentication) {
+    public String viewVacancy(@PathVariable Long vacancyId, Model model) {
 
         Vacancy vacancy = vacancyService.getById(vacancyId);
         EmployerProfile employerProfile = employerProfileService.getByVacancyId(vacancyId).orElseThrow(IllegalArgumentException::new);
@@ -179,11 +146,6 @@ public class MainController {
         model.addAttribute("vacancyFromServer", vacancy);
         model.addAttribute("EmployerProfileFromServer", employerProfile);
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
-
-        if (authentication.getAuthorities().contains(roleSeeker)) {
-            SeekerEvent seekerEvent = new SeekerEvent(this, ((Seeker)authentication.getPrincipal()).getId(), vacancy.getId());
-            applicationEventPublisher.publishEvent(seekerEvent);
-        }
 
         return "vacancy";
     }
