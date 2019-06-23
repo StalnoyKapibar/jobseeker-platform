@@ -200,6 +200,17 @@ function addTag(id, name) {
     $("#tagLabel_" + id).remove();
 }
 
+function addNewTag() {
+
+    var id = -1;
+    var searchTag = $("#search_tags");
+    var name = searchTag.val();
+    $("#v_tagsWell").append("<span class='label label-success' id='v_tagLabel_" + id + "' onclick='deleteTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
+
+    searchTag.val(""); // clear filter after adding tag
+    tags_search(); // refresh visible tags with empty filter
+}
+
 function deleteTag(id, name) {
     $("#tagsWell").append("<span class='label label-success' value='"+ name +"'id='tagLabel_" + id + "' onclick='addTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
     $("#v_tagLabel_" + id).remove();

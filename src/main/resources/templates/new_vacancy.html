@@ -196,7 +196,12 @@
                 <h2 class="modal-title">Добавление тегов</h2>
             </div>
             <div class="modal-body">
-                <input id="search_tags" placeholder="Фильтр по названию">
+                <div class="input-group">
+                    <input id="search_tags" class="form-control width100" placeholder="Фильтр по названию" maxlength="50">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-info" onclick="addNewTag();">Добавить</button>
+                    </span>
+                </div>
                 <div class="well well-sm" id="tagsWell">
                 </div>
             </div>

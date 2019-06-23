@@ -2,7 +2,7 @@ package com.jm.jobseekerplatform.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "tags")
@@ -15,11 +15,24 @@ public class Tag implements Serializable {
     @Column(name = "name", unique = true)
     private String name;
 
+    /**
+     * user (employer) adds new tag as verified
+     * if verified than invisible anyone except for admin
+     * admin change visible this tag for everyone
+     */
+    @Column(name = "verified")
+    private Boolean verified;
+
     public Tag() {
     }
 
     public Tag(String name) {
         this.name = name;
+    }
+
+    public Tag(String name, Boolean verified) {
+        this.name = name;
+        this.verified = verified;
     }
 
     public Long getId() {
@@ -36,6 +49,14 @@ public class Tag implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getVerified() {
+        return verified;
+    }
+
+    public void setVerified(Boolean verified) {
+        this.verified = verified;
     }
 
     @Override
