@@ -17,4 +17,10 @@ import java.util.regex.Pattern;
 @Service("chatService")
 @Transactional
 public class ChatService extends AbstractService<Chat> {
+
+    public void addChatMessage(Long chatId, ChatMessage chatMessage) {
+        Chat chat = getById(chatId);
+        chat.getChatMessages().add(chatMessage);
+        update(chat);
+    }
 }

@@ -49,7 +49,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         this.text = text;
     }
 
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="email")
+    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
     public User getAuthor() {
         return author;

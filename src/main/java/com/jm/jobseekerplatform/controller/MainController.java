@@ -129,13 +129,13 @@ public class MainController {
         return "index";
     }
 
-    @RequestMapping("/chat/{vacancyId}")
-    public String getChat(@PathVariable("vacancyId") String vacancyId,  Authentication authentication, Model model) {
+    @RequestMapping("/chat/{chatId}")
+    public String getChat(@PathVariable("chatId") String chatId,  Authentication authentication, Model model) {
 
         User user = (User)authentication.getPrincipal();
 
         model.addAttribute("userId", user.getId());
-        model.addAttribute("vacancyId", vacancyId);
+        model.addAttribute("chatId", chatId);
 
         return "chat";
     }

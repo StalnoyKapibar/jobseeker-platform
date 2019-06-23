@@ -1,10 +1,12 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.dto.MessageDTO;
+import com.jm.jobseekerplatform.model.Chat;
 import com.jm.jobseekerplatform.model.ChatMessage;
 import com.jm.jobseekerplatform.model.User;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.service.impl.ChatMessageService;
+import com.jm.jobseekerplatform.service.impl.ChatService;
 import com.jm.jobseekerplatform.service.impl.UserService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,23 +20,28 @@ import java.util.Date;
 public class WebSocketController {
 
     @Autowired
-    VacancyService vacancyService;
-
-    @Autowired
-    ChatMessageService chatMessageService;
-
-    @Autowired
     UserService userService;
 
     @Autowired
+    private ChatService chatService;
+
+    @Autowired
     SimpMessagingTemplate simpMessagingTemplate;
+
+    @Autowired
+    private  ChatMessageService chatMessageService;
+
+
 
     @MessageMapping("/chat/{chatId}")
     public void sendMessage(@DestinationVariable("chatId") String id, MessageDTO messageDTO) {
         Long chatId = Long.parseLong(id);
         User author = userService.getById(messageDTO.getAuthor());
+
         ChatMessage chatMessage = new ChatMessage(messageDTO.getText(), author, new Date(), false);
         chatMessageService.add(chatMessage);
+
+        chatService.addChatMessage(chatId, chatMessage);
 
         simpMessagingTemplate.convertAndSend("/topic/chat/" + chatId, chatMessage);
     }

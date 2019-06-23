@@ -7,19 +7,19 @@ $(document).ready (function () {
         searching: false,
         info: false,
 
-        "sAjaxSource": "/api/chatmessages/last", //todo ChatMessageRestController.getAllLastMessages()
+        "sAjaxSource": "/api/chats/last", //todo ChatMessageRestController.getAllLastMessages()
         "sAjaxDataProp": "",
         "order": [[1, "desc"]],
         "aoColumns": [
             {"mData": "vacancyHeadline"},
             {"mData": "date"},
-            {"mData": "vacancyId",
+            {"mData": "chatId",
                 "mRender": function (data, type, full) {
                     vacancyId=data;
                     return data;}},
             {"mData": "lastMessage",
              "mRender": function(data, type, full) {
-                return '<a href="/chat/'+vacancyId+'">'+data+'</a>'}},
+                return '<a href="/chat/' + vacancyId + '">' + data + '</a>'}},
             {"mData": "read"}
         ],
         "columnDefs": [
@@ -35,11 +35,11 @@ $(document).ready (function () {
     var url = "admin";
     count_not_read_messages(url);
 
-})
+});
 
 function count_not_read_messages(url) {
     $.ajax({
-        url: "/api/chatmessages/count_not_read_messages/" + url,
+        url: "/api/chats/count_not_read_messages/" + url,
         type: "GET",
         async: false,
         success: function (data) {

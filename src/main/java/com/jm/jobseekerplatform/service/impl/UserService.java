@@ -64,13 +64,18 @@ public class UserService extends AbstractService<User> {
         char[] userPass = encodePassword(user.getPasswordChar());
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
 
+        User userNew = null;
+
         if (userRole.equals(roleSeeker)) {
-            Seeker seeker = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
-            seekerService.add(seeker);
+            userNew = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            //seekerService.add(seeker);
         } else if (userRole.equals(roleEmployer)) {
-            Employer employer = new Employer(userEmail, userPass, LocalDateTime.now(), userRole, null);
-            employerService.add(employer);
+            userNew = new Employer(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            //employerService.add(employer);
         }
+
+        add(userNew);
+
 
         User registeredUser = findByEmail(userEmail);
         String token = UUID.randomUUID().toString();

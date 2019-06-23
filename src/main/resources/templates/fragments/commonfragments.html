@@ -29,7 +29,8 @@
             <li><a href="#"><span>Все вакансии</span></a></li>
             <li><a href="#"><span>Все компании</span></a></li>
             <li><a href="#"><span>Все резюме</span></a></li>
-            <li sec:authorize="isAuthenticated()"><a class="font-color" th:href="@{'/chat/' + ${vacancyId}}">Чат<span
+            <li><a href="#"><span>Написать администратору</span></a></li>
+            <li sec:authorize="isAuthenticated()"><a class="font-color" th:href="@{'/chat/' + ${chatId}}">Чат<span
                     id="count_not_read_messages"></span></a></li>
             <li sec:authorize="isAuthenticated()"><span id="username" th:utext="${username}"></span></li>
             <li sec:authorize="isAuthenticated()"><span id="vacancyId" th:utext="${vacancyId}"></span></li>

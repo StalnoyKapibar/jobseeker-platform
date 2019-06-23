@@ -1,88 +1,15 @@
 var stompClient = null;
-var vacancyId = document.querySelector('#vacancyId').innerText.trim();
-var userId = null;
+
+var chatId = parseInt(document.getElementById("chatId").getAttribute('value'));
+var userId = parseInt(document.getElementById("userId").getAttribute('value'));
 
 var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
 
-function connect() {
-    userId = document.querySelector('#userId').innerText.trim();
-    var socket = new SockJS('/chat');
-    stompClient = Stomp.over(socket);
-
-    stompClient.connect({}, function (frame) {
-        stompClient.subscribe("/topic/chat/" + vacancyId, onMessageReceived)
-    });
-}
-
-function disconnect() {
-    if (stompClient != null) {
-        stompClient.disconnect();
-    }
-}
-
-function onMessageReceived(payload) {
-    var message = JSON.parse(payload.body);
-
-    if (userId!==message.author) {
-            message.read=true;
-            updateMessage(message);
-    }
-
-    $(".media-list").append('<li class="media">' +
-        '<div class="media-body">' +
-        '<div class="media">' +
-        '<div class="media-body"><small>'
-        + message.text +
-        '<br/></small><small class="text-muted">'
-        + message.author +
-        '</small><hr/></div></div></div></li>');
-
-    $container = $('.message-area');
-    $container[0].scrollTop = $container[0].scrollHeight;
-}
-
-function updateMessage(message) {
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
-    $.ajax({
-        url: "/api/chatmessages/change_status/"+vacancyId,
-        type: "PUT",
-        contentType: "application/json",
-        data: JSON.stringify(message),
-        //dataType: 'json',
-        beforeSend: function(xhr) {
-            xhr.setRequestHeader("Accept", "application/json");
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.setRequestHeader(header, token);
-        }
-    })
-}
-
-function refreshMessages(chatMessagesList) {
-    chatMessagesList.reverse();
-    $(".media-list").html("");
-    $.each(chatMessagesList, function(i, message) {
-        if (userId!==message.author) {
-                message.read=true;
-                updateMessage(message);
-        }
-        $(".media-list").append('<li class="media">' +
-                                '<div class="media-body">' +
-                                '<div class="media">' +
-                                '<div class="media-body"><small>'
-                                    + message.text +
-                                '</small><br/><small class="text-muted">'
-                                + message.author +
-                                '</small><hr/></div></div></div></li>');
-    });
-    $container = $('.message-area');
-    $container[0].scrollTop = $container[0].scrollHeight;
-}
 
 function count_not_read_messages(url) { //todo
     // $.ajax({
-    //     url: "/api/chatmessages/count_not_read_messages/" + url,
+    //     url: "/api/chats/count_not_read_messages/" + url,
     //     type: "GET",
     //     async: false,
     //     success: function (data) {
@@ -92,34 +19,102 @@ function count_not_read_messages(url) { //todo
     // })
 }
 
-$(function(){
+$(function () {
 
-        connect();
+    connect();
 
-        $.get("/api/chatmessages/" + vacancyId, function (chatMessagesList) {
-            refreshMessages(chatMessagesList)});
+    getMessages();
 
+    messageForm.addEventListener('submit', sendMessage, true);
 
-        messageForm.addEventListener('submit', sendMessage, true);
+    if (userId == "admin@mail.ru") {
+        count_not_read_messages("admin");
+    } else {
+        count_not_read_messages(chatId);
+    }
 
-        if (userId=="admin@mail.ru") {
-            count_not_read_messages("admin");
-        } else {
-            count_not_read_messages(vacancyId);
+    function connect() {
+        var socket = new SockJS('/chat');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function (frame) {
+            stompClient.subscribe("/topic/chat/" + chatId, onMessageReceived)
+        });
+    }
+
+    function disconnect() {
+        if (stompClient != null) {
+            stompClient.disconnect();
         }
+    }
 
-        function sendMessage(event) {
+    function getMessages() {
+        $.get("/api/chats/" + chatId, function (chatMessagesList) {
+
+            chatMessagesList.reverse();
+            $(".media-list").html("");
+            $.each(chatMessagesList, function (i, message) {
+                processReceivedMessage(message);
+            });
+            $container = $('.message-area');
+            $container[0].scrollTop = $container[0].scrollHeight;
+        });
+
+    }
+
+    function onMessageReceived(payload) {
+        var message = JSON.parse(payload.body);
+
+        processReceivedMessage(message);
+
         $container = $('.message-area');
-        $container.animate({ scrollTop: $container[0].scrollHeight }, "slow");
+        $container[0].scrollTop = $container[0].scrollHeight;
+    }
+
+    function processReceivedMessage(message) {
+        if ((userId !== message.author) && (!message.read)) {
+            message.read = true;
+            updateMessageOnServer(message);
+        }
+        $(".media-list").append('<li class="media">' +
+            '<div class="media-body">' +
+            '<div class="media">' +
+            '<div class="media-body"><small>'
+            + message.text +
+            '</small><br/><small class="text-muted">'
+            + message.author +
+            '</small><hr/></div></div></div></li>');
+    }
+
+    function sendMessage(event) {
+        $container = $('.message-area');
+        $container.animate({scrollTop: $container[0].scrollHeight}, "slow");
         var messageContent = messageInput.value.trim();
-        if(messageContent && stompClient) {
+        if (messageContent && stompClient) {
             var chatMessage = {
                 author: userId,
-                text: messageInput.value };
-            stompClient.send("/live/chat/" + vacancyId, {}, JSON.stringify(chatMessage));
+                text: messageInput.value
+            };
+            stompClient.send("/live/chat/" + chatId, {}, JSON.stringify(chatMessage));
             messageInput.value = '';
         }
         event.preventDefault();
-
     }
-})
+
+    function updateMessageOnServer(message) {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        $.ajax({
+            url: "/api/chats/update_message",
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify(message),
+            //dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json");
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.setRequestHeader(header, token);
+            }
+        })
+    }
+});

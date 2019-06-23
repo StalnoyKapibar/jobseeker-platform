@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/chatmessages/")
+@RequestMapping("/api/chats/")
 public class ChatMessageRestController {
 
     @Autowired
@@ -31,8 +31,8 @@ public class ChatMessageRestController {
     @Autowired
     ChatService chatService;
 
-    @GetMapping("{chatId}/last")
-    public HttpEntity getAllLastMessages(@PathVariable("chatId") Long id) {
+    @GetMapping("/last") //todo
+    public HttpEntity getAllChats(@PathVariable("chatId") Long id) {
         List<MessageWithDateDTO> lastMessages = chatMessageService.getAllLastMessages();
         Collections.sort(lastMessages);
         return new ResponseEntity(lastMessages, HttpStatus.OK);
@@ -45,27 +45,26 @@ public class ChatMessageRestController {
         return new ResponseEntity(chatMessageList, HttpStatus.OK);
     }
 
-    @PutMapping("change_status/{messageId}")
-    public HttpEntity changeStatusMessage(@PathVariable("messageId") Long id, @RequestBody MessageDTO message) {
-        Long idMessage = message.getId();
-        ChatMessage chatMessage = chatMessageService.getById(idMessage);
-        chatMessage.setRead(message.isRead());
+    @PutMapping("update_message")
+    public HttpEntity updateMessage(@RequestBody MessageDTO message) {
+        ChatMessage chatMessage = chatMessageService.getById(message.getId());
+        chatMessage.setRead(message.isRead()); //todo менять всё остальное или переименовать метод
         chatMessageService.update(chatMessage);
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("count_not_read_messages/admin")
-    public HttpEntity getCountNotReadMessagesForAdmin() {
-        int count = chatMessageService.getNotReadMessages().size();
-        return new ResponseEntity(count, HttpStatus.OK);
-    }
-
-    @GetMapping("count_not_read_messages/{chatId}")
-    public HttpEntity getCountNotReadMessagesForUser(@PathVariable("chatId") Long chatId) {
-        List<ChatMessage> list = new ArrayList<>(chatService.getById(chatId).getChatMessages());
-        Long count = list.stream().filter(a -> a.getAuthor().getAuthority().equals(userRoleService.findByAuthority("ROLE_ADMIN"))).filter(a -> a.isRead() == false).count(); //todo переделать на запрос к БД
-
-        return new ResponseEntity(count, HttpStatus.OK);
-    }
+//    @GetMapping("count_not_read_messages/admin") //todo
+//    public HttpEntity getCountNotReadMessagesForAdmin() {
+//        int count = chatMessageService.getNotReadMessages().size();
+//        return new ResponseEntity(count, HttpStatus.OK);
+//    }
+//
+//    @GetMapping("count_not_read_messages/{chatId}") //todo
+//    public HttpEntity getCountNotReadMessagesForUser(@PathVariable("chatId") Long chatId) {
+//        List<ChatMessage> list = new ArrayList<>(chatService.getById(chatId).getChatMessages());
+//        Long count = list.stream().filter(a -> a.getAuthor().getAuthority().equals(userRoleService.findByAuthority("ROLE_ADMIN"))).filter(a -> a.isRead() == false).count(); //todo переделать на запрос к БД
+//
+//        return new ResponseEntity(count, HttpStatus.OK);
+//    }
 }
