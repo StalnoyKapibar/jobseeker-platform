@@ -15,10 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.NoResultException;
 import javax.annotation.security.RolesAllowed;
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.Base64;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,10 +40,6 @@ public class MainController {
 
     @Autowired
     private EmployerProfileService employerProfileService;
-
-
-
-    private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;

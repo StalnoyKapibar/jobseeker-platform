@@ -2,18 +2,18 @@ package com.jm.jobseekerplatform.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "history")
-public class SeekerHistory implements Serializable {
+@Table(name = "seeker_vacancy_record")
+public class SeekerVacancyRecord implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "date")
-    private Date date;
+    private LocalDateTime date;
 
     @Column
     private Long seekerId;
@@ -21,9 +21,9 @@ public class SeekerHistory implements Serializable {
     @Column
     private Long vacancyId;
 
-    public SeekerHistory() {}
+    public SeekerVacancyRecord() {}
 
-    public SeekerHistory(Date date, Long seekerId, Long vacancyId) {
+    public SeekerVacancyRecord(LocalDateTime date, Long seekerId, Long vacancyId) {
         this.date = date;
         this.seekerId = seekerId;
         this.vacancyId = vacancyId;
@@ -37,11 +37,11 @@ public class SeekerHistory implements Serializable {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

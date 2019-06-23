@@ -1,10 +1,10 @@
 package com.jm.jobseekerplatform.dao.impl;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
-import com.jm.jobseekerplatform.model.SeekerHistory;
+import com.jm.jobseekerplatform.model.SeekerVacancyRecord;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SeekerHistoryDAO extends AbstractDAO<SeekerHistory> {
+public class SeekerHistoryDAO extends AbstractDAO<SeekerVacancyRecord> {
 
 }
