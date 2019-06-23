@@ -17,16 +17,17 @@
     <tr style="font-weight: bold; ">
         <th scope="col">Id</th>
         <th scope="col">Имя</th>
-        <th scope="col">Утверджение</th>
-        <th scope="col">Удаление</th>
+        <th scope="col">Утвердить</th>
+        <th scope="col">Удалить</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="tag,tagCount: ${tags}" style="font-weight: normal;">
         <th th:text="${tag.getId()}"></th>
         <th th:text="${tag.getName()}"></th>
-        <th><button th:onclick="'changeVerifiedTag(' + ${tag.getId()} + ')'" th:text="${tag.getVerified()}"></button></th>
-        <th><button th:onclick="'deleteTag(' + ${tag.getId()} + ');'">Удалить</button>
+        <th th:if="${tag.getVerified()}"></th>
+        <th th:unless="${tag.getVerified()}"><button th:onclick="'changeVerifiedTag(' + ${tag.getId()} + ')'">OK</button></th>
+        <th><button th:onclick="'deleteTag(' + ${tag.getId()} + ');'">OK</button>
         </th>
     </tr>
     </tbody>
