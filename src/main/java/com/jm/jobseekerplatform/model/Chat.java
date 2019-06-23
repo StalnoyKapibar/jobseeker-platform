@@ -12,6 +12,7 @@ import java.util.Set;
  */
 
 @Entity
+@Inheritance
 @Table(name = "chats")
 public class Chat implements Serializable {
 
@@ -19,32 +20,34 @@ public class Chat implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    private User createdBy;
+
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = org.hibernate.annotations.FetchMode.SELECT)
     private List<ChatMessage> chatMessages;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @Fetch(value = org.hibernate.annotations.FetchMode.SELECT)
-    private Set<User> users;
-
 
     public Chat(){ }
 
+    public Chat(User createdBy){
+        this.createdBy = createdBy;
+    }
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
 
     public void setChatMessages(List<ChatMessage> chatMessages) {
         this.chatMessages = chatMessages;
     }
 
-
     public List<ChatMessage> getChatMessages() {
         return chatMessages;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
     }
 }

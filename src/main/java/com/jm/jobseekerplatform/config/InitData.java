@@ -388,6 +388,8 @@ public class InitData {
 
     public void initChat() {
 
+        Random rnd = new Random();
+
         for (Long i = 1L; i < 6L; i++) {
             List<ChatMessage> messages = new ArrayList<>();
             for (int k = 0; k < 5; k++) {
@@ -396,7 +398,10 @@ public class InitData {
                 messages.add(chatMessage);
             }
 
-            Chat chat = new Chat();
+            User randomUser = userService.getById(rnd.nextInt(10) + 1L); //todo тут надо одбирать всех, кроме employer
+            Vacancy randomVacancy = vacancyService.getById(rnd.nextInt(30) + 1L);
+
+            Chat chat = new ChatAboutVacancy(randomUser, randomVacancy);
             chat.setChatMessages(messages);
 
             chatService.add(chat);
