@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
 import com.jm.jobseekerplatform.dto.MessageDTO;
+import com.jm.jobseekerplatform.model.Chat;
 import com.jm.jobseekerplatform.model.ChatMessage;
 import com.jm.jobseekerplatform.service.impl.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.ChatService;
@@ -17,7 +18,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/chats/")
-public class ChatMessageRestController {
+public class ChatRestController {
 
     @Autowired
     VacancyService vacancyService;
@@ -32,13 +33,21 @@ public class ChatMessageRestController {
     ChatService chatService;
 
     @GetMapping("/last") //todo
-    public HttpEntity getAllChats(@PathVariable("chatId") Long id) {
+    public HttpEntity getAllLastMessages(@PathVariable("chatId") Long id) {
         List<MessageWithDateDTO> lastMessages = chatMessageService.getAllLastMessages();
         Collections.sort(lastMessages);
         return new ResponseEntity(lastMessages, HttpStatus.OK);
     }
 
-    @GetMapping("{chatId}")
+    @GetMapping("all")
+    public HttpEntity getAllChats() {
+        List<Chat> chats = chatService.getAll();
+        //Collections.sort(chats, (o1, o2) -> ...); //todo
+        return new ResponseEntity(chats, HttpStatus.OK);
+    }
+
+
+    @GetMapping("{chatId:\\d+}")
     public HttpEntity getAllMessagesInChat(@PathVariable("chatId") Long id) {
         List<ChatMessage> chatMessageList = chatService.getById(id).getChatMessages();
         Collections.sort(chatMessageList);
