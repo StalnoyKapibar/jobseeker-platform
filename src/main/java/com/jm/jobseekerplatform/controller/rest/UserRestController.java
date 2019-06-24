@@ -3,6 +3,7 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.User;
 import com.jm.jobseekerplatform.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,34 +35,13 @@ public class UserRestController {
     }
 //     проверка валидации user через ajax
     @RequestMapping(method = RequestMethod.GET, value = "/email/{email}")
-    public Object isExistEmail(@PathVariable String email) {
+    public ResponseEntity<String> isExistEmail(@PathVariable String email) {
         if (userService.isExistEmail(email)) {
-            return new Object() {
-                String valid = "false";
-
-                public String getValid() {
-                    return valid;
-                }
-            };
+            return ResponseEntity.ok("{\"valid\" : \"false\"}");
         } else {
-            return new Object() {
-                String valid = "true";
-
-                public String getValid() {
-                    return valid;
-                }
-            };
+            return ResponseEntity.ok("{\"valid\" : \"true\"}");
         }
     }
-    //проверка валидации user'а через ajax
-//    @RequestMapping(method = RequestMethod.GET, value = "/email/{email}")
-//    public String isExistEmail(@PathVariable String email) {
-//        if (userService.isExistEmail(email)) {
-//            return "false";
-//        } else {
-//            return "true";
-//        }
-//    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getUser/{id}")
     public User getUser(@PathVariable(required = false) Long id) {

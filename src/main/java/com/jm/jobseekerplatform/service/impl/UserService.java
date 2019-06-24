@@ -79,24 +79,21 @@ public class UserService extends AbstractService<User> {
         mailService.sendVerificationEmail(userEmail, token);
     }
 
-    public void addNewUserByAdmin(User user,boolean check) {
+    public void addNewUserByAdmin(User user, boolean check) {
         String userEmail = user.getEmail();
         char[] userPass = encodePassword(user.getPasswordChar());
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
-
+        User newUser = null;
         if (userRole.equals(roleSeeker)) {
-            Seeker seeker = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
-            seeker.setConfirm(true);
-            seekerService.add(seeker);
+            newUser = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
         } else if (userRole.equals(roleEmployer)) {
-            Employer employer = new Employer(userEmail, userPass, LocalDateTime.now(), userRole, null);
-            employer.setConfirm(true);
-            employerService.add(employer);
-        } else if (userRole.equals(roleAdmin)){
-            User newUser = new User(userEmail,userPass, LocalDateTime.now(), userRole);
-            newUser.setConfirm(true);
-            add(newUser);
+            newUser = new Employer(userEmail, userPass, LocalDateTime.now(), userRole, null);
+        } else if (userRole.equals(roleAdmin)) {
+            newUser = new User(userEmail, userPass, LocalDateTime.now(), userRole);
         }
+
+        newUser.setConfirm(true);
+        add(newUser);
 
         if (check) {
             mailService.sendNotificationAboutAddEmail(userEmail, user.getPassword());
@@ -116,7 +113,7 @@ public class UserService extends AbstractService<User> {
             throw new IllegalArgumentException("User's email already exist");
         }
 
-        isCorrect = (userRole.equals(roleSeeker) | userRole.equals(roleEmployer) | userRole.equals(roleAdmin) );
+        isCorrect = (userRole.equals(roleSeeker) | userRole.equals(roleEmployer) | userRole.equals(roleAdmin));
 
         pattern = Pattern.compile(email_pattern);
         matcher = pattern.matcher(user.getEmail());
