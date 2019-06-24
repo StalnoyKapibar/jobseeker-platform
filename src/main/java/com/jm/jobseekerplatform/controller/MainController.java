@@ -68,12 +68,6 @@ public class MainController {
         return "index";
     }
 
-
-    @RequestMapping("/admin/addUser")
-    public String adminAddUser() {
-        return "admin_addUser";
-    }
-
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "logout", required = false) String logout,
