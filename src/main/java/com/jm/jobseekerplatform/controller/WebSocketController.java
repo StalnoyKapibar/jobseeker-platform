@@ -45,6 +45,4 @@ public class WebSocketController {
 
         simpMessagingTemplate.convertAndSend("/topic/chat/" + chatId, chatMessage);
     }
-
-
 }

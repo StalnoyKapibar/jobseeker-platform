@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.persistence.NoResultException;
 
 import javax.annotation.security.RolesAllowed;
@@ -65,19 +66,6 @@ public class MainController {
         }
         return "index";
     }
-
-    @RequestMapping("/admin")
-    public String adminPage() {
-        return "admin";
-    }
-
-    @RequestMapping("/admin/vacancies")
-    public String adminPageVacancies() {
-        return "admin_vacancies";
-    }
-
-    @RequestMapping("/admin/chats")
-    public String adminPageChats() { return "admin_chats"; }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
@@ -140,7 +128,7 @@ public class MainController {
         return "chat";
     }
 
-    @RequestMapping("todo")
+    @RequestMapping("todo") //todo
     public String getChatByCreatorAndAbout(@PathVariable("chatId") String chatId,  Authentication authentication, Model model) {
 
         User user = (User)authentication.getPrincipal();

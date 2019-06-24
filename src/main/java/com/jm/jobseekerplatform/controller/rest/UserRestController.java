@@ -3,6 +3,7 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.User;
 import com.jm.jobseekerplatform.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,22 @@ public class UserRestController {
     public void registerNewUser(@RequestBody User user) {
         if (userService.validateNewUser(user)) {
             userService.registerNewUser(user);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/addUserByAdmin/{check}")
+    public void addNewUser(@RequestBody User user, @PathVariable boolean check) {
+        if (userService.validateNewUser(user)) {
+            userService.addNewUserByAdmin(user,check);
+        }
+    }
+//     проверка валидации user через ajax
+    @RequestMapping(method = RequestMethod.GET, value = "/email/{email}")
+    public ResponseEntity<String> isExistEmail(@PathVariable String email) {
+        if (userService.isExistEmail(email)) {
+            return ResponseEntity.ok("{\"valid\" : \"false\"}");
+        } else {
+            return ResponseEntity.ok("{\"valid\" : \"true\"}");
         }
     }
 
