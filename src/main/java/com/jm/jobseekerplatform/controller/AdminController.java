@@ -30,6 +30,11 @@ public class AdminController {
         return "admin";
     }
 
+    @RequestMapping("/admin/addUser")
+    public String adminAddUser() {
+        return "admin_addUser";
+    }
+
     @RequestMapping("/admin/vacancies")
     public String adminPageVacancies() {
         return "admin_vacancies";
