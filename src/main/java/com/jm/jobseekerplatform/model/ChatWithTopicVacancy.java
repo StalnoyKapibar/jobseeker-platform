@@ -7,11 +7,11 @@ import javax.persistence.Entity;
  */
 
 @Entity
-public class ChatAboutVacancy extends ChatAbout<Vacancy> {
-    public ChatAboutVacancy() {
+public class ChatWithTopicVacancy extends ChatWithTopic<Vacancy> {
+    public ChatWithTopicVacancy() {
     }
 
-    public ChatAboutVacancy(User createdBy, Vacancy about) {
+    public ChatWithTopicVacancy(User createdBy, Vacancy about) {
         super(createdBy, about);
     }
 }

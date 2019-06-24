@@ -77,7 +77,7 @@ public class MainController {
     }
 
     @RequestMapping("/admin/chats")
-    public String adminPageChats() { return "admin_chats"; } //todo
+    public String adminPageChats() { return "admin_chats"; }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
@@ -130,7 +130,18 @@ public class MainController {
     }
 
     @RequestMapping("/chat/{chatId}")
-    public String getChat(@PathVariable("chatId") String chatId,  Authentication authentication, Model model) {
+    public String getChatById(@PathVariable("chatId") String chatId,  Authentication authentication, Model model) {
+
+        User user = (User)authentication.getPrincipal();
+
+        model.addAttribute("userId", user.getId());
+        model.addAttribute("chatId", chatId);
+
+        return "chat";
+    }
+
+    @RequestMapping("todo")
+    public String getChatByCreatorAndAbout(@PathVariable("chatId") String chatId,  Authentication authentication, Model model) {
 
         User user = (User)authentication.getPrincipal();
 

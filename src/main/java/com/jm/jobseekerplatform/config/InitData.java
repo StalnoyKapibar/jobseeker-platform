@@ -401,7 +401,7 @@ public class InitData {
             User randomUser = userService.getById(rnd.nextInt(10) + 1L); //todo тут надо одбирать всех, кроме employer
             Vacancy randomVacancy = vacancyService.getById(rnd.nextInt(30) + 1L);
 
-            Chat chat = new ChatAboutVacancy(randomUser, randomVacancy);
+            Chat chat = new ChatWithTopicVacancy(randomUser, randomVacancy);
             chat.setChatMessages(messages);
 
             chatService.add(chat);

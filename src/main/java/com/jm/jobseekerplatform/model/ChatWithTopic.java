@@ -8,21 +8,21 @@ import javax.persistence.MappedSuperclass;
  */
 
 @MappedSuperclass
-public class ChatAbout<T> extends Chat {
+public class ChatWithTopic<T extends CreatedByUser> extends Chat {
 
     @ManyToOne
-    private T about;
+    private T topic;
 
 
-    public ChatAbout(User createdBy, T about) {
+    public ChatWithTopic(User createdBy, T about) {
         super(createdBy);
-        this.about = about;
+        this.topic = about;
     }
 
-    public ChatAbout() {
+    public ChatWithTopic() {
     }
 
-    public T getAbout() {
-        return about;
+    public T getTopic() {
+        return topic;
     }
 }
