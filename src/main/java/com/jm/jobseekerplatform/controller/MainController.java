@@ -80,6 +80,11 @@ public class MainController {
     @RequestMapping("/admin/chats")
     public String adminPageChats() { return "admin_chats"; }
 
+    @RequestMapping("/admin/addUser")
+    public String adminAddUser() {
+        return "admin_addUser";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "logout", required = false) String logout,
@@ -131,7 +136,7 @@ public class MainController {
     }
 
     @RequestMapping("/chat/{vacancyId}")
-    public String getChat(@PathVariable("vacancyId") String vacancyId,  Principal principal, Model model) {
+    public String getChat(@PathVariable("vacancyId") String vacancyId, Principal principal, Model model) {
 
         String username = principal.getName();
         model.addAttribute("username", username);
@@ -145,19 +150,5 @@ public class MainController {
     public String new_vacancyPage(Model model) {
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "new_vacancy";
-    }
-
-    @RequestMapping(value = "/vacancy/{vacancyId}", method = RequestMethod.GET)
-    public String viewVacancy(@PathVariable Long vacancyId, Model model) {
-
-        Vacancy vacancy = vacancyService.getById(vacancyId);
-        EmployerProfile employerProfile = employerProfileService.getByVacancyId(vacancyId).orElseThrow(IllegalArgumentException::new);
-
-        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-        model.addAttribute("vacancyFromServer", vacancy);
-        model.addAttribute("EmployerProfileFromServer", employerProfile);
-        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
-
-        return "vacancy";
     }
 }
