@@ -27,7 +27,7 @@ public class TagRestController {
     }
 
     @RequestMapping("/seeker/{seeker_id}")
-    public Set<Tag> getSeekerTags(@PathVariable("seeker_id") String seekerId) {
-        return seekerProfileService.getById(Long.parseLong(seekerId)).getTags();
+    public Set<Tag> getSeekerTags(@PathVariable("seeker_id") Long seekerId) {
+        return seekerProfileService.getById(seekerId).getTags();
     }
 }

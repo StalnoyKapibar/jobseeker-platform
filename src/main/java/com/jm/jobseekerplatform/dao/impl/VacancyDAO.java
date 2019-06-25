@@ -2,9 +2,9 @@ package com.jm.jobseekerplatform.dao.impl;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.dto.PageVacancyDTO;
+import com.jm.jobseekerplatform.model.Point;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
-
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.data.domain.Page;
@@ -36,6 +36,21 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         query.setMaxResults(limit);
 
         return new PageVacancyDTO(query.getResultList(), totalPages);
+    }
+
+    public List<Point> getPointsByTags(Set<Tag> tags) {
+        Set<Long> tagsId = new HashSet<>();
+        for (Tag tag:tags) { tagsId.add(tag.getId()); }
+
+        String s = "select * from points inner join (select vc.coordinates_id from vacancies as vc inner join "
+                +"(select v.vacancy_id as r_id, count(v.tags_id) as count "
+                +"from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result "
+                +"on vc.id=result.r_id order by result.count desc) as p on points.id=p.coordinates_id;";
+
+        Query query = entityManager.unwrap(Session.class).createSQLQuery(s).addEntity(Point.class)
+                .setParameter("param", tagsId);
+
+        return query.getResultList();
     }
 
     public int deletePermanentBlockVacancies() {

@@ -53,7 +53,7 @@ public class SeekerRestController {
     }
 
     @RequestMapping(value = "/{seekerId}", method = RequestMethod.GET)
-    public ResponseEntity<SeekerProfile> getSeekerById(@PathVariable Long seekerId) {
+    public ResponseEntity<SeekerProfile> getSeekerById(@PathVariable("seekerId") Long seekerId) {
         return new ResponseEntity<>(seekerProfileService.getById(seekerId), HttpStatus.OK);
     }
 
@@ -65,15 +65,15 @@ public class SeekerRestController {
 
     @RequestMapping(value = "/seeker_id", method = RequestMethod.GET)
     private ResponseEntity<String> getId(Authentication authentication) {
-        String id;
-        if(authentication == null || !authentication.isAuthenticated()) {
-            id = null;
+        String id = "";
+        if (authentication == null || !authentication.isAuthenticated()) {
+            id = "";
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                id = Long.toString(((Seeker) authentication.getPrincipal()).getSeekerProfile().getId());
-            } else { id = null; }
+                Seeker seeker = (Seeker) authentication.getPrincipal();
+                id = Long.toString(seeker.getSeekerProfile().getId());
+            }
         }
-
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 }

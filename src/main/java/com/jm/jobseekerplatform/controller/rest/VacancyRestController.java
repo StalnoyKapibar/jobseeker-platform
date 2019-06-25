@@ -32,10 +32,8 @@ public class VacancyRestController {
     }
 
     @RequestMapping("/page/{page}")
-    public Page<Vacancy> getPageOfAllVacancies(@PathVariable("page") int page, Authentication authentication) {
-
-        if (page != 0 ) { page = page - 1; }
-
+    public Page<Vacancy> getPageOfVacancies(@PathVariable("page") int page, Authentication authentication) {
+        if (page != 0) { page = page - 1; }
         int limit = 10;
 
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -44,14 +42,31 @@ public class VacancyRestController {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
                     Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
-
                     return vacancyService.getByTags(tags, limit, page);
-
                 } catch (NullPointerException e) {
                     return vacancyService.findAll(PageRequest.of(page, limit));
                 }
             }
         } return vacancyService.findAll(PageRequest.of(page, limit));
+    }
+
+    @RequestMapping("/point/page/{page}")
+    public Page<Vacancy> getPageOfVacanciesSortByPoints(@PathVariable("page") int page, @RequestBody Point point, Authentication authentication) {
+        if (page != 0) { page = page - 1; }
+        int limit = 10;
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return vacancyService.getAllVacanciesBySortPoint(point,limit,page);
+        } else {
+            if (authentication.getAuthorities().contains(roleSeeker)) {
+                try {
+                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
+                    return vacancyService.getVacanciesByTagsBySortPoint(point, tags, limit, page);
+                } catch (NullPointerException e) {
+                    return vacancyService.getAllVacanciesBySortPoint(point,limit,page);
+                }
+            }
+        } return vacancyService.getAllVacanciesBySortPoint(point,limit,page);
     }
 
     @RequestMapping("/{vacancyId:\\d+}")
