@@ -8,11 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "seekerprofiles")
-public class SeekerProfile implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class SeekerProfile extends UserProfile implements Serializable {
 
     @Column(name = "name")
     private String name;
@@ -47,14 +43,6 @@ public class SeekerProfile implements Serializable {
         this.photo = photo;
         this.tags = tags;
         this.portfolios = portfolios;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

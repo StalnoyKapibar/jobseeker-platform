@@ -9,11 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "employerprofiles")
-public class EmployerProfile implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class EmployerProfile extends UserProfile implements Serializable {
 
     @Column(name = "companyname")
     private String companyName;
@@ -54,13 +50,7 @@ public class EmployerProfile implements Serializable {
         this.state = State.NO_ACCESS;
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getCompanyName() {
         return companyName;
