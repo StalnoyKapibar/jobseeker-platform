@@ -64,4 +64,15 @@ public class MailService {
         sendEmail(friendAddres, subject, templateEngine.process("/emails/friendInviteEmail.html", ctx));
     }
 
+    // оповещение о добавлении
+    public void sendNotificationAboutAddEmail(String address, String password) {
+        String subject = address + "Приглашет вас попробовать нашу платформу";
+        String href = "http://localhost:" + port + "/login";
+        final Context ctx = new Context();
+        ctx.setVariable("your_login", address);
+        ctx.setVariable("password", password);
+        ctx.setVariable("href", href);
+        sendEmail(address, subject, templateEngine.process("/emails/notificationEmail.html", ctx));
+    }
+
 }

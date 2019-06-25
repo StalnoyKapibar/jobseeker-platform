@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.NoResultException;
+
 import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
 import java.util.Base64;
@@ -36,9 +37,6 @@ public class MainController {
     private EmployerService employerService;
 
     @Autowired
-    private TagService tagService;
-
-    @Autowired
     private EmployerProfileService employerProfileService;
 
     @Value("${google.maps.api.key}")
@@ -49,19 +47,6 @@ public class MainController {
         model.addAttribute("vacMess", "Доступные вакансии:");
         return "index";
     }
-
-    @RequestMapping("/admin")
-    public String adminPage() {
-        return "admin";
-    }
-
-    @RequestMapping("/admin/vacancies")
-    public String adminPageVacancies() {
-        return "admin_vacancies";
-    }
-
-    @RequestMapping("/admin/chats")
-    public String adminPageChats() { return "admin_chats"; }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
@@ -114,7 +99,7 @@ public class MainController {
     }
 
     @RequestMapping("/chat/{vacancyId}")
-    public String getChat(@PathVariable("vacancyId") String vacancyId,  Principal principal, Model model) {
+    public String getChat(@PathVariable("vacancyId") String vacancyId, Principal principal, Model model) {
 
         String username = principal.getName();
         model.addAttribute("username", username);
