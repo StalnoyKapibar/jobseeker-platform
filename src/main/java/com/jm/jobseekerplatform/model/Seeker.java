@@ -10,27 +10,15 @@ import java.time.LocalDateTime;
 @Table(name = "seekers")
 public class Seeker extends User {
 
-    @OneToOne(fetch = FetchType.EAGER)
-    private SeekerProfile seekerProfile;
-
     public Seeker() {
     }
 
-    public Seeker(String email, char[] password, LocalDateTime date, UserRole authority, SeekerProfile seekerProfile) {
+    public Seeker(String email, char[] password, LocalDateTime date, UserRole authority) {
         super(email, password, date, authority);
-        this.seekerProfile = seekerProfile;
     }
 
-    @Override
-    public String getUsername() {
-        return seekerProfile.getName() + " " + seekerProfile.getSurname();
-    }
-
-    public SeekerProfile getSeekerProfile() {
-        return seekerProfile;
-    }
-
-    public void setSeekerProfile(SeekerProfile seekerProfile) {
-        this.seekerProfile = seekerProfile;
-    }
+//    @Override
+//    public String getUsername() { //todo
+//        return seekerProfile.getName() + " " + seekerProfile.getSurname();
+//    }
 }
