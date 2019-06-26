@@ -30,18 +30,7 @@ public class TagRestController {
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Boolean> deleteById(@PathVariable Long id) {
 
-        Tag findedTag = tagService.getById(id);
-        Set<Tag> findedTags = new HashSet<>();
-        findedTags.add(findedTag);
-
-        int unlimit = 2147483647;
-        // delete dependenies, otherwise tags we will not delete
-        Set<Vacancy> vacancy = vacancyService.getByTags(findedTags, unlimit);
-        Set<SeekerProfile> seekerProfiles = seekerProfileService.getByTags(findedTags, unlimit);
-        vacancy.forEach(x -> x.setTags(new HashSet<>()));
-        seekerProfiles.forEach(x -> x.setTags(new HashSet<>()));
-
-        tagService.delete(findedTag);
+        tagService.deleteById(id);
         return ResponseEntity.ok(true);
     }
 
