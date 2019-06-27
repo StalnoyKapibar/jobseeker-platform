@@ -338,9 +338,9 @@ public class InitData {
         tagService.add(new Tag("JMS", verified));
         tagService.add(new Tag("Azure", verified));
         tagService.add(new Tag("React", verified));
-        tagService.add(new Tag("MySQL"), verified));
-        tagService.add(new Tag("Thymeleaf"), verified));
-        tagService.add(new Tag("OAuth2"), verified));
+        tagService.add(new Tag("MySQL", verified));
+        tagService.add(new Tag("Thymeleaf", verified));
+        tagService.add(new Tag("OAuth2", verified));
         
     }
 
