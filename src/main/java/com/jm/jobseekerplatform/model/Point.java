@@ -11,10 +11,11 @@ public class Point implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "lat", nullable = false)
-    private Float latitudeY;
-    @Column(name = "place", nullable = false)
+    @Column(name = "latitude_x", nullable = false)
     private Float longitudeX;
+
+    @Column(name = "latitude_y", nullable = false)
+    private Float latitudeY;
 
     public Point() {
     }

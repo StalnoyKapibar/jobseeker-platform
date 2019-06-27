@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "chatmessages")
+@Table(name = "chat_messages")
 public class ChatMessage implements Serializable, Comparable<ChatMessage> {
 
     @Id
@@ -27,7 +27,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
     @Column(name = "date")
     private Date date;
 
-    @Column(name = "isread")
+    @Column(name = "is_read")
     private boolean isRead;
 
     public ChatMessage(){ }

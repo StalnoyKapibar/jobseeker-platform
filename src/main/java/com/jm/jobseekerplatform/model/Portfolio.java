@@ -12,7 +12,7 @@ public class Portfolio implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "projectname")
+    @Column(name = "project_name")
     private String projectName;
 
     @Column(name = "link")
