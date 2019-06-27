@@ -98,12 +98,9 @@ public class VacancyService extends AbstractService<Vacancy> {
         Point point = vacancy.getCoordinates();
         pointService.add(point);
         vacancy.setCoordinates(point);
-        Set<Tag> tags = vacancy.getTags();;
-        Set<Tag> tagsNew = new HashSet<>();
-        for (Tag tag:tags) {
-            tagsNew.add(tagService.findByName(tag.getName()));
-        }
-        vacancy.setTags(tagsNew);
+
+        Set<Tag> matchedTags = tagService.matchTagsByName(vacancy.getTags());
+        vacancy.setTags(matchedTags);
         dao.add(vacancy);
     }
 }
