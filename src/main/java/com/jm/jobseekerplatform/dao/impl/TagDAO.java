@@ -42,4 +42,13 @@ public class TagDAO extends AbstractDAO<Tag> {
                 .executeUpdate()
         );
     }
+
+    public List<Tag> getTagsByNames(Set<String> tagsName) {
+
+        List<Tag> findedTags = entityManager
+                .createQuery("SELECT tag FROM Tag tag WHERE tag.name IN :tagsName", Tag.class)
+                .setParameter("tagsName", tagsName)
+                .getResultList();
+        return findedTags;
+    }
 }

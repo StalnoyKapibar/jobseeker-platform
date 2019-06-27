@@ -19,40 +19,51 @@ public class TagService extends AbstractService<Tag> {
         return dao.findByName(name);
     }
 
-    public void getAndAddTag(Tag desiredTag, List<Tag> allTags, Set<Tag> result) {
-
-        result.add(FindOrCreateTag(desiredTag, allTags));
-    }
-
     /**
      * if tag not found, it means user (employer) added new tag
      * unverified while admin will not change it
      */
-    public Tag FindOrCreateTag(Tag desiredTag, List<Tag> allTags) {
-
-        if (allTags.contains(desiredTag)) {
-            int i = allTags.indexOf(desiredTag);
-            return allTags.get(i);
-        }
+    public Set<Tag> createTags(Set<Tag> formTags, List<Tag> foundedTags) {
 
         boolean verified = false;
-        Tag newTag = new Tag(desiredTag.getName(), verified);
-        dao.add(newTag);
-        return newTag;
+        Set<Tag> createdTags = new HashSet<>();
+        for (Tag formTag : formTags) {
+            if (!foundedTags.contains(formTag)) {
+                Tag newTag = new Tag(formTag.getName(), verified);
+                dao.add(newTag);
+                createdTags.add(newTag);
+            }
+        }
+        return createdTags;
     }
 
     /**
      * find or create tags by Name
-     * @param tagsName contains new enitity Tag with filled field Name
+     * @param inputTagsName contains new enitity Tag with filled field Name
      * @return found or created tags
      */
-    public Set<Tag> matchTagsByName(Set<Tag> tagsName) {
+    public Set<Tag> matchTagsByName(Set<Tag> inputTagsName) {
 
         Set<Tag> result = new HashSet<>();
-        List<Tag> allExistingTags = dao.getAll();
-        tagsName.forEach(currentTag -> getAndAddTag(currentTag, allExistingTags, result));
+
+        List<Tag> foundedTags = getTagsByNames(inputTagsName);
+        Set<Tag> createdTags = createTags(inputTagsName, foundedTags);
+
+        result.addAll(foundedTags);
+        result.addAll(createdTags);
 
         return result;
+    }
+
+    private List<Tag> getTagsByNames(Set<Tag> inputTagsName) {
+
+        // convert set Tags to set String
+        Set<String> tagsName = new HashSet<>();
+        inputTagsName.forEach(curTag -> tagsName.add(curTag.getName()));
+        // find set tags name in db
+        List<Tag> findedTags = dao.getTagsByNames(tagsName);
+
+        return findedTags;
     }
 
     public List<Tag> getVerified() {
