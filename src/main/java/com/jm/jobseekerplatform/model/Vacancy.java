@@ -25,16 +25,16 @@ public class Vacancy implements Serializable {
     @Column(name = "remote", nullable = false)
     private Boolean remote;
 
-    @Column(name = "shortdescription")
+    @Column(name = "short_description")
     private String shortDescription;
 
     @Column(name = "description", nullable = false, columnDefinition = "mediumtext")
     private String description;
 
-    @Column(name = "salarymin")
+    @Column(name = "salary_min")
     private Integer salaryMin;
 
-    @Column(name = "salarymax")
+    @Column(name = "salary_max")
     private Integer salaryMax;
 
     @ManyToMany(fetch = FetchType.EAGER)

@@ -8,17 +8,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "employerprofiles")
+@Table(name = "employer_profiles")
 public class EmployerProfile implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "companyname")
+    @Column(name = "company_name")
     private String companyName;
 
-    @Column(name = "website")
+    @Column(name = "web_site")
     private String website;
 
     @Column(name = "description", columnDefinition = "mediumtext")

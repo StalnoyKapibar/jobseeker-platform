@@ -13,10 +13,10 @@ public class EmployerReviews implements Serializable, Comparable<EmployerReviews
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "reviews")
+    @Column(name = "review")
     private String reviews;
 
-    @Column(name = "date_revives")
+    @Column(name = "date_review")
     private Date dateReviews;
 
     @Column(name = "evaluation")

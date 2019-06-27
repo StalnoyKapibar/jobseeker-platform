@@ -11,7 +11,7 @@ public class Offer implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "companyname", nullable = false)
+    @Column(name = "company_name", nullable = false)
     private String companyName;
 
     @Column(name = "position", nullable = false)

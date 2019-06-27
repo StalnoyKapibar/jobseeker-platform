@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "userroles")
+@Table(name = "user_roles")
 public class UserRole implements Serializable, GrantedAuthority {
 
     @Id
