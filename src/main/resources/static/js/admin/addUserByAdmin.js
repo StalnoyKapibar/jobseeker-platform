@@ -1,9 +1,10 @@
 $(document).ready(function () {
+    feather.replace();
     $('#contact_form').bootstrapValidator({
         feedbackIcons: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
+            valid: 'fas fa-check-circle',
+            invalid: 'fas fa-exclamation-circle',
+            validating: 'fas fa-sync-alt'
         },
         live: 'enabled',
         fields: {

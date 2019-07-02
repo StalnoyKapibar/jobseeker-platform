@@ -1,9 +1,11 @@
 <!doctype html>
 <html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/adminlayouts">
+      layout:decorator="layouts/adminlayouts" th:with="side='admin'">
 <head>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" src="/js/admin/admin.js"></script>
 </head>
 <body>
 <div class="container-fluid">

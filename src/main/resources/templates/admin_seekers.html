@@ -1,7 +1,7 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/adminlayouts">
+      layout:decorator="layouts/adminlayouts" th:with="side='seek'">
 <head>
 </head>
 <body>
@@ -106,7 +106,7 @@
     </div>
 </div>
 <div class="container-fluid" layout:fragment="content-script">
-    <script src="/js/admin_seekers.js"></script>
+    <script src="/js/admin/admin_seekers.js"></script>
 </div>
 </body>
 </html>

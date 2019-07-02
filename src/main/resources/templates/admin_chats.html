@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/adminlayouts">
+      layout:decorator="layouts/adminlayouts" th:with="side='chat'">
 <head>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
 </head>
@@ -33,7 +34,7 @@
     </div>
 </div>
 <div class="container-fluid" layout:fragment="content-script">
-    <script src="/js/admin_chats.js"></script>
+    <script src="/js/admin/admin_chats.js"></script>
     <script type="text/javascript" charset="utf8"
             src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>

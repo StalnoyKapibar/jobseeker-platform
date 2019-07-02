@@ -1,7 +1,7 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/adminlayouts">
+      layout:decorator="layouts/adminlayouts" th:with="side='empl'">
 <head>
 </head>
 <body>
@@ -107,7 +107,7 @@
     </div>
 </div>
 <div class="container-fluid" layout:fragment="content-script">
-    <script src="/js/admin_employers.js"></script>
+    <script src="/js/admin/admin_employers.js"></script>
 </div>
 </body>
 </html>

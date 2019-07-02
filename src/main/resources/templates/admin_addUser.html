@@ -2,14 +2,16 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="layouts/adminlayouts">
+      layout:decorate="layouts/adminlayouts" th:with="side='add'">
+
 <head>
     <style>#success_message {
         display: none;
     }</style>
+    <script src="https://kit.fontawesome.com/c5edb0b5a3.js"></script>
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
-    <script type="text/javascript" src="/js/addUserByAdmin.js"></script>
+    <script type="text/javascript" src="/js/admin/addUserByAdmin.js"></script>
 </head>
 
 <body>
@@ -35,7 +37,7 @@
                                 <div class="col-md-4 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i
-                                                class="glyphicon glyphicon-envelope"></i></span>
+                                                class="fas fa-envelope"></i></span>
                                         <input name="user_email" id="user_email" th:value="${email}"
                                                placeholder="Введите Email" class="form-control" type="text">
                                     </div>
@@ -43,13 +45,13 @@
                             </div>
 
                             <!--<div class="col-md-4 mb-3">-->
-                                <!--<label for="validationDefaultUsername">Имя пользователя</label>-->
-                                <!--<div class="input-group">-->
-                                    <!--<div class="input-group-prepend">-->
-                                        <!--<span class="input-group-text" id="inputGroupPrepend2">@</span>-->
-                                    <!--</div>-->
-                                    <!--<input type="text" class="form-control" id="validationDefaultUsername" placeholder="Имя пользователя" aria-describedby="inputGroupPrepend2" required>-->
-                                <!--</div>-->
+                            <!--<label for="validationDefaultUsername">Имя пользователя</label>-->
+                            <!--<div class="input-group">-->
+                            <!--<div class="input-group-prepend">-->
+                            <!--<span class="input-group-text" id="inputGroupPrepend2">@</span>-->
+                            <!--</div>-->
+                            <!--<input type="text" class="form-control" id="validationDefaultUsername" placeholder="Имя пользователя" aria-describedby="inputGroupPrepend2" required>-->
+                            <!--</div>-->
                             <!--</div>-->
 
                             <!-- Text input-->
@@ -57,7 +59,7 @@
                                 <label class="col-md-4 control-label">Пароль</label>
                                 <div class="col-md-4 inputGroupContainer">
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <span class="input-group-addon"><i class="fas fa-user"></i></span>
                                         <input name="user_password" id="user_password"
                                                placeholder="Введите пароль от 8 до 20 символов" class="form-control"
                                                type="password">
@@ -70,7 +72,7 @@
                                 <label class="col-md-4 control-label">Введите повторно</label>
                                 <div class="col-md-4 inputGroupContainer">
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <span class="input-group-addon"><i class="fas fa-user"></i></span>
                                         <input name="confirm_password" id="confirm_password"
                                                placeholder="Введите пароль от 8 до 20 символов" class="form-control"
                                                type="password">
@@ -82,7 +84,7 @@
                                 <label class="col-md-4 control-label">Вид аккаунта</label>
                                 <div class="col-md-4 selectContainer">
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                                        <span class="input-group-addon"><i class="fas fa-list"></i></span>
                                         <select name="role" id="role" class="form-control selectpicker">
                                             <option value="">Выберите роль</option>
                                             <option value="ROLE_SEEKER">Соискатель</option>
@@ -101,7 +103,7 @@
                             <!--Success message-->
                             <div class="alert alert-success" role="alert" id="success_message">Ползователь успешно
                                 добавлен<i
-                                        class="glyphicon glyphicon-thumbs-up"></i><br/>
+                                        class="fas fa-thumbs-up"></i><br/>
                             </div>
                             <!-- Button -->
                             <div class="form-group">
@@ -109,7 +111,7 @@
                                 <div class="col-md-4" style="display: flex; justify-content: center;"><br>
                                     <button type="button" class="btn btn-warning" onclick="validateAndAdd()"
                                             style="width: 250px;">
-                                        Добавить <span class="glyphicon glyphicon-send"></span>
+                                        Добавить <i class="fas fa-paper-plane "></i>
                                     </button>
                                 </div>
                             </div>
