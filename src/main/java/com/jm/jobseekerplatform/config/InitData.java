@@ -328,21 +328,23 @@ public class InitData {
     }
 
     public void initTags() {
-        tagService.add(new Tag("Java 8"));
-        tagService.add(new Tag("Spring Framework"));
-        tagService.add(new Tag("Git"));
-        tagService.add(new Tag("Maven"));
-        tagService.add(new Tag("Apache Tomcat"));
-        tagService.add(new Tag("Java Servlets"));
-        tagService.add(new Tag("JSF"));
-        tagService.add(new Tag("PostgreSQL"));
-        tagService.add(new Tag("Oracle Pl/SQL"));
-        tagService.add(new Tag("JMS"));
-        tagService.add(new Tag("Azure"));
-        tagService.add(new Tag("React"));
-        tagService.add(new Tag("MySQL"));
-        tagService.add(new Tag("Thymeleaf"));
-        tagService.add(new Tag("OAuth2"));
+        boolean verified = true;
+        tagService.add(new Tag("Java 8", verified));
+        tagService.add(new Tag("Spring Framework", verified));
+        tagService.add(new Tag("Git", verified));
+        tagService.add(new Tag("Maven", verified));
+        tagService.add(new Tag("Apache Tomcat", verified));
+        tagService.add(new Tag("Java Servlets", verified));
+        tagService.add(new Tag("JSF", verified));
+        tagService.add(new Tag("PostgreSQL", verified));
+        tagService.add(new Tag("Oracle Pl/SQL", verified));
+        tagService.add(new Tag("JMS", verified));
+        tagService.add(new Tag("Azure", verified));
+        tagService.add(new Tag("React", verified));
+        tagService.add(new Tag("MySQL", verified));
+        tagService.add(new Tag("Thymeleaf", verified));
+        tagService.add(new Tag("OAuth2", verified));
+        
     }
 
     public void initSeekerProfile() {
