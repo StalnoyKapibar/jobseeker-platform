@@ -46,67 +46,68 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-<!-- Modal -->
-<div id="portfolioModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h2 class="modal-title"><span id="PMHeadline"></span></h2>
-            </div>
-            <div class="modal-body">
-                <h4><a id="PMlink"></a></h4>
-                <div class="well well-sm">
-                    <span id="PMDescription"></span>
+            <!-- Modal -->
+            <div id="portfolioModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h2 class="modal-title"><span id="PMHeadline"></span></h2>
+                        </div>
+                        <div class="modal-body">
+                            <h4><a id="PMlink"></a></h4>
+                            <div class="well well-sm">
+                                <span id="PMDescription"></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-<!-- модальное окно приглашения -->
-<div id="inviteFriendModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h2 class="modal-title">Вы можете пригласить друга здесь</h2>
-            </div>
-            <div class="modal-body text-center edit-form">
+            <!-- модальное окно приглашения -->
+            <div id="inviteFriendModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h2 class="modal-title">Вы можете пригласить друга здесь</h2>
+                        </div>
+                        <div class="modal-body text-center edit-form">
 
 
-                <label for="seeker-input-add">Seeker</label>
-                <input id="seeker-input-add" class="form-control"
-                       type="text"
-                       placeholder="Seeker" name="seeker"/>
+                            <label for="seeker-input-add">Seeker</label>
+                            <input id="seeker-input-add" class="form-control"
+                                   type="text"
+                                   placeholder="Seeker" name="seeker"/>
 
-                <label for="friend-input-add">Friend</label>
-                <input id="friend-input-add" class="form-control"
-                       type="text" placeholder="Введите Email друга"
-                       name="friend"/>
+                            <label for="friend-input-add">Friend</label>
+                            <input id="friend-input-add" class="form-control"
+                                   type="text" placeholder="Введите Email друга"
+                                   name="friend"/>
 
-            </div>
-            <div class="modal-footer">
-                <button type="submit" onclick="inviteFriend(document.getElementById('seeker-input-add').value,
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" onclick="inviteFriend(document.getElementById('seeker-input-add').value,
                     document.getElementById('friend-input-add').value)"
-                        class="btn btn-basic "><span
-                        class="glyphicon glyphicon-envelope"></span>
-                    Send Invitation
-                </button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    class="btn btn-basic "><span
+                                    class="glyphicon glyphicon-envelope"></span>
+                                Send Invitation
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
-
     </div>
 </div>
+
 
 </body>
 </html>
