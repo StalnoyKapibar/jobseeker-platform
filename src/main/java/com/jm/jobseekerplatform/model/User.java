@@ -27,6 +27,9 @@ public class User implements Serializable, UserDetails {
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
+    @ManyToOne
+    private UserProfile userProfile;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private UserRole authority;
 
@@ -133,4 +136,8 @@ public class User implements Serializable, UserDetails {
     public void setConfirm(boolean confirm) {
         this.confirm = confirm;
     }
+
+//    public UserProfile getProfile() {
+//        return null;
+//    }
 }

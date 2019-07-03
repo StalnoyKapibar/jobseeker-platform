@@ -54,7 +54,7 @@ public class MainController {
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
-                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
+                    Set<Tag> tags = (SeekerProfile)(((User)authentication.getPrincipal()).getProfile()).getTags();
                     Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
                     model.addAttribute("vacancies", vacancies);
