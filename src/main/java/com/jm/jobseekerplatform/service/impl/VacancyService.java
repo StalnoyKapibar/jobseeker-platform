@@ -1,19 +1,16 @@
 package com.jm.jobseekerplatform.service.impl;
 
+import com.jm.jobseekerplatform.dao.VacancyDaoI;
 import com.jm.jobseekerplatform.dao.impl.VacancyDAO;
-import com.jm.jobseekerplatform.model.Point;
-import com.jm.jobseekerplatform.model.State;
-import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,8 +27,18 @@ public class VacancyService extends AbstractService<Vacancy> {
     @Autowired
     private PointService pointService;
 
+    @Autowired
+    private VacancyDaoI vacancyDaoI;
+
     private Pattern pattern;
     private Matcher matcher;
+
+    public Page<Vacancy> findAll(Pageable pageable) {
+        return vacancyDaoI.findAll(pageable);
+    }
+    public Page<Vacancy> findAllByTags(Set<Tag> tags, Pageable pageable) {
+        return vacancyDaoI.findAllByTags(tags,pageable);
+    }
 
     public Set<Vacancy> getByTags(Set<Tag> tags, int limit) {
         return dao.getByTags(tags, limit);
