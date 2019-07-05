@@ -154,7 +154,7 @@ function searchResults() {
                             '<span class="pull-right">' +
                             '<span class="btn btn-xs btn-default"' +
                             'onclick="window.location.href =\'/vacancy/' + value.id + '\'">' +
-                            '<span class="glyphicon glyphicon-play" aria-hidden="true"></span></span>' +
+                            '<i class="fas fa-play"></i></span>' +
                             '</li>');
                     });
                     pageCount++;
@@ -201,7 +201,7 @@ $(window).scroll(function () {
                             '<span class="pull-right">' +
                             '<span class="btn btn-xs btn-default"' +
                             'onclick="window.location.href =\'/vacancy/' + value.id + '\'">' +
-                            '<span class="glyphicon glyphicon-play" aria-hidden="true"></span></span>' +
+                            '<i class="fas fa-play"></i></span>' +
                             '</li>');
                     });
                     pageCount++;
