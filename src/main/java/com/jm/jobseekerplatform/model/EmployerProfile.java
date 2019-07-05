@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.model;
 
 import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -8,8 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "employerprofiles")
-public class EmployerProfile extends UserProfile implements Serializable {
+public class EmployerProfile extends Profile implements Serializable {
 
     @Column(name = "companyname")
     private String companyName;
@@ -31,10 +31,6 @@ public class EmployerProfile extends UserProfile implements Serializable {
     @JoinColumn(name = "employer_id")
     private Set<EmployerReviews> reviews;
 
-    @Column(name = "state", nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private State state;
-
     @Column(name = "expiry_block")
     private Date expiryBlock;
 
@@ -42,15 +38,13 @@ public class EmployerProfile extends UserProfile implements Serializable {
     }
 
     public EmployerProfile(String companyName, String website, String description, byte[] logo, Set<Vacancy> vacancies) {
+        super();
         this.companyName = companyName;
         this.website = website;
         this.description = description;
         this.logo = logo;
         this.vacancies = vacancies;
-        this.state = State.NO_ACCESS;
     }
-
-
 
     public String getCompanyName() {
         return companyName;
@@ -110,20 +104,12 @@ public class EmployerProfile extends UserProfile implements Serializable {
     }
 
     public Double getAverageRating() {
-        if (reviews != null){
+        if (reviews != null) {
             return reviews.stream().mapToInt(EmployerReviews::getEvaluation).average().orElse(0);
-        }else {
+        } else {
             return 0d;
         }
 
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
     }
 
     public Date getExpiryBlock() {

@@ -7,8 +7,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@Table(name = "seekerprofiles")
-public class SeekerProfile extends UserProfile implements Serializable {
+public class SeekerProfile extends Profile implements Serializable {
 
     @Column(name = "name")
     private String name;

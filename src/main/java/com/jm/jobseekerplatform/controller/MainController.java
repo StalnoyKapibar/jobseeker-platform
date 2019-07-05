@@ -54,7 +54,7 @@ public class MainController {
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
-                    Set<Tag> tags = (SeekerProfile)(((User)authentication.getPrincipal()).getProfile()).getTags();
+                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getProfile().getTags();
                     Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
                     model.addAttribute("vacancies", vacancies);
@@ -107,10 +107,10 @@ public class MainController {
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
                 Employer employer = (Employer) employerService.getById(id);
-                return "redirect:/employer/" + employer.getEmployerProfile().getId();
+                return "redirect:/employer/" + employer.getProfile().getId();
             } else if (roles.contains("ROLE_SEEKER")) {
                 Seeker seeker = (Seeker) seekerService.getById(id);
-                return "redirect:/seeker/" + seeker.getSeekerProfile().getId();
+                return "redirect:/seeker/" + seeker.getProfile().getId();
             } else if (roles.contains("ROLE_ADMIN")) {
                 return "redirect:/admin";
             }

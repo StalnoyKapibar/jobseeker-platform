@@ -45,12 +45,12 @@ public class EmployerController {
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
                 Employer employer = (Employer) employerService.getById(userId);
-                isOwner = employer.getEmployerProfile().getId().equals(employerProfileId);
+                isOwner = employer.getProfile().getId().equals(employerProfileId);
             }
             if (roles.contains("ROLE_SEEKER") | roles.contains("ROLE_ADMIN")) {
                 if (roles.contains("ROLE_SEEKER")) {
                     Seeker seeker = (Seeker) seekerService.getById(userId);
-                    model.addAttribute("seekerId", seeker.getSeekerProfile().getId());
+                    model.addAttribute("seekerId", seeker.getProfile().getId());
                 }
             }
             if (!employerProfile.getReviews().isEmpty()) {

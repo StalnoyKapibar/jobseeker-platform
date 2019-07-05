@@ -10,9 +10,10 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn
 @Table(name = "users")
-public class User implements Serializable, UserDetails {
+public class User<T extends Profile> implements Serializable, UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +28,17 @@ public class User implements Serializable, UserDetails {
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
-    @ManyToOne
-    private UserProfile userProfile;
+//    @Any(metaColumn = @Column(name = "what_i_contain"))
+//    @AnyMetaDef(
+//            idType = "integer",
+//            metaType = "string",
+//            metaValues = {
+//                    @MetaValue(value = "AdminProfile", targetEntity = AdminProfile.class),
+//                    @MetaValue(value = "EmployerProfile", targetEntity = EmployerProfile.class),
+//                    @MetaValue(value = "SeekerProfile", targetEntity = SeekerProfile.class)
+//            })
+    @OneToOne(fetch = FetchType.EAGER, targetEntity=Profile.class)
+    private T profile;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private UserRole authority;
@@ -42,13 +52,14 @@ public class User implements Serializable, UserDetails {
     public User() {
     }
 
-    public User(String email, char[] password, LocalDateTime date, UserRole authority) {
+    public User(String email, char[] password, LocalDateTime date, UserRole authority, T profile) {
         this.email = email;
         this.password = password;
         this.date = date;
         this.authority = authority;
         this.enabled = true;
         this.confirm = false;
+        this.profile = profile;
     }
 
     public Long getId() {
@@ -67,9 +78,29 @@ public class User implements Serializable, UserDetails {
         this.email = email;
     }
 
+    public T getProfile() {
+        return profile;
+    }
+
+    public void setProfile(T profile) {
+        this.profile = profile;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(authority);
+    }
+
+//    public void setAuthority(UserRole authority) { //todo never used
+//        this.authority = authority;
+//    }
+
+    public UserRole getAuthority() {
+        return authority;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getPassword() {
@@ -117,18 +148,6 @@ public class User implements Serializable, UserDetails {
         this.password = password;
     }
 
-    public UserRole getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(UserRole authority) {
-        this.authority = authority;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     public boolean isConfirm() {
         return confirm;
     }
@@ -136,8 +155,4 @@ public class User implements Serializable, UserDetails {
     public void setConfirm(boolean confirm) {
         this.confirm = confirm;
     }
-
-//    public UserProfile getProfile() {
-//        return null;
-//    }
 }
