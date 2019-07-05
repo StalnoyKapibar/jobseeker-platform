@@ -11,7 +11,6 @@ import java.util.Collection;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn
 @Table(name = "users")
 public class User<T extends Profile> implements Serializable, UserDetails {
 
