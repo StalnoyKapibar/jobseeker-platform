@@ -1,71 +1,49 @@
 $(document).ready(function () {
+
     feather.replace();
-    $('#contact_form').bootstrapValidator({
-        feedbackIcons: {
-            valid: 'fas fa-check-circle',
-            invalid: 'fas fa-exclamation-circle',
-            validating: 'fas fa-sync-alt'
-        },
-        live: 'enabled',
-        fields: {
-            user_email: {
-                trigger: 'blur',
-                validators: {
-                    notEmpty: {
-                        message: 'Введите Ваш Email-адрес'
-                    },
-                    regexp: {
-                        regexp: /^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?.)*(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$/,
-                        message: 'Введите корректный Email-адрес'
-                    },
-                    remote: {
-                        url: function () {
-                            return '/api/users/email/' + $("#user_email").val();
-                        },
-                        message: 'Данный Email уже используется'
-                    }
-                }
-            },
-            user_password: {
-                validators: {
-                    notEmpty: {
-                        message: 'Введите пароль'
-                    },
-                    regexp: {
-                        regexp: /^(?=.*[a-z].*)(?=.*[0-9].*)[A-Za-z0-9]{8,20}$/,
-                        message: 'Пароль должен содержать латинские буквы и цифры, от 8 до 20 символов'
-                    }
-                }
-            },
-            confirm_password: {
-                validators: {
-                    identical: {
-                        field: 'user_password',
-                        message: 'Пароли не совпадают'
-                    },
-                    notEmpty: {
-                        message: 'Введите пароль'
-                    }
-                }
-            },
-            role: {
-                validators: {
-                    notEmpty: {
-                        message: 'Выберите вид аккаунта'
-                    }
-                }
-            }
+    bootstrapValidate('#user_email', 'email:Введите корректный Email-адрес', function (isValid) {
+        if (isValid) {
+            exists();
+        } else {
+            $('#exists_warning').html('');
         }
     })
-});
+    bootstrapValidate('#user_password', 'regex:^(?=.*[a-z].*)(?=.*[0-9].*)[A-Za-z0-9]{6,20}$:Пароль должен содержать латинские буквы и цифры, от 6 до 20 символов', function (isValid) {
+        if (isValid) {
+            $('#user_password').addClass('is-valid');
+        } else {
 
-function validateAndAdd() {
-    var bootstrapValidator = $('#contact_form').data('bootstrapValidator');
-    bootstrapValidator.validate();
-    if (bootstrapValidator.isValid()) {
-        addUser();
-    }
-}
+        }
+    })
+    bootstrapValidate('#confirm_password', 'matches:#user_password:Пароли не совпадают', function (isValid) {
+        if (isValid) {
+            $('#confirm_password').addClass('is-valid');
+        }
+    })
+    bootstrapValidate('#role', 'required:Нужно выбрать роль', function (isValid) {
+        if (isValid) {
+            $('#role').addClass('is-valid');
+        }
+    })
+})
+
+// }
+// (function () {
+//     'use strict';
+//     window.addEventListener('load', function () {
+//         var form = document.getElementById('contact_form');
+//         form.addEventListener('submit', function (event) {
+//             if (form.checkValidity() === false) {
+//                 alert("Форма заполнена не верно");
+//                 event.preventDefault();
+//                 event.stopPropagation();
+//             } else {
+//                 addUser();
+//             }
+//             form.classList.add('was-validated');
+//         }, false);
+//     }, false);
+// })();
 
 function addUser() {
 
@@ -103,4 +81,19 @@ function addUser() {
             alert(error.responseJSON.message);
         }
     });
+}
+
+function exists() {
+    $.ajax({
+        url: '/api/users/email/'
+            + $('#user_email').val(),
+        success: function (result) {
+            if (result) {
+                $('#user_email').addClass("is-invalid");
+                $('#exists_warning').html("Email-адрес уже существует");
+            } else {
+                $('#user_email').addClass("is-valid");
+            }
+        }
+    })
 }

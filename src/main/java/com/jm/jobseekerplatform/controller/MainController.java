@@ -148,4 +148,9 @@ public class MainController {
 
         return "vacancy";
     }
+
+    @RequestMapping(value = "/ex", method = RequestMethod.GET)
+    public String ex(){
+        return "ex";
+    }
 }

@@ -9,8 +9,9 @@
         display: none;
     }</style>
     <script src="https://kit.fontawesome.com/c5edb0b5a3.js"></script>
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <!--<script type="text/javascript"-->
+    <!--src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>-->
+    <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
     <script type="text/javascript" src="/js/admin/addUserByAdmin.js"></script>
 </head>
 
@@ -22,101 +23,108 @@
                 <br>
                 <div class="container">
 
-                    <form class="card bg-light card-body mb-3 " id="contact_form">
-                        <center><fieldset>
+                    <form class="card bg-light card-body mb-3 " id="contact_form" novalidate="novalidate">
+                        <center>
+                            <fieldset>
 
-                            <!-- Form Name -->
-                            <legend>
-                                <h2><b>Добавьте пользователя</b></h2>
-                            </legend>
-                            <br>
+                                <!-- Form Name -->
+                                <legend>
+                                    <h2><b>Добавьте пользователя</b></h2>
+                                </legend>
+                                <br>
 
-                            <!-- Text input-->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label">Логин (Email)</label>
-                                <div class="col-md-4 inputGroupContainer">
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i
-                                                class="fas fa-envelope"></i></span>
-                                        <input name="user_email" id="user_email" th:value="${email}"
-                                               placeholder="Введите Email" class="form-control" type="text">
+                                <!-- Text input-->
+                                <div class="form-group">
+                                    <!--<label class="col-md-5 control-label">Логин (Email)</label>-->
+                                    <div class="col-md-5 inputGroupContainer">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="Введите Email"
+                                                   name="user_email" id="user_email" required="required">
+                                            <div class="invalid-feedback " id="exists_warning">
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!--<div class="col-md-4 mb-3">-->
-                            <!--<label for="validationDefaultUsername">Имя пользователя</label>-->
-                            <!--<div class="input-group">-->
-                            <!--<div class="input-group-prepend">-->
-                            <!--<span class="input-group-text" id="inputGroupPrepend2">@</span>-->
-                            <!--</div>-->
-                            <!--<input type="text" class="form-control" id="validationDefaultUsername" placeholder="Имя пользователя" aria-describedby="inputGroupPrepend2" required>-->
-                            <!--</div>-->
-                            <!--</div>-->
-
-                            <!-- Text input-->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label">Пароль</label>
-                                <div class="col-md-4 inputGroupContainer">
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fas fa-user"></i></span>
-                                        <input name="user_password" id="user_password"
-                                               placeholder="Введите пароль от 8 до 20 символов" class="form-control"
-                                               type="password">
+                                <!-- Text input-->
+                                <div class="form-group">
+                                    <!--<label class="col-md-4 control-label">Пароль</label>-->
+                                    <div class="col-md-5 inputGroupContainer">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                            </div>
+                                            <input type="password" class="form-control"
+                                                   placeholder="Введите пароль от 8 до 20 символов"
+                                                   name="user_password" id="user_password" required="required">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Text input-->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label">Введите повторно</label>
-                                <div class="col-md-4 inputGroupContainer">
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fas fa-user"></i></span>
-                                        <input name="confirm_password" id="confirm_password"
-                                               placeholder="Введите пароль от 8 до 20 символов" class="form-control"
-                                               type="password">
+                                <!-- Text input-->
+                                <div class="form-group">
+                                    <!--<label class="col-md-4 control-label">Введите повторно</label>-->
+                                    <div class="col-md-5 inputGroupContainer">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                            </div>
+                                            <input name="confirm_password" id="confirm_password"
+                                                   placeholder="Введите пароль повторно" class="form-control"
+                                                   type="password" required="required">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group">
-                                <label class="col-md-4 control-label">Вид аккаунта</label>
-                                <div class="col-md-4 selectContainer">
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fas fa-list"></i></span>
-                                        <select name="role" id="role" class="form-control selectpicker">
-                                            <option value="">Выберите роль</option>
-                                            <option value="ROLE_SEEKER">Соискатель</option>
-                                            <option value="ROLE_EMPLOYER">Работодатель</option>
-                                            <option value="ROLE_ADMIN">Администратор</option>
-                                        </select>
+                                <div class="form-group">
+                                    <!--<label class="col-md-4 control-label">Вид аккаунта</label>-->
+                                    <div class="col-md-5 selectContainer">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-list"></i></span>
+                                            </div>
+                                            <select name="role" id="role" class="form-control selectpicker"
+                                                    required="required">
+                                                <option value="">Выберите роль</option>
+                                                <option value="ROLE_SEEKER">Соискатель</option>
+                                                <option value="ROLE_EMPLOYER">Работодатель</option>
+                                                <option value="ROLE_ADMIN">Администратор</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="checkbox form-group">
-                                <label class="col-md-4"><input type="checkbox" id="myCheck">Оповестить
-                                    Пользователя</label>
-                            </div>
-
-                            <!--Success message-->
-                            <div class="alert alert-success" role="alert" id="success_message">Ползователь успешно
-                                добавлен<i
-                                        class="fas fa-thumbs-up"></i><br/>
-                            </div>
-                            <!-- Button -->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label"></label>
-                                <div class="col-md-4" style="display: flex; justify-content: center;"><br>
-                                    <button type="button" class="btn btn-warning" onclick="validateAndAdd()"
-                                            style="width: 250px;">
-                                        Добавить <i class="fas fa-paper-plane "></i>
-                                    </button>
+                                <div class="checkbox form-group">
+                                    <label class="col-md-4"><input type="checkbox" id="myCheck">
+                                        Оповестить Пользователя</label>
                                 </div>
-                            </div>
 
-                        </fieldset></center>
+                                <!--Success message-->
+                                <div class="form-group">
+                                    <div class="col-md-5">
+                                        <div class="alert alert-success" role="alert" id="success_message">
+                                            Ползователь успешно добавлен<i
+                                                class="fas fa-thumbs-up"></i><br/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Button -->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label"></label>
+                                    <div class="col-md-4" style="display: flex; justify-content: center;"><br>
+                                        <button type="button" class="btn btn-warning"
+                                                style="width: 250px;" onclick="addUser()">
+                                            Добавить <i class="fas fa-paper-plane "></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </center>
                     </form>
                 </div>
             </main>

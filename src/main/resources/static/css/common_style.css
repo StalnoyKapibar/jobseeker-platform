@@ -68,6 +68,8 @@ li {
     height: 135%;
     margin-top: 60px;
     width: 85%;
+    position: relative;
+    right: -15%;
 }
 
 .well {
