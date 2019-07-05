@@ -353,7 +353,7 @@ public class InitData {
         tagService.add(new Tag("MySQL", verified));
         tagService.add(new Tag("Thymeleaf", verified));
         tagService.add(new Tag("OAuth2", verified));
-        
+
     }
 
     public void initSeekerProfile() {

@@ -3,6 +3,7 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,14 @@ public class TagRestController {
         return tags;
     }
 
+
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<List<Tag>> getSearchTags(@RequestBody String param) {
+        char[] chars = param.toCharArray();
+        List<Tag> tags = tagService.getBySearchParam(String.valueOf(chars, 1, chars.length - 2));
+        return new ResponseEntity<>(tags, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Boolean> deleteById(@PathVariable Long id) {
 
@@ -41,5 +50,6 @@ public class TagRestController {
         findedTag.setVerified(!findedTag.getVerified());
         tagService.update(findedTag);
         return ResponseEntity.ok(true);
+
     }
 }
