@@ -23,12 +23,16 @@ public class EmployerRestController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity updateEmployer(@RequestBody Employer employer) {
-        EmployerProfile tmpEmployer = employerProfileService.getById(employer.getProfile().getId());
+        Long id = employer.getProfile().getId();
+        EmployerProfile tmpEmployer = employerProfileService.getById(id);
+
         employer.getProfile().setLogo(tmpEmployer.getLogo());
         employer.getProfile().setVacancies(tmpEmployer.getVacancies());
         employer.getProfile().setReviews(tmpEmployer.getReviews());
+
         employerProfileService.update(employer.getProfile());
         employerService.update(employer);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 

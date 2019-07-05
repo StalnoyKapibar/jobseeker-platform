@@ -28,15 +28,6 @@ public class User<T extends Profile> implements Serializable, UserDetails {
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
-//    @Any(metaColumn = @Column(name = "what_i_contain"))
-//    @AnyMetaDef(
-//            idType = "integer",
-//            metaType = "string",
-//            metaValues = {
-//                    @MetaValue(value = "AdminProfile", targetEntity = AdminProfile.class),
-//                    @MetaValue(value = "EmployerProfile", targetEntity = EmployerProfile.class),
-//                    @MetaValue(value = "SeekerProfile", targetEntity = SeekerProfile.class)
-//            })
     @OneToOne(fetch = FetchType.EAGER, targetEntity=Profile.class)
     private T profile;
 
@@ -90,10 +81,6 @@ public class User<T extends Profile> implements Serializable, UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(authority);
     }
-
-//    public void setAuthority(UserRole authority) { //todo never used
-//        this.authority = authority;
-//    }
 
     public UserRole getAuthority() {
         return authority;
