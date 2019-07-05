@@ -2,7 +2,10 @@ package com.jm.jobseekerplatform.service.impl;
 
 import com.jm.jobseekerplatform.dao.VacancyDaoI;
 import com.jm.jobseekerplatform.dao.impl.VacancyDAO;
-import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.Point;
+import com.jm.jobseekerplatform.model.State;
+import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,7 +13,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,8 +42,9 @@ public class VacancyService extends AbstractService<Vacancy> {
     public Page<Vacancy> findAll(Pageable pageable) {
         return vacancyDaoI.findAll(pageable);
     }
+
     public Page<Vacancy> findAllByTags(Set<Tag> tags, Pageable pageable) {
-        return vacancyDaoI.findAllByTags(tags,pageable);
+        return vacancyDaoI.findAllByTags(tags, pageable);
     }
 
     public Set<Vacancy> getByTags(Set<Tag> tags, int limit) {
@@ -100,14 +107,14 @@ public class VacancyService extends AbstractService<Vacancy> {
         return isCorrect;
     }
 
-    public void addNewVacancyFromRest(Vacancy vacancy){
+    public void addNewVacancyFromRest(Vacancy vacancy) {
         vacancy.setState(State.NO_ACCESS);
         Point point = vacancy.getCoordinates();
         pointService.add(point);
         vacancy.setCoordinates(point);
-        Set<Tag> tags = vacancy.getTags();;
+        Set<Tag> tags = vacancy.getTags();
         Set<Tag> tagsNew = new HashSet<>();
-        for (Tag tag:tags) {
+        for (Tag tag : tags) {
             tagsNew.add(tagService.findByName(tag.getName()));
         }
         vacancy.setTags(tagsNew);
