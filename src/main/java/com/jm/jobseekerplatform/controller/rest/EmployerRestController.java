@@ -23,12 +23,16 @@ public class EmployerRestController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity updateEmployer(@RequestBody Employer employer) {
-        EmployerProfile tmpEmployer = employerProfileService.getById(employer.getEmployerProfile().getId());
-        employer.getEmployerProfile().setLogo(tmpEmployer.getLogo());
-        employer.getEmployerProfile().setVacancies(tmpEmployer.getVacancies());
-        employer.getEmployerProfile().setReviews(tmpEmployer.getReviews());
-        employerProfileService.update(employer.getEmployerProfile());
+        Long id = employer.getProfile().getId();
+        EmployerProfile tmpEmployer = employerProfileService.getById(id);
+
+        employer.getProfile().setLogo(tmpEmployer.getLogo());
+        employer.getProfile().setVacancies(tmpEmployer.getVacancies());
+        employer.getProfile().setReviews(tmpEmployer.getReviews());
+
+        employerProfileService.update(employer.getProfile());
         employerService.update(employer);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -39,13 +43,13 @@ public class EmployerRestController {
         if (!file.isEmpty()) {
             try {
                 byte[] logo = file.getBytes();
-                employer.getEmployerProfile().setLogo(logo);
-                employerProfileService.update(employer.getEmployerProfile());
+                employer.getProfile().setLogo(logo);
+                employerProfileService.update(employer.getProfile());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return new ResponseEntity<>(employer.getEmployerProfile(), HttpStatus.OK);
+        return new ResponseEntity<>(employer.getProfile(), HttpStatus.OK);
     }
 
     @GetMapping("/{employerId}")

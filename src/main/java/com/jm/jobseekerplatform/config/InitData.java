@@ -27,7 +27,13 @@ public class InitData {
     private VacancyService vacancyService;
 
     @Autowired
+    private AdminProfileService adminProfileService;
+
+    @Autowired
     private EmployerProfileService employerProfileService;
+
+    @Autowired
+    private SeekerProfileService seekerProfileService;
 
     @Autowired
     private ImageService imageService;
@@ -38,8 +44,7 @@ public class InitData {
     @Autowired
     private TagService tagService;
 
-    @Autowired
-    private SeekerProfileService seekerProfileService;
+
 
     @Autowired
     private EmployerService employerService;
@@ -63,6 +68,7 @@ public class InitData {
         initUserRoles();
         initVacancies();
         initPortfolio();
+        initAdminProfile();
         initEmployerProfiles();
         initSeekerProfile();
         initUsers();
@@ -74,36 +80,36 @@ public class InitData {
         EmployerReviews reviewOne = new EmployerReviews();
         reviewOne.setDateReviews(new Date());
         reviewOne.setEvaluation(4);
-        reviewOne.setSeekerProfile(seekerProfileService.getById(1L));
+        reviewOne.setSeekerProfile(seekerProfileService.getById(8L));
         reviewOne.setReviews("Хорошая контора. Отличный коллектив, только директор придурковатый");
 
         EmployerReviews reviewTwo = new EmployerReviews();
         reviewTwo.setDateReviews(new Date());
-        reviewTwo.setSeekerProfile(seekerProfileService.getById(1L));
+        reviewTwo.setSeekerProfile(seekerProfileService.getById(8L));
         reviewTwo.setEvaluation(1);
         reviewTwo.setReviews("Неадекватное руководство. Уволился через месяц");
 
         EmployerReviews reviewThree = new EmployerReviews();
         reviewThree.setDateReviews(new Date());
-        reviewThree.setSeekerProfile(seekerProfileService.getById(2L));
+        reviewThree.setSeekerProfile(seekerProfileService.getById(9L));
         reviewThree.setEvaluation(4);
         reviewThree.setReviews("Очень низкие зарплаты, уволился через полгода");
 
         EmployerReviews reviewFour = new EmployerReviews();
         reviewFour.setDateReviews(new Date());
-        reviewFour.setSeekerProfile(seekerProfileService.getById(2L));
+        reviewFour.setSeekerProfile(seekerProfileService.getById(9L));
         reviewFour.setEvaluation(1);
         reviewFour.setReviews("Неадекватное руководство. Уволился через месяц");
 
         EmployerReviews reviewFive = new EmployerReviews();
         reviewFive.setDateReviews(new Date());
-        reviewFive.setSeekerProfile(seekerProfileService.getById(3L));
+        reviewFive.setSeekerProfile(seekerProfileService.getById(10L));
         reviewFive.setEvaluation(4);
         reviewFive.setReviews("Хорошая контора. Отличный коллектив");
 
         EmployerReviews reviewSix = new EmployerReviews();
         reviewSix.setDateReviews(new Date());
-        reviewSix.setSeekerProfile(seekerProfileService.getById(3L));
+        reviewSix.setSeekerProfile(seekerProfileService.getById(10L));
         reviewSix.setEvaluation(1);
         reviewSix.setReviews("Все нравилось,но уволился через месяц");
 
@@ -131,27 +137,27 @@ public class InitData {
         reviewsSix.add(reviewTwo);
         reviewsSix.add(reviewFive);
 
-        EmployerProfile employerProfileOne = employerProfileService.getById(1L);
+        EmployerProfile employerProfileOne = employerProfileService.getById(2L);
         employerProfileOne.setReviews(reviewsOne);
         employerProfileService.update(employerProfileOne);
 
-        EmployerProfile employerProfileTwo = employerProfileService.getById(2L);
+        EmployerProfile employerProfileTwo = employerProfileService.getById(3L);
         employerProfileTwo.setReviews(reviewsTwo);
         employerProfileService.update(employerProfileTwo);
 
-        EmployerProfile employerProfileThree = employerProfileService.getById(3L);
+        EmployerProfile employerProfileThree = employerProfileService.getById(4L);
         employerProfileThree.setReviews(reviewsThree);
         employerProfileService.update(employerProfileThree);
 
-        EmployerProfile employerProfileFour = employerProfileService.getById(4L);
+        EmployerProfile employerProfileFour = employerProfileService.getById(5L);
         employerProfileFour.setReviews(reviewsFour);
         employerProfileService.update(employerProfileFour);
 
-        EmployerProfile employerProfileFive = employerProfileService.getById(5L);
+        EmployerProfile employerProfileFive = employerProfileService.getById(6L);
         employerProfileFive.setReviews(reviewsFive);
         employerProfileService.update(employerProfileFive);
 
-        EmployerProfile employerProfileSix = employerProfileService.getById(6L);
+        EmployerProfile employerProfileSix = employerProfileService.getById(7L);
         employerProfileSix.setReviews(reviewsSix);
         employerProfileService.update(employerProfileSix);
     }
@@ -169,46 +175,46 @@ public class InitData {
         Seeker seeker;
 
         role = userRoleService.findByAuthority("ROLE_ADMIN");
-        user = new User("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), role);
+        user = new Admin("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), role, adminProfileService.getById(1L));
         user.setConfirm(true);
         userService.add(user);
 
         role = userRoleService.findByAuthority("ROLE_EMPLOYER");
-        employer = new Employer("employer@mail.ru", userService.encodePassword("employer".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(1L));
+        employer = new Employer("employer@mail.ru", userService.encodePassword("employer".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(2L));
         employer.setConfirm(true);
         employerService.add(employer);
 
-        employer = new Employer("employer2@mail.ru", userService.encodePassword("employer2".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(2L));
+        employer = new Employer("employer2@mail.ru", userService.encodePassword("employer2".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(3L));
         employer.setConfirm(true);
         employerService.add(employer);
 
-        employer = new Employer("employer3@mail.ru", userService.encodePassword("employer3".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(3L));
+        employer = new Employer("employer3@mail.ru", userService.encodePassword("employer3".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(4L));
         employer.setConfirm(true);
         employerService.add(employer);
 
-        employer = new Employer("employer4@mail.ru", userService.encodePassword("employer4".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(4L));
+        employer = new Employer("employer4@mail.ru", userService.encodePassword("employer4".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(5L));
         employer.setConfirm(true);
         employerService.add(employer);
 
-        employer = new Employer("employer5@mail.ru", userService.encodePassword("employer5".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(5L));
+        employer = new Employer("employer5@mail.ru", userService.encodePassword("employer5".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(6L));
         employer.setConfirm(true);
         employerService.add(employer);
 
-        employer = new Employer("employer6@mail.ru", userService.encodePassword("employer6".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(6L));
+        employer = new Employer("employer6@mail.ru", userService.encodePassword("employer6".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(7L));
         employer.setConfirm(true);
         employerService.add(employer);
 
         role = userRoleService.findByAuthority("ROLE_SEEKER");
 
-        seeker = new Seeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker = new Seeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(8L));
         seeker.setConfirm(true);
         seekerService.add(seeker);
 
-        seeker = new Seeker("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(2L));
+        seeker = new Seeker("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(9L));
         seeker.setConfirm(true);
         seekerService.add(seeker);
 
-        seeker = new Seeker("seeker3@mail.ru", userService.encodePassword("seeker3".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(3L));
+        seeker = new Seeker("seeker3@mail.ru", userService.encodePassword("seeker3".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(10L));
         seeker.setConfirm(true);
         seekerService.add(seeker);
     }
@@ -256,6 +262,12 @@ public class InitData {
             vacancy.setState(State.ACCESS);
             vacancyService.add(vacancy);
         }
+    }
+
+    private void initAdminProfile() {
+        AdminProfile adminProfile = new AdminProfile();
+        adminProfile.setState(State.ACCESS);
+        adminProfileService.add(adminProfile);
     }
 
     public void initEmployerProfiles() {
@@ -399,6 +411,4 @@ public class InitData {
             vacancyService.update(vacancy);
         }
     }
-
-
 }
