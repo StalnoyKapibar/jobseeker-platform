@@ -20,5 +20,7 @@ public class TagService extends AbstractService<Tag> {
         return dao.findByName(name);
     }
 
-    public List<Tag> getBySearchParam(String param){return dao.getBySearchParam(param);}
+    public List<Tag> getBySearchParam(String param) {
+        return dao.getBySearchParam(param);
+    }
 }
