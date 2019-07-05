@@ -40,6 +40,9 @@ public class MainController {
     @Autowired
     private EmployerProfileService employerProfileService;
 
+    @Autowired
+    private TagService tagService;
+
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
     @Value("${google.maps.api.key}")
@@ -147,5 +150,14 @@ public class MainController {
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
 
         return "vacancy";
+    }
+
+    @RequestMapping(value = "/admin/tags", method = RequestMethod.GET)
+    public String UsersViewPage(Model model) {
+
+        List<Tag> tags = tagService.getAll();
+        model.addAttribute("tags", tags);
+
+        return "admin_tags";
     }
 }
