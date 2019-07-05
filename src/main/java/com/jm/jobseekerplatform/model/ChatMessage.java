@@ -22,7 +22,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
 
     @ManyToOne
     @JoinColumn(name = "author")
-    private User<?> author;
+    private User author;
 
     @Column(name = "date")
     private Date date;
