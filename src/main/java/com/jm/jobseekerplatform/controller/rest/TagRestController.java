@@ -32,8 +32,9 @@ public class TagRestController {
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<List<Tag>> getSearchTags(@RequestBody String param) {
         char[] chars = param.toCharArray();
-        List<Tag> tags = tagService.getBySearchParam(String.valueOf(chars,1,chars.length-2));
-        return new ResponseEntity<>(tags, HttpStatus.OK) ;
+        List<Tag> tags = tagService.getBySearchParam(String.valueOf(chars, 1, chars.length - 2));
+        return new ResponseEntity<>(tags, HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Boolean> deleteById(@PathVariable Long id) {
