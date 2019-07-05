@@ -11,54 +11,90 @@
 <div class="container-fluid">
     <div class="row">
         <div class="main-block chromeFix" layout:fragment="content">
-            <div id="vacancyDiv" class="container-fluid">
+            <div id="vacancyDiv" class="container-fluid" style="margin-top: 30px">
                 <div class="row">
+                    <div class="col-sm-4"></div>
                     <div class="col-sm-6">
+
+                        <div class="search_area">
+                            <form class="form-inline" style="margin-bottom: 5px;">
+                                <input class="form-control mr-sm-2 form-search" id="search_box" type="search"
+                                       name="query" placeholder="Поиск вакансий по тегам..."
+                                       aria-label="Search" value="" autocomplete="off" style="width: 60%">
+                                <button type="button" onclick="searchResults()" class="btn btn-primary my-2 my-sm-0">
+                                    Поиск
+                                </button>
+                            </form>
+                            <input type="hidden" id="searchBoxId" value="">
+                            <div id="search_advice_wrapper"></div>
+                        </div>
+                        <div id="searchButtons" style="margin-bottom: 10px"></div>
                     </div>
+                </div>
+                <div class="row" style="margin-top: 30px">
                     <div class="col-sm-4">
-                        <span th:text="${vacMess}"></span><br/>
-                        <div class="list-group">
-                            <th:block th:each="vacancy: ${vacancies}">
-                                <a class="list-group-item clearfix"
-                                   data-toggle="modal" data-target="#vacancyModal"
-                                   th:onclick="'showVacancy('+${vacancy.id}+')'">
-                                    [[${vacancy.headline}]]
-                                    <span class="pull-right">
-                            <span class="btn btn-xs btn-default"
-                                  th:onclick="'window.location.href = \'' + @{/vacancy/{id}(id=${vacancy.id})} + '\''">
-                                <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                            </span>
-                        </span>
-                                </a>
-                            </th:block>
+                    </div>
+                    <div class="col-sm-6">
+                        <div id="allVacancies">
+                            <span th:text="${vacMess}"></span><br/>
+                            <div class="list-group">
+                                <th:block th:each="vacancy: ${vacancies}">
+                                    <a class="list-group-item clearfix"
+                                       data-toggle="modal" data-target="#vacancyModal"
+                                       th:onclick="'showVacancy('+${vacancy.id}+')'">
+                                        [[${vacancy.headline}]]
+                                        <span class="pull-right">
+                                            <span class="btn btn-xs btn-default"
+                                                  th:onclick="'window.location.href = \'' + @{/vacancy/{id}(id=${vacancy.id})} + '\''">
+                                               <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                            </span>
+                                         </span>
+                                    </a>
+                                </th:block>
+                            </div>
+                            <input id="isAVShow" type="hidden" value="0">
+                        </div>
+                        <div id="searchVacancies">
+                            <span id="searchHeader" style="color: #4177A3;"></span>
+                            <div class="list-group" id="searchResult">
+                                <ul id="searchList" class="list-group"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="height: 200px">
+                    <div class="col-sm-6"></div>
+                    <div class="col-sm-4">
+                        <div class="flagToScroll" style="margin-top: 30px">
+                            <input type="hidden" id="scrollPageCount" value="0">
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-<!-- Modal -->
-<div id="vacancyModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h2 class="modal-title" th:text="Вакансия"></h2>
-            </div>
-            <div class="modal-body">
-                <h3><span id="VMTags"></span><br></h3>
-                <h3><span id="VMHeadline"></span><br/></h3>
-                <span id="VMCity"></span>
-                <span id="VMRemote"> (Удаленная работа)</span><br/>
-                <span id="VMSalary"></span><br/>
-                <div class="well well-sm">
-                    <span id="VMDescription"></span>
+            <!-- Modal -->
+            <div id="vacancyModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h2 class="modal-title" th:text="Вакансия"></h2>
+                        </div>
+                        <div class="modal-body">
+                            <h3><span id="VMTags"></span><br></h3>
+                            <h3><span id="VMHeadline"></span><br/></h3>
+                            <span id="VMCity"></span>
+                            <span id="VMRemote"> (Удаленная работа)</span><br/>
+                            <span id="VMSalary"></span><br/>
+                            <div class="well well-sm">
+                                <span id="VMDescription"></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
