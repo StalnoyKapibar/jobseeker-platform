@@ -142,12 +142,11 @@ public class MainController {
     public String viewVacancy(@PathVariable Long vacancyId, Model model) {
 
         Vacancy vacancy = vacancyService.getById(vacancyId);
-        EmployerProfile employerProfile = employerProfileService.getByVacancyId(vacancyId).orElseThrow(IllegalArgumentException::new);
 
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("vacancyFromServer", vacancy);
-        model.addAttribute("EmployerProfileFromServer", employerProfile);
-        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
+        model.addAttribute("EmployerProfileFromServer", vacancy.getEmployerProfile());
+        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getEmployerProfile().getLogo()));
 
         return "vacancy";
     }

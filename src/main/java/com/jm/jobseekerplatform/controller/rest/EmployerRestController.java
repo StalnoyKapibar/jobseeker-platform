@@ -27,7 +27,6 @@ public class EmployerRestController {
         EmployerProfile tmpEmployer = employerProfileService.getById(id);
 
         employer.getProfile().setLogo(tmpEmployer.getLogo());
-        employer.getProfile().setVacancies(tmpEmployer.getVacancies());
         employer.getProfile().setReviews(tmpEmployer.getReviews());
 
         employerProfileService.update(employer.getProfile());

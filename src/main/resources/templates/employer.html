@@ -59,7 +59,7 @@
                             <span class="glyphicon glyphicon-plus"></span> Добавить вакансию
                         </a><br/>
                         <div class="list-group">
-                            <a th:each="vacancy, index: ${eprofile.vacancies}" class="list-group-item"
+                            <a th:each="vacancy, index: ${vacancies}" class="list-group-item"
                                th:text="${vacancy.headline}"
                                data-toggle="modal" data-target="#vacancyModal"
                                th:onclick="'showVacancy('+${vacancy.id}+')'"></a>
@@ -148,7 +148,7 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">Оцените</h4>
                 <input id="review_evaluation"
-                       th:attr="data-id-employer=${eprofile.id}, data-id-seeker=${seekerId}"
+                       th:attr="data-employer-profile-id=${eprofile.id}, data-seeker-profile-id=${seekerProfileId}"
                        name="input-name" type="number" class="rating" min=0 max=5 step=1 data-size="lg">
             </div>
             <div class="modal-body">
