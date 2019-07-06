@@ -44,8 +44,6 @@ public class InitData {
     @Autowired
     private TagService tagService;
 
-
-
     @Autowired
     private EmployerService employerService;
 
@@ -63,15 +61,20 @@ public class InitData {
 
     private Faker faker = new Faker(new Locale("ru"));
 
+    private Random rnd = new Random();
+
     public void initData() {
         initTags();
         initUserRoles();
-        initVacancies();
         initPortfolio();
+
         initAdminProfile();
         initEmployerProfiles();
         initSeekerProfile();
         initUsers();
+
+        initVacancies();
+
         initReviews();
         initChat();
     }
@@ -258,10 +261,27 @@ public class InitData {
 
             Point point = new Point(latitudeY, longitudeX);
             pointService.add(point);
-            vacancy = new Vacancy(faker.job().title(), city, Math.random() < 0.5, shortDescr, description, Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), randomTags(0L), point);
+
+            vacancy = new Vacancy(
+                    getRandomEmployerProfile(),
+                    faker.job().title(),
+                    city,
+                    Math.random() < 0.5,
+                    shortDescr,
+                    description,
+                    Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), //salaryMin
+                    Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), //salaryMax
+                    randomTags(0L),
+                    point);
+
             vacancy.setState(State.ACCESS);
             vacancyService.add(vacancy);
         }
+    }
+
+    private EmployerProfile getRandomEmployerProfile() {
+        List<EmployerProfile> all = employerProfileService.getAll();
+        return all.get(rnd.nextInt(all.size()));
     }
 
     private void initAdminProfile() {
@@ -280,7 +300,8 @@ public class InitData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        employerProfile = new EmployerProfile("Рога и копыта", "www.roga.ru", "Мы продуктовая компания, которая разрабатывает высокотехнологичные продукты в области электротранспорта, роботизации, автоматизации и биотехнологий.\n" +
+
+        String description = "Мы продуктовая компания, которая разрабатывает высокотехнологичные продукты в области электротранспорта, роботизации, автоматизации и биотехнологий.\n" +
                 "В России базируется отдел исследований и разработок. \n" +
                 "Стек: Java8, J2ee, Spring. Клиентская часть: ES6, React, React Native. Облака AWS, Docker, NodeJS (+ Express/Koa/Hapi).\n" +
                 "Миссия - улучшать жизнь людей с помощью технологий.\n" +
@@ -292,7 +313,9 @@ public class InitData {
                 "- Новые технологии без legacy кода. \n" +
                 "- Открытая атмосфера, без корпоративного \"булшита\". \n" +
                 "- Официальное оформление по ТК РФ. \n" +
-                "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ", imageService.resizeLogoEmployer(image), randomVacancies(0L));
+                "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ";
+
+        employerProfile = new EmployerProfile("Рога и копыта", "www.roga.ru", description, imageService.resizeLogoEmployer(image));
         employerProfile.setState(State.ACCESS);
         employerProfileService.add(employerProfile);
 
@@ -302,17 +325,15 @@ public class InitData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        employerProfile = new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image), randomVacancies(5L));
+        employerProfile = new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image));
         employerProfile.setState(State.ACCESS);
         employerProfileService.add(employerProfile);
 
-        for (Long i = 10L; i <= 25L; i++) {
-            if (i % 5 == 0) {
-                image = getBufferedImage();
-                employerProfile = new EmployerProfile(faker.company().name(), faker.company().url(), faker.company().bs(), imageService.resizeLogoEmployer(image), randomVacancies(i));
-                employerProfile.setState(State.ACCESS);
-                employerProfileService.add(employerProfile);
-            }
+        for (Long i = 0L; i <= 3L; i++) {
+            image = getBufferedImage();
+            employerProfile = new EmployerProfile(faker.company().name(), faker.company().url(), faker.company().bs(), imageService.resizeLogoEmployer(image));
+            employerProfile.setState(State.ACCESS);
+            employerProfileService.add(employerProfile);
         }
     }
 
@@ -387,14 +408,6 @@ public class InitData {
             tags.add(tagService.getById(i + 1));
         }
         return tags;
-    }
-
-    private Set<Vacancy> randomVacancies(Long position) {
-        Set<Vacancy> vacancies = new HashSet<>();
-        for (Long i = position; i < position + 5; i++) {
-            vacancies.add(vacancyService.getById(i + 1));
-        }
-        return vacancies;
     }
 
     public void initChat() {

@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,16 +27,24 @@ public class VacancyService extends AbstractService<Vacancy> {
     private VacancyDAO dao;
 
     @Autowired
+    private VacancyDaoI vacancyDaoI;
+
+    @Autowired
     private TagService tagService;
 
     @Autowired
     private PointService pointService;
 
-    @Autowired
-    private VacancyDaoI vacancyDaoI;
-
     private Pattern pattern;
     private Matcher matcher;
+
+    public Set<Vacancy> getAllByEmployerProfileId(Long id, int limit) {
+        return dao.getAllByEmployerProfileId(id, limit);
+    }
+
+    public Set<Vacancy> getAllByEmployerProfileId(Long id) {
+        return dao.getAllByEmployerProfileId(id);
+    }
 
     public Page<Vacancy> findAll(Pageable pageable) {
         return vacancyDaoI.findAll(pageable);
@@ -48,7 +55,7 @@ public class VacancyService extends AbstractService<Vacancy> {
     }
 
     public Set<Vacancy> getByTags(Set<Tag> tags, int limit) {
-        return dao.getByTags(tags, limit);
+        return dao.getAllByTags(tags, limit);
     }
 
     public void blockPermanently(Vacancy vacancy) {
