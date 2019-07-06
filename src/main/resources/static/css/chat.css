@@ -1,0 +1,101 @@
+body {
+    background-color:#F5F5F5;
+}
+li {
+    margin-top: 20px;
+    list-style-type: none; /* Убираем маркеры */
+}
+ul {
+    margin-left: 0; /* Отступ слева в браузере IE и Opera */
+    padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+}
+
+#username {
+    display: none;
+}
+#vacancyId {
+    display: none;
+}
+
+.main-block {
+    background-color:#F5F5F5;
+    height: calc(100vh);
+    width: 85%;
+    position: relative;
+}
+.sidebar {
+    width: 15%;
+    position: relative;
+    background-color: #dae3ea;
+    height: calc(100vh);
+}
+.right {
+    position:absolute;
+    right: 60px;
+}
+
+.center {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.sidebar-paths {
+    margin-top: 15%;
+    width: 90%;
+
+}
+
+.font-color {
+    color: #425e7b;
+    margin-left: 25%;
+}
+.navbar {
+    height: 50px;
+    width: 100%;
+    margin: 0;
+    background-color: #7295b1
+}
+.navtext-color {
+    color: white;
+}
+
+#chat-container {
+    background-color: white;
+    margin-top: 20px;
+    height: 80%;
+    width: 80%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#messageForm {
+    width: 80%;
+    padding-bottom: 20px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    bottom: 0;
+}
+
+.message-area {
+    max-height: 80%;
+    height: 80%;
+    max-width: 80%;
+    padding: 30px;
+    overflow: hidden;
+    overflow-y: scroll;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}

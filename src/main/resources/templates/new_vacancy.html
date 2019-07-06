@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <title>Новая вакансия</title>
+    <th:block th:include="fragments :: head"></th:block>
+    <meta name="apiKey" th:content="${googleMapsApiKey}"/>
+    <style>.label {
+        font-size: 110%;
+        display: inline-block;
+        margin: 1px;
+    }</style>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script type="text/javascript" src="/js/new_vacancy.js"></script>
+    <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey})}"
+            async defer></script>
+    <script type="text/javascript" src="/js/map.js"></script>
+</head>
+<body>
+<th:block th:include="fragments :: nav"></th:block>
+<div class="container" id="vacancy_container">
+    <form class="well form-horizontal" id="vacancy_form">
+        <fieldset>
+            <legend>
+                <center><h2><b>Создание новой вакансии</b></h2></center>
+            </legend>
+            <br>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Должность</label>
+                <div class="col-md-10 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-briefcase"></i></span>
+                        <input name="v_headline" id="v_headline" placeholder="Введите название должности"
+                               class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Город</label>
+                <div class="col-md-10 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-globe"></i></span>
+                        <input name="v_city" id="v_city" placeholder="Введите название города"
+                               class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Местонахождение</label>
+                <div class="col-md-10 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-globe"></i></span>
+                        <input name="v_address" id="v_address"
+                               placeholder="Введите полный адрес вручную или выберите на карте"
+                               class="form-control" type="text">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" data-toggle="modal" data-target="#mapModal"
+                                    onclick="initV_Map()"><span class="glyphicon glyphicon-map-marker"
+                                                                style="color: #db4437"></span>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Место работы</label>
+                <div class="col-md-10 selectContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                        <select name="v_remote" id="v_remote" class="form-control selectpicker">
+                            <option value="false">В офисе работодателя</option>
+                            <option value="true">Удаленная работа</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Зарплата: от</label>
+                <div class="col-md-10 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-ruble"></i></span>
+                        <input name="v_salaryMin" id="v_salaryMin" placeholder="Можно не указывать"
+                               class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">до</label>
+                <div class="col-md-10 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-ruble"></i></span>
+                        <input name="v_salaryMax" id="v_salaryMax" placeholder="Можно не указывать"
+                               class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" id="v_form_group_tags">
+                <label class="col-md-2 control-label">Технологии</label>
+                <div class="col-md-10 inputGroupContainer">
+                    <div class="input-group" style="width: 100%;">
+                        <div class="well well-sm" name="v_tagsWell" id="v_tagsWell" style="margin-bottom: 0px;">
+                            <button type="button" class="btn btn-default" data-toggle="modal"
+                                    data-target="#tagsModal" onclick="showTags()"
+                                    style="color: #5cb85c;height: 24px;width: 21px;padding-right: 3px;padding-left: 3px;padding-top: 2px;padding-bottom: 2px;margin-bottom: 2px;">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </div>
+                        <small class="help-block" id="v_help_block_tags" style="display: none; margin-bottom: 0px;">
+                            Необходимо добавить хотя бы
+                            одну технологию
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Краткое описание вакансии</label>
+                <div class="col-md-10 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-align-center"></i></span>
+                        <textarea name="v_shortDescription" id="v_shortDescription" placeholder="До 255 символов"
+                                  class="form-control" rows="3" maxlength="255"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Подробное описание вакансии</label>
+                <div class="col-md-10 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-align-center"></i></span>
+                        <textarea name="v_description" id="v_description" class="form-control" rows="15"></textarea>
+                    </div>
+                </div>
+            </div>
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-10" style="display: flex; justify-content: center;"><br>
+                    <button type="button" class="btn btn-warning"
+                            onclick="validateAndPreview()" style="width: 150px;"> Создать
+                        <span class="glyphicon glyphicon-send"></span>
+                    </button>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+</div>
+
+<!-- vacancyModal -->
+<div id="vacancyModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h2 class="modal-title">Предварительный просмотр</h2>
+            </div>
+            <div class="modal-body">
+                <h3><span id="VMTags"></span><br></h3>
+                <h3><span id="VMHeadline"></span><br/></h3>
+                <span id="VMCity"></span>
+                <span id="VMRemote"> (Удаленная работа)</span><br/>
+                <span id="VMAddress"></span>
+                <a data-toggle="collapse" data-target="#map_collapse"> Показать на карте</a>
+                <div id="map_collapse" class="collapsed collapse">
+                    <div id="map" style="height: 300px"></div>
+                </div>
+                <br/>
+                <span id="VMSalary"></span><br/>
+                <span>Краткое описание:</span><br/>
+                <div class="well well-sm">
+                    <span id="VMShortDescription"></span>
+                </div>
+                <span>Подробное описание:</span><br/>
+                <div class="well well-sm">
+                    <span id="VMDescription"></span>
+                </div>
+                <span id="VMId" hidden></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="sendVacancy()">Сохранить</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- tagsModal -->
+<div id="tagsModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h2 class="modal-title">Добавление тегов</h2>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <input id="search_tags" class="form-control width100" placeholder="Фильтр по названию" maxlength="50">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-info" onclick="addNewTag();">Добавить</button>
+                    </span>
+                </div>
+                <div class="well well-sm" id="tagsWell">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- mapModal -->
+<div id="mapModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h2 class="modal-title">Укажите место на карте</h2>
+            </div>
+            <div class="modal-body">
+                <div id="v_map" style="height: 600px"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

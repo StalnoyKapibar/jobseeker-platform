@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <th:block th:include="fragments :: head"></th:block>
+    <meta charset="UTF-8">
+    <title>SeekerProfile</title>
+    <script type="text/javascript" src="/js/seeker.js"></script>
+</head>
+<body>
+<th:block th:include="fragments :: nav"></th:block>
+
+<div id="sProfileDiv" class="container-fluid">
+    <br/>
+    <br/>
+    <div class="row">
+        <div class="col-lg-3">
+        </div>
+        <div class="col-lg-3">
+            <h1><span th:text="${sprofile.name}"></span></h1>
+            <h3><span th:each="tag : ${sprofile.tags}" th:text="${tag.name} + ' '"></span></h3>
+            <span>Мои проекты:</span><br/>
+            <div class="list-group">
+                <a th:each="portfolio, index: ${sprofile.portfolios}" class="list-group-item"
+                   th:text="${portfolio.projectName}" data-toggle="modal" data-target="#portfolioModal"
+                   th:onclick="'showPortfolio('+${portfolio.id}+')'"></a>
+            </div>
+        </div>
+        <div class="col-lg-3" align="right">
+            <img th:src="@{'data:image/png;base64,' + ${photoimg}}" class="img-rounded" alt="Photo">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3">
+        </div>
+        <div class="col-lg-6">
+            <span>Обо мне:</span><br/>
+            <div class="well well-sm">
+                <span th:text="${sprofile.description}"></span>
+            </div>
+            <!-- кнопка приглашения -->
+            <button type="button" th:onclick="'showInviteModal('+${sprofile.id}+')'"
+                    class="btn btn-basic"><span
+                    class="glyphicon glyphicon-plus"></span>
+                InviteFriend
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="portfolioModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h2 class="modal-title"><span id="PMHeadline"></span></h2>
+            </div>
+            <div class="modal-body">
+                <h4><a id="PMlink"></a></h4>
+                <div class="well well-sm">
+                    <span id="PMDescription"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- модальное окно приглашения -->
+<div id="inviteFriendModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h2 class="modal-title">Вы можете пригласить друга здесь</h2>
+            </div>
+            <div class="modal-body text-center edit-form">
+
+
+                <label for="seeker-input-add">Seeker</label>
+                <input id="seeker-input-add" class="form-control"
+                       type="text"
+                       placeholder="Seeker" name="seeker"/>
+
+                <label for="friend-input-add">Friend</label>
+                <input id="friend-input-add" class="form-control"
+                       type="text" placeholder="Введите Email друга"
+                       name="friend"/>
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" onclick="inviteFriend(document.getElementById('seeker-input-add').value,
+                    document.getElementById('friend-input-add').value)"
+                        class="btn btn-basic "><span
+                        class="glyphicon glyphicon-envelope"></span>
+                    Send Invitation
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

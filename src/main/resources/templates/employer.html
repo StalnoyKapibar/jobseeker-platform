@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <th:block th:include="fragments :: head"></th:block>
+    <meta name="apiKey" th:content="${googleMapsApiKey}"/>
+    <title>Employer's profile</title>
+    <script type="text/javascript" src="/js/employer.js"></script>
+    <script type="text/javascript" src="/js/star-rating.min.js"></script>
+    <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey})}"
+            async defer></script>
+    <script type="text/javascript" src="/js/map.js"></script>
+    <link href="/css/star-rating.min.css" th:href="@{/css/star-rating.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<th:block th:include="fragments :: nav"></th:block>
+
+<div id="eProfileDiv" class="container-fluid">
+    <br/>
+    <br/>
+    <div class="row">
+        <div class="col-lg-3">
+        </div>
+        <div class="col-lg-3">
+            <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                <span id="EPId" th:text="${eprofile.id}" hidden></span>
+                <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown">Блокировать<span
+                        class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li><a onclick="blockEmployerProfile(1)">На сутки</a></li>
+                    <li><a onclick="blockEmployerProfile(3)">На 3 дня</a></li>
+                    <li><a onclick="blockEmployerProfile(7)">На 7 дней</a></li>
+                    <li><a onclick="blockEmployerProfile(14)">На 14 дней</a></li>
+                    <li><a onclick="blockEmployerProfile(0)">Бессрочно</a></li>
+                </ul>
+            </div>
+            <h1><span id="EPcompanyName" th:text="${eprofile.companyName}"></span></h1>
+            <h2><a th:href="@{'http://' + ${eprofile.website}}" th:text="${eprofile.website}"></a></h2>
+        </div>
+        <div class="col-lg-3" align="center">
+            <img th:src="@{'data:image/png;base64,' + ${logoimg}}" class="img-rounded" alt="Logo of company">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3">
+        </div>
+        <div class="col-lg-3">
+            <span>О нас:</span><br/>
+            <div class="well well-sm">
+                <span th:text="${eprofile.description}"></span>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <span>Наши вакансии:</span>
+            <a th:if="${isOwner}" style="float: right;color: green;" href="/new_vacancy">
+                <span class="glyphicon glyphicon-plus"></span> Добавить вакансию
+            </a><br/>
+            <div class="list-group">
+                <a th:each="vacancy, index: ${eprofile.vacancies}" class="list-group-item" th:text="${vacancy.headline}"
+                   data-toggle="modal" data-target="#vacancyModal" th:onclick="'showVacancy('+${vacancy.id}+')'"></a>
+            </div>
+        </div>
+    </div>
+    <div sec:authorize="hasAnyRole('ROLE_SEEKER','ROLE_ADMIN')">
+        <div class="row">
+            <div class="col-lg-3">
+            </div>
+            <div class="col-lg-3">
+                <h5><span>Отзывы о компании: </span>
+                    <input name="reviews-fix" type="number" class="rating fixed-rating"
+                           readonly="true" data-size="xs" data-rtl="false" th:value="${eprofile.getAverageRating()}">
+                </h5>
+                <div th:if="${reviewStatus == false}">
+                    <p>Еще нет отзывов</p>
+                </div>
+                <div th:if="${maxReviewsEvaluation != null}" class="panel panel-default">
+                    <a th:href="@{'/seeker/' + ${maxReviewsEvaluation.seekerProfile.id}}"
+                       th:text="${maxReviewsEvaluation.seekerProfile.name}"></a> <span
+                        th:text="${#dates.format(maxReviewsEvaluation.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
+                    <input name="reviews-fix" type="number" class="rating fixed-rating"
+                           readonly="true" data-size="xs" data-rtl="false"
+                           th:value="${maxReviewsEvaluation.evaluation}">
+                    <p th:text="${maxReviewsEvaluation.reviews}"></p>
+                </div>
+                <div th:if="${minReviewsEvaluation != null}" class="panel panel-default">
+                    <a th:href="@{'/seeker/' + ${minReviewsEvaluation.seekerProfile.id}}"
+                       th:text="${minReviewsEvaluation.seekerProfile.name}"></a> <span
+                        th:text="${#dates.format(minReviewsEvaluation.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
+                    <input name="reviews-fix" type="number" class="rating fixed-rating"
+                           readonly="true" data-size="xs" data-rtl="false"
+                           th:value="${minReviewsEvaluation.evaluation}">
+                    <p th:text="${minReviewsEvaluation.reviews}"></p>
+                </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="modal"
+                                    data-target="#reviewsModal">Оставить отзыв
+                            </button>
+                        </div>
+                        <div class="col-md-6" th:if="${eprofile.getReviews().size() > 2}">
+                            <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="modal"
+                                    data-target="#allReviewsModal">Все отзывы
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--allReviewsModal-->
+<div class="modal fade" id="allReviewsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content form-group">
+            <div class="modal-body">
+                <div th:each="review : ${eprofile.getReviews()}" class="panel panel-default">
+                    <a th:href="@{'/seeker/' + ${review.seekerProfile.id}}"
+                       th:text="${review.seekerProfile.name}"></a> <span
+                        th:text="${#dates.format(review.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
+                    <input name="reviews-fix" type="number" class="rating fixed-rating"
+                           readonly="true" data-size="xs" data-rtl="false"
+                           th:value="${review.evaluation}">
+                    <p th:text="${review.reviews}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- reviewsModal -->
+<div class="modal fade" id="reviewsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content form-group">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Оцените</h4>
+                <input id="review_evaluation" th:attr="data-id-employer=${eprofile.id}, data-id-seeker=${seekerId}"
+                       name="input-name" type="number" class="rating" min=0 max=5 step=1 data-size="lg">
+            </div>
+            <div class="modal-body">
+                <label for="reviewsText">Описание:</label>
+                <textarea class="form-control rounded-0" id="reviewsText"></textarea>
+            </div>
+            <div class="modal-footer">
+                <input name="_csrf" type="hidden" th:value="${_csrf.token}"/>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary postReview">Добавить отзыв</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- vacancyModal -->
+<div id="vacancyModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h2 class="modal-title" th:text="'Вакансия в компании ' + ${eprofile.companyName}"></h2>
+            </div>
+            <div class="modal-body">
+                <h3><span id="VMTags"></span><br></h3>
+                <h3><span id="VMHeadline"></span><br/></h3>
+                <span id="VMCity"></span>
+                <span id="VMRemote"> (Удаленная работа)</span><br/>
+                <span id="VMAddress"></span>
+                <a data-toggle="collapse" data-target="#map_collapse"> Показать на карте</a>
+                <div id="map_collapse" class="collapsed collapse">
+                    <div id="map" style="height: 300px"></div>
+                </div><br/>
+                <span id="VMSalary"></span><br/>
+                <span>Краткое описание:</span><br/>
+                <div class="well well-sm">
+                    <span id="VMShortDescription"></span>
+                </div>
+                <span>Подробное описание:</span><br/>
+                <div class="well well-sm">
+                    <span id="VMDescription"></span>
+                </div>
+                <span id="VMId" hidden></span>
+            </div>
+            <div class="modal-footer">
+                <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown">Блокировать<span
+                            class="caret"></span></button>
+                    <ul class="dropdown-menu dropdown-menu-right" style="right: 84px;">
+                        <li><a onclick="blockVacancy(1)">На сутки</a></li>
+                        <li><a onclick="blockVacancy(3)">На 3 дня</a></li>
+                        <li><a onclick="blockVacancy(7)">На 7 дней</a></li>
+                        <li><a onclick="blockVacancy(14)">На 14 дней</a></li>
+                        <li><a onclick="blockVacancy(0)">Бессрочно</a></li>
+                    </ul>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+            <div sec:authorize="!hasRole('ROLE_ADMIN')">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
