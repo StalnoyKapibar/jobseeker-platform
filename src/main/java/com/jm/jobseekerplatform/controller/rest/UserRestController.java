@@ -37,7 +37,6 @@ public class UserRestController {
     @RequestMapping(method = RequestMethod.GET, value = "/email/{email}")
     public ResponseEntity<Boolean> isExistEmail(@PathVariable String email) {
         if (userService.isExistEmail(email)) {
-//            return ResponseEntity.ok("{\"valid\" : \"false\"}");
             return ResponseEntity.ok(true);
         } else {
             return ResponseEntity.ok(false);
