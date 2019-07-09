@@ -134,13 +134,13 @@ public class MainController {
         return "chat";
     }
 
-    @RequestMapping("todo") //todo
-    public String getChatByCreatorAndAbout(@PathVariable("chatId") String chatId,  Authentication authentication, Model model) { //todo Warning:(138, 59) Cannot resolve path variable 'chatId' in request mapping
+    @RequestMapping("/chat/vacancy/{vacancyId}/creator/{creatorId}") //todo
+    public String getChatByCreatorAndVacancy(@PathVariable("vacancyId") String chatId, @PathVariable("creatorId") String creatorId, Authentication authentication, Model model) {
 
-        User user = (User)authentication.getPrincipal();
-
-        model.addAttribute("userId", user.getId());
-        model.addAttribute("chatId", chatId);
+//        chat
+//
+//        model.addAttribute("userId", user.getId());
+//        model.addAttribute("chatId", chatId);
 
         return "chat";
     }

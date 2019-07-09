@@ -32,22 +32,22 @@ public class AdminController {
 
     @RequestMapping("/admin")
     public String adminPage() {
-        return "admin";
+        return "admin/admin";
     }
 
     @RequestMapping("/admin/addUser")
     public String adminAddUser() {
-        return "admin_addUser";
+        return "admin/admin_addUser";
     }
 
     @RequestMapping("/admin/vacancies")
     public String adminPageVacancies() {
-        return "admin_vacancies";
+        return "admin/admin_vacancies";
     }
 
     @RequestMapping("/admin/chats")
     public String adminPageChats() {
-        return "admin_chats";
+        return "admin/admin_chats";
     }
 
     @RequestMapping(value = "/admin/employers", method = RequestMethod.GET)
@@ -78,7 +78,7 @@ public class AdminController {
         Page<UserEmployer> userEmployers = employerService.findAll(PageRequest.of(page, size, lastVisitSort));
 
         model.addAttribute("userEmployers", userEmployers);
-        return "admin_employers";
+        return "admin/admin_employers";
     }
 
     @RequestMapping(value = "/admin/employer/{userEmployerId}", method = RequestMethod.GET)
@@ -90,7 +90,7 @@ public class AdminController {
         model.addAttribute("vacancies", vacancyService.getAllByEmployerProfileId(userEmployer.getProfile().getId()));
         model.addAttribute("photoimg", Base64.getEncoder().encodeToString(userEmployer.getProfile().getLogo()));
 
-        return "admin_employer_edit";
+        return "admin/admin_employer_edit";
     }
 
     @RequestMapping(value = "/admin/seekers", method = RequestMethod.GET)
@@ -119,7 +119,7 @@ public class AdminController {
 
         model.addAttribute("userSeekers", seekerService.findAll(PageRequest.of(page, size, lastVisitSort)));
 
-        return "admin_seekers";
+        return "admin/admin_seekers";
     }
 
     @RequestMapping(value = "/admin/seeker/{seekerId}", method = RequestMethod.GET)
@@ -130,6 +130,6 @@ public class AdminController {
         model.addAttribute("profileSeeker", userSeeker.getProfile());
         model.addAttribute("photoimg", Base64.getEncoder().encodeToString(userSeeker.getProfile().getPhoto()));
 
-        return "admin_seeker_edit";
+        return "admin/admin_seeker_edit";
     }
 }
