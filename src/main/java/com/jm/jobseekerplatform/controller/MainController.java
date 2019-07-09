@@ -151,7 +151,7 @@ public class MainController {
 
         return "vacancy";
     }
-
+    @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/admin/tags", method = RequestMethod.GET)
     public String UsersViewPage(Model model) {
 
