@@ -10,7 +10,7 @@ import java.util.*;
 public class VacancyDAO extends AbstractDAO<Vacancy> {
 
     //language=SQL
-    private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.employerProfile.id = :param";
+    private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.profileEmployer.id = :param"; //todo check
 
     public Set<Vacancy> getAllByTags(Set<Tag> tags, int limit) {
         Set<Vacancy> vacancies = new HashSet<>();

@@ -1,6 +1,8 @@
 package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
+import com.jm.jobseekerplatform.model.users.UserEmployer;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
@@ -13,7 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -68,8 +69,8 @@ public class VacancyRestController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public boolean addVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
         if (vacancyService.validateVacancy(vacancy)) {
-            EmployerProfile employerProfile = ((Employer) authentication.getPrincipal()).getProfile();
-            vacancy.setEmployerProfile(employerProfile);
+            ProfileEmployer profileEmployer = ((UserEmployer) authentication.getPrincipal()).getProfile();
+            vacancy.setProfileEmployer(profileEmployer);
             vacancyService.addNewVacancyFromRest(vacancy);
             return true;
         } else {

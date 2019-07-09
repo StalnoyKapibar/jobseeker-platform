@@ -1,8 +1,9 @@
-package com.jm.jobseekerplatform.model;
+package com.jm.jobseekerplatform.model.chats;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.jm.jobseekerplatform.model.users.User;
 
 import javax.persistence.*;
 import java.io.Serializable;

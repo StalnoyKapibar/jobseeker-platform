@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.SeekerProfile;
+import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
 import com.jm.jobseekerplatform.service.impl.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,12 +16,12 @@ public class SeekerProfileRestController {
     private SeekerProfileService seekerProfileService;
     
     @RequestMapping("/")
-    public List<SeekerProfile> getAllSeekerProfiles() {
+    public List<ProfileSeeker> getAllSeekerProfiles() {
         return seekerProfileService.getAll();
     }
 
     @RequestMapping("/{seekerProfileId}")
-    public SeekerProfile getSeekerProfileById(@PathVariable Long seekerProfileId) {
+    public ProfileSeeker getSeekerProfileById(@PathVariable Long seekerProfileId) {
         return seekerProfileService.getById(seekerProfileId);
     }
 }

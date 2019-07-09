@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,25 +15,25 @@ public class EmployerProfileRestController {
     private EmployerProfileService employerProfileService;
 
     @RequestMapping("/")
-    public List<EmployerProfile> getAllEmployerProfiles() {
-        List<EmployerProfile> employerprofiles = employerProfileService.getAll();
+    public List<ProfileEmployer> getAllEmployerProfiles() {
+        List<ProfileEmployer> employerprofiles = employerProfileService.getAll();
         return employerprofiles;
     }
 
     @RequestMapping("/{employerProfileId:\\d+}")
-    public EmployerProfile getEmployerProfileById(@PathVariable Long employerProfileId){
-        EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
-        return employerProfile;
+    public ProfileEmployer getEmployerProfileById(@PathVariable Long employerProfileId){
+        ProfileEmployer profileEmployer = employerProfileService.getById(employerProfileId);
+        return profileEmployer;
     }
 
     @RequestMapping(value = "/block/{vacancyId:\\d+}", method = RequestMethod.POST)
     public void blockEmployerProfile(@PathVariable("vacancyId") Long id, @RequestBody int periodInDays) {
-        EmployerProfile employerProfile = employerProfileService.getById(id);
+        ProfileEmployer profileEmployer = employerProfileService.getById(id);
         if (periodInDays == 0){
-            employerProfileService.blockPermanently(employerProfile);
+            employerProfileService.blockPermanently(profileEmployer);
         }
         if (periodInDays > 0 && periodInDays < 15){
-            employerProfileService.blockTemporary(employerProfile, periodInDays);
+            employerProfileService.blockTemporary(profileEmployer, periodInDays);
         }
     }
 }

@@ -1,4 +1,6 @@
-package com.jm.jobseekerplatform.model;
+package com.jm.jobseekerplatform.model.profiles;
+
+import com.jm.jobseekerplatform.model.State;
 
 import javax.persistence.*;
 import java.io.Serializable;

@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.service.impl;
 
 import com.jm.jobseekerplatform.dao.impl.EmployerProfileDAO;
-import com.jm.jobseekerplatform.model.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.model.State;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,41 +10,40 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Optional;
 
 @Service("employerProfileService")
 @Transactional
-public class EmployerProfileService extends AbstractService<EmployerProfile> {
+public class EmployerProfileService extends AbstractService<ProfileEmployer> {
 
     @Autowired
     private EmployerProfileDAO dao;
 
-    public void blockPermanently(EmployerProfile employerProfile) {
-        employerProfile.setState(State.BLOCK_PERMANENT);
-        employerProfile.setExpiryBlock(null);
-        dao.update(employerProfile);
+    public void blockPermanently(ProfileEmployer profileEmployer) {
+        profileEmployer.setState(State.BLOCK_PERMANENT);
+        profileEmployer.setExpiryBlock(null);
+        dao.update(profileEmployer);
     }
 
-    public void blockTemporary(EmployerProfile employerProfile, int periodInDays) {
+    public void blockTemporary(ProfileEmployer profileEmployer, int periodInDays) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, periodInDays);
         Date expiryBlockDate = calendar.getTime();
 
-        employerProfile.setState(State.BLOCK_TEMPORARY);
-        employerProfile.setExpiryBlock(expiryBlockDate);
-        dao.update(employerProfile);
+        profileEmployer.setState(State.BLOCK_TEMPORARY);
+        profileEmployer.setExpiryBlock(expiryBlockDate);
+        dao.update(profileEmployer);
     }
 
-    public void blockOwn(EmployerProfile employerProfile) {
-        employerProfile.setState(State.BLOCK_OWN);
-        employerProfile.setExpiryBlock(null);
-        dao.update(employerProfile);
+    public void blockOwn(ProfileEmployer profileEmployer) {
+        profileEmployer.setState(State.BLOCK_OWN);
+        profileEmployer.setExpiryBlock(null);
+        dao.update(profileEmployer);
     }
 
-    public void unblock(EmployerProfile employerProfile) {
-        employerProfile.setState(State.ACCESS);
-        employerProfile.setExpiryBlock(null);
-        dao.update(employerProfile);
+    public void unblock(ProfileEmployer profileEmployer) {
+        profileEmployer.setState(State.ACCESS);
+        profileEmployer.setExpiryBlock(null);
+        dao.update(profileEmployer);
     }
 
     public int deletePermanentBlockEmployerProfiles() {

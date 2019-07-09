@@ -12,6 +12,7 @@
         height: 300px;
     }
 </style>
+
 <div class="container-fluid" layout:fragment="content">
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main_admin_page" style="padding-top: 60px">
         <h2>Edit seeker profile</h2>
@@ -27,7 +28,7 @@
                                     <label class="custom-file-label" for="customFile">Choose new image</label>
                                     <input type="file" class="custom-file-input" id="customFile"
                                            accept="image/jpeg,image/png,image/gif" name="file">
-                                    <input type="hidden" th:value="${seeker.id}" name="seekerId">
+                                    <input type="hidden" th:value="${userSeeker.id}" name="seekerId">
                                 </div>
                                 <div class="col-4">
                                     <button onclick="uploadPhoto()" class="btn btn-secondary" type="button">
@@ -43,68 +44,68 @@
                 <form id="editSeeker">
                     <div class="form-group">
                         <label>Seeker ID : </label> <input class="form-control" type="text"
-                                                           th:value="${seeker.id}" name="id" readonly>
+                                                           th:value="${userSeeker.id}" name="id" readonly>
                     </div>
                     <div class="form-group">
                         <label>Seeker email : </label><input class="form-control" type="text"
-                                                             th:value="${seeker.email}" name="email">
+                                                             th:value="${userSeeker.email}" name="email">
                     </div>
                     <div class="form-group">
                         <label>Seeker last visit : </label><input class="form-control" type="text"
-                                                                  th:value="${seeker.date}" name="date"
+                                                                  th:value="${userSeeker.date}" name="date"
                                                                   readonly>
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${seeker.password}" name="password">
+                        <input class="form-control" type="hidden" th:value="${userSeeker.password}" name="password">
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${seeker.authority.id}"
+                        <input class="form-control" type="hidden" th:value="${userSeeker.authority.id}"
                                name="authorityId">
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${seeker.authority.authority}"
+                        <input class="form-control" type="hidden" th:value="${userSeeker.authority.authority}"
                                name="authority">
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${seeker.confirm}" name="confirm">
+                        <input class="form-control" type="hidden" th:value="${userSeeker.confirm}" name="confirm">
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${seeker.enabled}" name="enabled">
+                        <input class="form-control" type="hidden" th:value="${userSeeker.enabled}" name="enabled">
                     </div>
                     <div class="form-group">
                         <label>Seeker profile ID : </label> <input class="form-control" type="text"
-                                                                   th:value="${seekerprof.id}" name="profId"
+                                                                   th:value="${profileSeeker.id}" name="profId"
                                                                    readonly>
                     </div>
                     <div class="form-group">
                         <label>Profile name : </label> <input class="form-control" type="text"
-                                                              th:value="${seekerprof.name}" name="name">
+                                                              th:value="${profileSeeker.name}" name="name">
                     </div>
                     <div class="form-group">
                         <label>Profile patronymic : </label><input class="form-control" type="text"
-                                                                   th:value="${seekerprof.patronymic}"
+                                                                   th:value="${profileSeeker.patronymic}"
                                                                    name="patronymic">
                     </div>
                     <div class="form-group">
                         <label>Profile surname : </label><input class="form-control" type="text"
-                                                                th:value="${seekerprof.surname}"
+                                                                th:value="${profileSeeker.surname}"
                                                                 name="surname">
                     </div>
                     <div class="form-group">
                         <label>Profile description : </label><input class="form-control" type="text"
-                                                                    th:value="${seekerprof.description}"
+                                                                    th:value="${profileSeeker.description}"
                                                                     name="description">
                     </div>
                     <div class="form-group">
                         <label>Profile tags : </label>
                         <select id="seekerTags" name="seekerTags">
-                            <option th:each="tag : ${seekerprof.tags}" th:value="${tag.name}"
+                            <option th:each="tag : ${profileSeeker.tags}" th:value="${tag.name}"
                                     th:text="${tag.name}"
                                     th:selected="${tag==0}"></option>
                         </select>
                         <label>Profile portfolios : </label>
                         <select id="seekerPortfolios" name="seekerPortfolios">
-                            <option th:each="portfolio : ${seekerprof.portfolios}"
+                            <option th:each="portfolio : ${profileSeeker.portfolios}"
                                     th:value="${portfolio.projectName}"
                                     th:text="${portfolio.projectName}"
                                     th:selected="${portfolio==0}"></option>

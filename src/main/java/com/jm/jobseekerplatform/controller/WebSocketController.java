@@ -1,14 +1,11 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.dto.MessageDTO;
-import com.jm.jobseekerplatform.model.Chat;
-import com.jm.jobseekerplatform.model.ChatMessage;
-import com.jm.jobseekerplatform.model.User;
-import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.chats.ChatMessage;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.ChatService;
 import com.jm.jobseekerplatform.service.impl.UserService;
-import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

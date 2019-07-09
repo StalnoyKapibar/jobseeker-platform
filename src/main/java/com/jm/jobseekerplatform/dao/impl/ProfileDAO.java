@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.dao.impl;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
-import com.jm.jobseekerplatform.model.Profile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
 import org.springframework.stereotype.Repository;
 
 /**

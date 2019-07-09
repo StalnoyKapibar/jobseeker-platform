@@ -1,4 +1,4 @@
-package com.jm.jobseekerplatform.model;
+package com.jm.jobseekerplatform.model.profiles;
 
 import javax.persistence.Entity;
 
@@ -7,7 +7,7 @@ import javax.persistence.Entity;
  */
 
 @Entity
-public class AdminProfile extends Profile {
-    public AdminProfile() {
+public class ProfileAdmin extends Profile {
+    public ProfileAdmin() {
     }
 }

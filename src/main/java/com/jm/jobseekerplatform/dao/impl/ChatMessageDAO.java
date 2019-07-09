@@ -2,16 +2,9 @@ package com.jm.jobseekerplatform.dao.impl;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
-import com.jm.jobseekerplatform.model.ChatMessage;
-import org.hibernate.Session;
-import org.hibernate.type.BooleanType;
-import org.hibernate.type.DateType;
-import org.hibernate.type.LongType;
-import org.hibernate.type.StringType;
+import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Repository("chatMessageDAO")

@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.Employer;
-import com.jm.jobseekerplatform.model.EmployerProfile;
+import com.jm.jobseekerplatform.model.users.UserEmployer;
+import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.EmployerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,37 +22,37 @@ public class EmployerRestController {
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity updateEmployer(@RequestBody Employer employer) {
-        Long id = employer.getProfile().getId();
-        EmployerProfile tmpEmployer = employerProfileService.getById(id);
+    ResponseEntity updateEmployer(@RequestBody UserEmployer userEmployer) {
+        Long id = userEmployer.getProfile().getId();
+        ProfileEmployer tmpEmployer = employerProfileService.getById(id);
 
-        employer.getProfile().setLogo(tmpEmployer.getLogo());
-        employer.getProfile().setReviews(tmpEmployer.getReviews());
+        userEmployer.getProfile().setLogo(tmpEmployer.getLogo());
+        userEmployer.getProfile().setReviews(tmpEmployer.getReviews());
 
-        employerProfileService.update(employer.getProfile());
-        employerService.update(employer);
+        employerProfileService.update(userEmployer.getProfile());
+        employerService.update(userEmployer);
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/editLogo", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<EmployerProfile> updateEmployerLogo(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("id") String id) {
-        Employer employer = employerService.getById(Long.parseLong(id));
+    ResponseEntity<ProfileEmployer> updateEmployerLogo(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("id") String id) {
+        UserEmployer userEmployer = employerService.getById(Long.parseLong(id));
         if (!file.isEmpty()) {
             try {
                 byte[] logo = file.getBytes();
-                employer.getProfile().setLogo(logo);
-                employerProfileService.update(employer.getProfile());
+                userEmployer.getProfile().setLogo(logo);
+                employerProfileService.update(userEmployer.getProfile());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return new ResponseEntity<>(employer.getProfile(), HttpStatus.OK);
+        return new ResponseEntity<>(userEmployer.getProfile(), HttpStatus.OK);
     }
 
     @GetMapping("/{employerId}")
-    public ResponseEntity<EmployerProfile> getEmployerById(@PathVariable Long employerId) {
+    public ResponseEntity<ProfileEmployer> getEmployerById(@PathVariable Long employerId) {
         return new ResponseEntity<>(employerProfileService.getById(employerId), HttpStatus.OK);
     }
 

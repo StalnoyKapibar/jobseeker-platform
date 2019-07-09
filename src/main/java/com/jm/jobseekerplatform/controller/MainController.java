@@ -1,6 +1,9 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.users.UserEmployer;
+import com.jm.jobseekerplatform.model.users.UserSeeker;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,7 +59,7 @@ public class MainController {
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
-                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getProfile().getTags();
+                    Set<Tag> tags = ((UserSeeker) authentication.getPrincipal()).getProfile().getTags();
                     Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
                     model.addAttribute("vacancies", vacancies);
@@ -97,8 +100,8 @@ public class MainController {
         } catch (NoResultException e) {
             e.printStackTrace();
             model.addAttribute("complete", false);
-        } finally {
-            return "confirm_reg";
+        } finally { //todo Warning:(103, 11) 'finally' block can not complete normally
+            return "confirm_reg"; //todo Warning:(104, 13) 'return' inside 'finally' block
         }
     }
 
@@ -108,11 +111,11 @@ public class MainController {
             Long id = ((User) authentication.getPrincipal()).getId();
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
-                Employer employer = (Employer) employerService.getById(id);
-                return "redirect:/employer/" + employer.getProfile().getId();
+                UserEmployer userEmployer = (UserEmployer) employerService.getById(id);
+                return "redirect:/employer/" + userEmployer.getProfile().getId();
             } else if (roles.contains("ROLE_SEEKER")) {
-                Seeker seeker = (Seeker) seekerService.getById(id);
-                return "redirect:/seeker/" + seeker.getProfile().getId();
+                UserSeeker userSeeker = (UserSeeker) seekerService.getById(id);
+                return "redirect:/seeker/" + userSeeker.getProfile().getId();
             } else if (roles.contains("ROLE_ADMIN")) {
                 return "redirect:/admin";
             }
@@ -132,7 +135,7 @@ public class MainController {
     }
 
     @RequestMapping("todo") //todo
-    public String getChatByCreatorAndAbout(@PathVariable("chatId") String chatId,  Authentication authentication, Model model) {
+    public String getChatByCreatorAndAbout(@PathVariable("chatId") String chatId,  Authentication authentication, Model model) { //todo Warning:(138, 59) Cannot resolve path variable 'chatId' in request mapping
 
         User user = (User)authentication.getPrincipal();
 
@@ -156,8 +159,8 @@ public class MainController {
 
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("vacancyFromServer", vacancy);
-        model.addAttribute("EmployerProfileFromServer", vacancy.getEmployerProfile());
-        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getEmployerProfile().getLogo()));
+        model.addAttribute("EmployerProfileFromServer", vacancy.getProfileEmployer());
+        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getProfileEmployer().getLogo()));
 
         return "vacancy";
     }

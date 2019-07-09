@@ -1,4 +1,7 @@
-package com.jm.jobseekerplatform.model;
+package com.jm.jobseekerplatform.model.chats;
+
+import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.model.Vacancy;
 
 import javax.persistence.Entity;
 

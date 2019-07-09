@@ -1,5 +1,7 @@
-package com.jm.jobseekerplatform.model;
+package com.jm.jobseekerplatform.model.profiles;
 
+import com.jm.jobseekerplatform.model.Portfolio;
+import com.jm.jobseekerplatform.model.Tag;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -7,7 +9,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-public class SeekerProfile extends Profile implements Serializable {
+public class ProfileSeeker extends Profile implements Serializable {
 
     @Column(name = "name")
     private String name;
@@ -31,10 +33,10 @@ public class SeekerProfile extends Profile implements Serializable {
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Portfolio> portfolios;
 
-    public SeekerProfile() {
+    public ProfileSeeker() {
     }
 
-    public SeekerProfile(String name, String patronymic, String surname, String description, byte[] photo, Set<Tag> tags, Set<Portfolio> portfolios) {
+    public ProfileSeeker(String name, String patronymic, String surname, String description, byte[] photo, Set<Tag> tags, Set<Portfolio> portfolios) {
         this.name = name;
         this.patronymic = patronymic;
         this.surname = surname;

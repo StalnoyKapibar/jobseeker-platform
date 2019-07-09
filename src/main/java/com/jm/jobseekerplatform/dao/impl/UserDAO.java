@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.dao.impl;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
-import com.jm.jobseekerplatform.model.User;
+import com.jm.jobseekerplatform.model.users.User;
 import org.springframework.stereotype.Repository;
 
 @Repository("userDAO")

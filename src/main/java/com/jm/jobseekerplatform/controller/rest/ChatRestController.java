@@ -2,8 +2,8 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
 import com.jm.jobseekerplatform.dto.MessageDTO;
-import com.jm.jobseekerplatform.model.Chat;
-import com.jm.jobseekerplatform.model.ChatMessage;
+import com.jm.jobseekerplatform.model.chats.Chat;
+import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.service.impl.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.ChatService;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
@@ -33,10 +33,10 @@ public class ChatRestController {
     ChatService chatService;
 
     @GetMapping("/last") //todo
-    public HttpEntity getAllLastMessages(@PathVariable("chatId") Long id) {
+    public HttpEntity getAllLastMessages(@PathVariable("chatId") Long id) { //todo Warning:(36, 57) Cannot resolve path variable 'chatId' in request mapping
         List<MessageWithDateDTO> lastMessages = chatMessageService.getAllLastMessages();
         Collections.sort(lastMessages);
-        return new ResponseEntity(lastMessages, HttpStatus.OK);
+        return new ResponseEntity(lastMessages, HttpStatus.OK); //todo Warning:(39, 16) Unchecked call to 'ResponseEntity(T, HttpStatus)' as a member of raw type 'org.springframework.http.ResponseEntity'
     }
 
     @GetMapping("all")

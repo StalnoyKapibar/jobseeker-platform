@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.service.impl;
 
 import com.jm.jobseekerplatform.dao.EmployerDaoI;
-import com.jm.jobseekerplatform.model.Employer;
+import com.jm.jobseekerplatform.model.users.UserEmployer;
 import com.jm.jobseekerplatform.service.AbstractService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service("employerService")
 @Transactional
-public class EmployerService extends AbstractService<Employer> {
+public class EmployerService extends AbstractService<UserEmployer> {
 
     @Autowired
     private EmployerDaoI employerDaoI;
 
-    public Page<Employer> findAll(Pageable pageable) {
+    public Page<UserEmployer> findAll(Pageable pageable) {
         return employerDaoI.findAll(pageable);
     }
 }

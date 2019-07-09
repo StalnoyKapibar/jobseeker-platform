@@ -1,5 +1,7 @@
 package com.jm.jobseekerplatform.model;
 
+import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -23,17 +25,17 @@ public class EmployerReviews implements Serializable, Comparable<EmployerReviews
     private Integer evaluation;
 
     @OneToOne(cascade=CascadeType.REFRESH, fetch=FetchType.EAGER)
-    @JoinColumn(name="seekerProfile")
-    private SeekerProfile seekerProfile;
+    @JoinColumn(name="profileSeeker")
+    private ProfileSeeker profileSeeker;
 
     public EmployerReviews() {
     }
 
-    public EmployerReviews(String reviews, Date dateReviews, Integer evaluation, SeekerProfile seekerProfile) {
+    public EmployerReviews(String reviews, Date dateReviews, Integer evaluation, ProfileSeeker profileSeeker) {
         this.reviews = reviews;
         this.dateReviews = dateReviews;
         this.evaluation = evaluation;
-        this.seekerProfile = seekerProfile;
+        this.profileSeeker = profileSeeker;
     }
 
     public Long getId() {
@@ -68,12 +70,12 @@ public class EmployerReviews implements Serializable, Comparable<EmployerReviews
         this.evaluation = evaluation;
     }
 
-    public SeekerProfile getSeekerProfile() {
-        return seekerProfile;
+    public ProfileSeeker getProfileSeeker() {
+        return profileSeeker;
     }
 
-    public void setSeekerProfile(SeekerProfile seekerProfile) {
-        this.seekerProfile = seekerProfile;
+    public void setProfileSeeker(ProfileSeeker profileSeeker) {
+        this.profileSeeker = profileSeeker;
     }
 
     @Override
@@ -85,12 +87,12 @@ public class EmployerReviews implements Serializable, Comparable<EmployerReviews
                 Objects.equals(reviews, that.reviews) &&
                 Objects.equals(dateReviews, that.dateReviews) &&
                 Objects.equals(evaluation, that.evaluation) &&
-                Objects.equals(seekerProfile, that.seekerProfile);
+                Objects.equals(profileSeeker, that.profileSeeker);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, reviews, dateReviews, evaluation, seekerProfile);
+        return Objects.hash(id, reviews, dateReviews, evaluation, profileSeeker);
     }
 
     @Override

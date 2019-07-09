@@ -1,4 +1,8 @@
-package com.jm.jobseekerplatform.model;
+package com.jm.jobseekerplatform.model.chats;
+
+import com.jm.jobseekerplatform.model.CreatedByProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.users.User;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -8,7 +12,7 @@ import javax.persistence.MappedSuperclass;
  */
 
 @MappedSuperclass
-public class ChatWithTopic<T extends CreatedByUser> extends Chat {
+public class ChatWithTopic<T extends CreatedByProfile<? extends Profile>> extends Chat {
 
     @ManyToOne
     private T topic;

@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.model.EmployerReviews;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.EmployerReviewsService;
@@ -32,9 +32,9 @@ public class ReviewsRestController {
     @ResponseBody
     public ResponseEntity<String> addNewReviews(@RequestBody Map<String, Object> map) {
         try {
-            EmployerProfile employer = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
+            ProfileEmployer employer = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
             EmployerReviews reviews = employer.getReviews().stream()
-                    .filter(employerReviews -> employerReviews.getSeekerProfile().getId() == ((Number) map.get("seekerProfiles_id")).longValue())
+                    .filter(employerReviews -> employerReviews.getProfileSeeker().getId() == ((Number) map.get("seekerProfiles_id")).longValue())
                     .findFirst().orElse(null);
             if (reviews != null) {
                 reviews.setEvaluation(Integer.parseInt(map.get("evaluation").toString()));
@@ -46,7 +46,7 @@ public class ReviewsRestController {
                 newReview.setReviews(String.valueOf(map.get("reviews")));
                 newReview.setDateReviews(new Date());
                 newReview.setEvaluation(Integer.parseInt(String.valueOf(map.get("evaluation"))));
-                newReview.setSeekerProfile((seekerProfileService.getById(((Number) map.get("seekerProfiles_id")).longValue())));
+                newReview.setProfileSeeker((seekerProfileService.getById(((Number) map.get("seekerProfiles_id")).longValue())));
                 employer.addNewReview(newReview);
                 employerProfileService.update(employer);
                 return new ResponseEntity<String>("{\"status\": \"Review added\"}", HttpStatus.OK);
@@ -71,9 +71,9 @@ public class ReviewsRestController {
     @ResponseBody
     public ResponseEntity<EmployerReviews> findReviewBySeekerIdAndEmloerIdForEdit(@RequestBody Map<String, Object> map) {
         try {
-            EmployerProfile employer = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
+            ProfileEmployer employer = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
             Set<EmployerReviews> reviewsSet = employer.getReviews();
-            EmployerReviews reviews = reviewsSet.stream().filter(employerReviews -> employerReviews.getSeekerProfile().getId() == ((Number) map.get("seekerProfiles_id")).longValue()).findFirst().orElse(null);
+            EmployerReviews reviews = reviewsSet.stream().filter(employerReviews -> employerReviews.getProfileSeeker().getId() == ((Number) map.get("seekerProfiles_id")).longValue()).findFirst().orElse(null);
             if (reviews != null) return new ResponseEntity<>(reviews, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

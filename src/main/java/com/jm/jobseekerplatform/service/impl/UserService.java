@@ -2,6 +2,10 @@ package com.jm.jobseekerplatform.service.impl;
 
 import com.jm.jobseekerplatform.dao.impl.UserDAO;
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.users.UserAdmin;
+import com.jm.jobseekerplatform.model.users.UserEmployer;
+import com.jm.jobseekerplatform.model.users.UserSeeker;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -65,10 +69,10 @@ public class UserService extends AbstractService<User> {
         User userNew = null;
 
         if (userRole.equals(roleSeeker)) {
-            userNew = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            userNew = new UserSeeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
             //seekerService.add(seeker);
         } else if (userRole.equals(roleEmployer)) {
-            userNew = new Employer(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            userNew = new UserEmployer(userEmail, userPass, LocalDateTime.now(), userRole, null);
             //employerService.add(employer);
         }
 
@@ -87,11 +91,11 @@ public class UserService extends AbstractService<User> {
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
         User newUser = null;
         if (userRole.equals(roleSeeker)) {
-            newUser = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            newUser = new UserSeeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
         } else if (userRole.equals(roleEmployer)) {
-            newUser = new Employer(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            newUser = new UserEmployer(userEmail, userPass, LocalDateTime.now(), userRole, null);
         } else if (userRole.equals(roleAdmin)) {
-            newUser = new Admin(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            newUser = new UserAdmin(userEmail, userPass, LocalDateTime.now(), userRole, null);
         }
 
         newUser.setConfirm(true);

@@ -27,7 +27,7 @@
                                     <label class="custom-file-label" for="customFile">Choose new image</label>
                                     <input type="file" class="custom-file-input" id="customFile"
                                            accept="image/jpeg,image/png,image/gif" name="file">
-                                    <input type="hidden" th:value="${employer.id}" name="employerId">
+                                    <input type="hidden" th:value="${userEmployer.id}" name="employerId">
                                 </div>
                                 <div class="col-4">
                                     <button onclick="uploadLogo()" class="btn btn-secondary" type="button">
@@ -43,65 +43,65 @@
                 <form id="editEmployer">
                     <div class="form-group">
                         <label>Employer ID : </label> <input class="form-control" type="text"
-                                                             th:value="${employer.id}" name="id" readonly>
+                                                             th:value="${userEmployer.id}" name="id" readonly>
                     </div>
                     <div class="form-group">
                         <label>Employer email : </label><input class="form-control" type="text"
-                                                               th:value="${employer.email}" name="email">
+                                                               th:value="${userEmployer.email}" name="email">
                     </div>
                     <div class="form-group">
                         <label>Employer last visit : </label><input class="form-control" type="text"
-                                                                    th:value="${employer.date}" name="date"
+                                                                    th:value="${userEmployer.date}" name="date"
                                                                     readonly>
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${employer.password}"
+                        <input class="form-control" type="hidden" th:value="${userEmployer.password}"
                                name="password">
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${employer.authority.id}"
+                        <input class="form-control" type="hidden" th:value="${userEmployer.authority.id}"
                                name="authorityId">
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${employer.authority.authority}"
+                        <input class="form-control" type="hidden" th:value="${userEmployer.authority.authority}"
                                name="authority">
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${employer.confirm}" name="confirm">
+                        <input class="form-control" type="hidden" th:value="${userEmployer.confirm}" name="confirm">
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${employer.enabled}" name="enabled">
+                        <input class="form-control" type="hidden" th:value="${userEmployer.enabled}" name="enabled">
                     </div>
                     <div class="form-group">
                         <label>Employer profile ID : </label> <input class="form-control" type="text"
-                                                                     th:value="${employerprof.id}" name="profId"
+                                                                     th:value="${profileEmployer.id}" name="profId"
                                                                      readonly>
                     </div>
                     <div class="form-group">
                         <label>Profile companyName : </label> <input class="form-control" type="text"
-                                                                     th:value="${employerprof.companyName}"
+                                                                     th:value="${profileEmployer.companyName}"
                                                                      name="companyName">
                     </div>
                     <div class="form-group">
                         <label>Profile website : </label><input class="form-control" type="text"
-                                                                th:value="${employerprof.website}"
+                                                                th:value="${profileEmployer.website}"
                                                                 name="website">
                     </div>
                     <div class="form-group">
                         <label>Profile description : </label><input class="form-control" type="text"
-                                                                    th:value="${employerprof.description}"
+                                                                    th:value="${profileEmployer.description}"
                                                                     name="description">
                     </div>
                     <div class="form-group">
                         <label>Profile vacancies : </label>
                         <select id="employerVacancies" name="employerVacancies">
-                            <option th:each="vacancy : ${employerprof.vacancies}" th:value="${vacancy.headline}"
+                            <option th:each="vacancy : ${vacancies}" th:value="${vacancy.headline}"
                                     th:text="${vacancy.headline}"
                                     th:selected="${vacancy==0}"></option>
                         </select>
                         <label>Profile reviews : </label>
                         <select id="employerReviews" name="employerReviews">
-                            <option th:each="review : ${employerprof.reviews}"
+                            <option th:each="review : ${profileEmployer.reviews}"
                                     th:value="${review.reviews}"
                                     th:text="${review.reviews}"
                                     th:selected="${review==0}"></option>

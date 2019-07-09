@@ -4,6 +4,7 @@
       layout:decorator="layouts/adminlayouts">
 <head>
 </head>
+
 <body>
 <div class="container-fluid" layout:fragment="content">
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main_admin_page">
@@ -56,16 +57,16 @@
                     </tr>
                     </thead>
                     <tbody align="center">
-                    <tr th:each="employer : ${employers}">
-                        <td th:text="${employer.id}"></td>
-                        <td th:text="${employer.email}"></td>
-                        <td th:text="${employer.date}"></td>
+                    <tr th:each="userEmployer : ${userEmployers}">
+                        <td th:text="${userEmployer.id}"></td>
+                        <td th:text="${userEmployer.email}"></td>
+                        <td th:text="${userEmployer.date}"></td>
                         <td>
-                            <button th:onclick="'editEmployer(\'' + ${employer.id} + '\');'" type="button"
+                            <button th:onclick="'editEmployer(\'' + ${userEmployer.id} + '\');'" type="button"
                                     class="btn btn-primary">Edit
                                 Employer
                             </button>
-                            <button th:onclick="'deleteEmployer(\'' + ${employer.id} + '\');'" type="button"
+                            <button th:onclick="'deleteEmployer(\'' + ${userEmployer.id} + '\');'" type="button"
                                     class="btn btn-primary">
                                 Delete Employer
                             </button>
@@ -76,24 +77,24 @@
             </div>
         </div>
 
-        <nav aria-label="Pagination" th:if="${employers.totalPages gt 0}">
+        <nav aria-label="Pagination" th:if="${userEmployers.totalPages gt 0}">
             <ul id="pagList" class="pagination justify-content-right font-weight-bold">
-                <li class="page-item" th:classappend="${employers.number eq 0} ? 'disabled'">
+                <li class="page-item" th:classappend="${userEmployers.number eq 0} ? 'disabled'">
                     <a class="page-link"
-                       th:href="@{/admin/employers?page={id}(id=${employers.number lt 2 ? 1 : employers.number})}"
+                       th:href="@{/admin/employers?page={id}(id=${userEmployers.number lt 2 ? 1 : employers.number})}"
                        aria-label="Previous" title="Previous Page" data-toggle="tooltip">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-                <li class="page-item" th:classappend="${i eq employers.number + 1} ? 'active'"
-                    th:each="i : ${#numbers.sequence( 1, employers.totalPages, 1)}">
+                <li class="page-item" th:classappend="${i eq userEmployers.number + 1} ? 'active'"
+                    th:each="i : ${#numbers.sequence( 1, userEmployers.totalPages, 1)}">
                     <a class="page-link" th:href="@{/admin/employers?page={id}(id=${i})}" th:text="${i}"
                        th:title="${'Page '+ i}" data-toggle="tooltip"></a>
                 </li>
                 <li class="page-item"
-                    th:classappend="${employers.number + 1 eq employers.totalPages} ? 'disabled'">
+                    th:classappend="${userEmployers.number + 1 eq userEmployers.totalPages} ? 'disabled'">
                     <a class="page-link"
-                       th:href="@{/admin/employers?page={id}(id=${employers.number + 2})}"
+                       th:href="@{/admin/employers?page={id}(id=${userEmployers.number + 2})}"
                        aria-label="Next" title="Next Page" data-toggle="tooltip">
                         <span aria-hidden="true">&raquo;</span>
                     </a>

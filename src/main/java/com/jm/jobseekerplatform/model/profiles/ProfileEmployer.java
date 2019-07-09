@@ -1,5 +1,6 @@
-package com.jm.jobseekerplatform.model;
+package com.jm.jobseekerplatform.model.profiles;
 
+import com.jm.jobseekerplatform.model.EmployerReviews;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class EmployerProfile extends Profile implements Serializable {
+public class ProfileEmployer extends Profile implements Serializable {
 
     @Column(name = "companyname")
     private String companyName;
@@ -31,10 +32,10 @@ public class EmployerProfile extends Profile implements Serializable {
     @Column(name = "expiry_block")
     private Date expiryBlock;
 
-    public EmployerProfile() {
+    public ProfileEmployer() {
     }
 
-    public EmployerProfile(String companyName, String website, String description, byte[] logo) {
+    public ProfileEmployer(String companyName, String website, String description, byte[] logo) {
         super();
         this.companyName = companyName;
         this.website = website;

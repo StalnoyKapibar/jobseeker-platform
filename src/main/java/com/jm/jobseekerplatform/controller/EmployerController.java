@@ -1,6 +1,10 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
+import com.jm.jobseekerplatform.model.users.UserEmployer;
+import com.jm.jobseekerplatform.model.users.UserSeeker;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.EmployerService;
 import com.jm.jobseekerplatform.service.impl.SeekerService;
@@ -40,28 +44,29 @@ public class EmployerController {
     @RequestMapping("/employer/{employerProfileId}")
     public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {
         boolean isOwner = false;
-        EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
-        model.addAttribute("eprofile", employerProfile);
+        ProfileEmployer profileEmployer = employerProfileService.getById(employerProfileId);
 
-        Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
+        model.addAttribute("eprofile", profileEmployer);
+
+        Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(profileEmployer.getId());
         model.addAttribute("vacancies", vacancies);
-        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
+        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(profileEmployer.getLogo()));
 
         if (authentication != null && authentication.isAuthenticated()) {
             Long userId = ((User) authentication.getPrincipal()).getId();
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
-                Employer employer = employerService.getById(userId);
-                isOwner = employer.getProfile().getId().equals(employerProfileId);
+                UserEmployer userEmployer = employerService.getById(userId);
+                isOwner = userEmployer.getProfile().getId().equals(employerProfileId);
             }
             if (roles.contains("ROLE_SEEKER") | roles.contains("ROLE_ADMIN")) {
                 if (roles.contains("ROLE_SEEKER")) {
-                    Seeker seeker = seekerService.getById(userId);
-                    model.addAttribute("seekerProfileId", seeker.getProfile().getId());
+                    UserSeeker userSeeker = seekerService.getById(userId);
+                    model.addAttribute("seekerProfileId", userSeeker.getProfile().getId());
                 }
             }
-            if (!employerProfile.getReviews().isEmpty()) {
-                Set<EmployerReviews> employerReviews = employerProfile.getReviews();
+            if (!profileEmployer.getReviews().isEmpty()) {
+                Set<EmployerReviews> employerReviews = profileEmployer.getReviews();
                 if (employerReviews.size() < 2) {
                     model.addAttribute("minReviewsEvaluation", employerReviews.iterator().next());
                 } else if (employerReviews.size() >= 2) {
@@ -74,8 +79,10 @@ public class EmployerController {
                 model.addAttribute("reviewStatus", false);
             }
         }
+
         model.addAttribute("isOwner", isOwner);
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+
         return "employer";
     }
 }

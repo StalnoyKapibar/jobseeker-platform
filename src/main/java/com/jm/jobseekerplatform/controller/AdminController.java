@@ -1,9 +1,10 @@
 package com.jm.jobseekerplatform.controller;
 
-import com.jm.jobseekerplatform.model.Employer;
-import com.jm.jobseekerplatform.model.Seeker;
+import com.jm.jobseekerplatform.model.users.UserEmployer;
+import com.jm.jobseekerplatform.model.users.UserSeeker;
 import com.jm.jobseekerplatform.service.impl.EmployerService;
 import com.jm.jobseekerplatform.service.impl.SeekerService;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,9 @@ public class AdminController {
 
     @Autowired
     private SeekerService seekerService;
+
+    @Autowired
+    private VacancyService vacancyService;
 
     @RequestMapping("/admin")
     public String adminPage() {
@@ -54,6 +58,7 @@ public class AdminController {
         String pageParam = request.getParameter("page");
         String sizeParam = request.getParameter("size");
         String direction = request.getParameter("direction");
+
         Sort lastVisitSort = new Sort(Sort.Direction.DESC, "date");
         if (direction != null && !direction.isEmpty() && direction.equals("ASC")) {
             lastVisitSort = new Sort(Sort.Direction.ASC, "date");
@@ -70,22 +75,21 @@ public class AdminController {
             page = Integer.parseInt(request.getParameter("page")) - 1;
         }
 
-        Page<Employer> employers = employerService.findAll(PageRequest.of(page, size, lastVisitSort));
+        Page<UserEmployer> userEmployers = employerService.findAll(PageRequest.of(page, size, lastVisitSort));
 
-        model.addAttribute("employers", employers);
+        model.addAttribute("userEmployers", userEmployers);
         return "admin_employers";
     }
 
-    @RequestMapping(value = "/admin/employer/{employerId}", method = RequestMethod.GET)
-    public String adminPageEmployerToEdit(@PathVariable Long employerId, Model model) {
-        Employer employer = employerService.getById(employerId);
-        return getStringForEmployer(model, employer);
-    }
+    @RequestMapping(value = "/admin/employer/{userEmployerId}", method = RequestMethod.GET)
+    public String adminPageEmployerToEdit(@PathVariable Long userEmployerId, Model model) {
+        UserEmployer userEmployer = employerService.getById(userEmployerId);
 
-    private String getStringForEmployer(Model model, Employer employer) {
-        model.addAttribute("employer", employer);
-        model.addAttribute("employerprof", employer.getProfile());
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(employer.getProfile().getLogo()));
+        model.addAttribute("userEmployer", userEmployer);
+        model.addAttribute("profileEmployer", userEmployer.getProfile());
+        model.addAttribute("vacancies", vacancyService.getAllByEmployerProfileId(userEmployer.getProfile().getId()));
+        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(userEmployer.getProfile().getLogo()));
+
         return "admin_employer_edit";
     }
 
@@ -112,20 +116,20 @@ public class AdminController {
         if (sizeParam != null && !sizeParam.isEmpty()) {
             size = Integer.parseInt(request.getParameter("size"));
         }
-        model.addAttribute("seekers", seekerService.findAll(PageRequest.of(page, size, lastVisitSort)));
+
+        model.addAttribute("userSeekers", seekerService.findAll(PageRequest.of(page, size, lastVisitSort)));
+
         return "admin_seekers";
     }
 
     @RequestMapping(value = "/admin/seeker/{seekerId}", method = RequestMethod.GET)
     public String adminPageSeekerToEdit(@PathVariable Long seekerId, Model model) {
-        Seeker seeker = seekerService.getById(seekerId);
-        return getStringForSeeker(model, seeker);
-    }
+        UserSeeker userSeeker = seekerService.getById(seekerId);
 
-    private String getStringForSeeker(Model model, Seeker seeker) {
-        model.addAttribute("seeker", seeker);
-        model.addAttribute("seekerprof", seeker.getProfile());
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seeker.getProfile().getPhoto()));
+        model.addAttribute("userSeeker", userSeeker);
+        model.addAttribute("profileSeeker", userSeeker.getProfile());
+        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(userSeeker.getProfile().getPhoto()));
+
         return "admin_seeker_edit";
     }
 }
