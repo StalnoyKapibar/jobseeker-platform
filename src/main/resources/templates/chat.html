@@ -15,9 +15,7 @@
 
 </head>
 <body>
-<div class="container-fluid">
-    <div class="row">
-        <div class="main-block chromeFix" layout:fragment="content">
+<div class="main-block chromeFix" layout:fragment="content">
 
             <div id="chat-container" class="panel-body">
                 <div id="chatId" th:value="${chatId}"></div>
@@ -40,6 +38,7 @@
             <script th:src="@{/js/chat.js}"></script>
         </div>
     </div>
+    <script th:src="@{/js/chat.js}"></script>
 </div>
 </body>
 </html>

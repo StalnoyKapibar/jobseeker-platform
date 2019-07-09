@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.Seeker;
 import com.jm.jobseekerplatform.model.SeekerProfile;
+import com.jm.jobseekerplatform.model.Seeker;
 import com.jm.jobseekerplatform.service.impl.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.SeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +23,11 @@ public class SeekerRestController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity updateSeeker(@RequestBody Seeker seeker) {
-        SeekerProfile seekerProfile = seekerProfileService.getById(seeker.getSeekerProfile().getId());
-        seeker.getSeekerProfile().setPhoto(seekerProfile.getPhoto());
-        seeker.getSeekerProfile().setTags(seekerProfile.getTags());
-        seeker.getSeekerProfile().setPortfolios(seekerProfile.getPortfolios());
-        seekerProfileService.update(seeker.getSeekerProfile());
+        SeekerProfile seekerProfile = seekerProfileService.getById(seeker.getProfile().getId());
+        seeker.getProfile().setPhoto(seekerProfile.getPhoto());
+        seeker.getProfile().setTags(seekerProfile.getTags());
+        seeker.getProfile().setPortfolios(seekerProfile.getPortfolios());
+        seekerProfileService.update(seeker.getProfile());
         seekerService.update(seeker);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -39,13 +39,13 @@ public class SeekerRestController {
         if (!file.isEmpty()) {
             try {
                 byte[] photo = file.getBytes();
-                seeker.getSeekerProfile().setPhoto(photo);
-                seekerProfileService.update(seeker.getSeekerProfile());
+                seeker.getProfile().setPhoto(photo);
+                seekerProfileService.update(seeker.getProfile());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return new ResponseEntity<>(seeker.getSeekerProfile(), HttpStatus.OK);
+        return new ResponseEntity<>(seeker.getProfile(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{seekerId}", method = RequestMethod.GET)

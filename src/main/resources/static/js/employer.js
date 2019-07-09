@@ -53,8 +53,8 @@ $(document).ready(function () {
 
     $(".postReview").click(function () {
         var review = {};
-        review["seekerProfiles_id"] = $("#review_evaluation").data("id-seeker");
-        review["employerProfiles_id"] = $("#review_evaluation").data("id-employer");
+        review["seekerProfiles_id"] = $("#review_evaluation").data("seeker-profile-id");
+        review["employerProfiles_id"] = $("#review_evaluation").data("employer-profile-id");
         review["evaluation"] = $("#review_evaluation").val();
         review["reviews"] = $("#reviewsText").val();
         $.ajax({
@@ -78,8 +78,8 @@ $(document).ready(function () {
 
     $("#reviewsModal").on('show.bs.modal', function(){
         var review = {};
-        review["seekerProfiles_id"] = $("#review_evaluation").data("id-seeker");
-        review["employerProfiles_id"] = $("#review_evaluation").data("id-employer");
+        review["seekerProfiles_id"] = $("#review_evaluation").data("seeker-profile-id");
+        review["employerProfiles_id"] = $("#review_evaluation").data("employer-profile-id");
         $.ajax({
             type: "POST",
             dataType: 'json',

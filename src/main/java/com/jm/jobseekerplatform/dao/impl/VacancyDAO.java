@@ -9,7 +9,10 @@ import java.util.*;
 @Repository("vacancyDAO")
 public class VacancyDAO extends AbstractDAO<Vacancy> {
 
-    public Set<Vacancy> getByTags(Set<Tag> tags, int limit) {
+    //language=SQL
+    private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.employerProfile.id = :param";
+
+    public Set<Vacancy> getAllByTags(Set<Tag> tags, int limit) {
         Set<Vacancy> vacancies = new HashSet<>();
         vacancies.addAll(entityManager
                 .createQuery("SELECT v FROM Vacancy v JOIN v.tags t WHERE t IN (:param)", Vacancy.class)
@@ -17,6 +20,22 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
                 .setMaxResults(limit)
                 .getResultList());
         return vacancies;
+    }
+
+    public Set<Vacancy> getAllByEmployerProfileId(Long id, int limit) {
+        Set<Vacancy> vacancies = new HashSet<>();
+
+        vacancies.addAll(entityManager
+                .createQuery(SQL_getAllByEmployerProfileId, Vacancy.class)
+                .setParameter("param", id)
+                .setMaxResults(limit)
+                .getResultList());
+
+        return vacancies;
+    }
+
+    public Set<Vacancy> getAllByEmployerProfileId(Long id) {
+        return getAllByEmployerProfileId(id, Integer.MAX_VALUE);
     }
 
     public int deletePermanentBlockVacancies() {

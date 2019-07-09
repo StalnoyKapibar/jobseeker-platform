@@ -1,10 +1,7 @@
 package com.jm.jobseekerplatform.service.impl;
 
 import com.jm.jobseekerplatform.dao.impl.UserDAO;
-import com.jm.jobseekerplatform.model.Employer;
-import com.jm.jobseekerplatform.model.Seeker;
-import com.jm.jobseekerplatform.model.User;
-import com.jm.jobseekerplatform.model.UserRole;
+import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -94,7 +91,7 @@ public class UserService extends AbstractService<User> {
         } else if (userRole.equals(roleEmployer)) {
             newUser = new Employer(userEmail, userPass, LocalDateTime.now(), userRole, null);
         } else if (userRole.equals(roleAdmin)) {
-            newUser = new User(userEmail, userPass, LocalDateTime.now(), userRole);
+            newUser = new Admin(userEmail, userPass, LocalDateTime.now(), userRole, null);
         }
 
         newUser.setConfirm(true);
