@@ -1,14 +1,22 @@
 package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.*;
-import com.jm.jobseekerplatform.service.impl.*;
+import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.TagService;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/vacancies")
@@ -19,6 +27,9 @@ public class VacancyRestController {
 
     @Autowired
     private EmployerProfileService employerProfileService;
+
+    @Autowired
+    private TagService tagService;
 
     @RequestMapping("/")
     public List<Vacancy> getAll() {
@@ -57,13 +68,23 @@ public class VacancyRestController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public boolean addVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
         if (vacancyService.validateVacancy(vacancy)) {
+            EmployerProfile employerProfile = ((Employer) authentication.getPrincipal()).getProfile();
+            vacancy.setEmployerProfile(employerProfile);
             vacancyService.addNewVacancyFromRest(vacancy);
-            Long employerProfileId = ((Employer) authentication.getPrincipal()).getEmployerProfile().getId();
-            Long vacancyId = vacancy.getId();
-            employerProfileService.addVacancyToEmployerProfile(employerProfileId, vacancyId);
             return true;
         } else {
             throw new IllegalArgumentException("Some fields is incorrect");
         }
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<Set<Vacancy>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
+        if (searchParam.isEmpty()) {
+            return new ResponseEntity<>(new HashSet<>(), HttpStatus.OK);
+        }
+        List<Vacancy> list = vacancyService.findAllByTags(searchParam,PageRequest.of(pageCount, 10,
+                new Sort(Sort.Direction.ASC, "id"))).getContent();
+        return new ResponseEntity<>(new HashSet<>(list), HttpStatus.OK);
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
+import java.util.List;
+
 @Service("tagService")
 @Transactional
 public class TagService extends AbstractService<Tag> {
@@ -17,6 +19,10 @@ public class TagService extends AbstractService<Tag> {
 
     public Tag findByName(String name) {
         return dao.findByName(name);
+    }
+
+    public List<Tag> getBySearchParam(String param) {
+        return dao.getBySearchParam(param);
     }
 
     /**
@@ -79,5 +85,6 @@ public class TagService extends AbstractService<Tag> {
     @Override
     public void deleteById(Long id) {
         dao.deleteById(id);
+
     }
 }

@@ -4,6 +4,7 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.EmployerService;
 import com.jm.jobseekerplatform.service.impl.SeekerService;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -29,6 +30,9 @@ public class EmployerController {
     @Autowired
     private SeekerService seekerService;
 
+    @Autowired
+    private VacancyService vacancyService;
+
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
 
@@ -38,19 +42,22 @@ public class EmployerController {
         boolean isOwner = false;
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
         model.addAttribute("eprofile", employerProfile);
+
+        Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
+        model.addAttribute("vacancies", vacancies);
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
 
         if (authentication != null && authentication.isAuthenticated()) {
             Long userId = ((User) authentication.getPrincipal()).getId();
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
-                Employer employer = (Employer) employerService.getById(userId);
-                isOwner = employer.getEmployerProfile().getId().equals(employerProfileId);
+                Employer employer = employerService.getById(userId);
+                isOwner = employer.getProfile().getId().equals(employerProfileId);
             }
             if (roles.contains("ROLE_SEEKER") | roles.contains("ROLE_ADMIN")) {
                 if (roles.contains("ROLE_SEEKER")) {
-                    Seeker seeker = (Seeker) seekerService.getById(userId);
-                    model.addAttribute("seekerId", seeker.getSeekerProfile().getId());
+                    Seeker seeker = seekerService.getById(userId);
+                    model.addAttribute("seekerProfileId", seeker.getProfile().getId());
                 }
             }
             if (!employerProfile.getReviews().isEmpty()) {

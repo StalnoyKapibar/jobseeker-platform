@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.model.Seeker;
 import com.jm.jobseekerplatform.service.impl.EmployerService;
 import com.jm.jobseekerplatform.service.impl.SeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -68,20 +69,23 @@ public class AdminController {
         if (pageParam != null && !pageParam.isEmpty()) {
             page = Integer.parseInt(request.getParameter("page")) - 1;
         }
-        model.addAttribute("employers", employerService.findAll(PageRequest.of(page, size, lastVisitSort)));
+
+        Page<Employer> employers = employerService.findAll(PageRequest.of(page, size, lastVisitSort));
+
+        model.addAttribute("employers", employers);
         return "admin_employers";
     }
 
     @RequestMapping(value = "/admin/employer/{employerId}", method = RequestMethod.GET)
     public String adminPageEmployerToEdit(@PathVariable Long employerId, Model model) {
         Employer employer = employerService.getById(employerId);
-        return getString(model, employer);
+        return getStringForEmployer(model, employer);
     }
 
-    private String getString(Model model, Employer employer) {
+    private String getStringForEmployer(Model model, Employer employer) {
         model.addAttribute("employer", employer);
-        model.addAttribute("employerprof", employer.getEmployerProfile());
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(employer.getEmployerProfile().getLogo()));
+        model.addAttribute("employerprof", employer.getProfile());
+        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(employer.getProfile().getLogo()));
         return "admin_employer_edit";
     }
 
@@ -115,13 +119,13 @@ public class AdminController {
     @RequestMapping(value = "/admin/seeker/{seekerId}", method = RequestMethod.GET)
     public String adminPageSeekerToEdit(@PathVariable Long seekerId, Model model) {
         Seeker seeker = seekerService.getById(seekerId);
-        return getString(model, seeker);
+        return getStringForSeeker(model, seeker);
     }
 
-    private String getString(Model model, Seeker seeker) {
+    private String getStringForSeeker(Model model, Seeker seeker) {
         model.addAttribute("seeker", seeker);
-        model.addAttribute("seekerprof", seeker.getSeekerProfile());
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seeker.getSeekerProfile().getPhoto()));
+        model.addAttribute("seekerprof", seeker.getProfile());
+        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seeker.getProfile().getPhoto()));
         return "admin_seeker_edit";
     }
 }
