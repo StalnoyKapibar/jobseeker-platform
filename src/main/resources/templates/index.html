@@ -5,6 +5,7 @@
       lang="en">
 <head>
     <title>Hello</title>
+    <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <script type="text/javascript" src="/js/index.js"></script>
     <style>
         .list-group {
@@ -24,9 +25,6 @@
                     </div>
                     <div class="col-sm-6">
                         <br/><h4 th:text="${vacMess}"></h4><br/>
-
-                        <input type="submit" id="sub-point" class="btn btn-warning" value="Сортировать по местонахождению"><br/>
-
                         <!--Modal-->
                         <div id="vacancyModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">

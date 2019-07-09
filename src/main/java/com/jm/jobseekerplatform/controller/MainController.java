@@ -45,6 +45,7 @@ public class MainController {
     @RequestMapping("/")
     public String mainPage(Model model) {
         model.addAttribute("vacMess", "Доступные вакансии:");
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "index";
     }
 

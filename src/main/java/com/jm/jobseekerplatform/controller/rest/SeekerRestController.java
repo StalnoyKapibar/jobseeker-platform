@@ -67,7 +67,7 @@ public class SeekerRestController {
     private ResponseEntity<String> getId(Authentication authentication) {
         String id = "";
         if (authentication == null || !authentication.isAuthenticated()) {
-            id = "";
+            return new ResponseEntity<>(id, HttpStatus.OK);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 Seeker seeker = (Seeker) authentication.getPrincipal();

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VacancyDaoI extends JpaRepository<Vacancy, Long> {
-    Page<Vacancy> findAll(Pageable pageable);
+    Page<Vacancy> findAllByCity(String city, Pageable pageable);
 
     Vacancy findVacancyByCoordinates(Point point);
 }

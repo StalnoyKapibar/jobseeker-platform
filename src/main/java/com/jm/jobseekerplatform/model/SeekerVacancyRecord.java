@@ -15,26 +15,22 @@ public class SeekerVacancyRecord implements Serializable {
     @Column(name = "date")
     private LocalDateTime date;
 
-    @Column
-    private Long seekerId;
+    @OneToOne(fetch = FetchType.EAGER)
+    private Seeker seeker;
 
-    @Column
-    private Long vacancyId;
+    @OneToOne(fetch = FetchType.EAGER)
+    private Vacancy vacancy;
 
     public SeekerVacancyRecord() {}
 
-    public SeekerVacancyRecord(LocalDateTime date, Long seekerId, Long vacancyId) {
+    public SeekerVacancyRecord(LocalDateTime date, Seeker seeker, Vacancy vacancy) {
         this.date = date;
-        this.seekerId = seekerId;
-        this.vacancyId = vacancyId;
+        this.seeker = seeker;
+        this.vacancy = vacancy;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public LocalDateTime getDate() {
@@ -45,19 +41,19 @@ public class SeekerVacancyRecord implements Serializable {
         this.date = date;
     }
 
-    public Long getSeekerId() {
-        return seekerId;
+    public Seeker getSeeker() {
+        return seeker;
     }
 
-    public void setSeekerId(Long seekerId) {
-        this.seekerId = seekerId;
+    public void setSeeker(Seeker seeker) {
+        this.seeker = seeker;
     }
 
-    public Long getVacancyId() {
-        return vacancyId;
+    public Vacancy getVacancy() {
+        return vacancy;
     }
 
-    public void setVacancyId(Long vacancyId) {
-        this.vacancyId = vacancyId;
+    public void setVacancy(Vacancy vacancy) {
+        this.vacancy = vacancy;
     }
 }

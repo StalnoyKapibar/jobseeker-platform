@@ -41,19 +41,15 @@ var total_pages;
 var block = false;
 var seeker_tags;
 var user_id;
+var point;
 
 $(function () {
     getSeekerId();
 
     if (user_id!==""){ getSeekerTags();}
 
-    getAllVacancies();
-
-    var sub = document.getElementById("sub-point");
-
-    sub.onclick = (function(e) {
-        e.preventDefault();
-        getVacBySortPoint();
+    getCurrentLocation(function () {
+        getAllVacanciesByPoint(point);
     });
 
 });
@@ -64,7 +60,7 @@ function getSeekerId() {
         type: "GET",
         async: false,
         success: function (data) {
-            user_id = data.toString();
+            user_id = data;
         }
     });
 }
@@ -79,9 +75,37 @@ function getSeekerTags() {
     })
 }
 
-function getAllVacancies() {
+function getCurrentLocation(callback) {
+    if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+            point = {'latitudeY': lat, 'longitudeX': lng};
+            callback(point);
+        });
+    }
+    else {
+        throw new Error("Your browser does not support geolocation.");
+    }
+}
 
-    get_vacancies();
+// function getAddressByCoords(lat, lng) {
+//     var city;
+//     $.ajax({
+//         url: "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=" + $("meta[name='apiKey']").attr("content"),
+//         type: "GET",
+//         async: false,
+//         success: function (data) {
+//             city = data.results[0].address_components[5].long_name;
+//         }
+//     });
+//     return city;
+// }
+
+function getAllVacanciesByPoint(point) {
+
+    //get_vacancies(point);
+    getSortedVac(point);
 
     $(".list-group").scroll(function () {
         if($(".list-group").scrollTop() + $(".list-group").height() >= $(".list-group").height() && !block) {
@@ -90,9 +114,9 @@ function getAllVacancies() {
                 get_vacancies();}}});
 }
 
-function get_vacancies() {
+function get_vacancies(point) {
     $.ajax({
-        url: "api/vacancies/page/" + page,
+        url: "api/vacancies/"+point+"/page/" + page,
         type:"GET",
         success:function(vacancies) {
             total_pages = vacancies.totalPages;
@@ -134,36 +158,6 @@ function compare_seeker_tags(v_tag_, tag_id) {
         if (s_tag_.localeCompare(v_tag_)==0) {
             $(tag_id).css({"background-color":"#fff2a8"})}
     })
-}
-
-function getVacBySortPoint() {
-    page = 1;
-    block = false;
-    var lng=0;
-    var lat=0;
-
-    if(navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            lat = position.coords.latitude;
-            lng = position.coords.longitude;
-        });
-
-    } else { alert("Geolocation API не поддерживается в вашем браузере"); }
-
-    var point = {'latitudeY': lat, 'longitudeX': lng};
-
-    $(".list-group").html("");
-
-    getSortedVac(point);
-
-    $(".list-group").scroll(function () {
-        if($(".list-group").scrollTop() + $(".list-group").height() >= $(".list-group").height() && !block) {
-            block = true;
-            if (page <= total_pages) {
-                getSortedVac(point);
-            }
-        }
-    });
 }
 
 function getSortedVac(point) {

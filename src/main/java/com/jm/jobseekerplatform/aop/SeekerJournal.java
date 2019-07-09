@@ -3,7 +3,9 @@ package com.jm.jobseekerplatform.aop;
 import com.jm.jobseekerplatform.model.Seeker;
 import com.jm.jobseekerplatform.model.SeekerVacancyRecord;
 import com.jm.jobseekerplatform.model.UserRole;
+import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.service.impl.SeekerHistoryService;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -24,6 +26,9 @@ public class SeekerJournal {
     @Autowired
     private SeekerHistoryService seekerHistoryService;
 
+    @Autowired
+    private VacancyService vacancyService;
+
     @Pointcut( "execution(public * com.jm.jobseekerplatform.controller.MainController.viewVacancy(..))")
     public void monitor(){}
 
@@ -33,9 +38,10 @@ public class SeekerJournal {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth.getAuthorities().contains(roleSeeker)) {
-            Long seekerId = ((Seeker)auth.getPrincipal()).getSeekerProfile().getId();
+            Seeker seeker = ((Seeker)auth.getPrincipal());
+            Vacancy vacancy = vacancyService.getById(vacancyId);
             LocalDateTime date = LocalDateTime.now();
-            seekerHistoryService.add(new SeekerVacancyRecord(date, seekerId, vacancyId));
+            seekerHistoryService.add(new SeekerVacancyRecord(date, seeker, vacancy));
         }
     }
 }

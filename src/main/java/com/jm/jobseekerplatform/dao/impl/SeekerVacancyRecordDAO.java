@@ -5,6 +5,6 @@ import com.jm.jobseekerplatform.model.SeekerVacancyRecord;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SeekerHistoryDAO extends AbstractDAO<SeekerVacancyRecord> {
+public class SeekerVacancyRecordDAO extends AbstractDAO<SeekerVacancyRecord> {
 
 }

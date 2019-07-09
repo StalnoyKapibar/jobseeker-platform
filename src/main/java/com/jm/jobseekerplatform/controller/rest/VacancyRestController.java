@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.google.maps.errors.ApiException;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -29,44 +31,6 @@ public class VacancyRestController {
     public List<Vacancy> getAll() {
         List<Vacancy> vacancies = vacancyService.getAll();
         return vacancies;
-    }
-
-    @RequestMapping("/page/{page}")
-    public Page<Vacancy> getPageOfVacancies(@PathVariable("page") int page, Authentication authentication) {
-        if (page != 0) { page = page - 1; }
-        int limit = 10;
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return vacancyService.findAll(PageRequest.of(page, limit));
-        } else {
-            if (authentication.getAuthorities().contains(roleSeeker)) {
-                try {
-                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
-                    return vacancyService.getByTags(tags, limit, page);
-                } catch (NullPointerException e) {
-                    return vacancyService.findAll(PageRequest.of(page, limit));
-                }
-            }
-        } return vacancyService.findAll(PageRequest.of(page, limit));
-    }
-
-    @RequestMapping("/point/page/{page}")
-    public Page<Vacancy> getPageOfVacanciesSortByPoints(@PathVariable("page") int page, @RequestBody Point point, Authentication authentication) {
-        if (page != 0) { page = page - 1; }
-        int limit = 10;
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return vacancyService.getAllVacanciesBySortPoint(point,limit,page);
-        } else {
-            if (authentication.getAuthorities().contains(roleSeeker)) {
-                try {
-                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
-                    return vacancyService.getVacanciesByTagsBySortPoint(point, tags, limit, page);
-                } catch (NullPointerException e) {
-                    return vacancyService.getAllVacanciesBySortPoint(point,limit,page);
-                }
-            }
-        } return vacancyService.getAllVacanciesBySortPoint(point,limit,page);
     }
 
     @RequestMapping("/{vacancyId:\\d+}")
@@ -108,5 +72,24 @@ public class VacancyRestController {
         } else {
             throw new IllegalArgumentException("Some fields is incorrect");
         }
+    }
+
+    @RequestMapping("/point/page/{page}")
+    public Page<Vacancy> getPageOfVacancies(@RequestBody Point point, @PathVariable("page") int page, Authentication authentication) throws InterruptedException, ApiException, IOException {
+        if (page != 0) { page = page - 1; }
+        int limit = 10;
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return vacancyService.findAllVacanciesByPoint(point, limit, page);
+        } else {
+            if (authentication.getAuthorities().contains(roleSeeker)) {
+                try {
+                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
+                    return vacancyService.getVacanciesByTagsAndByPoint(point, tags, limit, page);
+                } catch (NullPointerException e) {
+                    return vacancyService.findAllVacanciesByPoint(point, limit, page);
+                }
+            }
+        } return vacancyService.findAllVacanciesByPoint(point, limit, page);
     }
 }
