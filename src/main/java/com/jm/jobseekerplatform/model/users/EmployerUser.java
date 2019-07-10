@@ -7,11 +7,11 @@ import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
 @Entity
-public class UserEmployer extends User<ProfileEmployer> {
-    public UserEmployer() {
+public class EmployerUser extends User<ProfileEmployer> {
+    public EmployerUser() {
     }
 
-    public UserEmployer(String email, char[] password, LocalDateTime date, UserRole authority, ProfileEmployer profile) {
+    public EmployerUser(String email, char[] password, LocalDateTime date, UserRole authority, ProfileEmployer profile) {
         super(email, password, date, authority, profile);
     }
 }

@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.users.UserEmployer;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.EmployerService;
@@ -22,15 +22,15 @@ public class EmployerRestController {
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity updateEmployer(@RequestBody UserEmployer userEmployer) {
-        Long id = userEmployer.getProfile().getId();
+    ResponseEntity updateEmployer(@RequestBody EmployerUser employerUser) {
+        Long id = employerUser.getProfile().getId();
         ProfileEmployer tmpEmployer = employerProfileService.getById(id);
 
-        userEmployer.getProfile().setLogo(tmpEmployer.getLogo());
-        userEmployer.getProfile().setReviews(tmpEmployer.getReviews());
+        employerUser.getProfile().setLogo(tmpEmployer.getLogo());
+        employerUser.getProfile().setReviews(tmpEmployer.getReviews());
 
-        employerProfileService.update(userEmployer.getProfile());
-        employerService.update(userEmployer);
+        employerProfileService.update(employerUser.getProfile());
+        employerService.update(employerUser);
 
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -38,17 +38,17 @@ public class EmployerRestController {
     @RequestMapping(value = "/editLogo", method = RequestMethod.POST)
     public @ResponseBody
     ResponseEntity<ProfileEmployer> updateEmployerLogo(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("id") String id) {
-        UserEmployer userEmployer = employerService.getById(Long.parseLong(id));
+        EmployerUser employerUser = employerService.getById(Long.parseLong(id));
         if (!file.isEmpty()) {
             try {
                 byte[] logo = file.getBytes();
-                userEmployer.getProfile().setLogo(logo);
-                employerProfileService.update(userEmployer.getProfile());
+                employerUser.getProfile().setLogo(logo);
+                employerProfileService.update(employerUser.getProfile());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return new ResponseEntity<>(userEmployer.getProfile(), HttpStatus.OK);
+        return new ResponseEntity<>(employerUser.getProfile(), HttpStatus.OK);
     }
 
     @GetMapping("/{employerId}")

@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.controller;
 
-import com.jm.jobseekerplatform.model.users.UserEmployer;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.UserSeeker;
 import com.jm.jobseekerplatform.service.impl.EmployerService;
 import com.jm.jobseekerplatform.service.impl.SeekerService;
@@ -75,20 +75,21 @@ public class AdminController {
             page = Integer.parseInt(request.getParameter("page")) - 1;
         }
 
-        Page<UserEmployer> userEmployers = employerService.findAll(PageRequest.of(page, size, lastVisitSort));
+        Page<EmployerUser> employerUsers = employerService.findAll(PageRequest.of(page, size, lastVisitSort));
 
-        model.addAttribute("userEmployers", userEmployers);
+        model.addAttribute("employerUsers", employerUsers);
+
         return "admin/admin_employers";
     }
 
     @RequestMapping(value = "/admin/employer/{userEmployerId}", method = RequestMethod.GET)
     public String adminPageEmployerToEdit(@PathVariable Long userEmployerId, Model model) {
-        UserEmployer userEmployer = employerService.getById(userEmployerId);
+        EmployerUser employerUser = employerService.getById(userEmployerId);
 
-        model.addAttribute("userEmployer", userEmployer);
-        model.addAttribute("profileEmployer", userEmployer.getProfile());
-        model.addAttribute("vacancies", vacancyService.getAllByEmployerProfileId(userEmployer.getProfile().getId()));
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(userEmployer.getProfile().getLogo()));
+        model.addAttribute("employerUser", employerUser);
+        model.addAttribute("profileEmployer", employerUser.getProfile());
+        model.addAttribute("vacancies", vacancyService.getAllByEmployerProfileId(employerUser.getProfile().getId()));
+        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(employerUser.getProfile().getLogo()));
 
         return "admin/admin_employer_edit";
     }

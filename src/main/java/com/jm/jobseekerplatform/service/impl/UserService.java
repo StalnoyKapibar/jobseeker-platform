@@ -3,7 +3,7 @@ package com.jm.jobseekerplatform.service.impl;
 import com.jm.jobseekerplatform.dao.impl.UserDAO;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.users.AdminUser;
-import com.jm.jobseekerplatform.model.users.UserEmployer;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.UserSeeker;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
@@ -72,12 +72,11 @@ public class UserService extends AbstractService<User> {
             userNew = new UserSeeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
             //seekerService.add(seeker);
         } else if (userRole.equals(roleEmployer)) {
-            userNew = new UserEmployer(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            userNew = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
             //employerService.add(employer);
         }
 
         add(userNew);
-
 
         User registeredUser = findByEmail(userEmail);
         String token = UUID.randomUUID().toString();
@@ -93,7 +92,7 @@ public class UserService extends AbstractService<User> {
         if (userRole.equals(roleSeeker)) {
             newUser = new UserSeeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
         } else if (userRole.equals(roleEmployer)) {
-            newUser = new UserEmployer(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            newUser = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
         } else if (userRole.equals(roleAdmin)) {
             newUser = new AdminUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
         }

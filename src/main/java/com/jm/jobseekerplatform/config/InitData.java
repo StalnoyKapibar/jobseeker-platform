@@ -10,7 +10,7 @@ import com.jm.jobseekerplatform.model.profiles.ProfileAdmin;
 import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
 import com.jm.jobseekerplatform.model.users.AdminUser;
-import com.jm.jobseekerplatform.model.users.UserEmployer;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.UserSeeker;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
@@ -191,7 +191,7 @@ public class InitData {
     public void initUsers() {
         UserRole role;
         User user;
-        UserEmployer userEmployer;
+        EmployerUser employerUser;
         UserSeeker userSeeker;
 
         role = userRoleService.findByAuthority("ROLE_ADMIN");
@@ -200,29 +200,29 @@ public class InitData {
         userService.add(user);
 
         role = userRoleService.findByAuthority("ROLE_EMPLOYER");
-        userEmployer = new UserEmployer("employer@mail.ru", userService.encodePassword("employer".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(2L));
-        userEmployer.setConfirm(true);
-        employerService.add(userEmployer);
+        employerUser = new EmployerUser("employer@mail.ru", userService.encodePassword("employer".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(2L));
+        employerUser.setConfirm(true);
+        employerService.add(employerUser);
 
-        userEmployer = new UserEmployer("employer2@mail.ru", userService.encodePassword("employer2".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(3L));
-        userEmployer.setConfirm(true);
-        employerService.add(userEmployer);
+        employerUser = new EmployerUser("employer2@mail.ru", userService.encodePassword("employer2".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(3L));
+        employerUser.setConfirm(true);
+        employerService.add(employerUser);
 
-        userEmployer = new UserEmployer("employer3@mail.ru", userService.encodePassword("employer3".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(4L));
-        userEmployer.setConfirm(true);
-        employerService.add(userEmployer);
+        employerUser = new EmployerUser("employer3@mail.ru", userService.encodePassword("employer3".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(4L));
+        employerUser.setConfirm(true);
+        employerService.add(employerUser);
 
-        userEmployer = new UserEmployer("employer4@mail.ru", userService.encodePassword("employer4".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(5L));
-        userEmployer.setConfirm(true);
-        employerService.add(userEmployer);
+        employerUser = new EmployerUser("employer4@mail.ru", userService.encodePassword("employer4".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(5L));
+        employerUser.setConfirm(true);
+        employerService.add(employerUser);
 
-        userEmployer = new UserEmployer("employer5@mail.ru", userService.encodePassword("employer5".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(6L));
-        userEmployer.setConfirm(true);
-        employerService.add(userEmployer);
+        employerUser = new EmployerUser("employer5@mail.ru", userService.encodePassword("employer5".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(6L));
+        employerUser.setConfirm(true);
+        employerService.add(employerUser);
 
-        userEmployer = new UserEmployer("employer6@mail.ru", userService.encodePassword("employer6".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(7L));
-        userEmployer.setConfirm(true);
-        employerService.add(userEmployer);
+        employerUser = new EmployerUser("employer6@mail.ru", userService.encodePassword("employer6".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(7L));
+        employerUser.setConfirm(true);
+        employerService.add(employerUser);
 
         role = userRoleService.findByAuthority("ROLE_SEEKER");
 

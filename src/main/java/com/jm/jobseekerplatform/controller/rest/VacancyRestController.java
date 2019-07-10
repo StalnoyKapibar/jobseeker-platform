@@ -2,7 +2,7 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
-import com.jm.jobseekerplatform.model.users.UserEmployer;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
@@ -69,7 +69,7 @@ public class VacancyRestController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public boolean addVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
         if (vacancyService.validateVacancy(vacancy)) {
-            ProfileEmployer profileEmployer = ((UserEmployer) authentication.getPrincipal()).getProfile();
+            ProfileEmployer profileEmployer = ((EmployerUser) authentication.getPrincipal()).getProfile();
             vacancy.setProfileEmployer(profileEmployer);
             vacancyService.addNewVacancyFromRest(vacancy);
             return true;

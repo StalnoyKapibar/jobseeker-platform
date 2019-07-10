@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
-import com.jm.jobseekerplatform.model.users.UserEmployer;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.UserSeeker;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
@@ -111,10 +111,10 @@ public class MainController {
             Long id = ((User) authentication.getPrincipal()).getId();
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
-                UserEmployer userEmployer = (UserEmployer) employerService.getById(id);
-                return "redirect:/employer/" + userEmployer.getProfile().getId();
+                EmployerUser employerUser = employerService.getById(id);
+                return "redirect:/employer/" + employerUser.getProfile().getId();
             } else if (roles.contains("ROLE_SEEKER")) {
-                UserSeeker userSeeker = (UserSeeker) seekerService.getById(id);
+                UserSeeker userSeeker = seekerService.getById(id);
                 return "redirect:/seeker/" + userSeeker.getProfile().getId();
             } else if (roles.contains("ROLE_ADMIN")) {
                 return "redirect:/admin";

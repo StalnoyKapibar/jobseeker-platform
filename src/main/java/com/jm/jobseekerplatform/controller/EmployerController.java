@@ -2,7 +2,7 @@ package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
-import com.jm.jobseekerplatform.model.users.UserEmployer;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.UserSeeker;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
@@ -56,8 +56,8 @@ public class EmployerController {
             Long userId = ((User) authentication.getPrincipal()).getId();
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
-                UserEmployer userEmployer = employerService.getById(userId);
-                isOwner = userEmployer.getProfile().getId().equals(employerProfileId);
+                EmployerUser employerUser = employerService.getById(userId);
+                isOwner = employerUser.getProfile().getId().equals(employerProfileId);
             }
             if (roles.contains("ROLE_SEEKER") | roles.contains("ROLE_ADMIN")) {
                 if (roles.contains("ROLE_SEEKER")) {
