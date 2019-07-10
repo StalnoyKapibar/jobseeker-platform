@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/commonlayouts}"
       lang="en">
@@ -38,7 +39,7 @@
                             </button>
                         </form>
 
-                        <div th:align="right">
+                        <div sec:authorize="!isAuthenticated()" th:align="right">
                             <a href="/recovery" style="color: black;">Восстановить пароль</a><br/>
                             <a href="/registration" style="color: black;">Зарегистрироваться</a>
                         </div>
