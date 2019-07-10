@@ -6,7 +6,7 @@ import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 import com.jm.jobseekerplatform.model.profiles.Profile;
-import com.jm.jobseekerplatform.model.profiles.ProfileAdmin;
+import com.jm.jobseekerplatform.model.profiles.AdminProfile;
 import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
 import com.jm.jobseekerplatform.model.users.AdminUser;
@@ -304,9 +304,9 @@ public class InitData {
     }
 
     private void initAdminProfile() {
-        ProfileAdmin profileAdmin = new ProfileAdmin();
-        profileAdmin.setState(State.ACCESS);
-        adminProfileService.add(profileAdmin);
+        AdminProfile adminProfile = new AdminProfile();
+        adminProfile.setState(State.ACCESS);
+        adminProfileService.add(adminProfile);
     }
 
     public void initEmployerProfiles() {

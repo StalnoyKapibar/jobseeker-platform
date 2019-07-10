@@ -7,7 +7,7 @@ import javax.persistence.Entity;
  */
 
 @Entity
-public class ProfileAdmin extends Profile {
-    public ProfileAdmin() {
+public class AdminProfile extends Profile {
+    public AdminProfile() {
     }
 }
