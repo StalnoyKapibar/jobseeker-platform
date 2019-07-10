@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.model.chats;
 
+import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.model.Vacancy;
 
@@ -14,7 +15,7 @@ public class ChatWithTopicVacancy extends ChatWithTopic<Vacancy> {
     public ChatWithTopicVacancy() {
     }
 
-    public ChatWithTopicVacancy(User createdBy, Vacancy about) {
-        super(createdBy, about);
+    public ChatWithTopicVacancy(Profile creator, Vacancy about) {
+        super(creator, about);
     }
 }

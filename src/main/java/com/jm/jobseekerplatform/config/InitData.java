@@ -5,10 +5,11 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
+import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.ProfileAdmin;
 import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
-import com.jm.jobseekerplatform.model.users.UserAdmin;
+import com.jm.jobseekerplatform.model.users.AdminUser;
 import com.jm.jobseekerplatform.model.users.UserEmployer;
 import com.jm.jobseekerplatform.model.users.UserSeeker;
 import com.jm.jobseekerplatform.model.users.User;
@@ -35,6 +36,9 @@ public class InitData {
 
     @Autowired
     private VacancyService vacancyService;
+
+    @Autowired
+    private ProfileService profileService;
 
     @Autowired
     private AdminProfileService adminProfileService;
@@ -191,7 +195,7 @@ public class InitData {
         UserSeeker userSeeker;
 
         role = userRoleService.findByAuthority("ROLE_ADMIN");
-        user = new UserAdmin("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), role, adminProfileService.getById(1L));
+        user = new AdminUser("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), role, adminProfileService.getById(1L));
         user.setConfirm(true);
         userService.add(user);
 
@@ -290,11 +294,6 @@ public class InitData {
             vacancy.setState(State.ACCESS);
             vacancyService.add(vacancy);
         }
-    }
-
-    private ProfileEmployer getRandomEmployerProfile() {
-        List<ProfileEmployer> all = employerProfileService.getAll();
-        return all.get(rnd.nextInt(all.size()));
     }
 
     private void initAdminProfile() {
@@ -435,13 +434,36 @@ public class InitData {
                 messages.add(chatMessage);
             }
 
-            User randomUser = userService.getById(rnd.nextInt(10) + 1L); //todo тут надо одбирать всех, кроме employer
             Vacancy randomVacancy = vacancyService.getById(rnd.nextInt(30) + 1L);
+            Profile chatCreator = getRandomProfileExceptWithId(randomVacancy.getProfileEmployer().getId());
 
-            Chat chat = new ChatWithTopicVacancy(randomUser, randomVacancy);
+            Chat chat = new ChatWithTopicVacancy(chatCreator, randomVacancy);
             chat.setChatMessages(messages);
 
             chatService.add(chat);
         }
+    }
+
+    private Profile getRandomProfileExceptWithId(Long exceptId){
+        boolean ready = false;
+
+        int amountOfProfiles = profileService.getAll().size();
+        int randomId = -1;
+
+        while (!ready){
+            randomId = rnd.nextInt(amountOfProfiles);
+            if (randomId != exceptId) {
+                ready = true;
+            }
+        }
+
+        Profile randomProfile = profileService.getById((long) randomId);
+
+        return randomProfile;
+    }
+
+    private ProfileEmployer getRandomEmployerProfile() {
+        List<ProfileEmployer> all = employerProfileService.getAll();
+        return all.get(rnd.nextInt(all.size()));
     }
 }

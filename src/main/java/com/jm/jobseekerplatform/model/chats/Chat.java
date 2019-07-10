@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.model.profiles.Profile;
 import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
@@ -27,7 +27,7 @@ public class Chat implements Serializable {
     @ManyToOne
     @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
-    private User createdBy;
+    private Profile creator;
 
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = org.hibernate.annotations.FetchMode.SELECT)
@@ -37,8 +37,8 @@ public class Chat implements Serializable {
 
     public Chat(){ }
 
-    public Chat(User createdBy){
-        this.createdBy = createdBy;
+    public Chat(Profile creator){
+        this.creator = creator;
     }
 
 
@@ -46,8 +46,8 @@ public class Chat implements Serializable {
         return id;
     }
 
-    public User getCreatedBy() {
-        return createdBy;
+    public Profile getCreator() {
+        return creator;
     }
 
     public void setChatMessages(List<ChatMessage> chatMessages) {

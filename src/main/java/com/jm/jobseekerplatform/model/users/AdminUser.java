@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
  */
 
 @Entity
-public class UserAdmin extends User<ProfileAdmin> {
-    public UserAdmin() {
+public class AdminUser extends User<ProfileAdmin> {
+    public AdminUser() {
     }
 
-    public UserAdmin(String email, char[] password, LocalDateTime date, UserRole authority, ProfileAdmin profile) {
+    public AdminUser(String email, char[] password, LocalDateTime date, UserRole authority, ProfileAdmin profile) {
         super(email, password, date, authority, profile);
     }
 }

@@ -2,7 +2,7 @@ package com.jm.jobseekerplatform.service.impl;
 
 import com.jm.jobseekerplatform.dao.impl.UserDAO;
 import com.jm.jobseekerplatform.model.*;
-import com.jm.jobseekerplatform.model.users.UserAdmin;
+import com.jm.jobseekerplatform.model.users.AdminUser;
 import com.jm.jobseekerplatform.model.users.UserEmployer;
 import com.jm.jobseekerplatform.model.users.UserSeeker;
 import com.jm.jobseekerplatform.model.users.User;
@@ -95,7 +95,7 @@ public class UserService extends AbstractService<User> {
         } else if (userRole.equals(roleEmployer)) {
             newUser = new UserEmployer(userEmail, userPass, LocalDateTime.now(), userRole, null);
         } else if (userRole.equals(roleAdmin)) {
-            newUser = new UserAdmin(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            newUser = new AdminUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
         }
 
         newUser.setConfirm(true);

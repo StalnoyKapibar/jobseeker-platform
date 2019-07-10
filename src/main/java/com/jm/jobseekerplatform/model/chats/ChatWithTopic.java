@@ -18,8 +18,8 @@ public class ChatWithTopic<T extends CreatedByProfile<? extends Profile>> extend
     private T topic;
 
 
-    public ChatWithTopic(User createdBy, T about) {
-        super(createdBy);
+    public ChatWithTopic(Profile creator, T about) {
+        super(creator);
         this.topic = about;
     }
 
