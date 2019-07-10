@@ -5,9 +5,9 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.AdminProfile;
-import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
 import com.jm.jobseekerplatform.model.users.AdminUser;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
@@ -164,29 +164,29 @@ public class InitData {
         reviewsSix.add(reviewTwo);
         reviewsSix.add(reviewFive);
 
-        ProfileEmployer profileEmployerOne = employerProfileService.getById(2L);
-        profileEmployerOne.setReviews(reviewsOne);
-        employerProfileService.update(profileEmployerOne);
+        EmployerProfile employerProfileOne = employerProfileService.getById(2L);
+        employerProfileOne.setReviews(reviewsOne);
+        employerProfileService.update(employerProfileOne);
 
-        ProfileEmployer profileEmployerTwo = employerProfileService.getById(3L);
-        profileEmployerTwo.setReviews(reviewsTwo);
-        employerProfileService.update(profileEmployerTwo);
+        EmployerProfile employerProfileTwo = employerProfileService.getById(3L);
+        employerProfileTwo.setReviews(reviewsTwo);
+        employerProfileService.update(employerProfileTwo);
 
-        ProfileEmployer profileEmployerThree = employerProfileService.getById(4L);
-        profileEmployerThree.setReviews(reviewsThree);
-        employerProfileService.update(profileEmployerThree);
+        EmployerProfile employerProfileThree = employerProfileService.getById(4L);
+        employerProfileThree.setReviews(reviewsThree);
+        employerProfileService.update(employerProfileThree);
 
-        ProfileEmployer profileEmployerFour = employerProfileService.getById(5L);
-        profileEmployerFour.setReviews(reviewsFour);
-        employerProfileService.update(profileEmployerFour);
+        EmployerProfile employerProfileFour = employerProfileService.getById(5L);
+        employerProfileFour.setReviews(reviewsFour);
+        employerProfileService.update(employerProfileFour);
 
-        ProfileEmployer profileEmployerFive = employerProfileService.getById(6L);
-        profileEmployerFive.setReviews(reviewsFive);
-        employerProfileService.update(profileEmployerFive);
+        EmployerProfile employerProfileFive = employerProfileService.getById(6L);
+        employerProfileFive.setReviews(reviewsFive);
+        employerProfileService.update(employerProfileFive);
 
-        ProfileEmployer profileEmployerSix = employerProfileService.getById(7L);
-        profileEmployerSix.setReviews(reviewsSix);
-        employerProfileService.update(profileEmployerSix);
+        EmployerProfile employerProfileSix = employerProfileService.getById(7L);
+        employerProfileSix.setReviews(reviewsSix);
+        employerProfileService.update(employerProfileSix);
     }
 
     public void initUserRoles() {
@@ -311,7 +311,7 @@ public class InitData {
 
     public void initEmployerProfiles() {
         BufferedImage image = null;
-        ProfileEmployer profileEmployer;
+        EmployerProfile employerProfile;
 
         try {
             URL url = new URL("https://wiki.godville.net/images/2/25/%D0%A0%D0%BE%D0%B3%D0%B0_%D0%B8_%D0%9A%D0%BE%D0%BF%D1%8B%D1%82%D0%B0_%28%D0%BB%D0%BE%D0%B3%D0%BE%29.png");
@@ -334,9 +334,9 @@ public class InitData {
                 "- Официальное оформление по ТК РФ. \n" +
                 "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ";
 
-        profileEmployer = new ProfileEmployer("Рога и копыта", "www.roga.ru", description, imageService.resizeLogoEmployer(image));
-        profileEmployer.setState(State.ACCESS);
-        employerProfileService.add(profileEmployer);
+        employerProfile = new EmployerProfile("Рога и копыта", "www.roga.ru", description, imageService.resizeLogoEmployer(image));
+        employerProfile.setState(State.ACCESS);
+        employerProfileService.add(employerProfile);
 
         try {
             URL url = new URL("https://0oq.ru/reshebnik-onlajn/ru.onlinemschool.com/pictures/vector/points-to-vector.png");
@@ -344,15 +344,15 @@ public class InitData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        profileEmployer = new ProfileEmployer("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image));
-        profileEmployer.setState(State.ACCESS);
-        employerProfileService.add(profileEmployer);
+        employerProfile = new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image));
+        employerProfile.setState(State.ACCESS);
+        employerProfileService.add(employerProfile);
 
         for (Long i = 0L; i <= 3L; i++) {
             image = getBufferedImage();
-            profileEmployer = new ProfileEmployer(faker.company().name(), faker.company().url(), faker.company().bs(), imageService.resizeLogoEmployer(image));
-            profileEmployer.setState(State.ACCESS);
-            employerProfileService.add(profileEmployer);
+            employerProfile = new EmployerProfile(faker.company().name(), faker.company().url(), faker.company().bs(), imageService.resizeLogoEmployer(image));
+            employerProfile.setState(State.ACCESS);
+            employerProfileService.add(employerProfile);
         }
     }
 
@@ -442,7 +442,7 @@ public class InitData {
             }
 
             Vacancy randomVacancy = vacancyService.getById(rnd.nextInt(30) + 1L);
-            Profile chatCreator = getRandomProfileExceptWithId(randomVacancy.getProfileEmployer().getId());
+            Profile chatCreator = getRandomProfileExceptWithId(randomVacancy.getEmployerProfile().getId());
 
             Chat chat = new ChatWithTopicVacancy(chatCreator, randomVacancy);
             chat.setChatMessages(messages);
@@ -469,8 +469,8 @@ public class InitData {
         return randomProfile;
     }
 
-    private ProfileEmployer getRandomEmployerProfile() {
-        List<ProfileEmployer> all = employerProfileService.getAll();
+    private EmployerProfile getRandomEmployerProfile() {
+        List<EmployerProfile> all = employerProfileService.getAll();
         return all.get(rnd.nextInt(all.size()));
     }
 }

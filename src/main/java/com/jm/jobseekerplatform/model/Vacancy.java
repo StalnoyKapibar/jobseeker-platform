@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "vacancies")
-public class Vacancy implements Serializable, CreatedByProfileEmployer {
+public class Vacancy implements Serializable, CreatedByEmployerProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class Vacancy implements Serializable, CreatedByProfileEmployer {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "employer_profile_id")
-    private ProfileEmployer profileEmployer;
+    private EmployerProfile employerProfile;
 
     @Column(name = "headline", nullable = false)
     private String headline;
@@ -60,8 +60,8 @@ public class Vacancy implements Serializable, CreatedByProfileEmployer {
     public Vacancy() {
     }
 
-    public Vacancy(ProfileEmployer profileEmployer, String headline, String city, Boolean remote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags, Point coordinates) {
-        this.profileEmployer = profileEmployer;
+    public Vacancy(EmployerProfile employerProfile, String headline, String city, Boolean remote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags, Point coordinates) {
+        this.employerProfile = employerProfile;
         this.headline = headline;
         this.city = city;
         this.remote = remote;
@@ -84,18 +84,18 @@ public class Vacancy implements Serializable, CreatedByProfileEmployer {
 
     @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
-    public ProfileEmployer getProfileEmployer() {
-        return profileEmployer;
+    public EmployerProfile getEmployerProfile() {
+        return employerProfile;
     }
 
-    public void setProfileEmployer(ProfileEmployer profileEmployer) {
-        this.profileEmployer = profileEmployer;
+    public void setEmployerProfile(EmployerProfile employerProfile) {
+        this.employerProfile = employerProfile;
     }
 
     @JsonIgnore
     @Override
-    public ProfileEmployer getCreator() {
-        return profileEmployer;
+    public EmployerProfile getCreator() {
+        return employerProfile;
     }
 
     public String getHeadline() {

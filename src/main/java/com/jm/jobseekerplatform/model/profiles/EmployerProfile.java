@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class ProfileEmployer extends Profile implements Serializable {
+public class EmployerProfile extends Profile implements Serializable {
 
     @Column(name = "companyname")
     private String companyName;
@@ -32,10 +32,10 @@ public class ProfileEmployer extends Profile implements Serializable {
     @Column(name = "expiry_block")
     private Date expiryBlock;
 
-    public ProfileEmployer() {
+    public EmployerProfile() {
     }
 
-    public ProfileEmployer(String companyName, String website, String description, byte[] logo) {
+    public EmployerProfile(String companyName, String website, String description, byte[] logo) {
         super();
         this.companyName = companyName;
         this.website = website;

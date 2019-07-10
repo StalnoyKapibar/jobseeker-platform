@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
-import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
@@ -44,13 +44,13 @@ public class EmployerController {
     @RequestMapping("/employer/{employerProfileId}")
     public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {
         boolean isOwner = false;
-        ProfileEmployer profileEmployer = employerProfileService.getById(employerProfileId);
+        EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
 
-        model.addAttribute("eprofile", profileEmployer);
+        model.addAttribute("employerProfile", employerProfile);
 
-        Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(profileEmployer.getId());
+        Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
         model.addAttribute("vacancies", vacancies);
-        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(profileEmployer.getLogo()));
+        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
 
         if (authentication != null && authentication.isAuthenticated()) {
             Long userId = ((User) authentication.getPrincipal()).getId();
@@ -65,8 +65,8 @@ public class EmployerController {
                     model.addAttribute("seekerProfileId", seekerUser.getProfile().getId());
                 }
             }
-            if (!profileEmployer.getReviews().isEmpty()) {
-                Set<EmployerReviews> employerReviews = profileEmployer.getReviews();
+            if (!employerProfile.getReviews().isEmpty()) {
+                Set<EmployerReviews> employerReviews = employerProfile.getReviews();
                 if (employerReviews.size() < 2) {
                     model.addAttribute("minReviewsEvaluation", employerReviews.iterator().next());
                 } else if (employerReviews.size() >= 2) {

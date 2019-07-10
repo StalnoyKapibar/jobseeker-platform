@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
-                            <span id="EPId" th:text="${eprofile.id}" hidden></span>
+                            <span id="EPId" th:text="${employerProfile.id}" hidden></span>
                             <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown">
                                 Блокировать<span
                                     class="caret"></span></button>
@@ -36,8 +36,8 @@
                                 <li><a onclick="blockEmployerProfile(0)">Бессрочно</a></li>
                             </ul>
                         </div>
-                        <h1><span id="EPcompanyName" th:text="${eprofile.companyName}"></span></h1>
-                        <h2><a th:href="@{'http://' + ${eprofile.website}}" th:text="${eprofile.website}"></a></h2>
+                        <h1><span id="EPcompanyName" th:text="${employerProfile.companyName}"></span></h1>
+                        <h2><a th:href="@{'http://' + ${employerProfile.website}}" th:text="${employerProfile.website}"></a></h2>
                     </div>
                     <div class="col-sm-3" align="center">
                         <img th:src="@{'data:image/png;base64,' + ${logoimg}}" class="img-rounded"
@@ -50,7 +50,7 @@
                     <div class="col-sm-5">
                         <span>О нас:</span><br/>
                         <div class="well well-sm">
-                            <span th:text="${eprofile.description}"></span>
+                            <span th:text="${employerProfile.description}"></span>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -74,7 +74,7 @@
                             <h5><span>Отзывы о компании: </span>
                                 <input name="reviews-fix" type="number" class="rating fixed-rating"
                                        readonly="true" data-size="xs" data-rtl="false"
-                                       th:value="${eprofile.getAverageRating()}">
+                                       th:value="${employerProfile.getAverageRating()}">
                             </h5>
                             <div th:if="${reviewStatus == false}">
                                 <p>Еще нет отзывов</p>
@@ -105,7 +105,7 @@
                                                 data-target="#reviewsModal">Оставить отзыв
                                         </button>
                                     </div>
-                                    <div class="col-sm-6" th:if="${eprofile.getReviews().size() > 2}">
+                                    <div class="col-sm-6" th:if="${employerProfile.getReviews().size() > 2}">
                                         <button type="button" class="btn btn-primary btn-sm btn-block"
                                                 data-toggle="modal"
                                                 data-target="#allReviewsModal">Все отзывы
@@ -126,7 +126,7 @@
         <!-- Modal content-->
         <div class="modal-content form-group">
             <div class="modal-body">
-                <div th:each="review : ${eprofile.getReviews()}" class="panel panel-default">
+                <div th:each="review : ${employerProfile.getReviews()}" class="panel panel-default">
                     <a th:href="@{'/seeker/' + ${review.profileSeeker.id}}"
                        th:text="${review.profileSeeker.name}"></a> <span
                         th:text="${#dates.format(review.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
@@ -148,7 +148,7 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">Оцените</h4>
                 <input id="review_evaluation"
-                       th:attr="data-employer-profile-id=${eprofile.id}, data-seeker-profile-id=${seekerProfileId}"
+                       th:attr="data-employer-profile-id=${employerProfile.id}, data-seeker-profile-id=${seekerProfileId}"
                        name="input-name" type="number" class="rating" min=0 max=5 step=1 data-size="lg">
             </div>
             <div class="modal-body">
@@ -171,7 +171,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h2 class="modal-title" th:text="'Вакансия в компании ' + ${eprofile.companyName}"></h2>
+                <h2 class="modal-title" th:text="'Вакансия в компании ' + ${employerProfile.companyName}"></h2>
             </div>
             <div class="modal-body">
                 <h3><span id="VMTags"></span><br></h3>

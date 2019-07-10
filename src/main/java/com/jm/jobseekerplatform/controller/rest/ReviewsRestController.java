@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.EmployerReviews;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.EmployerReviewsService;
@@ -32,7 +32,7 @@ public class ReviewsRestController {
     @ResponseBody
     public ResponseEntity<String> addNewReviews(@RequestBody Map<String, Object> map) {
         try {
-            ProfileEmployer employer = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
+            EmployerProfile employer = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
             EmployerReviews reviews = employer.getReviews().stream()
                     .filter(employerReviews -> employerReviews.getProfileSeeker().getId() == ((Number) map.get("seekerProfiles_id")).longValue())
                     .findFirst().orElse(null);
@@ -71,7 +71,7 @@ public class ReviewsRestController {
     @ResponseBody
     public ResponseEntity<EmployerReviews> findReviewBySeekerIdAndEmloerIdForEdit(@RequestBody Map<String, Object> map) {
         try {
-            ProfileEmployer employer = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
+            EmployerProfile employer = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
             Set<EmployerReviews> reviewsSet = employer.getReviews();
             EmployerReviews reviews = reviewsSet.stream().filter(employerReviews -> employerReviews.getProfileSeeker().getId() == ((Number) map.get("seekerProfiles_id")).longValue()).findFirst().orElse(null);
             if (reviews != null) return new ResponseEntity<>(reviews, HttpStatus.OK);

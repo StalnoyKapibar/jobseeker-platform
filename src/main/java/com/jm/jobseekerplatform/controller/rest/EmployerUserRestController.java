@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
-import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/employer")
-public class EmployerRestController {
+public class EmployerUserRestController {
     @Autowired
     private EmployerUserService employerUserService;
 
@@ -24,7 +24,7 @@ public class EmployerRestController {
     public @ResponseBody
     ResponseEntity updateEmployer(@RequestBody EmployerUser employerUser) {
         Long id = employerUser.getProfile().getId();
-        ProfileEmployer tmpEmployer = employerProfileService.getById(id);
+        EmployerProfile tmpEmployer = employerProfileService.getById(id);
 
         employerUser.getProfile().setLogo(tmpEmployer.getLogo());
         employerUser.getProfile().setReviews(tmpEmployer.getReviews());
@@ -37,7 +37,7 @@ public class EmployerRestController {
 
     @RequestMapping(value = "/editLogo", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<ProfileEmployer> updateEmployerLogo(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("id") String id) {
+    ResponseEntity<EmployerProfile> updateEmployerLogo(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("id") String id) {
         EmployerUser employerUser = employerUserService.getById(Long.parseLong(id));
         if (!file.isEmpty()) {
             try {
@@ -51,14 +51,14 @@ public class EmployerRestController {
         return new ResponseEntity<>(employerUser.getProfile(), HttpStatus.OK);
     }
 
-    @GetMapping("/{employerId}")
-    public ResponseEntity<ProfileEmployer> getEmployerById(@PathVariable Long employerId) {
-        return new ResponseEntity<>(employerProfileService.getById(employerId), HttpStatus.OK);
+    @GetMapping("/{employerProfileId}")
+    public ResponseEntity<EmployerProfile> getEmployerProfileById(@PathVariable Long employerProfileId) {
+        return new ResponseEntity<>(employerProfileService.getById(employerProfileId), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/delete/{employerId}", method = RequestMethod.GET)
-    public ResponseEntity deleteEmployerById(@PathVariable Long employerId) {
-        employerUserService.deleteById(employerId);
+    @RequestMapping(value = "/delete/{employerUserId}", method = RequestMethod.GET)
+    public ResponseEntity deleteEmployerUserById(@PathVariable Long employerUserId) {
+        employerUserService.deleteById(employerUserId);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

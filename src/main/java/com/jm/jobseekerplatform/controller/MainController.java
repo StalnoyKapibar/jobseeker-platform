@@ -137,7 +137,7 @@ public class MainController {
         return "chat";
     }
 
-    @RequestMapping("/chat/vacancy/{vacancyId}/creator/{creatorId}") //todo
+    @RequestMapping("/chat/vacancy/{vacancyId:\\d+}/creator/{creatorId:\\d+}") //todo
     public String getChatByCreatorAndVacancy(@PathVariable("vacancyId") String chatId, @PathVariable("creatorId") String creatorId, Authentication authentication, Model model) {
 
 //        chat
@@ -162,8 +162,8 @@ public class MainController {
 
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("vacancyFromServer", vacancy);
-        model.addAttribute("EmployerProfileFromServer", vacancy.getProfileEmployer());
-        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getProfileEmployer().getLogo()));
+        model.addAttribute("EmployerProfileFromServer", vacancy.getEmployerProfile());
+        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getEmployerProfile().getLogo()));
 
         return "vacancy";
     }
