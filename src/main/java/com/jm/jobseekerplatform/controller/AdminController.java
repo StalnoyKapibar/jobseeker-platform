@@ -87,7 +87,7 @@ public class AdminController {
         EmployerUser employerUser = employerUserService.getById(userEmployerId);
 
         model.addAttribute("employerUser", employerUser);
-        model.addAttribute("profileEmployer", employerUser.getProfile());
+        model.addAttribute("employerProfile", employerUser.getProfile());
         model.addAttribute("vacancies", vacancyService.getAllByEmployerProfileId(employerUser.getProfile().getId()));
         model.addAttribute("photoimg", Base64.getEncoder().encodeToString(employerUser.getProfile().getLogo()));
 
@@ -128,7 +128,7 @@ public class AdminController {
         SeekerUser seekerUser = seekerUserService.getById(seekerUserId);
 
         model.addAttribute("seekerUser", seekerUser);
-        model.addAttribute("profileSeeker", seekerUser.getProfile());
+        model.addAttribute("seekerProfile", seekerUser.getProfile());
         model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerUser.getProfile().getPhoto()));
 
         return "admin/admin_seeker_edit";

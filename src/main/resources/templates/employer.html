@@ -80,8 +80,8 @@
                                 <p>Еще нет отзывов</p>
                             </div>
                             <div th:if="${maxReviewsEvaluation != null}" class="panel panel-default">
-                                <a th:href="@{'/seeker/' + ${maxReviewsEvaluation.profileSeeker.id}}"
-                                   th:text="${maxReviewsEvaluation.profileSeeker.name}"></a> <span
+                                <a th:href="@{'/seeker/' + ${maxReviewsEvaluation.seekerProfile.id}}"
+                                   th:text="${maxReviewsEvaluation.seekerProfile.name}"></a> <span
                                     th:text="${#dates.format(maxReviewsEvaluation.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
                                 <input name="reviews-fix" type="number" class="rating fixed-rating"
                                        readonly="true" data-size="xs" data-rtl="false"
@@ -89,8 +89,8 @@
                                 <p th:text="${maxReviewsEvaluation.reviews}"></p>
                             </div>
                             <div th:if="${minReviewsEvaluation != null}" class="panel panel-default">
-                                <a th:href="@{'/seeker/' + ${minReviewsEvaluation.profileSeeker.id}}"
-                                   th:text="${minReviewsEvaluation.profileSeeker.name}"></a> <span
+                                <a th:href="@{'/seeker/' + ${minReviewsEvaluation.seekerProfile.id}}"
+                                   th:text="${minReviewsEvaluation.seekerProfile.name}"></a> <span
                                     th:text="${#dates.format(minReviewsEvaluation.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
                                 <input name="reviews-fix" type="number" class="rating fixed-rating"
                                        readonly="true" data-size="xs" data-rtl="false"
@@ -127,8 +127,8 @@
         <div class="modal-content form-group">
             <div class="modal-body">
                 <div th:each="review : ${employerProfile.getReviews()}" class="panel panel-default">
-                    <a th:href="@{'/seeker/' + ${review.profileSeeker.id}}"
-                       th:text="${review.profileSeeker.name}"></a> <span
+                    <a th:href="@{'/seeker/' + ${review.seekerProfile.id}}"
+                       th:text="${review.seekerProfile.name}"></a> <span
                         th:text="${#dates.format(review.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
                     <input name="reviews-fix" type="number" class="rating fixed-rating"
                            readonly="true" data-size="xs" data-rtl="false"

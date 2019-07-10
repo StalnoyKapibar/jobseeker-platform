@@ -12,7 +12,7 @@ public class ChatService extends AbstractService<Chat> {
 
     public void addChatMessage(Long chatId, ChatMessage chatMessage) {
         Chat chat = getById(chatId);
-        chat.getChatMessages().add(chatMessage); //todo грузятся все сообщения чтобы добавить одно???
+        chat.getChatMessages().add(chatMessage); //todo (Nick Dolgopolov) грузятся все сообщения чтобы добавить одно???
         update(chat);
     }
 }

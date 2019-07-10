@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
@@ -23,11 +23,11 @@ public class SeekerUserRestController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity updateSeekerUser(@RequestBody SeekerUser seekerUser) {
-        ProfileSeeker profileSeeker = seekerProfileService.getById(seekerUser.getProfile().getId());
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerUser.getProfile().getId());
 
-        seekerUser.getProfile().setPhoto(profileSeeker.getPhoto());
-        seekerUser.getProfile().setTags(profileSeeker.getTags());
-        seekerUser.getProfile().setPortfolios(profileSeeker.getPortfolios());
+        seekerUser.getProfile().setPhoto(seekerProfile.getPhoto());
+        seekerUser.getProfile().setTags(seekerProfile.getTags());
+        seekerUser.getProfile().setPortfolios(seekerProfile.getPortfolios());
 
         seekerProfileService.update(seekerUser.getProfile());
         seekerUserService.update(seekerUser);
@@ -37,7 +37,7 @@ public class SeekerUserRestController {
 
     @RequestMapping(value = "/editPhoto", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<ProfileSeeker> updateSeekerPhoto(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("seekerUserId") String seekerUserId) {
+    ResponseEntity<SeekerProfile> updateSeekerPhoto(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("seekerUserId") String seekerUserId) {
         SeekerUser seekerUser = seekerUserService.getById(Long.parseLong(seekerUserId));
         if (!file.isEmpty()) {
             try {
@@ -52,7 +52,7 @@ public class SeekerUserRestController {
     }
 
 //    @RequestMapping(value = "/{seekerProfileId}", method = RequestMethod.GET)
-//    public ResponseEntity<ProfileSeeker> getSeekerProfileById(@PathVariable Long seekerProfileId) {
+//    public ResponseEntity<SeekerProfile> getSeekerProfileById(@PathVariable Long seekerProfileId) {
 //        return new ResponseEntity<>(seekerProfileService.getById(seekerProfileId), HttpStatus.OK);
 //    }
 

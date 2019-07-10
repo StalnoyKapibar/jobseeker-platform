@@ -32,7 +32,7 @@ public class ChatRestController {
     @Autowired
     ChatService chatService;
 
-    @GetMapping("/last") //todo
+    @GetMapping("/last") //todo (Nick Dolgopolov)
     public HttpEntity getAllLastMessages(@PathVariable("chatId") Long id) { //todo Warning:(36, 57) Cannot resolve path variable 'chatId' in request mapping
         List<MessageWithDateDTO> lastMessages = chatMessageService.getAllLastMessages();
         Collections.sort(lastMessages);
@@ -42,7 +42,7 @@ public class ChatRestController {
     @GetMapping("all")
     public HttpEntity getAllChats() {
         List<Chat> chats = chatService.getAll();
-        //Collections.sort(chats, (o1, o2) -> ...); //todo
+        //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov)
         return new ResponseEntity(chats, HttpStatus.OK);
     }
 
@@ -57,22 +57,22 @@ public class ChatRestController {
     @PutMapping("update_message")
     public HttpEntity updateMessage(@RequestBody MessageDTO message) {
         ChatMessage chatMessage = chatMessageService.getById(message.getId());
-        chatMessage.setRead(message.isRead()); //todo менять всё остальное или переименовать метод
+        chatMessage.setRead(message.isRead()); //todo (Nick Dolgopolov) менять всё остальное или переименовать метод
         chatMessageService.update(chatMessage);
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
-//    @GetMapping("count_not_read_messages/admin") //todo
+//    @GetMapping("count_not_read_messages/admin") //todo (Nick Dolgopolov)
 //    public HttpEntity getCountNotReadMessagesForAdmin() {
 //        int count = chatMessageService.getNotReadMessages().size();
 //        return new ResponseEntity(count, HttpStatus.OK);
 //    }
 //
-//    @GetMapping("count_not_read_messages/{chatId}") //todo
+//    @GetMapping("count_not_read_messages/{chatId}") //todo (Nick Dolgopolov)
 //    public HttpEntity getCountNotReadMessagesForUser(@PathVariable("chatId") Long chatId) {
 //        List<ChatMessage> list = new ArrayList<>(chatService.getById(chatId).getChatMessages());
-//        Long count = list.stream().filter(a -> a.getAuthor().getAuthority().equals(userRoleService.findByAuthority("ROLE_ADMIN"))).filter(a -> a.isRead() == false).count(); //todo переделать на запрос к БД
+//        Long count = list.stream().filter(a -> a.getAuthor().getAuthority().equals(userRoleService.findByAuthority("ROLE_ADMIN"))).filter(a -> a.isRead() == false).count(); //todo (Nick Dolgopolov) переделать на запрос к БД
 //
 //        return new ResponseEntity(count, HttpStatus.OK);
 //    }

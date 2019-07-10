@@ -137,7 +137,7 @@ public class MainController {
         return "chat";
     }
 
-    @RequestMapping("/chat/vacancy/{vacancyId:\\d+}/creator/{creatorId:\\d+}") //todo
+    @RequestMapping("/chat/vacancy/{vacancyId:\\d+}/creator/{creatorId:\\d+}") //todo (Nick Dolgopolov)
     public String getChatByCreatorAndVacancy(@PathVariable("vacancyId") String chatId, @PathVariable("creatorId") String creatorId, Authentication authentication, Model model) {
 
 //        chat

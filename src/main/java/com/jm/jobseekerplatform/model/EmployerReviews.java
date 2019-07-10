@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.model;
 
-import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,17 +25,17 @@ public class EmployerReviews implements Serializable, Comparable<EmployerReviews
     private Integer evaluation;
 
     @OneToOne(cascade=CascadeType.REFRESH, fetch=FetchType.EAGER)
-    @JoinColumn(name="profileSeeker")
-    private ProfileSeeker profileSeeker;
+    @JoinColumn(name="seekerProfile")
+    private SeekerProfile seekerProfile;
 
     public EmployerReviews() {
     }
 
-    public EmployerReviews(String reviews, Date dateReviews, Integer evaluation, ProfileSeeker profileSeeker) {
+    public EmployerReviews(String reviews, Date dateReviews, Integer evaluation, SeekerProfile seekerProfile) {
         this.reviews = reviews;
         this.dateReviews = dateReviews;
         this.evaluation = evaluation;
-        this.profileSeeker = profileSeeker;
+        this.seekerProfile = seekerProfile;
     }
 
     public Long getId() {
@@ -70,12 +70,12 @@ public class EmployerReviews implements Serializable, Comparable<EmployerReviews
         this.evaluation = evaluation;
     }
 
-    public ProfileSeeker getProfileSeeker() {
-        return profileSeeker;
+    public SeekerProfile getSeekerProfile() {
+        return seekerProfile;
     }
 
-    public void setProfileSeeker(ProfileSeeker profileSeeker) {
-        this.profileSeeker = profileSeeker;
+    public void setSeekerProfile(SeekerProfile seekerProfile) {
+        this.seekerProfile = seekerProfile;
     }
 
     @Override
@@ -87,12 +87,12 @@ public class EmployerReviews implements Serializable, Comparable<EmployerReviews
                 Objects.equals(reviews, that.reviews) &&
                 Objects.equals(dateReviews, that.dateReviews) &&
                 Objects.equals(evaluation, that.evaluation) &&
-                Objects.equals(profileSeeker, that.profileSeeker);
+                Objects.equals(seekerProfile, that.seekerProfile);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, reviews, dateReviews, evaluation, profileSeeker);
+        return Objects.hash(id, reviews, dateReviews, evaluation, seekerProfile);
     }
 
     @Override

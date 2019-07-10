@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-public class ProfileSeeker extends Profile implements Serializable {
+public class SeekerProfile extends Profile implements Serializable {
 
     @Column(name = "name")
     private String name;
@@ -33,10 +33,10 @@ public class ProfileSeeker extends Profile implements Serializable {
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Portfolio> portfolios;
 
-    public ProfileSeeker() {
+    public SeekerProfile() {
     }
 
-    public ProfileSeeker(String name, String patronymic, String surname, String description, byte[] photo, Set<Tag> tags, Set<Portfolio> portfolios) {
+    public SeekerProfile(String name, String patronymic, String surname, String description, byte[] photo, Set<Tag> tags, Set<Portfolio> portfolios) {
         this.name = name;
         this.patronymic = patronymic;
         this.surname = surname;

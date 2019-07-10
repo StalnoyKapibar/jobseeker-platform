@@ -35,7 +35,7 @@ public class ReviewsRestController {
             EmployerProfile employerProfile = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
 
             EmployerReviews reviews = employerProfile.getReviews().stream()
-                    .filter(employerReviews -> employerReviews.getProfileSeeker().getId() == ((Number) map.get("seekerProfiles_id")).longValue())
+                    .filter(employerReviews -> employerReviews.getSeekerProfile().getId() == ((Number) map.get("seekerProfiles_id")).longValue())
                     .findFirst().orElse(null);
 
             if (reviews != null) {
@@ -48,7 +48,7 @@ public class ReviewsRestController {
                 newReview.setReviews(String.valueOf(map.get("reviews")));
                 newReview.setDateReviews(new Date());
                 newReview.setEvaluation(Integer.parseInt(String.valueOf(map.get("evaluation"))));
-                newReview.setProfileSeeker((seekerProfileService.getById(((Number) map.get("seekerProfiles_id")).longValue())));
+                newReview.setSeekerProfile((seekerProfileService.getById(((Number) map.get("seekerProfiles_id")).longValue())));
                 employerProfile.addNewReview(newReview);
                 employerProfileService.update(employerProfile);
                 return new ResponseEntity<String>("{\"status\": \"Review added\"}", HttpStatus.OK);
@@ -75,7 +75,7 @@ public class ReviewsRestController {
         try {
             EmployerProfile employerProfile = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
             Set<EmployerReviews> reviewsSet = employerProfile.getReviews();
-            EmployerReviews reviews = reviewsSet.stream().filter(employerReviews -> employerReviews.getProfileSeeker().getId() == ((Number) map.get("seekerProfiles_id")).longValue()).findFirst().orElse(null);
+            EmployerReviews reviews = reviewsSet.stream().filter(employerReviews -> employerReviews.getSeekerProfile().getId() == ((Number) map.get("seekerProfiles_id")).longValue()).findFirst().orElse(null);
             if (reviews != null) return new ResponseEntity<>(reviews, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

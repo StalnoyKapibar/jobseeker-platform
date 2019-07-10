@@ -74,38 +74,38 @@
                     </div>
                     <div class="form-group">
                         <label>Seeker profile ID : </label> <input class="form-control" type="text"
-                                                                   th:value="${profileSeeker.id}" name="profId"
+                                                                   th:value="${seekerProfile.id}" name="profId"
                                                                    readonly>
                     </div>
                     <div class="form-group">
                         <label>Profile name : </label> <input class="form-control" type="text"
-                                                              th:value="${profileSeeker.name}" name="name">
+                                                              th:value="${seekerProfile.name}" name="name">
                     </div>
                     <div class="form-group">
                         <label>Profile patronymic : </label><input class="form-control" type="text"
-                                                                   th:value="${profileSeeker.patronymic}"
+                                                                   th:value="${seekerProfile.patronymic}"
                                                                    name="patronymic">
                     </div>
                     <div class="form-group">
                         <label>Profile surname : </label><input class="form-control" type="text"
-                                                                th:value="${profileSeeker.surname}"
+                                                                th:value="${seekerProfile.surname}"
                                                                 name="surname">
                     </div>
                     <div class="form-group">
                         <label>Profile description : </label><input class="form-control" type="text"
-                                                                    th:value="${profileSeeker.description}"
+                                                                    th:value="${seekerProfile.description}"
                                                                     name="description">
                     </div>
                     <div class="form-group">
                         <label>Profile tags : </label>
                         <select id="seekerTags" name="seekerTags">
-                            <option th:each="tag : ${profileSeeker.tags}" th:value="${tag.name}"
+                            <option th:each="tag : ${seekerProfile.tags}" th:value="${tag.name}"
                                     th:text="${tag.name}"
                                     th:selected="${tag==0}"></option>
                         </select>
                         <label>Profile portfolios : </label>
                         <select id="seekerPortfolios" name="seekerPortfolios">
-                            <option th:each="portfolio : ${profileSeeker.portfolios}"
+                            <option th:each="portfolio : ${seekerProfile.portfolios}"
                                     th:value="${portfolio.projectName}"
                                     th:text="${portfolio.projectName}"
                                     th:selected="${portfolio==0}"></option>
@@ -124,5 +124,6 @@
 <div class="container-fluid" layout:fragment="content-script">
     <script src="/js/admin_seekers.js"></script>
 </div>
+
 </body>
 </html>

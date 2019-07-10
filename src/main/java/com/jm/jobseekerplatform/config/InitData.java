@@ -8,7 +8,7 @@ import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.AdminProfile;
-import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.AdminUser;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
@@ -107,36 +107,36 @@ public class InitData {
         EmployerReviews reviewOne = new EmployerReviews();
         reviewOne.setDateReviews(new Date());
         reviewOne.setEvaluation(4);
-        reviewOne.setProfileSeeker(seekerProfileService.getById(8L));
+        reviewOne.setSeekerProfile(seekerProfileService.getById(8L));
         reviewOne.setReviews("Хорошая контора. Отличный коллектив, только директор придурковатый");
 
         EmployerReviews reviewTwo = new EmployerReviews();
         reviewTwo.setDateReviews(new Date());
-        reviewTwo.setProfileSeeker(seekerProfileService.getById(8L));
+        reviewTwo.setSeekerProfile(seekerProfileService.getById(8L));
         reviewTwo.setEvaluation(1);
         reviewTwo.setReviews("Неадекватное руководство. Уволился через месяц");
 
         EmployerReviews reviewThree = new EmployerReviews();
         reviewThree.setDateReviews(new Date());
-        reviewThree.setProfileSeeker(seekerProfileService.getById(9L));
+        reviewThree.setSeekerProfile(seekerProfileService.getById(9L));
         reviewThree.setEvaluation(4);
         reviewThree.setReviews("Очень низкие зарплаты, уволился через полгода");
 
         EmployerReviews reviewFour = new EmployerReviews();
         reviewFour.setDateReviews(new Date());
-        reviewFour.setProfileSeeker(seekerProfileService.getById(9L));
+        reviewFour.setSeekerProfile(seekerProfileService.getById(9L));
         reviewFour.setEvaluation(1);
         reviewFour.setReviews("Неадекватное руководство. Уволился через месяц");
 
         EmployerReviews reviewFive = new EmployerReviews();
         reviewFive.setDateReviews(new Date());
-        reviewFive.setProfileSeeker(seekerProfileService.getById(10L));
+        reviewFive.setSeekerProfile(seekerProfileService.getById(10L));
         reviewFive.setEvaluation(4);
         reviewFive.setReviews("Хорошая контора. Отличный коллектив");
 
         EmployerReviews reviewSix = new EmployerReviews();
         reviewSix.setDateReviews(new Date());
-        reviewSix.setProfileSeeker(seekerProfileService.getById(10L));
+        reviewSix.setSeekerProfile(seekerProfileService.getById(10L));
         reviewSix.setEvaluation(1);
         reviewSix.setReviews("Все нравилось,но уволился через месяц");
 
@@ -408,17 +408,17 @@ public class InitData {
             e.printStackTrace();
         }
 
-        seekerProfileService.add(new ProfileSeeker("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L), portfolios));
+        seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L), portfolios));
 
         portfolios.clear();
         portfolios.add(portfolioService.getById(3L));
         portfolios.add(portfolioService.getById(4L));
-        seekerProfileService.add(new ProfileSeeker("Иван", "Игоревич", "Петров", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios));
+        seekerProfileService.add(new SeekerProfile("Иван", "Игоревич", "Петров", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios));
 
         portfolios.clear();
         portfolios.add(portfolioService.getById(5L));
         portfolios.add(portfolioService.getById(6L));
-        seekerProfileService.add(new ProfileSeeker("Семен", "Александрович", "Иванов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L), portfolios));
+        seekerProfileService.add(new SeekerProfile("Семен", "Александрович", "Иванов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L), portfolios));
     }
 
     private Set<Tag> randomTags(Long position) {

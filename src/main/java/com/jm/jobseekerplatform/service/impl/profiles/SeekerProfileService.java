@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.service.impl.profiles;
 
 import com.jm.jobseekerplatform.dao.impl.profiles.SeekerProfileDAO;
-import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +11,12 @@ import java.util.*;
 
 @Service("seekerProfileService")
 @Transactional
-public class SeekerProfileService extends AbstractService<ProfileSeeker> {
+public class SeekerProfileService extends AbstractService<SeekerProfile> {
 
     @Autowired
     private SeekerProfileDAO dao;
 
-    public Set<ProfileSeeker> getByTags(Set<Tag> tags, int limit) {
+    public Set<SeekerProfile> getByTags(Set<Tag> tags, int limit) {
 
         return dao.getByTags(tags, limit);
     }

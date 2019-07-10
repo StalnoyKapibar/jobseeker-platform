@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.controller;
 
-import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,9 +18,9 @@ public class SeekerController {
 
     @RequestMapping("/seeker/{seekerProfileId}")
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
-        ProfileSeeker profileSeeker = seekerProfileService.getById(seekerProfileId);
-        model.addAttribute("sprofile", profileSeeker);
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(profileSeeker.getPhoto()));
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        model.addAttribute("seekerProfile", seekerProfile);
+        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerProfile.getPhoto()));
         return "seeker";
     }
 }

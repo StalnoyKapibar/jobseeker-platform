@@ -7,7 +7,7 @@ var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
 
 
-function count_not_read_messages(url) { //todo
+function count_not_read_messages(url) { //todo (Nick Dolgopolov)
     // $.ajax({
     //     url: "/api/chats/count_not_read_messages/" + url,
     //     type: "GET",
