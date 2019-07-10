@@ -45,6 +45,6 @@ public abstract class AbstractDAO<T extends Serializable> {
 
     public void deleteById(Long id) {
         T entity = getById(id);
-        entityManager.remove(entity);
+        delete(entity);
     }
 }

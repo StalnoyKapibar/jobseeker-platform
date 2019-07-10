@@ -62,7 +62,7 @@ $('#editSeekerForm').click(function (event) {
         'authority': authority
     };
 
-    var seekerProfile = {
+    var profile = {
         'id': profId,
         'name': name,
         'patronymic': patronymic,
@@ -78,7 +78,7 @@ $('#editSeekerForm').click(function (event) {
         'authority': userAuthority,
         'enabled': enabled,
         'confirm': confirm,
-        'seekerProfile': seekerProfile
+        'profile': profile
     };
 
     $.ajax({

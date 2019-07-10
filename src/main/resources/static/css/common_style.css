@@ -76,9 +76,26 @@ li {
     background-color: white;
 }
 
-/*
+#search_advice_wrapper{
+    display:none;
+    width: 325px;
+    background-color: white;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    position: absolute;
+    z-index: 100;
+}
 
-.form-search {
+#search_advice_wrapper .advice_variant{
+    cursor: pointer;
+    padding: 5px;
+    text-align: left;
+}
+#search_advice_wrapper .advice_variant:hover{
+    background-color:lightgray;
+}
+
+/*.form-search {
     width: 80%;
     height: 60px;
     margin-top: 5%;

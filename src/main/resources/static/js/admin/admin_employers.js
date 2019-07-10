@@ -61,7 +61,7 @@ $('#editEmployerForm').click(function (event) {
     };
 
 
-    var employerProfile = {
+    var profile = {
         'id': profId,
         'companyName': companyName,
         'website': website,
@@ -76,7 +76,7 @@ $('#editEmployerForm').click(function (event) {
         'authority': userAuthority,
         'enabled': enabled,
         'confirm': confirm,
-        'employerProfile': employerProfile
+        'profile': profile
     };
 
     $.ajax({

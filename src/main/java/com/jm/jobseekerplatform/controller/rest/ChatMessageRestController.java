@@ -3,7 +3,6 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.dto.LastMessageDTO;
 import com.jm.jobseekerplatform.dto.MessageDTO;
 import com.jm.jobseekerplatform.model.ChatMessage;
-import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.service.impl.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
