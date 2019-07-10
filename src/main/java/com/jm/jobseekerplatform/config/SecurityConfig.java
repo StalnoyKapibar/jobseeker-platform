@@ -72,6 +72,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true);
 
         http.authorizeRequests()
+                // делаем страницу регистрации недоступной для авторизированных пользователей
+                .antMatchers("/registration")
+                .anonymous()
                 .antMatchers("/**")
                 .permitAll();
 
