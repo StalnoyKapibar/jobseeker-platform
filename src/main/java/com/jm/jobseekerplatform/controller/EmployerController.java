@@ -5,9 +5,9 @@ import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
-import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
-import com.jm.jobseekerplatform.service.impl.EmployerService;
-import com.jm.jobseekerplatform.service.impl.SeekerService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,10 +29,10 @@ public class EmployerController {
     private EmployerProfileService employerProfileService;
 
     @Autowired
-    private EmployerService employerService;
+    private EmployerUserService employerUserService;
 
     @Autowired
-    private SeekerService seekerService;
+    private SeekerUserService seekerUserService;
 
     @Autowired
     private VacancyService vacancyService;
@@ -56,12 +56,12 @@ public class EmployerController {
             Long userId = ((User) authentication.getPrincipal()).getId();
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
-                EmployerUser employerUser = employerService.getById(userId);
+                EmployerUser employerUser = employerUserService.getById(userId);
                 isOwner = employerUser.getProfile().getId().equals(employerProfileId);
             }
             if (roles.contains("ROLE_SEEKER") | roles.contains("ROLE_ADMIN")) {
                 if (roles.contains("ROLE_SEEKER")) {
-                    SeekerUser seekerUser = seekerService.getById(userId);
+                    SeekerUser seekerUser = seekerUserService.getById(userId);
                     model.addAttribute("seekerProfileId", seekerUser.getProfile().getId());
                 }
             }

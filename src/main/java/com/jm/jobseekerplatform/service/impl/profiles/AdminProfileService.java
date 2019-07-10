@@ -1,6 +1,6 @@
-package com.jm.jobseekerplatform.service.impl;
+package com.jm.jobseekerplatform.service.impl.profiles;
 
-import com.jm.jobseekerplatform.dao.impl.AdminProfileDAO;
+import com.jm.jobseekerplatform.dao.impl.profiles.AdminProfileDAO;
 import com.jm.jobseekerplatform.model.profiles.ProfileAdmin;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;

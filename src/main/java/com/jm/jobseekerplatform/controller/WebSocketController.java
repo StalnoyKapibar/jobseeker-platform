@@ -5,7 +5,7 @@ import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.ChatService;
-import com.jm.jobseekerplatform.service.impl.UserService;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

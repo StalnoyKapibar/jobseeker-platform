@@ -1,12 +1,15 @@
-package com.jm.jobseekerplatform.service.impl;
+package com.jm.jobseekerplatform.service.impl.users;
 
-import com.jm.jobseekerplatform.dao.impl.UserDAO;
+import com.jm.jobseekerplatform.dao.impl.users.UserDAO;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.users.AdminUser;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
+import com.jm.jobseekerplatform.service.impl.MailService;
+import com.jm.jobseekerplatform.service.impl.UserRoleService;
+import com.jm.jobseekerplatform.service.impl.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,12 +29,6 @@ public class UserService extends AbstractService<User> {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private SeekerService seekerService;
-
-    @Autowired
-    private EmployerService employerService;
 
     @Autowired
     private UserRoleService userRoleService;
@@ -70,10 +67,8 @@ public class UserService extends AbstractService<User> {
 
         if (userRole.equals(roleSeeker)) {
             userNew = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
-            //seekerService.add(seeker);
         } else if (userRole.equals(roleEmployer)) {
             userNew = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
-            //employerService.add(employer);
         }
 
         add(userNew);

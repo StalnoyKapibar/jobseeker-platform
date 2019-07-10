@@ -5,6 +5,9 @@ import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -34,10 +37,10 @@ public class MainController {
     private VerificationTokenService verificationTokenService;
 
     @Autowired
-    private SeekerService seekerService;
+    private SeekerUserService seekerUserService;
 
     @Autowired
-    private EmployerService employerService;
+    private EmployerUserService employerUserService;
 
     @Autowired
     private EmployerProfileService employerProfileService;
@@ -111,10 +114,10 @@ public class MainController {
             Long id = ((User) authentication.getPrincipal()).getId();
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
-                EmployerUser employerUser = employerService.getById(id);
+                EmployerUser employerUser = employerUserService.getById(id);
                 return "redirect:/employer/" + employerUser.getProfile().getId();
             } else if (roles.contains("ROLE_SEEKER")) {
-                SeekerUser seekerUser = seekerService.getById(id);
+                SeekerUser seekerUser = seekerUserService.getById(id);
                 return "redirect:/seeker/" + seekerUser.getProfile().getId();
             } else if (roles.contains("ROLE_ADMIN")) {
                 return "redirect:/admin";

@@ -2,9 +2,9 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.model.EmployerReviews;
-import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.EmployerReviewsService;
-import com.jm.jobseekerplatform.service.impl.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

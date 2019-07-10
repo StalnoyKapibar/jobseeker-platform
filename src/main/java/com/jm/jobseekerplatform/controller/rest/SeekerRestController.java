@@ -2,8 +2,8 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
-import com.jm.jobseekerplatform.service.impl.SeekerProfileService;
-import com.jm.jobseekerplatform.service.impl.SeekerService;
+import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/seeker")
 public class SeekerRestController {
     @Autowired
-    private SeekerService seekerService;
+    private SeekerUserService seekerUserService;
 
     @Autowired
     private SeekerProfileService seekerProfileService;
@@ -28,14 +28,14 @@ public class SeekerRestController {
         seekerUser.getProfile().setTags(profileSeeker.getTags());
         seekerUser.getProfile().setPortfolios(profileSeeker.getPortfolios());
         seekerProfileService.update(seekerUser.getProfile());
-        seekerService.update(seekerUser);
+        seekerUserService.update(seekerUser);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/editPhoto", method = RequestMethod.POST)
     public @ResponseBody
     ResponseEntity<ProfileSeeker> updateSeekerPhoto(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("id") String id) {
-        SeekerUser seekerUser = seekerService.getById(Long.parseLong(id));
+        SeekerUser seekerUser = seekerUserService.getById(Long.parseLong(id));
         if (!file.isEmpty()) {
             try {
                 byte[] photo = file.getBytes();
@@ -55,7 +55,7 @@ public class SeekerRestController {
 
     @RequestMapping(value = "/delete/{seekerId}", method = RequestMethod.GET)
     public ResponseEntity deleteSeekerById(@PathVariable Long seekerId) {
-        seekerService.deleteById(seekerId);
+        seekerUserService.deleteById(seekerId);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

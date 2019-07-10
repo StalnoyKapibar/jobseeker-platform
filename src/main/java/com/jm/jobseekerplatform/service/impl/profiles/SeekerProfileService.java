@@ -1,6 +1,6 @@
-package com.jm.jobseekerplatform.service.impl;
+package com.jm.jobseekerplatform.service.impl.profiles;
 
-import com.jm.jobseekerplatform.dao.impl.SeekerProfileDAO;
+import com.jm.jobseekerplatform.dao.impl.profiles.SeekerProfileDAO;
 import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.service.AbstractService;

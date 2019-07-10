@@ -3,7 +3,7 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
-import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;

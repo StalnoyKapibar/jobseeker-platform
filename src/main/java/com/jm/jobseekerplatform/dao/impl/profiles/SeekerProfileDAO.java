@@ -1,4 +1,4 @@
-package com.jm.jobseekerplatform.dao.impl;
+package com.jm.jobseekerplatform.dao.impl.profiles;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;

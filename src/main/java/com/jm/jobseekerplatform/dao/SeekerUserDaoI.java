@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SeekerDaoI extends JpaRepository<SeekerUser,Long> {
+public interface SeekerUserDaoI extends JpaRepository<SeekerUser,Long> {
     Page<SeekerUser> findAll(Pageable pageable);
 }

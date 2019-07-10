@@ -2,8 +2,8 @@ package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
-import com.jm.jobseekerplatform.service.impl.EmployerService;
-import com.jm.jobseekerplatform.service.impl.SeekerService;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,10 +22,10 @@ import java.util.Base64;
 public class AdminController {
 
     @Autowired
-    private EmployerService employerService;
+    private EmployerUserService employerUserService;
 
     @Autowired
-    private SeekerService seekerService;
+    private SeekerUserService seekerUserService;
 
     @Autowired
     private VacancyService vacancyService;
@@ -75,7 +75,7 @@ public class AdminController {
             page = Integer.parseInt(request.getParameter("page")) - 1;
         }
 
-        Page<EmployerUser> employerUsers = employerService.findAll(PageRequest.of(page, size, lastVisitSort));
+        Page<EmployerUser> employerUsers = employerUserService.findAll(PageRequest.of(page, size, lastVisitSort));
 
         model.addAttribute("employerUsers", employerUsers);
 
@@ -84,7 +84,7 @@ public class AdminController {
 
     @RequestMapping(value = "/admin/employer/{userEmployerId}", method = RequestMethod.GET)
     public String adminPageEmployerToEdit(@PathVariable Long userEmployerId, Model model) {
-        EmployerUser employerUser = employerService.getById(userEmployerId);
+        EmployerUser employerUser = employerUserService.getById(userEmployerId);
 
         model.addAttribute("employerUser", employerUser);
         model.addAttribute("profileEmployer", employerUser.getProfile());
@@ -118,14 +118,14 @@ public class AdminController {
             size = Integer.parseInt(request.getParameter("size"));
         }
 
-        model.addAttribute("seekerUsers", seekerService.findAll(PageRequest.of(page, size, lastVisitSort)));
+        model.addAttribute("seekerUsers", seekerUserService.findAll(PageRequest.of(page, size, lastVisitSort)));
 
         return "admin/admin_seekers";
     }
 
     @RequestMapping(value = "/admin/seeker/{seekerUserId}", method = RequestMethod.GET)
     public String adminPageSeekerToEdit(@PathVariable Long seekerUserId, Model model) {
-        SeekerUser seekerUser = seekerService.getById(seekerUserId);
+        SeekerUser seekerUser = seekerUserService.getById(seekerUserId);
 
         model.addAttribute("seekerUser", seekerUser);
         model.addAttribute("profileSeeker", seekerUser.getProfile());

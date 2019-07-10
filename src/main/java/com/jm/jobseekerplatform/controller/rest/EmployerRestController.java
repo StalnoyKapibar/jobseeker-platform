@@ -2,8 +2,8 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
-import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
-import com.jm.jobseekerplatform.service.impl.EmployerService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/employer")
 public class EmployerRestController {
     @Autowired
-    private EmployerService employerService;
+    private EmployerUserService employerUserService;
 
     @Autowired
     private EmployerProfileService employerProfileService;
@@ -30,7 +30,7 @@ public class EmployerRestController {
         employerUser.getProfile().setReviews(tmpEmployer.getReviews());
 
         employerProfileService.update(employerUser.getProfile());
-        employerService.update(employerUser);
+        employerUserService.update(employerUser);
 
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -38,7 +38,7 @@ public class EmployerRestController {
     @RequestMapping(value = "/editLogo", method = RequestMethod.POST)
     public @ResponseBody
     ResponseEntity<ProfileEmployer> updateEmployerLogo(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("id") String id) {
-        EmployerUser employerUser = employerService.getById(Long.parseLong(id));
+        EmployerUser employerUser = employerUserService.getById(Long.parseLong(id));
         if (!file.isEmpty()) {
             try {
                 byte[] logo = file.getBytes();
@@ -58,7 +58,7 @@ public class EmployerRestController {
 
     @RequestMapping(value = "/delete/{employerId}", method = RequestMethod.GET)
     public ResponseEntity deleteEmployerById(@PathVariable Long employerId) {
-        employerService.deleteById(employerId);
+        employerUserService.deleteById(employerId);
         return new ResponseEntity(HttpStatus.OK);
     }
 }
