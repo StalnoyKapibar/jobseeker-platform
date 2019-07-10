@@ -32,10 +32,12 @@ public class ReviewsRestController {
     @ResponseBody
     public ResponseEntity<String> addNewReviews(@RequestBody Map<String, Object> map) {
         try {
-            EmployerProfile employer = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
-            EmployerReviews reviews = employer.getReviews().stream()
+            EmployerProfile employerProfile = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
+
+            EmployerReviews reviews = employerProfile.getReviews().stream()
                     .filter(employerReviews -> employerReviews.getProfileSeeker().getId() == ((Number) map.get("seekerProfiles_id")).longValue())
                     .findFirst().orElse(null);
+
             if (reviews != null) {
                 reviews.setEvaluation(Integer.parseInt(map.get("evaluation").toString()));
                 reviews.setReviews(String.valueOf(map.get("reviews")));
@@ -47,8 +49,8 @@ public class ReviewsRestController {
                 newReview.setDateReviews(new Date());
                 newReview.setEvaluation(Integer.parseInt(String.valueOf(map.get("evaluation"))));
                 newReview.setProfileSeeker((seekerProfileService.getById(((Number) map.get("seekerProfiles_id")).longValue())));
-                employer.addNewReview(newReview);
-                employerProfileService.update(employer);
+                employerProfile.addNewReview(newReview);
+                employerProfileService.update(employerProfile);
                 return new ResponseEntity<String>("{\"status\": \"Review added\"}", HttpStatus.OK);
             }
         } catch (Exception e) {
@@ -71,8 +73,8 @@ public class ReviewsRestController {
     @ResponseBody
     public ResponseEntity<EmployerReviews> findReviewBySeekerIdAndEmloerIdForEdit(@RequestBody Map<String, Object> map) {
         try {
-            EmployerProfile employer = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
-            Set<EmployerReviews> reviewsSet = employer.getReviews();
+            EmployerProfile employerProfile = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
+            Set<EmployerReviews> reviewsSet = employerProfile.getReviews();
             EmployerReviews reviews = reviewsSet.stream().filter(employerReviews -> employerReviews.getProfileSeeker().getId() == ((Number) map.get("seekerProfiles_id")).longValue()).findFirst().orElse(null);
             if (reviews != null) return new ResponseEntity<>(reviews, HttpStatus.OK);
         } catch (Exception e) {

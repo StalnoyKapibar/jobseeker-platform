@@ -43,9 +43,9 @@ public class UserRestController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/getUser/{id}")
-    public User getUser(@PathVariable(required = false) Long id) {
-        return userService.getById(id);
+    @RequestMapping(method = RequestMethod.GET, value = "/getUser/{userId}")
+    public User getUser(@PathVariable(required = false) Long userId) {
+        return userService.getById(userId);
     }
 
     // отправка приглашения

@@ -101,7 +101,7 @@ $('#editSeekerForm').click(function (event) {
 
 function uploadPhoto() {
 
-    var id = $('#editPhotoForm').find("input[name='seekerId']").val();
+    var seekerUserId = $('#editPhotoForm').find("input[name='seekerUserId']").val();
 
     var data = new FormData();
 
@@ -110,7 +110,7 @@ function uploadPhoto() {
             data.append(tag.name, file);
         });
     });
-    data.append('id', id);
+    data.append('seekerUserId', seekerUserId);
 
     $.ajax({
         url: '/api/seeker/editPhoto',
@@ -127,9 +127,9 @@ function uploadPhoto() {
     });
 }
 
-function deleteSeeker(id) {
+function deleteSeekerUserById(seekerUserId) {
     $.ajax({
-        url: '/api/seeker/delete/' + id,
+        url: '/api/seeker/delete/' + seekerUserId,
         type: 'GET',
         success: function () {
             location.href = '/admin/seekers'

@@ -23,8 +23,8 @@ public class EmployerUserRestController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity updateEmployer(@RequestBody EmployerUser employerUser) {
-        Long id = employerUser.getProfile().getId();
-        EmployerProfile tmpEmployer = employerProfileService.getById(id);
+        Long employerProfileId = employerUser.getProfile().getId();
+        EmployerProfile tmpEmployer = employerProfileService.getById(employerProfileId);
 
         employerUser.getProfile().setLogo(tmpEmployer.getLogo());
         employerUser.getProfile().setReviews(tmpEmployer.getReviews());
@@ -51,10 +51,10 @@ public class EmployerUserRestController {
         return new ResponseEntity<>(employerUser.getProfile(), HttpStatus.OK);
     }
 
-    @GetMapping("/{employerProfileId}")
-    public ResponseEntity<EmployerProfile> getEmployerProfileById(@PathVariable Long employerProfileId) {
-        return new ResponseEntity<>(employerProfileService.getById(employerProfileId), HttpStatus.OK);
-    }
+//    @GetMapping("/{employerProfileId}")
+//    public ResponseEntity<EmployerProfile> getEmployerProfileById(@PathVariable Long employerProfileId) {
+//        return new ResponseEntity<>(employerProfileService.getById(employerProfileId), HttpStatus.OK);
+//    }
 
     @RequestMapping(value = "/delete/{employerUserId}", method = RequestMethod.GET)
     public ResponseEntity deleteEmployerUserById(@PathVariable Long employerUserId) {

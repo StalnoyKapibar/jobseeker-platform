@@ -46,17 +46,17 @@ public class VacancyRestController {
 
     @RequestMapping(value = "/{vacancyId:\\d+}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public void updateVacancyState(@PathVariable("vacancyId") Long id, @RequestBody String state) {
+    public void updateVacancyState(@PathVariable("vacancyId") Long vacancyId, @RequestBody String state) {
         String st = state.substring(1, state.length() - 1);
         State s = State.valueOf(st);
-        Vacancy vacancy = vacancyService.getById(id);
+        Vacancy vacancy = vacancyService.getById(vacancyId);
         vacancy.setState(s);
         vacancyService.update(vacancy);
     }
 
     @RequestMapping(value = "/block/{vacancyId}", method = RequestMethod.POST)
-    public void blockVacancy(@PathVariable("vacancyId") Long id, @RequestBody int periodInDays) {
-        Vacancy vacancy = vacancyService.getById(id);
+    public void blockVacancy(@PathVariable("vacancyId") Long vacancyId, @RequestBody int periodInDays) {
+        Vacancy vacancy = vacancyService.getById(vacancyId);
         if (periodInDays == 0) {
             vacancyService.blockPermanently(vacancy);
         }
