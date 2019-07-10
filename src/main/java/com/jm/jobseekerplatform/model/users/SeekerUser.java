@@ -7,11 +7,11 @@ import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
 @Entity
-public class UserSeeker extends User<ProfileSeeker> {
-    public UserSeeker() {
+public class SeekerUser extends User<ProfileSeeker> {
+    public SeekerUser() {
     }
 
-    public UserSeeker(String email, char[] password, LocalDateTime date, UserRole authority, ProfileSeeker profile) {
+    public SeekerUser(String email, char[] password, LocalDateTime date, UserRole authority, ProfileSeeker profile) {
         super(email, password, date, authority, profile);
     }
 }

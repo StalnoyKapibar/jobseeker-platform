@@ -11,7 +11,7 @@ import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
 import com.jm.jobseekerplatform.model.users.AdminUser;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
-import com.jm.jobseekerplatform.model.users.UserSeeker;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -192,7 +192,7 @@ public class InitData {
         UserRole role;
         User user;
         EmployerUser employerUser;
-        UserSeeker userSeeker;
+        SeekerUser seekerUser;
 
         role = userRoleService.findByAuthority("ROLE_ADMIN");
         user = new AdminUser("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), role, adminProfileService.getById(1L));
@@ -226,17 +226,17 @@ public class InitData {
 
         role = userRoleService.findByAuthority("ROLE_SEEKER");
 
-        userSeeker = new UserSeeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(8L));
-        userSeeker.setConfirm(true);
-        seekerService.add(userSeeker);
+        seekerUser = new SeekerUser("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(8L));
+        seekerUser.setConfirm(true);
+        seekerService.add(seekerUser);
 
-        userSeeker = new UserSeeker("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(9L));
-        userSeeker.setConfirm(true);
-        seekerService.add(userSeeker);
+        seekerUser = new SeekerUser("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(9L));
+        seekerUser.setConfirm(true);
+        seekerService.add(seekerUser);
 
-        userSeeker = new UserSeeker("seeker3@mail.ru", userService.encodePassword("seeker3".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(10L));
-        userSeeker.setConfirm(true);
-        seekerService.add(userSeeker);
+        seekerUser = new SeekerUser("seeker3@mail.ru", userService.encodePassword("seeker3".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(10L));
+        seekerUser.setConfirm(true);
+        seekerService.add(seekerUser);
     }
 
     public void initVacancies() {

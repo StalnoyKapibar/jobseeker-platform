@@ -56,16 +56,16 @@
                     </tr>
                     </thead>
                     <tbody align="center">
-                    <tr th:each="userSeeker : ${userSeekers}">
-                        <td th:text="${userSeeker.id}"></td>
-                        <td th:text="${userSeeker.email}"></td>
-                        <td th:text="${userSeeker.date}"></td>
+                    <tr th:each="seekerUser : ${seekerUsers}">
+                        <td th:text="${seekerUser.id}"></td>
+                        <td th:text="${seekerUser.email}"></td>
+                        <td th:text="${seekerUser.date}"></td>
                         <td>
-                            <button th:onclick="'editSeeker(\'' + ${userSeeker.id} + '\');'" type="button"
+                            <button th:onclick="'editSeeker(\'' + ${seekerUser.id} + '\');'" type="button"
                                     class="btn btn-primary">Edit
                                 Seeker
                             </button>
-                            <button th:onclick="'deleteSeeker(\'' + ${userSeeker.id} + '\');'" type="button"
+                            <button th:onclick="'deleteSeeker(\'' + ${seekerUser.id} + '\');'" type="button"
                                     class="btn btn-primary">
                                 Delete Seeker
                             </button>
@@ -76,23 +76,23 @@
             </div>
         </div>
 
-        <nav aria-label="Pagination" th:if="${userSeekers.totalPages gt 0}">
+        <nav aria-label="Pagination" th:if="${seekerUsers.totalPages gt 0}">
             <ul id="pagList" class="pagination justify-content-right font-weight-bold">
-                <li class="page-item" th:classappend="${userSeekers.number eq 0} ? 'disabled'">
+                <li class="page-item" th:classappend="${seekerUsers.number eq 0} ? 'disabled'">
                     <a class="page-link"
-                       th:href="@{/admin/seekers?page={id}(id=${userSeekers.number lt 2 ? 1 : userSeekers.number})}"
+                       th:href="@{/admin/seekers?page={id}(id=${seekerUsers.number lt 2 ? 1 : seekerUsers.number})}"
                        aria-label="Previous" title="Previous Page" data-toggle="tooltip">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-                <li class="page-item" th:classappend="${i eq userSeekers.number + 1} ? 'active'"
-                    th:each="i : ${#numbers.sequence( 1, userSeekers.totalPages, 1)}">
+                <li class="page-item" th:classappend="${i eq seekerUsers.number + 1} ? 'active'"
+                    th:each="i : ${#numbers.sequence( 1, seekerUsers.totalPages, 1)}">
                     <a class="page-link" th:href="@{/admin/seekers?page={id}(id=${i})}" th:text="${i}"
                        th:title="${'Page '+ i}" data-toggle="tooltip"></a>
                 </li>
-                <li class="page-item" th:classappend="${userSeekers.number + 1 eq userSeekers.totalPages} ? 'disabled'">
+                <li class="page-item" th:classappend="${seekerUsers.number + 1 eq seekerUsers.totalPages} ? 'disabled'">
                     <a class="page-link"
-                       th:href="@{/admin/seekers?page={id}(id=${userSeekers.number + 2})}"
+                       th:href="@{/admin/seekers?page={id}(id=${seekerUsers.number + 2})}"
                        aria-label="Next" title="Next Page" data-toggle="tooltip">
                         <span aria-hidden="true">&raquo;</span>
                     </a>

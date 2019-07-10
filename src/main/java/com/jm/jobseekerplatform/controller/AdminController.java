@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.users.EmployerUser;
-import com.jm.jobseekerplatform.model.users.UserSeeker;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.service.impl.EmployerService;
 import com.jm.jobseekerplatform.service.impl.SeekerService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
@@ -118,18 +118,18 @@ public class AdminController {
             size = Integer.parseInt(request.getParameter("size"));
         }
 
-        model.addAttribute("userSeekers", seekerService.findAll(PageRequest.of(page, size, lastVisitSort)));
+        model.addAttribute("seekerUsers", seekerService.findAll(PageRequest.of(page, size, lastVisitSort)));
 
         return "admin/admin_seekers";
     }
 
-    @RequestMapping(value = "/admin/seeker/{seekerId}", method = RequestMethod.GET)
-    public String adminPageSeekerToEdit(@PathVariable Long seekerId, Model model) {
-        UserSeeker userSeeker = seekerService.getById(seekerId);
+    @RequestMapping(value = "/admin/seeker/{seekerUserId}", method = RequestMethod.GET)
+    public String adminPageSeekerToEdit(@PathVariable Long seekerUserId, Model model) {
+        SeekerUser seekerUser = seekerService.getById(seekerUserId);
 
-        model.addAttribute("userSeeker", userSeeker);
-        model.addAttribute("profileSeeker", userSeeker.getProfile());
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(userSeeker.getProfile().getPhoto()));
+        model.addAttribute("seekerUser", seekerUser);
+        model.addAttribute("profileSeeker", seekerUser.getProfile());
+        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerUser.getProfile().getPhoto()));
 
         return "admin/admin_seeker_edit";
     }

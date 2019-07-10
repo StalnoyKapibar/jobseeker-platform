@@ -3,7 +3,7 @@ package com.jm.jobseekerplatform.controller;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.ProfileEmployer;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
-import com.jm.jobseekerplatform.model.users.UserSeeker;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.EmployerService;
@@ -61,8 +61,8 @@ public class EmployerController {
             }
             if (roles.contains("ROLE_SEEKER") | roles.contains("ROLE_ADMIN")) {
                 if (roles.contains("ROLE_SEEKER")) {
-                    UserSeeker userSeeker = seekerService.getById(userId);
-                    model.addAttribute("seekerProfileId", userSeeker.getProfile().getId());
+                    SeekerUser seekerUser = seekerService.getById(userId);
+                    model.addAttribute("seekerProfileId", seekerUser.getProfile().getId());
                 }
             }
             if (!profileEmployer.getReviews().isEmpty()) {

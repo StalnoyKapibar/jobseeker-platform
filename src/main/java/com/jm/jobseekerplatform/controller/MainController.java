@@ -2,7 +2,7 @@ package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
-import com.jm.jobseekerplatform.model.users.UserSeeker;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +59,7 @@ public class MainController {
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
-                    Set<Tag> tags = ((UserSeeker) authentication.getPrincipal()).getProfile().getTags();
+                    Set<Tag> tags = ((SeekerUser) authentication.getPrincipal()).getProfile().getTags();
                     Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
                     model.addAttribute("vacancies", vacancies);
@@ -114,8 +114,8 @@ public class MainController {
                 EmployerUser employerUser = employerService.getById(id);
                 return "redirect:/employer/" + employerUser.getProfile().getId();
             } else if (roles.contains("ROLE_SEEKER")) {
-                UserSeeker userSeeker = seekerService.getById(id);
-                return "redirect:/seeker/" + userSeeker.getProfile().getId();
+                SeekerUser seekerUser = seekerService.getById(id);
+                return "redirect:/seeker/" + seekerUser.getProfile().getId();
             } else if (roles.contains("ROLE_ADMIN")) {
                 return "redirect:/admin";
             }

@@ -4,7 +4,7 @@ import com.jm.jobseekerplatform.dao.impl.UserDAO;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.users.AdminUser;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
-import com.jm.jobseekerplatform.model.users.UserSeeker;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +69,7 @@ public class UserService extends AbstractService<User> {
         User userNew = null;
 
         if (userRole.equals(roleSeeker)) {
-            userNew = new UserSeeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            userNew = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
             //seekerService.add(seeker);
         } else if (userRole.equals(roleEmployer)) {
             userNew = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
@@ -90,7 +90,7 @@ public class UserService extends AbstractService<User> {
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
         User newUser = null;
         if (userRole.equals(roleSeeker)) {
-            newUser = new UserSeeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            newUser = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
         } else if (userRole.equals(roleEmployer)) {
             newUser = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
         } else if (userRole.equals(roleAdmin)) {

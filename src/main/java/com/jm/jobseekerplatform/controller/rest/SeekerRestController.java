@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.profiles.ProfileSeeker;
-import com.jm.jobseekerplatform.model.users.UserSeeker;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.service.impl.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.SeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,30 +22,30 @@ public class SeekerRestController {
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity updateSeeker(@RequestBody UserSeeker userSeeker) {
-        ProfileSeeker profileSeeker = seekerProfileService.getById(userSeeker.getProfile().getId());
-        userSeeker.getProfile().setPhoto(profileSeeker.getPhoto());
-        userSeeker.getProfile().setTags(profileSeeker.getTags());
-        userSeeker.getProfile().setPortfolios(profileSeeker.getPortfolios());
-        seekerProfileService.update(userSeeker.getProfile());
-        seekerService.update(userSeeker);
+    ResponseEntity updateSeeker(@RequestBody SeekerUser seekerUser) {
+        ProfileSeeker profileSeeker = seekerProfileService.getById(seekerUser.getProfile().getId());
+        seekerUser.getProfile().setPhoto(profileSeeker.getPhoto());
+        seekerUser.getProfile().setTags(profileSeeker.getTags());
+        seekerUser.getProfile().setPortfolios(profileSeeker.getPortfolios());
+        seekerProfileService.update(seekerUser.getProfile());
+        seekerService.update(seekerUser);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/editPhoto", method = RequestMethod.POST)
     public @ResponseBody
     ResponseEntity<ProfileSeeker> updateSeekerPhoto(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("id") String id) {
-        UserSeeker userSeeker = seekerService.getById(Long.parseLong(id));
+        SeekerUser seekerUser = seekerService.getById(Long.parseLong(id));
         if (!file.isEmpty()) {
             try {
                 byte[] photo = file.getBytes();
-                userSeeker.getProfile().setPhoto(photo);
-                seekerProfileService.update(userSeeker.getProfile());
+                seekerUser.getProfile().setPhoto(photo);
+                seekerProfileService.update(seekerUser.getProfile());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return new ResponseEntity<>(userSeeker.getProfile(), HttpStatus.OK);
+        return new ResponseEntity<>(seekerUser.getProfile(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{seekerId}", method = RequestMethod.GET)
