@@ -14,8 +14,7 @@
         <div id="sProfileDiv" class="main-block chromeFix" layout:fragment="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-sm-3"></div>
-                    <div class="col-sm-9">
+                    <div class="col-sm-12">
                         <div class="container-fluid cards" >
                             <div class="card" th:each="vacancy : ${favoriteVacancy}">
                                 <div class="card-header" th:text="${vacancy.headline}">Header</div>
