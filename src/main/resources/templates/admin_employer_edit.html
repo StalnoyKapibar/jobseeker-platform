@@ -1,7 +1,7 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/adminlayouts" >
+      layout:decorator="layouts/adminlayouts">
 <head>
 </head>
 
@@ -13,108 +13,106 @@
     }
 </style>
 <div class="container-fluid" layout:fragment="content">
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main_admin_page" style="padding-top: 60px">
-        <h2>Edit employer profile</h2>
-        <div class="row" style="padding-top: 30px">
-            <div class="col-4" id="employerLogo">
-                <form id="editLogoForm" class="form-inline">
-                    <img id="eLogo" th:src="@{'data:image/png;base64,' + ${photoimg}}" name="logo" alt=""
-                         style="width: 300px;height: 300px;"><br>
-                    <div class="custom-file mt-4">
-                        <div class="input-group">
-                            <div class="row">
-                                <div class="col-8">
-                                    <label class="custom-file-label" for="customFile">Choose new image</label>
-                                    <input type="file" class="custom-file-input" id="customFile"
-                                           accept="image/jpeg,image/png,image/gif" name="file">
-                                    <input type="hidden" th:value="${employer.id}" name="employerId">
-                                </div>
-                                <div class="col-4">
-                                    <button onclick="uploadLogo()" class="btn btn-secondary" type="button">
-                                        Upload
-                                    </button>
-                                </div>
+    <h2>Edit employer profile</h2>
+    <div class="row" style="padding-top: 30px">
+        <div class="col-4" id="employerLogo">
+            <form id="editLogoForm" class="form-inline">
+                <img id="eLogo" th:src="@{'data:image/png;base64,' + ${photoimg}}" name="logo" alt=""
+                     style="width: 300px;height: 300px;"><br>
+                <div class="custom-file mt-4">
+                    <div class="input-group">
+                        <div class="row">
+                            <div class="col-8">
+                                <label class="custom-file-label" for="customFile">Choose new image</label>
+                                <input type="file" class="custom-file-input" id="customFile"
+                                       accept="image/jpeg,image/png,image/gif" name="file">
+                                <input type="hidden" th:value="${employer.id}" name="employerId">
+                            </div>
+                            <div class="col-4">
+                                <button onclick="uploadLogo()" class="btn btn-secondary" type="button">
+                                    Upload
+                                </button>
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="col-6">
-                <form id="editEmployer">
-                    <div class="form-group">
-                        <label>Employer ID : </label> <input class="form-control" type="text"
-                                                             th:value="${employer.id}" name="id" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Employer email : </label><input class="form-control" type="text"
-                                                               th:value="${employer.email}" name="email">
-                    </div>
-                    <div class="form-group">
-                        <label>Employer last visit : </label><input class="form-control" type="text"
-                                                                    th:value="${employer.date}" name="date"
-                                                                    readonly>
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${employer.password}"
-                               name="password">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${employer.authority.id}"
-                               name="authorityId">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${employer.authority.authority}"
-                               name="authority">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${employer.confirm}" name="confirm">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" type="hidden" th:value="${employer.enabled}" name="enabled">
-                    </div>
-                    <div class="form-group">
-                        <label>Employer profile ID : </label> <input class="form-control" type="text"
-                                                                     th:value="${employerprof.id}" name="profId"
-                                                                     readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Profile companyName : </label> <input class="form-control" type="text"
-                                                                     th:value="${employerprof.companyName}"
-                                                                     name="companyName">
-                    </div>
-                    <div class="form-group">
-                        <label>Profile website : </label><input class="form-control" type="text"
-                                                                th:value="${employerprof.website}"
-                                                                name="website">
-                    </div>
-                    <div class="form-group">
-                        <label>Profile description : </label><input class="form-control" type="text"
-                                                                    th:value="${employerprof.description}"
-                                                                    name="description">
-                    </div>
-                    <div class="form-group">
-                        <label>Profile vacancies : </label>
-                        <select id="employerVacancies" name="employerVacancies">
-                            <option th:each="vacancy : ${employerprof.vacancies}" th:value="${vacancy.headline}"
-                                    th:text="${vacancy.headline}"
-                                    th:selected="${vacancy==0}"></option>
-                        </select>
-                        <label>Profile reviews : </label>
-                        <select id="employerReviews" name="employerReviews">
-                            <option th:each="review : ${employerprof.reviews}"
-                                    th:value="${review.reviews}"
-                                    th:text="${review.reviews}"
-                                    th:selected="${review==0}"></option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <button id="editEmployerForm" class="btn btn-success btn-block" type="submit">Submit
-                        </button>
-                    </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
-    </main>
+        <div class="col-6">
+            <form id="editEmployer">
+                <div class="form-group">
+                    <label>Employer ID : </label> <input class="form-control" type="text"
+                                                         th:value="${employer.id}" name="id" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Employer email : </label><input class="form-control" type="text"
+                                                           th:value="${employer.email}" name="email">
+                </div>
+                <div class="form-group">
+                    <label>Employer last visit : </label><input class="form-control" type="text"
+                                                                th:value="${employer.date}" name="date"
+                                                                readonly>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="hidden" th:value="${employer.password}"
+                           name="password">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="hidden" th:value="${employer.authority.id}"
+                           name="authorityId">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="hidden" th:value="${employer.authority.authority}"
+                           name="authority">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="hidden" th:value="${employer.confirm}" name="confirm">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="hidden" th:value="${employer.enabled}" name="enabled">
+                </div>
+                <div class="form-group">
+                    <label>Employer profile ID : </label> <input class="form-control" type="text"
+                                                                 th:value="${employerprof.id}" name="profId"
+                                                                 readonly>
+                </div>
+                <div class="form-group">
+                    <label>Profile companyName : </label> <input class="form-control" type="text"
+                                                                 th:value="${employerprof.companyName}"
+                                                                 name="companyName">
+                </div>
+                <div class="form-group">
+                    <label>Profile website : </label><input class="form-control" type="text"
+                                                            th:value="${employerprof.website}"
+                                                            name="website">
+                </div>
+                <div class="form-group">
+                    <label>Profile description : </label><input class="form-control" type="text"
+                                                                th:value="${employerprof.description}"
+                                                                name="description">
+                </div>
+                <div class="form-group">
+                    <label>Profile vacancies : </label>
+                    <select id="employerVacancies" name="employerVacancies">
+                        <option th:each="vacancy : ${employerprof.vacancies}" th:value="${vacancy.headline}"
+                                th:text="${vacancy.headline}"
+                                th:selected="${vacancy==0}"></option>
+                    </select>
+                    <label>Profile reviews : </label>
+                    <select id="employerReviews" name="employerReviews">
+                        <option th:each="review : ${employerprof.reviews}"
+                                th:value="${review.reviews}"
+                                th:text="${review.reviews}"
+                                th:selected="${review==0}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button id="editEmployerForm" class="btn btn-success btn-block" type="submit">Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <div class="container-fluid" layout:fragment="content-script">

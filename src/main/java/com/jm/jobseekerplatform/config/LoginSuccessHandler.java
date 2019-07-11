@@ -28,7 +28,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         user.setDate(LocalDateTime.now());
         userService.update(user);
         if (authentication.isAuthenticated()) {
-            httpServletResponse.sendRedirect("/");
+            if (user.getAuthority().getAuthority().equals("ROLE_ADMIN")) {
+                httpServletResponse.sendRedirect("/admin");
+            } else {
+                httpServletResponse.sendRedirect("/");
+            }
         } else {
             throw new IllegalStateException();
         }

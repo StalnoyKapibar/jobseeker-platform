@@ -6,101 +6,99 @@
 </head>
 <body>
 <div class="container-fluid" layout:fragment="content">
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main_admin_page">
-        <br/>
-        <div class="row">
-            <h2>Все работодатели</h2>
+    <br/>
+    <div class="row">
+        <h2>Все работодатели</h2>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-2">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="sorBy" style="padding-right: 10px;"> Sort by </label>
+                    <select id="sorBy" class="browser-default custom-select">
+                        <option value="DESC">Last visit</option>
+                        <option value="ASC">First visit</option>
+                    </select>
+                </div>
+            </form>
         </div>
-        <br>
-        <div class="row">
-            <div class="col-2">
-                <form class="form-inline">
-                    <div class="form-group">
-                        <label for="sorBy" style="padding-right: 10px;"> Sort by </label>
-                        <select id="sorBy" class="browser-default custom-select">
-                            <option value="DESC">Last visit</option>
-                            <option value="ASC">First visit</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="col-8"></div>
-            <div class="col-2" style="padding-right: 0">
-                <form class="form-inline">
-                    <div class="form-group">
-                        <label for="viewBy" style="padding-right: 10px;">View by</label>
-                        <select id="viewBy" class="browser-default custom-select">
-                            <option value="10">10</option>
-                            <option value="5">5</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-
-            <br>
-        </div>
-        <br>
-        <div class="row">
-            <div class="table-responsive">
-                <table id="employerTable" class="table table-striped table-sm table-bordered sort-order"
-                       cellspacing="0"
-                       width="100%">
-                    <thead align="center">
-                    <tr>
-                        <th>Id</th>
-                        <th>Email</th>
-                        <th>Last Visit</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody align="center">
-                    <tr th:each="employer : ${employers}">
-                        <td th:text="${employer.id}"></td>
-                        <td th:text="${employer.email}"></td>
-                        <td th:text="${employer.date}"></td>
-                        <td>
-                            <button th:onclick="'editEmployer(\'' + ${employer.id} + '\');'" type="button"
-                                    class="btn btn-primary">Edit
-                                Employer
-                            </button>
-                            <button th:onclick="'deleteEmployer(\'' + ${employer.id} + '\');'" type="button"
-                                    class="btn btn-primary">
-                                Delete Employer
-                            </button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="col-8"></div>
+        <div class="col-2" style="padding-right: 0">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="viewBy" style="padding-right: 10px;">View by</label>
+                    <select id="viewBy" class="browser-default custom-select">
+                        <option value="10">10</option>
+                        <option value="5">5</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </form>
         </div>
 
-        <nav aria-label="Pagination" th:if="${employers.totalPages gt 0}">
-            <ul id="pagList" class="pagination justify-content-right font-weight-bold">
-                <li class="page-item" th:classappend="${employers.number eq 0} ? 'disabled'">
-                    <a class="page-link"
-                       th:href="@{/admin/employers?page={id}(id=${employers.number lt 2 ? 1 : employers.number})}"
-                       aria-label="Previous" title="Previous Page" data-toggle="tooltip">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item" th:classappend="${i eq employers.number + 1} ? 'active'"
-                    th:each="i : ${#numbers.sequence( 1, employers.totalPages, 1)}">
-                    <a class="page-link" th:href="@{/admin/employers?page={id}(id=${i})}" th:text="${i}"
-                       th:title="${'Page '+ i}" data-toggle="tooltip"></a>
-                </li>
-                <li class="page-item"
-                    th:classappend="${employers.number + 1 eq employers.totalPages} ? 'disabled'">
-                    <a class="page-link"
-                       th:href="@{/admin/employers?page={id}(id=${employers.number + 2})}"
-                       aria-label="Next" title="Next Page" data-toggle="tooltip">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </main>
+        <br>
+    </div>
+    <br>
+    <div class="row">
+        <div class="table-responsive">
+            <table id="employerTable" class="table table-striped table-sm table-bordered sort-order"
+                   cellspacing="0"
+                   width="100%">
+                <thead align="center">
+                <tr>
+                    <th>Id</th>
+                    <th>Email</th>
+                    <th>Last Visit</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody align="center">
+                <tr th:each="employer : ${employers}">
+                    <td th:text="${employer.id}"></td>
+                    <td th:text="${employer.email}"></td>
+                    <td th:text="${employer.date}"></td>
+                    <td>
+                        <button th:onclick="'editEmployer(\'' + ${employer.id} + '\');'" type="button"
+                                class="btn btn-primary">Edit
+                            Employer
+                        </button>
+                        <button th:onclick="'deleteEmployer(\'' + ${employer.id} + '\');'" type="button"
+                                class="btn btn-primary">
+                            Delete Employer
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <nav aria-label="Pagination" th:if="${employers.totalPages gt 0}">
+        <ul id="pagList" class="pagination justify-content-right font-weight-bold">
+            <li class="page-item" th:classappend="${employers.number eq 0} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/admin/employers?page={id}(id=${employers.number lt 2 ? 1 : employers.number})}"
+                   aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:classappend="${i eq employers.number + 1} ? 'active'"
+                th:each="i : ${#numbers.sequence( 1, employers.totalPages, 1)}">
+                <a class="page-link" th:href="@{/admin/employers?page={id}(id=${i})}" th:text="${i}"
+                   th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+            </li>
+            <li class="page-item"
+                th:classappend="${employers.number + 1 eq employers.totalPages} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/admin/employers?page={id}(id=${employers.number + 2})}"
+                   aria-label="Next" title="Next Page" data-toggle="tooltip">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
 <div class="container-fluid" layout:fragment="content-script">
