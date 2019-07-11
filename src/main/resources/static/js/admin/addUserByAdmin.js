@@ -13,6 +13,7 @@ $(document).ready(function () {
             email_check = false;
         }
     })
+
     bootstrapValidate('#user_password', 'regex:^(?=.*[a-z].*)(?=.*[0-9].*)[A-Za-z0-9]{6,20}$:Пароль должен содержать латинские буквы и цифры, от 6 до 20 символов', function (isValid) {
         if (isValid) {
             $('#user_password').addClass('is-valid');
@@ -20,12 +21,9 @@ $(document).ready(function () {
         } else {
             pass_check = false;
         }
-        if ($('#user_password').val() == $('#confirm_password').val()) {
-            passConfirm(true)
-        } else {
-            passConfirm(false)
-        }
+        passConfirm($('#user_password').val() == $('#confirm_password').val())
     })
+
     bootstrapValidate('#confirm_password', 'matches:#user_password:', function (isValid) {
         passConfirm(isValid);
     })

@@ -63,16 +63,20 @@ public class UserService extends AbstractService<User> {
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
 
         if (userRole.equals(roleSeeker)) {
-            Seeker seeker = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole,  new SeekerProfile());
+            Seeker seeker = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole,  null);
             seekerService.add(seeker);
         } else if (userRole.equals(roleEmployer)) {
             Employer employer = new Employer(userEmail, userPass, LocalDateTime.now(), userRole, null);
             employerService.add(employer);
         }
+        //так нужно сделать
+//        User registeredUser = findByEmail(userEmail);
 
-        User registeredUser = findByEmail(userEmail);
         String token = UUID.randomUUID().toString();
-        verificationTokenService.createVerificationToken(token, registeredUser);
+        //так нкжно сделать
+//        verificationTokenService.createVerificationToken(token, registeredUser);
+        //так делать нельзя
+        verificationTokenService.createVerificationToken(token,user);
         mailService.sendVerificationEmail(userEmail, token);
     }
 
