@@ -20,65 +20,73 @@
 </head>
 <body>
 
-<div class="main-block chromeFix" layout:fragment="content">
+<div layout:fragment="content">
     <div class="container-fluid" id="vacancy_container">
         <div class="row">
             <div class="col-sm-2">
             </div>
             <div class="col-sm-8">
                 <form class="well form-horizontal" id="vacancy_form">
-                    <fieldset>
-                        <legend>
-                            <center><h2><b>Создание новой вакансии</b></h2></center>
+                    <fieldset >
+                        <legend align="center">
+                            <h2><b>Создание новой вакансии</b></h2>
                         </legend>
                         <br>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Должность</label>
-                            <div class="col-md-10 inputGroupContainer">
+
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-1 col-form-label">Должность</label>
+                            <div class="col-md-9 inputGroupContainer">
                                 <div class="input-group">
-                                            <span class="input-group-addon"><i
-                                                    class="glyphicon glyphicon-briefcase"></i></span>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                    </div>
                                     <input name="v_headline" id="v_headline"
                                            placeholder="Введите название должности"
                                            class="form-control" type="text">
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Город</label>
-                            <div class="col-md-10 inputGroupContainer">
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-1 control-label">Город</label>
+                            <div class="col-md-9 inputGroupContainer">
                                 <div class="input-group">
-                                            <span class="input-group-addon"><i
-                                                    class="glyphicon glyphicon-globe"></i></span>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                    </div>
                                     <input name="v_city" id="v_city" placeholder="Введите название города"
                                            class="form-control" type="text">
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Местонахождение</label>
-                            <div class="col-md-10 inputGroupContainer">
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-1 control-label">Местонахождение</label>
+                            <div class="col-md-9 inputGroupContainer">
                                 <div class="input-group">
-                                            <span class="input-group-addon"><i
-                                                    class="glyphicon glyphicon-globe"></i></span>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                    </div>
                                     <input name="v_address" id="v_address"
                                            placeholder="Введите полный адрес вручную или выберите на карте"
                                            class="form-control" type="text">
                                     <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" data-toggle="modal" data-target="#mapModal"
-                                    onclick="initV_Map()"><span class="glyphicon glyphicon-map-marker"
-                                                                style="color: #db4437">карта</span>
+                            <button class="btn btn-secondary" type="button" data-toggle="modal" data-target="#mapModal"
+                                    onclick="initV_Map()"><i class="fas fa-map-marker" ></i>
                             </button>
                         </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Место работы</label>
-                            <div class="col-md-10 selectContainer">
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-1 control-label">Место работы</label>
+                            <div class="col-md-9 selectContainer">
                                 <div class="input-group">
-                                            <span class="input-group-addon"><i
-                                                    class="glyphicon glyphicon-home"></i></span>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-home"></i></span>
+                                    </div>
                                     <select name="v_remote" id="v_remote" class="form-control selectpicker">
                                         <option value="false">В офисе работодателя</option>
                                         <option value="true">Удаленная работа</option>
@@ -86,38 +94,43 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Зарплата: от</label>
-                            <div class="col-md-10 inputGroupContainer">
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-1 control-label">Зарплата: от</label>
+                            <div class="col-md-9 inputGroupContainer">
                                 <div class="input-group">
-                                            <span class="input-group-addon"><i
-                                                    class="glyphicon glyphicon-ruble"></i></span>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-ruble-sign"></i></span>
+                                    </div>
                                     <input name="v_salaryMin" id="v_salaryMin" placeholder="Можно не указывать"
                                            class="form-control" type="text">
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">до</label>
-                            <div class="col-md-10 inputGroupContainer">
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-1 control-label">до</label>
+                            <div class="col-md-9 inputGroupContainer">
                                 <div class="input-group">
-                                            <span class="input-group-addon"><i
-                                                    class="glyphicon glyphicon-ruble"></i></span>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-ruble-sign"></i></span>
+                                    </div>
                                     <input name="v_salaryMax" id="v_salaryMax" placeholder="Можно не указывать"
                                            class="form-control" type="text">
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" id="v_form_group_tags">
-                            <label class="col-md-2 control-label">Технологии</label>
-                            <div class="col-md-10 inputGroupContainer">
+                        <div class="form-group row" id="v_form_group_tags">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-1 control-label">Технологии</label>
+                            <div class="col-md-9 inputGroupContainer">
                                 <div class="input-group" style="width: 100%;">
                                     <div class="well well-sm" name="v_tagsWell" id="v_tagsWell"
                                          style="margin-bottom: 0px;">
-                                        <button type="button" class="btn btn-default" data-toggle="modal"
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
                                                 data-target="#tagsModal" onclick="showTags()"
                                                 style="color: #5cb85c;height: 24px;width: 21px;padding-right: 3px;padding-left: 3px;padding-top: 2px;padding-bottom: 2px;margin-bottom: 2px;">
-                                            <span class="glyphicon glyphicon-plus">+</span>
+                                            <i class="fas fa-plus-square"></i>
                                         </button>
                                     </div>
                                     <small class="help-block" id="v_help_block_tags"
@@ -128,36 +141,38 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Краткое описание вакансии</label>
+
+                        <!--tied-->
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-11 control-label">Краткое описание вакансии</label>
+                            <div class="col-sm-1"></div>
                             <div class="col-md-10 inputGroupContainer">
                                 <div class="input-group">
-                                            <span class="input-group-addon"><i
-                                                    class="glyphicon glyphicon-align-center"></i></span>
                                     <textarea name="v_shortDescription" id="v_shortDescription"
                                               placeholder="До 255 символов"
                                               class="form-control" rows="3" maxlength="255"></textarea>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Подробное описание вакансии</label>
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-11 control-label">Подробное описание вакансии</label>
+                            <div class="col-sm-1"></div>
                             <div class="col-md-10 inputGroupContainer">
                                 <div class="input-group">
-                                            <span class="input-group-addon"><i
-                                                    class="glyphicon glyphicon-align-center"></i></span>
                                     <textarea name="v_description" id="v_description" class="form-control"
                                               rows="15"></textarea>
                                 </div>
                             </div>
                         </div>
                         <!-- Button -->
-                        <div class="form-group">
+                        <div class="form-group" align="center">
                             <label class="col-md-2 control-label"></label>
                             <div class="col-md-10" style="display: flex; justify-content: center;"><br>
                                 <button type="button" class="btn btn-warning"
                                         onclick="validateAndPreview()" style="width: 150px;"> Создать
-                                    <span class="glyphicon glyphicon-send"></span>
+                                    <i class="fas fa-paper-plane "></i>
                                 </button>
                             </div>
                         </div>
@@ -174,8 +189,8 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h2 class="modal-title">Предварительный просмотр</h2>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
                     <h3><span id="VMTags"></span><br></h3>
@@ -200,9 +215,9 @@
                     <span id="VMId" hidden></span>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="sendVacancy()">Сохранить
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="sendVacancy()">Сохранить
                     </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
                 </div>
             </div>
         </div>
@@ -214,12 +229,13 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h2 class="modal-title">Добавление тегов</h2>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="input-group">
-                        <input id="search_tags" class="form-control width100" placeholder="Фильтр по названию" maxlength="50">
+                        <input id="search_tags" class="form-control width100" placeholder="Фильтр по названию"
+                               maxlength="50">
                         <span class="input-group-btn">
                         <button type="button" class="btn btn-info" onclick="addNewTag();">Добавить</button>
                     </span>
@@ -228,7 +244,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                 </div>
             </div>
         </div>
@@ -240,14 +256,14 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h2 class="modal-title">Укажите место на карте</h2>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div id="v_map" style="height: 600px"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                 </div>
             </div>
         </div>

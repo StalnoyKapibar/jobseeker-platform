@@ -4,14 +4,13 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/adminlayouts" th:with="side='admin'">
 <head>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
-    <script type="text/javascript" src="/js/admin/admin.js"></script>
 </head>
 <body>
 <div class="container-fluid" layout:fragment="content">
 </div>
 
-<div class="container-fluid" layout:fragment="content-script">
+<div layout:fragment="content-script">
+    <script type="text/javascript" src="/js/admin/admin.js"></script>
 </div>
 </body>
 </html>

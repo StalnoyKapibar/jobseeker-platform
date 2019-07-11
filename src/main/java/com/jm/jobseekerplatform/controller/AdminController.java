@@ -2,8 +2,10 @@ package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.Employer;
 import com.jm.jobseekerplatform.model.Seeker;
+import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.service.impl.EmployerService;
 import com.jm.jobseekerplatform.service.impl.SeekerService;
+import com.jm.jobseekerplatform.service.impl.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
+import java.util.List;
 
 @Controller
 public class AdminController {
@@ -25,6 +28,9 @@ public class AdminController {
 
     @Autowired
     private SeekerService seekerService;
+
+    @Autowired
+    private TagService tagService;
 
     @RequestMapping("/admin")
     public String adminPage() {
@@ -120,6 +126,15 @@ public class AdminController {
     public String adminPageSeekerToEdit(@PathVariable Long seekerId, Model model) {
         Seeker seeker = seekerService.getById(seekerId);
         return getStringForSeeker(model, seeker);
+    }
+
+    @RequestMapping(value = "/admin/tags", method = RequestMethod.GET)
+    public String UsersViewPage(Model model) {
+
+        List<Tag> tags = tagService.getAll();
+        model.addAttribute("tags", tags);
+
+        return "admin_tags";
     }
 
     private String getStringForSeeker(Model model, Seeker seeker) {

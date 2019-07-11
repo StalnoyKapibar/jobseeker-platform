@@ -72,6 +72,12 @@
                         Чат
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${side == 'tag' ? 'active' : ''}" href="/admin/tags">
+                        <span data-feather="tag"></span>
+                        Теги
+                    </a>
+                </li>
             </ul>
         </div>
     </nav>
