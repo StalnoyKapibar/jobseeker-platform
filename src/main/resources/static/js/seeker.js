@@ -38,3 +38,50 @@ function inviteFriend(id, friend) {
         }
     })
 }
+
+function inFavorite(vacancyId, profileId) {
+    $.ajax({
+        type: 'post',
+        url: "/api/seekerprofiles/inFavoriteVacancy?vacancyId=" + vacancyId + "&profileId=" + profileId,
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        success: function () {
+            $('#inFavorite').remove();
+            $('#buttons').append('<button id="outFavorite" class="btn btn-primary" onclick="outFavorite(' + vacancyId + ',' + profileId + ')">Убрать из избранное' +
+                '</button>');
+        },
+        error: function (error) {
+            console.log(error);
+            alert(error.toString());
+        }
+    })
+}
+
+function outFavorite(vacancyId, profileId) {
+    $.ajax({
+        type: 'post',
+        url: "/api/seekerprofiles/outFavoriteVacancy?vacancyId=" + vacancyId + "&profileId=" + profileId,
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        success: function () {
+            $('#outFavorite').remove();
+            $('#buttons').append('<button id="inFavorite" class="btn btn-primary" onclick="inFavorite(' + vacancyId + ',' + profileId + ')">В избранное' +
+                '</button>');
+        },
+        error: function (error) {
+            console.log(error);
+            alert(error.toString());
+        }
+    })
+}
+
+var token = $("meta[name='_csrf']").attr("content");
+var header = $("meta[name='_csrf_header']").attr("content");
+
+
+
+

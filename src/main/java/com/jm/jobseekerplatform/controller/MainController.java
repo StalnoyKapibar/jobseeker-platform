@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.NoResultException;
-
 import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
 import java.util.Base64;
@@ -30,6 +29,9 @@ public class MainController {
 
     @Autowired
     private VerificationTokenService verificationTokenService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private SeekerService seekerService;
@@ -51,6 +53,11 @@ public class MainController {
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
+                    Long id = ((User) authentication.getPrincipal()).getId();
+                    SeekerProfile profile = seekerService.getById(id).getProfile();
+                    model.addAttribute("favoriteVacancies", profile.getFavoriteVacancy());
+                    model.addAttribute("profileId", profile.getId());
+
                     Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getProfile().getTags();
                     Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
@@ -133,10 +140,19 @@ public class MainController {
     }
 
     @RequestMapping(value = "/vacancy/{vacancyId}", method = RequestMethod.GET)
-    public String viewVacancy(@PathVariable Long vacancyId, Model model) {
+    public String viewVacancy(@PathVariable Long vacancyId, Model model, Authentication authentication) {
 
         Vacancy vacancy = vacancyService.getById(vacancyId);
-
+        if (authentication != null) {
+            boolean isContain;
+            Long id = ((User) authentication.getPrincipal()).getId();
+            Profile profile = userService.getById(id).getProfile();
+            if (profile instanceof SeekerProfile) {
+                isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
+                model.addAttribute("isContain", isContain);
+            }
+            model.addAttribute("profileId", profile.getId());
+        }
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("vacancyFromServer", vacancy);
         model.addAttribute("EmployerProfileFromServer", vacancy.getEmployerProfile());

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <title>SeekerProfile</title>
+    <link href="/css/seeker.css" rel="stylesheet">
+    <script type="text/javascript" src="/js/seeker.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div id="sProfileDiv" class="main-block chromeFix" layout:fragment="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="container-fluid cards" >
+                            <div class="card" th:each="vacancy : ${favoriteVacancy}">
+                                <div class="card-header" th:text="${vacancy.headline}">Header</div>
+                                <div class="card-body" th:text="${vacancy.shortDescription}">Content</div>
+                                <div class="card-footer">
+                                    <button class="btn btn-primary"
+                                            th:onclick="'window.location.href = \'' + @{/vacancy/{id}(id=${vacancy.id})} + '\''">
+                                        Перейти
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
