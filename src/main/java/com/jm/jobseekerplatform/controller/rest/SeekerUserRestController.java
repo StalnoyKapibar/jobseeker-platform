@@ -51,11 +51,6 @@ public class SeekerUserRestController {
         return new ResponseEntity<>(seekerUser.getProfile(), HttpStatus.OK);
     }
 
-//    @RequestMapping(value = "/{seekerProfileId}", method = RequestMethod.GET)
-//    public ResponseEntity<SeekerProfile> getSeekerProfileById(@PathVariable Long seekerProfileId) {
-//        return new ResponseEntity<>(seekerProfileService.getById(seekerProfileId), HttpStatus.OK);
-//    }
-
     @RequestMapping(value = "/delete/{seekerUserId}", method = RequestMethod.GET)
     public ResponseEntity deleteSeekerById(@PathVariable Long seekerUserId) {
         seekerUserService.deleteById(seekerUserId);

@@ -51,11 +51,6 @@ public class EmployerUserRestController {
         return new ResponseEntity<>(employerUser.getProfile(), HttpStatus.OK);
     }
 
-//    @GetMapping("/{employerProfileId}")
-//    public ResponseEntity<EmployerProfile> getEmployerProfileById(@PathVariable Long employerProfileId) {
-//        return new ResponseEntity<>(employerProfileService.getById(employerProfileId), HttpStatus.OK);
-//    }
-
     @RequestMapping(value = "/delete/{employerUserId}", method = RequestMethod.GET)
     public ResponseEntity deleteEmployerUserById(@PathVariable Long employerUserId) {
         employerUserService.deleteById(employerUserId);
