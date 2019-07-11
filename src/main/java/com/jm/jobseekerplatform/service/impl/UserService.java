@@ -70,13 +70,11 @@ public class UserService extends AbstractService<User> {
             employerService.add(employer);
         }
         //так нужно сделать
-//        User registeredUser = findByEmail(userEmail);
+       User registeredUser = findByEmail(userEmail);
 
         String token = UUID.randomUUID().toString();
         //так нкжно сделать
-//        verificationTokenService.createVerificationToken(token, registeredUser);
-        //так делать нельзя
-        verificationTokenService.createVerificationToken(token,user);
+       verificationTokenService.createVerificationToken(token, registeredUser);
         mailService.sendVerificationEmail(userEmail, token);
     }
 
