@@ -11,8 +11,9 @@
         display: inline-block;
         margin: 1px;
     }</style>
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <!--<script type="text/javascript"-->
+    <!--src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>-->
+    <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
     <script type="text/javascript" src="/js/new_vacancy.js"></script>
     <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey})}"
             async defer></script>
@@ -27,7 +28,7 @@
             </div>
             <div class="col-sm-8">
                 <form class="well form-horizontal" id="vacancy_form">
-                    <fieldset >
+                    <fieldset>
                         <legend align="center">
                             <h2><b>Создание новой вакансии</b></h2>
                         </legend>
@@ -42,8 +43,8 @@
                                         <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
                                     </div>
                                     <input name="v_headline" id="v_headline"
-                                           placeholder="Введите название должности"
-                                           class="form-control" type="text">
+                                           placeholder="Введите название должности (обязательно)"
+                                           class="form-control is-invalid" type="text">
                                 </div>
                             </div>
                         </div>
@@ -55,27 +56,27 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-globe"></i></span>
                                     </div>
-                                    <input name="v_city" id="v_city" placeholder="Введите название города"
-                                           class="form-control" type="text">
+                                    <input name="v_city" id="v_city" placeholder="Введите название города (обязательно)"
+                                           class="form-control is-invalid" type="text">
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-1"></div>
-                            <label class="col-md-1 control-label">Местонахождение</label>
+                            <label class="col-md-1 control-label">Адрес</label>
                             <div class="col-md-9 inputGroupContainer">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button" data-toggle="modal"
+                                                    data-target="#mapModal"
+                                                    onclick="initV_Map()"><i class="fas fa-map"></i>
+                                            </button>
+                                        </span>
                                     </div>
                                     <input name="v_address" id="v_address"
-                                           placeholder="Введите полный адрес вручную или выберите на карте"
-                                           class="form-control" type="text">
-                                    <span class="input-group-btn">
-                            <button class="btn btn-secondary" type="button" data-toggle="modal" data-target="#mapModal"
-                                    onclick="initV_Map()"><i class="fas fa-map-marker" ></i>
-                            </button>
-                        </span>
+                                           placeholder="Введите полный адрес вручную или выберите на карте (обязательно)"
+                                           class="form-control is-invalid" type="text">
                                 </div>
                             </div>
                         </div>
@@ -87,7 +88,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-home"></i></span>
                                     </div>
-                                    <select name="v_remote" id="v_remote" class="form-control selectpicker">
+                                    <select name="v_remote" id="v_remote" placeholder="Нужно выбрать место" class="form-control selectpicker is-invalid">
+                                        <option value="">Выберите роль</option>
                                         <option value="false">В офисе работодателя</option>
                                         <option value="true">Удаленная работа</option>
                                     </select>
@@ -122,22 +124,17 @@
                         </div>
                         <div class="form-group row" id="v_form_group_tags">
                             <div class="col-sm-1"></div>
-                            <label class="col-md-1 control-label">Технологии</label>
-                            <div class="col-md-9 inputGroupContainer">
+                            <label class="col-md-2 control-label">Технологии (минимум одна)</label>
+                            <div class="col-md-7 inputGroupContainer">
                                 <div class="input-group" style="width: 100%;">
                                     <div class="well well-sm" name="v_tagsWell" id="v_tagsWell"
                                          style="margin-bottom: 0px;">
                                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                                 data-target="#tagsModal" onclick="showTags()"
-                                                style="color: #5cb85c;height: 24px;width: 21px;padding-right: 3px;padding-left: 3px;padding-top: 2px;padding-bottom: 2px;margin-bottom: 2px;">
+                                                style=";height: 24px;width: 21px;padding-right: 3px;padding-left: 3px;padding-top: 2px;padding-bottom: 2px;margin-bottom: 2px;">
                                             <i class="fas fa-plus-square"></i>
                                         </button>
                                     </div>
-                                    <small class="help-block" id="v_help_block_tags"
-                                           style="display: none; margin-bottom: 0px;">
-                                        Необходимо добавить хотя бы
-                                        одну технологию
-                                    </small>
                                 </div>
                             </div>
                         </div>
@@ -150,8 +147,11 @@
                             <div class="col-md-10 inputGroupContainer">
                                 <div class="input-group">
                                     <textarea name="v_shortDescription" id="v_shortDescription"
-                                              placeholder="До 255 символов"
-                                              class="form-control" rows="3" maxlength="255"></textarea>
+                                              placeholder="До 255 символов обязательно к заполнению"
+                                              class="form-control is-invalid" rows="3" maxlength="255"></textarea>
+                                    <div class="invalid-feedback">
+                                        опишите вакансию
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -161,8 +161,11 @@
                             <div class="col-sm-1"></div>
                             <div class="col-md-10 inputGroupContainer">
                                 <div class="input-group">
-                                    <textarea name="v_description" id="v_description" class="form-control"
+                                    <textarea name="v_description" id="v_description" placeholder="Обязательно к заполнению" class="form-control is-invalid"
                                               rows="15"></textarea>
+                                    <div class="invalid-feedback">
+                                        сделайте полное описание
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -215,7 +218,8 @@
                     <span id="VMId" hidden></span>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="sendVacancy()">Сохранить
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="sendVacancy()">
+                        Сохранить
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
                 </div>
