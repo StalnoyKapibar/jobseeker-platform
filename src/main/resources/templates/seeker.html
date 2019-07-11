@@ -43,6 +43,9 @@
                                 class="glyphicon glyphicon-plus"></span>
                             InviteFriend
                         </button>
+                        <div>
+                            <button class="btn btn-secondary" th:onclick="'window.location.href = \'' + @{/seeker/vacancies/{id}(id=${sprofile.id})} + '\''">Избранное</button>
+                        </div>
                     </div>
                 </div>
             </div>
