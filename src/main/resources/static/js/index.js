@@ -108,7 +108,7 @@ function deleteButton(id) {
 }
 
 function searchResults() {
-    $('#allVacancies').hide();
+    $('#allVacancies').remove();
     $('#searchList').remove();
     $('#searchResult').append('<ul id="searchList" class="list-group"></ul>');
     var param = [];
@@ -127,6 +127,11 @@ function searchResults() {
     } else {
         var pageCount = 0;
         $('#isAVShow').val('1');
+        var favoriteVacancies = [];
+        $('.favoriteVacancies').each(function (key, value) {
+            favoriteVacancies.push($(this).val())
+        });
+        var profileId = $('#profileId').val();
         $.ajax({
             type: 'post',
             url: "api/vacancies/search?pageCount=" + pageCount,
@@ -149,12 +154,22 @@ function searchResults() {
                         $('#searchHeader').text('Вакансии по тегам :');
                     }
                     $.each(data, function (key, value) {
+                        var favVac = '';
+                        $.each(favoriteVacancies, function (i, item) {
+                            if (item === value.id.toString()) {
+                                favVac = '<span class="stars" id="stars-' + value.id + '"><i id="outFavorite' + value.id + '" class="fas fa-star" onclick="outFavorite(' + value.id + ',' + profileId + ');event.stopPropagation();" title="убрать из избранных"></i></span>';
+                            }
+                        });
+                        if (favVac === '') {
+                            favVac = '<span class="stars" id="stars-' + value.id + '"><i id="inFavorite' + value.id + '" class="far fa-star" onclick="inFavorite(' + value.id + ',' + profileId + ');event.stopPropagation();" title="в избранное"></i></span>';
+                        }
                         $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
                             ' data-target="#vacancyModal" onclick="showVacancy(\'' + value.id + '\')">' + value.headline +
                             '<span class="pull-right">' +
                             '<span class="btn btn-xs btn-default"' +
                             'onclick="window.location.href =\'/vacancy/' + value.id + '\'">' +
                             '<i class="fas fa-play"></i></span>' +
+                            favVac +
                             '</li>');
                     });
                     pageCount++;
@@ -186,6 +201,11 @@ $(window).scroll(function () {
             });
 
             var pageCount = $('#scrollPageCount').val();
+            var favoriteVacancies = [];
+            $('.favoriteVacancies').each(function (key, value) {
+                favoriteVacancies.push($(this).val())
+            });
+            var profileId = $('#profileId').val();
             $.ajax({
                 type: 'post',
                 url: "api/vacancies/search?pageCount=" + pageCount,
@@ -196,12 +216,22 @@ $(window).scroll(function () {
                 data: JSON.stringify(param),
                 success: function (data) {
                     $.each(data, function (key, value) {
+                        var favVac = '';
+                        $.each(favoriteVacancies, function (i, item) {
+                            if (item === value.id.toString()) {
+                                favVac = '<span class="stars" id="stars-' + value.id + '"><i id="outFavorite' + value.id + '" class="fas fa-star" onclick="outFavorite(' + value.id + ',' + profileId + ');event.stopPropagation();" title="убрать из избранных"></i></span>';
+                            }
+                        });
+                        if (favVac === '') {
+                            favVac = '<span class="stars" id="stars-' + value.id + '"><i id="inFavorite' + value.id + '" class="far fa-star" onclick="inFavorite(' + value.id + ',' + profileId + ');event.stopPropagation();" title="в избранное"></i></span>';
+                        }
                         $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
                             ' data-target="#vacancyModal" onclick="showVacancy(\'' + value.id + '\')">' + value.headline +
                             '<span class="pull-right">' +
                             '<span class="btn btn-xs btn-default"' +
                             'onclick="window.location.href =\'/vacancy/' + value.id + '\'">' +
                             '<i class="fas fa-play"></i></span>' +
+                            favVac +
                             '</li>');
                     });
                     pageCount++;
@@ -216,3 +246,41 @@ $(window).scroll(function () {
     }
 });
 
+function inFavorite(vacancyId, profileId) {
+    $.ajax({
+        type: 'post',
+        url: "/api/seekerprofiles/inFavoriteVacancy?vacancyId=" + vacancyId + "&profileId=" + profileId,
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        success: function () {
+            $('#inFavorite' + vacancyId).remove();
+            $('#stars-' + vacancyId).append('<i id="outFavorite' + vacancyId + '" class="fas fa-star" onclick="outFavorite(' + vacancyId + ',' + profileId + ');event.stopPropagation();" title="убрать из избранных"></i>');
+
+        },
+        error: function (error) {
+            console.log(error);
+            alert(error.toString());
+        }
+    })
+}
+
+function outFavorite(vacancyId, profileId) {
+    $.ajax({
+        type: 'post',
+        url: "/api/seekerprofiles/outFavoriteVacancy?vacancyId=" + vacancyId + "&profileId=" + profileId,
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        success: function () {
+            $('#outFavorite' + vacancyId).remove();
+            $('#stars-' + vacancyId).append('<i id="inFavorite' + vacancyId + '" class="far fa-star" onclick="inFavorite(' + vacancyId + ',' + profileId + ');event.stopPropagation();" title="в избранное"></i>');
+        },
+        error: function (error) {
+            console.log(error);
+            alert(error.toString());
+        }
+    })
+}
