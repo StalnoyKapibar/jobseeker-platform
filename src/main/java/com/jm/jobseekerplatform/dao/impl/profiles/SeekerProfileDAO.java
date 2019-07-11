@@ -12,7 +12,7 @@ public class SeekerProfileDAO extends AbstractDAO<SeekerProfile> {
     public Set<SeekerProfile> getByTags(Set<Tag> tags, int limit) {
         Set<SeekerProfile> seekerProfiles = new HashSet<>();
         seekerProfiles.addAll(entityManager
-                .createQuery("SELECT v FROM SeekerProfile v JOIN v.tags t WHERE t IN (:param)", SeekerProfile.class) //todo (Nick Dolgopolov) check table SeekerProfile
+                .createQuery("SELECT v FROM SeekerProfile v JOIN v.tags t WHERE t IN (:param)", SeekerProfile.class)
                 .setParameter("param", tags)
                 .getResultList());
         return seekerProfiles;

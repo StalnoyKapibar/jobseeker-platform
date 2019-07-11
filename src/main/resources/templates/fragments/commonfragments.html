@@ -30,8 +30,7 @@
             <li><a href="#"><span>Все компании</span></a></li>
             <li><a href="#"><span>Все резюме</span></a></li>
 
-            <!--todo (Nick Dolgopolov)-->
-            <li sec:authorize="isAuthenticated()"><a class="font-color" th:href="@{'/chat/' + ${chatId}}">Чат<span
+            <li sec:authorize="isAuthenticated()"><a class="font-color" href="#">Мои чаты<span
                     id="count_not_read_messages"></span></a></li>
 
             <li sec:authorize="isAuthenticated()"><span id="username" th:utext="${username}"></span></li>

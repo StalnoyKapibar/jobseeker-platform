@@ -103,8 +103,8 @@ public class MainController {
         } catch (NoResultException e) {
             e.printStackTrace();
             model.addAttribute("complete", false);
-        } finally { //todo Warning:(103, 11) 'finally' block can not complete normally
-            return "confirm_reg"; //todo Warning:(104, 13) 'return' inside 'finally' block
+        } finally {
+            return "confirm_reg";
         }
     }
 
