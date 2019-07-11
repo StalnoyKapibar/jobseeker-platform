@@ -79,9 +79,9 @@ function addUser() {
     $.ajax({
         url: "/api/users/add",
         contentType: "application/json; charset=utf-8",
-        // beforeSend: function (request) {
-        //     request.setRequestHeader(header, token);
-        // },
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
         method: "POST",
         data: JSON.stringify(newUser),
         success:
