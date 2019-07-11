@@ -1,9 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.Employer;
-import com.jm.jobseekerplatform.model.State;
-import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
@@ -71,10 +68,9 @@ public class VacancyRestController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public boolean addVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
         if (vacancyService.validateVacancy(vacancy)) {
+            EmployerProfile employerProfile = ((Employer) authentication.getPrincipal()).getProfile();
+            vacancy.setEmployerProfile(employerProfile);
             vacancyService.addNewVacancyFromRest(vacancy);
-            Long employerProfileId = ((Employer) authentication.getPrincipal()).getEmployerProfile().getId();
-            Long vacancyId = vacancy.getId();
-            employerProfileService.addVacancyToEmployerProfile(employerProfileId, vacancyId);
             return true;
         } else {
             throw new IllegalArgumentException("Some fields is incorrect");

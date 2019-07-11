@@ -1,5 +1,8 @@
 package com.jm.jobseekerplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
@@ -15,6 +18,10 @@ public class Vacancy implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "employer_profile_id")
+    private EmployerProfile employerProfile;
 
     @Column(name = "headline", nullable = false)
     private String headline;
@@ -57,7 +64,8 @@ public class Vacancy implements Serializable {
     public Vacancy() {
     }
 
-    public Vacancy(String headline, String city, Boolean remote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags, Point coordinates) {
+    public Vacancy(EmployerProfile employerProfile, String headline, String city, Boolean remote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags, Point coordinates) {
+        this.employerProfile = employerProfile;
         this.headline = headline;
         this.city = city;
         this.remote = remote;
@@ -76,6 +84,16 @@ public class Vacancy implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+    @JsonIdentityReference(alwaysAsId=true)
+    public EmployerProfile getEmployerProfile() {
+        return employerProfile;
+    }
+
+    public void setEmployerProfile(EmployerProfile employerProfile) {
+        this.employerProfile = employerProfile;
     }
 
     public String getHeadline() {
