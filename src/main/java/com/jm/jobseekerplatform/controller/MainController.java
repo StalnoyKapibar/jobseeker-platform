@@ -174,6 +174,6 @@ public class MainController {
         List<Tag> tags = tagService.getAll();
         model.addAttribute("tags", tags);
 
-        return "admin_tags";
+        return "admin/admin_tags";
     }
 }
