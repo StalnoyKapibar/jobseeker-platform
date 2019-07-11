@@ -70,10 +70,10 @@ public class InitData {
 
         initAdminProfile();
         initEmployerProfiles();
+        initVacancies();
+
         initSeekerProfile();
         initUsers();
-
-        initVacancies();
 
         initReviews();
         initChat();
