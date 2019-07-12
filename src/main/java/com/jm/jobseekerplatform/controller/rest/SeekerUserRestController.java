@@ -37,7 +37,8 @@ public class SeekerUserRestController {
 
     @RequestMapping(value = "/editPhoto", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<SeekerProfile> updateSeekerPhoto(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("seekerUserId") String seekerUserId) {
+    ResponseEntity<SeekerProfile> updateSeekerPhoto(@RequestParam(value = "file", required = false) MultipartFile file,
+                                                    @RequestParam("seekerUserId") String seekerUserId) {
         SeekerUser seekerUser = seekerUserService.getById(Long.parseLong(seekerUserId));
         if (!file.isEmpty()) {
             try {

@@ -37,7 +37,8 @@ public class EmployerUserRestController {
 
     @RequestMapping(value = "/editLogo", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<EmployerProfile> updateEmployerLogo(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("id") String id) {
+    ResponseEntity<EmployerProfile> updateEmployerLogo(@RequestParam(value = "file", required = false) MultipartFile file,
+                                                       @RequestParam("id") String id) {
         EmployerUser employerUser = employerUserService.getById(Long.parseLong(id));
         if (!file.isEmpty()) {
             try {
