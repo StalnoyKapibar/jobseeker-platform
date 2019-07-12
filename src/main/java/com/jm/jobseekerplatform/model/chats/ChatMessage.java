@@ -3,6 +3,7 @@ package com.jm.jobseekerplatform.model.chats;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.users.User;
 
 import javax.persistence.*;
@@ -23,7 +24,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
 
     @ManyToOne
     @JoinColumn(name = "author")
-    private User author;
+    private Profile author;
 
     @Column(name = "date")
     private Date date;
@@ -33,7 +34,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
 
     public ChatMessage(){ }
 
-    public ChatMessage(String text, User author, Date date, boolean isRead) {
+    public ChatMessage(String text, Profile author, Date date, boolean isRead) {
         this.text = text;
         this.author = author;
         this.date = date;
@@ -52,11 +53,11 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
 
     @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
-    public User getAuthor() {
+    public Profile getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(Profile author) {
         this.author = author;
     }
 
@@ -81,7 +82,8 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         return "{" +
                 "\"id\":\"" + id + '\"' +
                 ",\"text\":\"" + text + '\"' +
-                ",\"author\":\"" + author.getEmail() + '\"' +
+                ",\"author type\":\"" + author.getClass() + '\"' +
+                ",\"author id\":\"" + author.getId() + '\"' +
                 ",\"createDate\":\"" + date + "\"" +
                 '}';
     }

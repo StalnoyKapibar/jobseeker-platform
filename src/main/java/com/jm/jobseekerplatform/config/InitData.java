@@ -8,6 +8,8 @@ import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 import com.jm.jobseekerplatform.model.profiles.*;
 import com.jm.jobseekerplatform.model.users.*;
 import com.jm.jobseekerplatform.service.impl.*;
+import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatService;
 import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
@@ -432,7 +434,7 @@ public class InitData {
         for (Long i = 1L; i < 6L; i++) {
             List<ChatMessage> messages = new ArrayList<>();
             for (int k = 0; k < 5; k++) {
-                ChatMessage chatMessage = new ChatMessage(faker.gameOfThrones().quote(), userService.findByEmail("admin@mail.ru"), new Date(), false);
+                ChatMessage chatMessage = new ChatMessage(faker.gameOfThrones().quote(), profileService.getById(1L), new Date(), false);
                 chatMessageService.add(chatMessage);
                 messages.add(chatMessage);
             }

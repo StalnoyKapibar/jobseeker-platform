@@ -1,13 +1,14 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
-import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicVacancyService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
@@ -46,6 +47,9 @@ public class MainController {
 
     @Autowired
     private EmployerUserService employerUserService;
+
+    @Autowired
+    private ChatWithTopicVacancyService chatWithTopicVacancyService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
@@ -141,13 +145,16 @@ public class MainController {
         return "chat";
     }
 
-    @RequestMapping("/chat/vacancy/{vacancyId:\\d+}/creator/{creatorId:\\d+}") //todo (Nick Dolgopolov)
-    public String getChatByCreatorAndVacancy(@PathVariable("vacancyId") String chatId, @PathVariable("creatorId") String creatorId, Authentication authentication, Model model) {
+    @RequestMapping("/chat/vacancy/{vacancyId:\\d+}") //todo (Nick Dolgopolov)
+    public String getChatByVacancyAndAuthenticatedUser(@PathVariable("vacancyId") String vacancyId,
+                                                       Authentication authentication, Model model) {
 
-//        chat
-//
-//        model.addAttribute("userId", user.getId());
-//        model.addAttribute("chatId", chatId);
+        User authenticatedUser = ((User) authentication.getPrincipal());
+
+        Chat chat = chatWithTopicVacancyService.getByVacancyIdAndCreatorProfileId(vacancyId, authenticatedUser.getProfile().getId());
+        chatService(Vacancy, );
+
+        model.addAttribute("chatId", chat.getId());
 
         return "chat";
     }

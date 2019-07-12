@@ -1,4 +1,4 @@
-package com.jm.jobseekerplatform.service.impl;
+package com.jm.jobseekerplatform.service.impl.chats;
 
 import com.jm.jobseekerplatform.dao.impl.ChatMessageDAO;
 import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
