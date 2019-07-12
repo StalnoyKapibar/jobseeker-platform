@@ -61,20 +61,20 @@ public class UserService extends AbstractService<User> {
         String userEmail = user.getEmail();
         char[] userPass = encodePassword(user.getPasswordChar());
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
+        User regNewUser = null;
 
         if (userRole.equals(roleSeeker)) {
-            Seeker seeker = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole,  null);
-            seekerService.add(seeker);
+            regNewUser  = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole,  null);
         } else if (userRole.equals(roleEmployer)) {
-            Employer employer = new Employer(userEmail, userPass, LocalDateTime.now(), userRole, null);
-            employerService.add(employer);
+            regNewUser = new Employer(userEmail, userPass, LocalDateTime.now(), userRole, null);
         }
+        add(regNewUser);
         //так нужно сделать
        User registeredUser = findByEmail(userEmail);
 
         String token = UUID.randomUUID().toString();
         //так нкжно сделать
-       verificationTokenService.createVerificationToken(token, registeredUser);
+        verificationTokenService.createVerificationToken(token, registeredUser);
         mailService.sendVerificationEmail(userEmail, token);
     }
 
