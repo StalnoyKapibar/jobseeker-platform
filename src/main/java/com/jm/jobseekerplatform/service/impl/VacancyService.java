@@ -1,6 +1,9 @@
 package com.jm.jobseekerplatform.service.impl;
 
+<<<<<<< HEAD
 import com.google.maps.errors.ApiException;
+=======
+>>>>>>> c4aab85a3b7b18a227459e49349585f8ff7fcbf5
 import com.jm.jobseekerplatform.dao.VacancyDaoI;
 import com.jm.jobseekerplatform.dao.impl.VacancyDAO;
 import com.jm.jobseekerplatform.dto.PageVacancyDTO;
@@ -16,8 +19,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+<<<<<<< HEAD
 import java.io.IOException;
 import java.util.*;
+=======
+import java.util.Calendar;
+import java.util.Date;
+>>>>>>> c4aab85a3b7b18a227459e49349585f8ff7fcbf5
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,6 +49,29 @@ public class VacancyService extends AbstractService<Vacancy> {
     private Pattern pattern;
     private Matcher matcher;
 
+<<<<<<< HEAD
+=======
+    public Set<Vacancy> getAllByEmployerProfileId(Long id, int limit) {
+        return dao.getAllByEmployerProfileId(id, limit);
+    }
+
+    public Set<Vacancy> getAllByEmployerProfileId(Long id) {
+        return dao.getAllByEmployerProfileId(id);
+    }
+
+    public Page<Vacancy> findAll(Pageable pageable) {
+        return vacancyDaoI.findAll(pageable);
+    }
+
+    public Page<Vacancy> findAllByTags(Set<Tag> tags, Pageable pageable) {
+        return vacancyDaoI.findAllByTags(tags, pageable);
+    }
+
+    public Set<Vacancy> getByTags(Set<Tag> tags, int limit) {
+        return dao.getAllByTags(tags, limit);
+    }
+
+>>>>>>> c4aab85a3b7b18a227459e49349585f8ff7fcbf5
     public void blockPermanently(Vacancy vacancy) {
         vacancy.setState(State.BLOCK_PERMANENT);
         vacancy.setExpiryBlock(null);
@@ -97,17 +128,13 @@ public class VacancyService extends AbstractService<Vacancy> {
         return isCorrect;
     }
 
-    public void addNewVacancyFromRest(Vacancy vacancy){
+    public void addNewVacancyFromRest(Vacancy vacancy) {
         vacancy.setState(State.NO_ACCESS);
         Point point = vacancy.getCoordinates();
         pointService.add(point);
         vacancy.setCoordinates(point);
-        Set<Tag> tags = vacancy.getTags();;
-        Set<Tag> tagsNew = new HashSet<>();
-        for (Tag tag:tags) {
-            tagsNew.add(tagService.findByName(tag.getName()));
-        }
-        vacancy.setTags(tagsNew);
+        Set<Tag> matchedTags = tagService.matchTagsByName(vacancy.getTags());
+        vacancy.setTags(matchedTags);
         dao.add(vacancy);
     }
 

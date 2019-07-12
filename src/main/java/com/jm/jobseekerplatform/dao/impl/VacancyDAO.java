@@ -19,11 +19,13 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
 
     public Page<Vacancy> getByTagsAndCity(String city, Set<Tag> tags, int limit, int page) {
         Set<Long> tagsId = new HashSet<>();
-        for (Tag tag:tags) { tagsId.add(tag.getId()); }
+        for (Tag tag : tags) {
+            tagsId.add(tag.getId());
+        }
 
         String s = "select * from vacancies as vc inner join (select v.vacancy_id as r_id, count(v.tags_id) as count "
-                +"from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result "
-                +"on vc.id=result.r_id where vc.city='"+city+"' order by result.count desc";
+                + "from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result "
+                + "on vc.id=result.r_id where vc.city='" + city + "' order by result.count desc";
 
         Query query = entityManager.unwrap(Session.class).createSQLQuery(s).addEntity(Vacancy.class)
                 .setParameter("param", tagsId);
@@ -35,6 +37,35 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         query.setMaxResults(limit);
 
         return new PageVacancyDTO(query.getResultList(), totalPages);
+    }
+
+    //language=SQL
+    private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.employerProfile.id = :param";
+
+    public Set<Vacancy> getAllByTags(Set<Tag> tags, int limit) {
+        Set<Vacancy> vacancies = new HashSet<>();
+        vacancies.addAll(entityManager
+                .createQuery("SELECT v FROM Vacancy v JOIN v.tags t WHERE t IN (:param)", Vacancy.class)
+                .setParameter("param", tags)
+                .setMaxResults(limit)
+                .getResultList());
+        return vacancies;
+    }
+
+    public Set<Vacancy> getAllByEmployerProfileId(Long id, int limit) {
+        Set<Vacancy> vacancies = new HashSet<>();
+
+        vacancies.addAll(entityManager
+                .createQuery(SQL_getAllByEmployerProfileId, Vacancy.class)
+                .setParameter("param", id)
+                .setMaxResults(limit)
+                .getResultList());
+
+        return vacancies;
+    }
+
+    public Set<Vacancy> getAllByEmployerProfileId(Long id) {
+        return getAllByEmployerProfileId(id, Integer.MAX_VALUE);
     }
 
     public int deletePermanentBlockVacancies() {

@@ -13,6 +13,7 @@ public class Point implements Serializable {
 
     @Column(name = "lat", nullable = false)
     private Float latitudeY;
+
     @Column(name = "place", nullable = false)
     private Float longitudeX;
 

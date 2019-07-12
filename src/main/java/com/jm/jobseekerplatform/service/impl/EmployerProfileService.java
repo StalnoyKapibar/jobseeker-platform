@@ -19,10 +19,6 @@ public class EmployerProfileService extends AbstractService<EmployerProfile> {
     @Autowired
     private EmployerProfileDAO dao;
 
-    public Optional<EmployerProfile> getByVacancyId(Long vacancyId) {
-        return dao.getByVacancyId(vacancyId);
-    }
-
     public void blockPermanently(EmployerProfile employerProfile) {
         employerProfile.setState(State.BLOCK_PERMANENT);
         employerProfile.setExpiryBlock(null);
@@ -57,9 +53,5 @@ public class EmployerProfileService extends AbstractService<EmployerProfile> {
 
     public int deleteExpiryBlockEmployerProfiles() {
         return dao.deleteExpiryBlockEmployerProfiles();
-    }
-
-    public void addVacancyToEmployerProfile(Long employerProfileId, Long vacancyId) {
-        dao.addVacancyToEmployerProfile(employerProfileId, vacancyId);
     }
 }

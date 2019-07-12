@@ -27,7 +27,13 @@ public class InitData {
     private VacancyService vacancyService;
 
     @Autowired
+    private AdminProfileService adminProfileService;
+
+    @Autowired
     private EmployerProfileService employerProfileService;
+
+    @Autowired
+    private SeekerProfileService seekerProfileService;
 
     @Autowired
     private ImageService imageService;
@@ -37,9 +43,6 @@ public class InitData {
 
     @Autowired
     private TagService tagService;
-
-    @Autowired
-    private SeekerProfileService seekerProfileService;
 
     @Autowired
     private EmployerService employerService;
@@ -58,14 +61,20 @@ public class InitData {
 
     private Faker faker = new Faker(new Locale("ru"));
 
+    private Random rnd = new Random();
+
     public void initData() {
         initTags();
         initUserRoles();
-        initVacancies();
         initPortfolio();
+
+        initAdminProfile();
         initEmployerProfiles();
         initSeekerProfile();
         initUsers();
+
+        initVacancies();
+
         initReviews();
         initChat();
     }
@@ -74,36 +83,36 @@ public class InitData {
         EmployerReviews reviewOne = new EmployerReviews();
         reviewOne.setDateReviews(new Date());
         reviewOne.setEvaluation(4);
-        reviewOne.setSeekerProfile(seekerProfileService.getById(1L));
+        reviewOne.setSeekerProfile(seekerProfileService.getById(8L));
         reviewOne.setReviews("Хорошая контора. Отличный коллектив, только директор придурковатый");
 
         EmployerReviews reviewTwo = new EmployerReviews();
         reviewTwo.setDateReviews(new Date());
-        reviewTwo.setSeekerProfile(seekerProfileService.getById(1L));
+        reviewTwo.setSeekerProfile(seekerProfileService.getById(8L));
         reviewTwo.setEvaluation(1);
         reviewTwo.setReviews("Неадекватное руководство. Уволился через месяц");
 
         EmployerReviews reviewThree = new EmployerReviews();
         reviewThree.setDateReviews(new Date());
-        reviewThree.setSeekerProfile(seekerProfileService.getById(2L));
+        reviewThree.setSeekerProfile(seekerProfileService.getById(9L));
         reviewThree.setEvaluation(4);
         reviewThree.setReviews("Очень низкие зарплаты, уволился через полгода");
 
         EmployerReviews reviewFour = new EmployerReviews();
         reviewFour.setDateReviews(new Date());
-        reviewFour.setSeekerProfile(seekerProfileService.getById(2L));
+        reviewFour.setSeekerProfile(seekerProfileService.getById(9L));
         reviewFour.setEvaluation(1);
         reviewFour.setReviews("Неадекватное руководство. Уволился через месяц");
 
         EmployerReviews reviewFive = new EmployerReviews();
         reviewFive.setDateReviews(new Date());
-        reviewFive.setSeekerProfile(seekerProfileService.getById(3L));
+        reviewFive.setSeekerProfile(seekerProfileService.getById(10L));
         reviewFive.setEvaluation(4);
         reviewFive.setReviews("Хорошая контора. Отличный коллектив");
 
         EmployerReviews reviewSix = new EmployerReviews();
         reviewSix.setDateReviews(new Date());
-        reviewSix.setSeekerProfile(seekerProfileService.getById(3L));
+        reviewSix.setSeekerProfile(seekerProfileService.getById(10L));
         reviewSix.setEvaluation(1);
         reviewSix.setReviews("Все нравилось,но уволился через месяц");
 
@@ -131,27 +140,27 @@ public class InitData {
         reviewsSix.add(reviewTwo);
         reviewsSix.add(reviewFive);
 
-        EmployerProfile employerProfileOne = employerProfileService.getById(1L);
+        EmployerProfile employerProfileOne = employerProfileService.getById(2L);
         employerProfileOne.setReviews(reviewsOne);
         employerProfileService.update(employerProfileOne);
 
-        EmployerProfile employerProfileTwo = employerProfileService.getById(2L);
+        EmployerProfile employerProfileTwo = employerProfileService.getById(3L);
         employerProfileTwo.setReviews(reviewsTwo);
         employerProfileService.update(employerProfileTwo);
 
-        EmployerProfile employerProfileThree = employerProfileService.getById(3L);
+        EmployerProfile employerProfileThree = employerProfileService.getById(4L);
         employerProfileThree.setReviews(reviewsThree);
         employerProfileService.update(employerProfileThree);
 
-        EmployerProfile employerProfileFour = employerProfileService.getById(4L);
+        EmployerProfile employerProfileFour = employerProfileService.getById(5L);
         employerProfileFour.setReviews(reviewsFour);
         employerProfileService.update(employerProfileFour);
 
-        EmployerProfile employerProfileFive = employerProfileService.getById(5L);
+        EmployerProfile employerProfileFive = employerProfileService.getById(6L);
         employerProfileFive.setReviews(reviewsFive);
         employerProfileService.update(employerProfileFive);
 
-        EmployerProfile employerProfileSix = employerProfileService.getById(6L);
+        EmployerProfile employerProfileSix = employerProfileService.getById(7L);
         employerProfileSix.setReviews(reviewsSix);
         employerProfileService.update(employerProfileSix);
     }
@@ -169,46 +178,46 @@ public class InitData {
         Seeker seeker;
 
         role = userRoleService.findByAuthority("ROLE_ADMIN");
-        user = new User("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), role);
+        user = new Admin("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), role, adminProfileService.getById(1L));
         user.setConfirm(true);
         userService.add(user);
 
         role = userRoleService.findByAuthority("ROLE_EMPLOYER");
-        employer = new Employer("employer@mail.ru", userService.encodePassword("employer".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(1L));
+        employer = new Employer("employer@mail.ru", userService.encodePassword("employer".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(2L));
         employer.setConfirm(true);
         employerService.add(employer);
 
-        employer = new Employer("employer2@mail.ru", userService.encodePassword("employer2".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(2L));
+        employer = new Employer("employer2@mail.ru", userService.encodePassword("employer2".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(3L));
         employer.setConfirm(true);
         employerService.add(employer);
 
-        employer = new Employer("employer3@mail.ru", userService.encodePassword("employer3".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(3L));
+        employer = new Employer("employer3@mail.ru", userService.encodePassword("employer3".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(4L));
         employer.setConfirm(true);
         employerService.add(employer);
 
-        employer = new Employer("employer4@mail.ru", userService.encodePassword("employer4".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(4L));
+        employer = new Employer("employer4@mail.ru", userService.encodePassword("employer4".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(5L));
         employer.setConfirm(true);
         employerService.add(employer);
 
-        employer = new Employer("employer5@mail.ru", userService.encodePassword("employer5".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(5L));
+        employer = new Employer("employer5@mail.ru", userService.encodePassword("employer5".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(6L));
         employer.setConfirm(true);
         employerService.add(employer);
 
-        employer = new Employer("employer6@mail.ru", userService.encodePassword("employer6".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(6L));
+        employer = new Employer("employer6@mail.ru", userService.encodePassword("employer6".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(7L));
         employer.setConfirm(true);
         employerService.add(employer);
 
         role = userRoleService.findByAuthority("ROLE_SEEKER");
 
-        seeker = new Seeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(1L));
+        seeker = new Seeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(8L));
         seeker.setConfirm(true);
         seekerService.add(seeker);
 
-        seeker = new Seeker("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(2L));
+        seeker = new Seeker("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(9L));
         seeker.setConfirm(true);
         seekerService.add(seeker);
 
-        seeker = new Seeker("seeker3@mail.ru", userService.encodePassword("seeker3".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(3L));
+        seeker = new Seeker("seeker3@mail.ru", userService.encodePassword("seeker3".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(10L));
         seeker.setConfirm(true);
         seekerService.add(seeker);
     }
@@ -252,10 +261,33 @@ public class InitData {
 
             Point point = new Point(latitudeY, longitudeX);
             pointService.add(point);
-            vacancy = new Vacancy(faker.job().title(), city, Math.random() < 0.5, shortDescr, description, Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), randomTags(0L), point);
+
+            vacancy = new Vacancy(
+                    getRandomEmployerProfile(),
+                    faker.job().title(),
+                    city,
+                    Math.random() < 0.5,
+                    shortDescr,
+                    description,
+                    Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), //salaryMin
+                    Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), //salaryMax
+                    randomTags(0L),
+                    point);
+
             vacancy.setState(State.ACCESS);
             vacancyService.add(vacancy);
         }
+    }
+
+    private EmployerProfile getRandomEmployerProfile() {
+        List<EmployerProfile> all = employerProfileService.getAll();
+        return all.get(rnd.nextInt(all.size()));
+    }
+
+    private void initAdminProfile() {
+        AdminProfile adminProfile = new AdminProfile();
+        adminProfile.setState(State.ACCESS);
+        adminProfileService.add(adminProfile);
     }
 
     public void initEmployerProfiles() {
@@ -268,7 +300,8 @@ public class InitData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        employerProfile = new EmployerProfile("Рога и копыта", "www.roga.ru", "Мы продуктовая компания, которая разрабатывает высокотехнологичные продукты в области электротранспорта, роботизации, автоматизации и биотехнологий.\n" +
+
+        String description = "Мы продуктовая компания, которая разрабатывает высокотехнологичные продукты в области электротранспорта, роботизации, автоматизации и биотехнологий.\n" +
                 "В России базируется отдел исследований и разработок. \n" +
                 "Стек: Java8, J2ee, Spring. Клиентская часть: ES6, React, React Native. Облака AWS, Docker, NodeJS (+ Express/Koa/Hapi).\n" +
                 "Миссия - улучшать жизнь людей с помощью технологий.\n" +
@@ -280,7 +313,9 @@ public class InitData {
                 "- Новые технологии без legacy кода. \n" +
                 "- Открытая атмосфера, без корпоративного \"булшита\". \n" +
                 "- Официальное оформление по ТК РФ. \n" +
-                "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ", imageService.resizeLogoEmployer(image), randomVacancies(0L));
+                "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ";
+
+        employerProfile = new EmployerProfile("Рога и копыта", "www.roga.ru", description, imageService.resizeLogoEmployer(image));
         employerProfile.setState(State.ACCESS);
         employerProfileService.add(employerProfile);
 
@@ -290,17 +325,15 @@ public class InitData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        employerProfile = new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image), randomVacancies(5L));
+        employerProfile = new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image));
         employerProfile.setState(State.ACCESS);
         employerProfileService.add(employerProfile);
 
-        for (Long i = 10L; i <= 25L; i++) {
-            if (i % 5 == 0) {
-                image = getBufferedImage();
-                employerProfile = new EmployerProfile(faker.company().name(), faker.company().url(), faker.company().bs(), imageService.resizeLogoEmployer(image), randomVacancies(i));
-                employerProfile.setState(State.ACCESS);
-                employerProfileService.add(employerProfile);
-            }
+        for (Long i = 0L; i <= 3L; i++) {
+            image = getBufferedImage();
+            employerProfile = new EmployerProfile(faker.company().name(), faker.company().url(), faker.company().bs(), imageService.resizeLogoEmployer(image));
+            employerProfile.setState(State.ACCESS);
+            employerProfileService.add(employerProfile);
         }
     }
 
@@ -325,21 +358,23 @@ public class InitData {
     }
 
     public void initTags() {
-        tagService.add(new Tag("Java 8"));
-        tagService.add(new Tag("Spring Framework"));
-        tagService.add(new Tag("Git"));
-        tagService.add(new Tag("Maven"));
-        tagService.add(new Tag("Apache Tomcat"));
-        tagService.add(new Tag("Java Servlets"));
-        tagService.add(new Tag("JSF"));
-        tagService.add(new Tag("PostgreSQL"));
-        tagService.add(new Tag("Oracle Pl/SQL"));
-        tagService.add(new Tag("JMS"));
-        tagService.add(new Tag("Azure"));
-        tagService.add(new Tag("React"));
-        tagService.add(new Tag("MySQL"));
-        tagService.add(new Tag("Thymeleaf"));
-        tagService.add(new Tag("OAuth2"));
+        boolean verified = true;
+        tagService.add(new Tag("Java 8", verified));
+        tagService.add(new Tag("Spring Framework", verified));
+        tagService.add(new Tag("Git", verified));
+        tagService.add(new Tag("Maven", verified));
+        tagService.add(new Tag("Apache Tomcat", verified));
+        tagService.add(new Tag("Java Servlets", verified));
+        tagService.add(new Tag("JSF", verified));
+        tagService.add(new Tag("PostgreSQL", verified));
+        tagService.add(new Tag("Oracle Pl/SQL", verified));
+        tagService.add(new Tag("JMS", verified));
+        tagService.add(new Tag("Azure", verified));
+        tagService.add(new Tag("React", verified));
+        tagService.add(new Tag("MySQL", verified));
+        tagService.add(new Tag("Thymeleaf", verified));
+        tagService.add(new Tag("OAuth2", verified));
+
     }
 
     public void initSeekerProfile() {
@@ -375,14 +410,6 @@ public class InitData {
         return tags;
     }
 
-    private Set<Vacancy> randomVacancies(Long position) {
-        Set<Vacancy> vacancies = new HashSet<>();
-        for (Long i = position; i < position + 5; i++) {
-            vacancies.add(vacancyService.getById(i + 1));
-        }
-        return vacancies;
-    }
-
     public void initChat() {
 
         for (Long i = 1L; i < 6L; i++) {
@@ -397,6 +424,4 @@ public class InitData {
             vacancyService.update(vacancy);
         }
     }
-
-
 }

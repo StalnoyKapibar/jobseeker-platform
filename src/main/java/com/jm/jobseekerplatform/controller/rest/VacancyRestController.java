@@ -2,16 +2,21 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.google.maps.errors.ApiException;
 import com.jm.jobseekerplatform.model.*;
-import com.jm.jobseekerplatform.service.impl.*;
+import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.TagService;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,6 +31,9 @@ public class VacancyRestController {
     private EmployerProfileService employerProfileService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
+
+    @Autowired
+    private TagService tagService;
 
     @RequestMapping("/")
     public List<Vacancy> getAll() {
@@ -64,32 +72,45 @@ public class VacancyRestController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public boolean addVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
         if (vacancyService.validateVacancy(vacancy)) {
+            EmployerProfile employerProfile = ((Employer) authentication.getPrincipal()).getProfile();
+            vacancy.setEmployerProfile(employerProfile);
             vacancyService.addNewVacancyFromRest(vacancy);
-            Long employerProfileId = ((Employer) authentication.getPrincipal()).getEmployerProfile().getId();
-            Long vacancyId = vacancy.getId();
-            employerProfileService.addVacancyToEmployerProfile(employerProfileId, vacancyId);
             return true;
         } else {
             throw new IllegalArgumentException("Some fields is incorrect");
         }
     }
 
-    @RequestMapping("/point/page/{page}")
-    public Page<Vacancy> getPageOfVacancies(@RequestBody Point point, @PathVariable("page") int page, Authentication authentication) throws InterruptedException, ApiException, IOException {
-        if (page != 0) { page = page - 1; }
-        int limit = 10;
+//    @RequestMapping("/point/page/{page}")
+//    public Page<Vacancy> getPageOfVacancies(@RequestBody Point point, @PathVariable("page") int page, Authentication authentication) throws InterruptedException, ApiException, IOException {
+//        if (page != 0) {
+//            page = page - 1;
+//        }
+//        int limit = 10;
+//
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            return vacancyService.findAllVacanciesByPoint(point, limit, page);
+//        } else {
+//            if (authentication.getAuthorities().contains(roleSeeker)) {
+//                try {
+//                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
+//                    return vacancyService.getVacanciesByTagsAndByPoint(point, tags, limit, page);
+//                } catch (NullPointerException e) {
+//                    return vacancyService.findAllVacanciesByPoint(point, limit, page);
+//                }
+//            }
+//        }
+//        return vacancyService.findAllVacanciesByPoint(point, limit, page);
+//    }
 
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return vacancyService.findAllVacanciesByPoint(point, limit, page);
-        } else {
-            if (authentication.getAuthorities().contains(roleSeeker)) {
-                try {
-                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
-                    return vacancyService.getVacanciesByTagsAndByPoint(point, tags, limit, page);
-                } catch (NullPointerException e) {
-                    return vacancyService.findAllVacanciesByPoint(point, limit, page);
-                }
-            }
-        } return vacancyService.findAllVacanciesByPoint(point, limit, page);
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<Set<Vacancy>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
+        if (searchParam.isEmpty()) {
+            return new ResponseEntity<>(new HashSet<>(), HttpStatus.OK);
+        }
+        List<Vacancy> list = vacancyService.findAllByTags(searchParam,PageRequest.of(pageCount, 10,
+                new Sort(Sort.Direction.ASC, "id"))).getContent();
+        return new ResponseEntity<>(new HashSet<>(list), HttpStatus.OK);
     }
 }

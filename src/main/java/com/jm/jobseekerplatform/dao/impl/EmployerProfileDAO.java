@@ -29,23 +29,4 @@ public class EmployerProfileDAO extends AbstractDAO<EmployerProfile> {
                 .executeUpdate();
         return deletedCount;
     }
-
-    public void addVacancyToEmployerProfile(Long employerProfileId, Long vacancyId) {
-        entityManager
-                .createNativeQuery("INSERT INTO employerprofiles_vacancies (employer_profile_id, vacancies_id) values (?, ?)")
-                .setParameter(1, employerProfileId)
-                .setParameter(2, vacancyId)
-                .executeUpdate();
-    }
-
-    public Optional<EmployerProfile> getByVacancyId(Long vacancyId) {
-
-        EmployerProfile employerProfile = entityManager.createQuery(
-                "select e from EmployerProfile e " +
-                        "where :vacancyId = ANY (select v.id from e.vacancies v)", EmployerProfile.class)
-                .setParameter("vacancyId", vacancyId)
-                .getSingleResult();
-
-        return Optional.ofNullable(employerProfile);
-    }
 }

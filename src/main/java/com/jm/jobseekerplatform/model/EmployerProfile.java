@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.model;
 
 import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -8,12 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "employerprofiles")
-public class EmployerProfile implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class EmployerProfile extends Profile implements Serializable {
 
     @Column(name = "companyname")
     private String companyName;
@@ -28,16 +24,9 @@ public class EmployerProfile implements Serializable {
     @Type(type = "image")
     private byte[] logo;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private Set<Vacancy> vacancies;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "employer_id")
     private Set<EmployerReviews> reviews;
-
-    @Column(name = "state", nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private State state;
 
     @Column(name = "expiry_block")
     private Date expiryBlock;
@@ -45,21 +34,12 @@ public class EmployerProfile implements Serializable {
     public EmployerProfile() {
     }
 
-    public EmployerProfile(String companyName, String website, String description, byte[] logo, Set<Vacancy> vacancies) {
+    public EmployerProfile(String companyName, String website, String description, byte[] logo) {
+        super();
         this.companyName = companyName;
         this.website = website;
         this.description = description;
         this.logo = logo;
-        this.vacancies = vacancies;
-        this.state = State.NO_ACCESS;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCompanyName() {
@@ -94,14 +74,6 @@ public class EmployerProfile implements Serializable {
         this.logo = logo;
     }
 
-    public Set<Vacancy> getVacancies() {
-        return vacancies;
-    }
-
-    public void setVacancies(Set<Vacancy> vacancies) {
-        this.vacancies = vacancies;
-    }
-
     public Set<EmployerReviews> getReviews() {
         return reviews;
     }
@@ -120,20 +92,12 @@ public class EmployerProfile implements Serializable {
     }
 
     public Double getAverageRating() {
-        if (reviews != null){
+        if (reviews != null) {
             return reviews.stream().mapToInt(EmployerReviews::getEvaluation).average().orElse(0);
-        }else {
+        } else {
             return 0d;
         }
 
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
     }
 
     public Date getExpiryBlock() {

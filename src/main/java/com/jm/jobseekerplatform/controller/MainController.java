@@ -18,6 +18,7 @@ import javax.persistence.NoResultException;
 import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
 import java.util.Base64;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,13 +40,38 @@ public class MainController {
     @Autowired
     private EmployerProfileService employerProfileService;
 
+    @Autowired
+    private TagService tagService;
+
+    private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
+
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
 
     @RequestMapping("/")
-    public String mainPage(Model model) {
-        model.addAttribute("vacMess", "Доступные вакансии:");
-        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+//    public String mainPage(Model model) {
+//        model.addAttribute("vacMess", "Доступные вакансии:");
+//        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+    public String mainPage(Authentication authentication, Model model) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
+            model.addAttribute("vacMess", "Доступные вакансии:");
+            model.addAttribute("vacancies", vacancies);
+        } else {
+            if (authentication.getAuthorities().contains(roleSeeker)) {
+                try {
+                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getProfile().getTags();
+                    Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
+                    model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
+                    model.addAttribute("vacancies", vacancies);
+                } catch (NullPointerException e) {
+                    List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
+                    model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
+                    model.addAttribute("vacancies", vacancies);
+                }
+            }
+        }
+
         return "index";
     }
 
@@ -88,10 +114,10 @@ public class MainController {
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
                 Employer employer = (Employer) employerService.getById(id);
-                return "redirect:/employer/" + employer.getEmployerProfile().getId();
+                return "redirect:/employer/" + employer.getProfile().getId();
             } else if (roles.contains("ROLE_SEEKER")) {
                 Seeker seeker = (Seeker) seekerService.getById(id);
-                return "redirect:/seeker/" + seeker.getSeekerProfile().getId();
+                return "redirect:/seeker/" + seeker.getProfile().getId();
             } else if (roles.contains("ROLE_ADMIN")) {
                 return "redirect:/admin";
             }
@@ -120,14 +146,22 @@ public class MainController {
     public String viewVacancy(@PathVariable Long vacancyId, Model model) {
 
         Vacancy vacancy = vacancyService.getById(vacancyId);
-        EmployerProfile employerProfile = employerProfileService.getByVacancyId(vacancyId).orElseThrow(IllegalArgumentException::new);
 
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("vacancyFromServer", vacancy);
-        model.addAttribute("EmployerProfileFromServer", employerProfile);
-        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
+        model.addAttribute("EmployerProfileFromServer", vacancy.getEmployerProfile());
+        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getEmployerProfile().getLogo()));
 
         return "vacancy";
+    }
+
+    @RequestMapping(value = "/admin/tags", method = RequestMethod.GET)
+    public String UsersViewPage(Model model) {
+
+        List<Tag> tags = tagService.getAll();
+        model.addAttribute("tags", tags);
+
+        return "admin_tags";
     }
 }
 
