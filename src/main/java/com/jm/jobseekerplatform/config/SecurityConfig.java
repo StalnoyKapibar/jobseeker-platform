@@ -64,9 +64,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				// делаем не валидной текущую сессию
 				.invalidateHttpSession(true);
 
-		http.authorizeRequests().antMatchers("/","/css/*","/js/*","/vacancy/**").permitAll().antMatchers("/admin","/admin/**").access("hasAnyRole('ADMIN','EMPLOYER')")
+		http.authorizeRequests().antMatchers("/registration")
+                .anonymous().antMatchers("/","/css/*","/js/*","/vacancy/**").permitAll().antMatchers("/admin","/admin/**").access("hasAnyRole('ADMIN','EMPLOYER')")
 				.anyRequest().authenticated();
-
-	}
-
+    }
 }

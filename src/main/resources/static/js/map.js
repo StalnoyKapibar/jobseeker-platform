@@ -26,6 +26,9 @@ function initV_Map() {
         google.maps.event.addListener(v_marker, 'dragend', function (a) {
             $("#v_address").val(getAddressByCoords(a.latLng.lat(), a.latLng.lng()));
         });
+        $("#v_address").removeClass("is-invalid");
+        $("#v_address").addClass("is-valid");
+        address_check = true;
     });
 }
 

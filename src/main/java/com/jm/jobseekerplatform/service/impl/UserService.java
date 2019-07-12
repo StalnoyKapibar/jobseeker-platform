@@ -63,16 +63,18 @@ public class UserService extends AbstractService<User> {
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
 
         if (userRole.equals(roleSeeker)) {
-            Seeker seeker = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            Seeker seeker = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole,  null);
             seekerService.add(seeker);
         } else if (userRole.equals(roleEmployer)) {
             Employer employer = new Employer(userEmail, userPass, LocalDateTime.now(), userRole, null);
             employerService.add(employer);
         }
+        //так нужно сделать
+       User registeredUser = findByEmail(userEmail);
 
-        User registeredUser = findByEmail(userEmail);
         String token = UUID.randomUUID().toString();
-        verificationTokenService.createVerificationToken(token, registeredUser);
+        //так нкжно сделать
+       verificationTokenService.createVerificationToken(token, registeredUser);
         mailService.sendVerificationEmail(userEmail, token);
     }
 
@@ -100,7 +102,7 @@ public class UserService extends AbstractService<User> {
     public boolean validateNewUser(User user) {
         UserRole userRole = user.getAuthority();
         String email_pattern = "^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\\.)*(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$";
-        String pass_pattern = "^(?=.*[a-z].*)(?=.*[0-9].*)[A-Za-z0-9]{8,20}$";
+        String pass_pattern = "^(?=.*[a-z].*)(?=.*[0-9].*)[A-Za-z0-9]{6,20}$";
         boolean isCorrect;
 
         if (user.getEmail().isEmpty() || user.getPassword().isEmpty() || user.getAuthority().getAuthority().isEmpty()) {

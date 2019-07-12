@@ -31,10 +31,14 @@ public class SeekerProfile extends Profile implements Serializable {
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Portfolio> portfolios;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Vacancy> favoriteVacancy;
+
     public SeekerProfile() {
     }
 
-    public SeekerProfile(String name, String patronymic, String surname, String description, byte[] photo, Set<Tag> tags, Set<Portfolio> portfolios) {
+    public SeekerProfile(String name, String patronymic, String surname, String description, byte[] photo, Set<Tag> tags,
+                         Set<Portfolio> portfolios, Set<Vacancy> favoriteVacancy) {
         this.name = name;
         this.patronymic = patronymic;
         this.surname = surname;
@@ -42,6 +46,15 @@ public class SeekerProfile extends Profile implements Serializable {
         this.photo = photo;
         this.tags = tags;
         this.portfolios = portfolios;
+        this.favoriteVacancy = favoriteVacancy;
+    }
+
+    public Set<Vacancy> getFavoriteVacancy() {
+        return favoriteVacancy;
+    }
+
+    public void setFavoriteVacancy(Set<Vacancy> favoriteVacancy) {
+        this.favoriteVacancy = favoriteVacancy;
     }
 
     public String getName() {

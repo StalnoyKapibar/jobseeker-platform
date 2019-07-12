@@ -55,7 +55,7 @@ $('#editSeekerForm').click(function (event) {
     var patronymic = $('#editSeeker').find("input[name='patronymic']").val();
     var surname = $('#editSeeker').find("input[name='surname']").val();
     var description = $('#editSeeker').find("input[name='description']").val();
-    //var photo = $('#seekerPhoto img').attr('src');
+    //var photo = $('#seekerPhoto img').attr('validator');
 
     var userAuthority = {
         'id': authorityId,
