@@ -139,4 +139,13 @@ public class AdminController {
 
         return "admin/admin_seeker_edit";
     }
+
+    @RequestMapping(value = "/admin/tags", method = RequestMethod.GET)
+    public String UsersViewPage(Model model) {
+
+        List<Tag> tags = tagService.getAll();
+        model.addAttribute("tags", tags);
+
+        return "admin/admin_tags";
+    }
 }

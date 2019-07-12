@@ -1,6 +1,8 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
@@ -8,6 +10,7 @@ import com.jm.jobseekerplatform.service.impl.*;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -59,7 +62,7 @@ public class MainController {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
                     Long id = ((User) authentication.getPrincipal()).getId();
-                    SeekerProfile profile = seekerService.getById(id).getProfile();
+                    SeekerProfile profile = seekerUserService.getById(id).getProfile();
                     model.addAttribute("favoriteVacancies", profile.getFavoriteVacancy());
                     model.addAttribute("profileId", profile.getId());
 
@@ -176,14 +179,5 @@ public class MainController {
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getEmployerProfile().getLogo()));
 
         return "vacancy";
-    }
-
-    @RequestMapping(value = "/admin/tags", method = RequestMethod.GET)
-    public String UsersViewPage(Model model) {
-
-        List<Tag> tags = tagService.getAll();
-        model.addAttribute("tags", tags);
-
-        return "admin/admin_tags";
     }
 }
