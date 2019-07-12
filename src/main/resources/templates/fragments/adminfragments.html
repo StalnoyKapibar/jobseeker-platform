@@ -12,9 +12,10 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Панель администратора</title>
-    <!-- Bootstrap core CSS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/c5edb0b5a3.js"></script>
     <link href="/css/dashboard.css" rel="stylesheet">
 </th:block>
 <th:block th:fragment="nav">
@@ -36,33 +37,45 @@
         <div class="sidebar-sticky">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/admin">
+                    <a class="nav-link" th:classappend="${side == 'admin' ? 'active' : ''}" href="/admin">
                         <span data-feather="home"></span>
                         Главная <!--<span class="sr-only">(current)</span>-->
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/employers">
+                    <a class="nav-link" th:classappend="${side == 'empl' ? 'active' : ''}" href="/admin/employers">
                         <span data-feather="user"></span>
                         Работодатели
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/seekers">
+                    <a class="nav-link" th:classappend="${side == 'seek' ? 'active' : ''}" href="/admin/seekers">
                         <span data-feather="user"></span>
                         Соискатели
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/vacancies">
+                    <a class="nav-link" th:classappend="${side == 'vac' ? 'active' : ''}" href="/admin/vacancies">
                         <span data-feather="layers"></span>
                         Вакансии
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="/admin/addUser">
+                    <a class="nav-link" th:classappend="${side == 'add' ? 'active' : ''}" href="/admin/addUser">
                         <span data-feather="user-plus"></span>
                         Добавить Пользователя
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${side == 'chat' ? 'active' : ''}" href="/admin/chats">
+                        <span data-feather="message-circle"></span>
+                        Чат
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${side == 'tag' ? 'active' : ''}" href="/admin/tags">
+                        <span data-feather="tag"></span>
+                        Теги
                     </a>
                 </li>
             </ul>
@@ -70,9 +83,7 @@
     </nav>
 </th:block>
 <th:block th:fragment="scripts">
-    <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <!--<script>window.jQuery || document.write('<script src="/docs/4.3.1/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>-->
+    <!--<script>window.jQuery || document.write('<script validator="/docs/4.3.1/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>-->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>

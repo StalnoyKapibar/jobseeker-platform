@@ -1,0 +1,175 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<!--xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<head>
+    <style>#success_message {
+        display: none;
+    }</style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="/css/dashboard.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/c5edb0b5a3.js"></script>
+    <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
+</head>
+<body>
+<div class="form-row">
+    <form class="card bg-light card-body mb-3 " id="contact_form" onclick="document.getElementById('success_message').hide()" >
+        <center>
+            <fieldset>
+
+                <!-- Form Name -->
+                <legend>
+                    <h2><b>Добавьте пользователя</b></h2>
+                </legend>
+                <br>
+                <!-- Text input-->
+                <div class="form-group">
+                    <!--<label class="col-md-5 control-label">Логин (Email)</label>-->
+                    <div class="col-md-5 inputGroupContainer">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Введите Email"
+                                   name="user_email" id="user_email" required>
+                            <div class="invalid-feedback " id="exists_warning">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <!--<label class="col-md-4 control-label">Пароль</label>-->
+                    <div class="col-md-5 inputGroupContainer">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" class="form-control" placeholder="Введите пароль от 8 до 20 символов"
+                                   name="user_password" id="user_password" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <!--<label class="col-md-4 control-label">Введите повторно</label>-->
+                    <div class="col-md-5 inputGroupContainer">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input name="confirm_password" id="confirm_password"
+                                   placeholder="Введите пароль повторно" class="form-control"
+                                   type="password" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <!--<label class="col-md-4 control-label">Вид аккаунта</label>-->
+                    <div class="col-md-5 selectContainer">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-list"></i></span>
+                            </div>
+                            <select name="role" id="role" class="form-control selectpicker" required>
+                                <option value="">Выберите роль</option>
+                                <option value="ROLE_SEEKER">Соискатель</option>
+                                <option value="ROLE_EMPLOYER">Работодатель</option>
+                                <option value="ROLE_ADMIN">Администратор</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="checkbox form-group">
+                    <label class="col-md-4"><input type="checkbox" id="show" onclick="showFuck()">показать</label>
+                </div>
+                <div class="checkbox form-group">
+                    <label class="col-md-4"><input type="checkbox" id="hide" onclick="hideFuck()"/>спрятать</label>
+                </div>
+                <!--Success message-->
+                <div class="alert alert-success" role="alert" id="success_message">Ползователь успешно
+                    добавлен<i
+                            class="fas fa-thumbs-up"></i><br/>
+                </div>
+                <!-- Button -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label"></label>
+                    <div class="col-md-4" style="display: flex; justify-content: center;"><br>
+                        <button type="button" class="btn btn-warning" onclick="showFuck()"
+                                style="width: 250px;">
+                            Добавить <i class="fas fa-paper-plane "></i>
+                        </button>
+                    </div>
+                </div>
+
+            </fieldset>
+        </center>
+    </form>
+</div>
+<script>
+    // $(document).ready(function () {
+    //     ex();
+    // })
+
+
+    bootstrapValidate('#user_email', 'email:Введите корректный Email-адрес', function (isValid) {
+        if (isValid){
+            exists();
+        } else {
+            $('#exists_warning').html('');
+        }
+    })
+    bootstrapValidate('#user_password', 'alphanum:только латинские буквы и цифры|min:6: от 6 символов|max:20: до 20 символов', function (isValid) {
+        if (isValid){
+            $('#user_password').addClass('is-valid');
+        }
+    })
+    bootstrapValidate('#confirm_password', 'matches:#user_password:Пароли не совпадают', function (isValid) {
+        if (isValid){
+            $('#confirm_password').addClass('is-valid');
+        }
+    })
+    bootstrapValidate('#role', 'required:Нужно выбрать роль', function (isValid) {
+        if (isValid){
+            $('#role').addClass('is-valid');
+        }
+    })
+
+    function showFuck() {
+        var checkBox = document.getElementById('show');
+        if (checkBox.checked) {
+            $('#success_message').slideDown({opacity: "show"}, "slow");
+        }else {
+            $('#success_message').hide();
+        }
+    }
+    function hideFuck() {
+        $('#success_message').slideDown("slow").hide();
+    }
+    function exists() {
+        $.ajax({
+            url: '/api/users/email/'
+                + $('#user_email').val(),
+            success: function (result) {
+               if (result){
+                   $('#user_email').addClass("is-invalid");
+                   $('#exists_warning').html("Email-адрес уже существует");
+               } else {
+                   $('#user_email').addClass("is-valid");
+               }
+            }
+        })
+    }
+
+</script>
+
+
+</body>
+</html>

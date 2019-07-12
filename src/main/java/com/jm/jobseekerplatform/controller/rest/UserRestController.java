@@ -35,12 +35,8 @@ public class UserRestController {
     }
 //     проверка валидации user через ajax
     @RequestMapping(method = RequestMethod.GET, value = "/email/{email}")
-    public ResponseEntity<String> isExistEmail(@PathVariable String email) {
-        if (userService.isExistEmail(email)) {
-            return ResponseEntity.ok("{\"valid\" : \"false\"}");
-        } else {
-            return ResponseEntity.ok("{\"valid\" : \"true\"}");
-        }
+    public ResponseEntity<Boolean> isExistEmail(@PathVariable String email) {
+        return ResponseEntity.ok(userService.isExistEmail(email));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getUser/{id}")
