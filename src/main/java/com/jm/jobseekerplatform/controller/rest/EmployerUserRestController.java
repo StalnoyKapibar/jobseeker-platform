@@ -21,8 +21,7 @@ public class EmployerUserRestController {
     private EmployerProfileService employerProfileService;
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
-    ResponseEntity updateEmployer(@RequestBody EmployerUser employerUser) {
+    public @ResponseBody ResponseEntity updateEmployer(@RequestBody EmployerUser employerUser) {
         Long employerProfileId = employerUser.getProfile().getId();
         EmployerProfile tmpEmployer = employerProfileService.getById(employerProfileId);
 

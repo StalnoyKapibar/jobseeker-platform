@@ -21,8 +21,7 @@ public class SeekerUserRestController {
     private SeekerProfileService seekerProfileService;
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
-    ResponseEntity updateSeekerUser(@RequestBody SeekerUser seekerUser) {
+    public @ResponseBody ResponseEntity updateSeekerUser(@RequestBody SeekerUser seekerUser) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerUser.getProfile().getId());
 
         seekerUser.getProfile().setPhoto(seekerProfile.getPhoto());
