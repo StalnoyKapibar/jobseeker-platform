@@ -7,96 +7,14 @@
     <title>Error</title>
 </head>
 <body>
-<!--<style type="text/css">
-    body {
-        background-color: #F5F5F5;
-    }
-
-    li {
-        margin-top: 20px;
-        list-style-type: none; /* Убираем маркеры */
-    }
-
-    ul {
-        margin-left: 0; /* Отступ слева в браузере IE и Opera */
-        padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
-    }
-
-    .logo {
-        width: 90%;
-        height: auto;
-    }
-
-    .main-block {
-        height: 135%;
-        width: 85%;
-        position: relative;
-    }
-
-    .sidebar {
-        width: 15%;
-        position: relative;
-        background-color: #a3bacc;
-        height: calc(100vh);
-    }
-
-    .right {
-        position: absolute;
-        right: 60px;
-    }
-
-    .center {
-        position: absolute;
-        left: 0;
-        right: 0;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .form-search {
-        width: 80%;
-        height: 60px;
-        margin-top: 5%;
-
-    }
-
-    .sidebar-paths {
-        margin-top: 15%;
-        width: 90%;
-
-    }
-
-    .vacancy-table {
-        width: 80%;
-        background-color: white;
-        text-align: center;
-        margin-top: 15%;
-    }
-
-    a {
-        color: white;
-        margin-left: 25%;
-    }
-
-    .navbar {
-        height: 40px;
-        width: 100%;
-        margin: 0;
-        background-color: #7295b1
-    }
-</style>-->
-<div class="container-fluid">
-    <div class="row">
-        <div class="main-block chromeFix" layout:fragment="content">
-            <div class="container-fluid">
-                <div class="row" style="height: 40px"></div>
-                <div class="row">
-                    <div class="col-sm-6"></div>
-                    <div class="col-sm-4" align="center" style="color: #7295B1">
-                        <span style="font-size: 25px">Ой, что-то пошло не так!</span><br>
-                        <span th:text="${status}" style="font-size: 120px"></span>
-                    </div>
-                </div>
+<div  layout:fragment="content">
+    <div class="container-fluid">
+        <div class="row" style="height: 40px"></div>
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4" align="center" style="color: #7295B1">
+                <span style="font-size: 25px">Ой, что-то пошло не так!</span><br>
+                <span th:text="${status}" style="font-size: 120px"></span>
             </div>
         </div>
     </div>

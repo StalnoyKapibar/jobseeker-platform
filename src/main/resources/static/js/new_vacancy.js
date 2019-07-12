@@ -1,85 +1,101 @@
 var vacancy;
 var flagTag = false;
 
+var headline_check = false;
+var city_check = false;
+var address_check = false;
+var remote_check = false;
+var salary_min_check = true;
+var salary_max_check = true;
+var shrt_desc_check = false;
+var desc_check = false;
+
 $(document).ready(function () {
-    $('#vacancy_form').bootstrapValidator({
-        feedbackIcons: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        live: 'enabled',
-        fields: {
-            v_headline: {
-                validators: {
-                    notEmpty: {
-                        message: 'Введите название должности'
-                    },
-                    regexp: {
-                        regexp: /^[A-Za-z0-9А-Яа-я ()\-]{3,100}$/,
-                        message: 'Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов'
-                    }
-                }
-            },
-            v_city: {
-                validators: {
-                    notEmpty: {
-                        message: 'Введите название города'
-                    },
-                    regexp: {
-                        regexp: /^[A-Za-z0-9А-Яа-я ()\-]{3,100}$/,
-                        message: 'Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов'
-                    }
-                }
-            },
-            v_address: {
-                validators: {
-                    notEmpty: {
-                        message: 'Введите адрес или выберите на карте'
-                    }
-                }
-            },
-            v_remote: {
-                validators: {
-                    notEmpty: {
-                        message: 'Выберите место работы'
-                    }
-                }
-            },
-            v_salaryMin: {
-                validators: {
-                    regexp: {
-                        regexp: /^[0-9]{1,100}$/,
-                        message: 'Поле может содержать цифры от одного до 10 разрядов'
-                    }
-                }
-            },
-            v_salaryMax: {
-                validators: {
-                    regexp: {
-                        regexp: /^[0-9]{1,100}$/,
-                        message: 'Поле может содержать цифры от одного до 10 разрядов'
-                    }
-                }
-            },
-            v_shortDescription: {
-                validators: {
-                    notEmpty: {
-                        message: 'Краткое описание должно быть заполнено'
-                    }
-                }
-            },
-            v_description: {
-                validators: {
-                    notEmpty: {
-                        message: 'Подробное описание должно быть заполнено'
-                    }
-                }
+    bootstrapValidate('#v_headline', 'regex:^[A-Za-z0-9А-Яа-я ()\\-]{3,100}$:Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов',
+        function (isValid) {
+            if (isValid) {
+                $('#v_headline').addClass('is-valid');
+                headline_check = true;
+            } else {
+                headline_check = false;
             }
         }
-    });
+    )
+    bootstrapValidate('#v_city', 'regex:^[A-Za-z0-9А-Яа-я ()\\-]{3,100}$:Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов',
+        function (isValid) {
+            if (isValid) {
+                $('#v_city').addClass('is-valid');
+                city_check = true;
+            } else {
+                city_check = false;
+            }
+        }
+    )
 
-    $("#search_tags").keyup(function(e){
+    bootstrapValidate('#v_address', 'required:', function (isValid) {
+        if (isValid) {
+            $('#v_address').removeClass('is-invalid');
+            $('#v_address').addClass('is-valid');
+            address_check = true;
+        } else {
+            address_check = false;
+        }
+    })
+    bootstrapValidate('#v_remote', 'required:', function (isValid) {
+        if (isValid) {
+            $('#v_remote').removeClass('is-invalid');
+            $('#v_remote').addClass('is-valid');
+            remote_check = true;
+        } else {
+            remote_check = false;
+        }
+    })
+
+    bootstrapValidate('#v_salaryMin', 'regex:^[0-9]{0,100}$:Поле может содержать цифры от одного до 10 разрядов',
+        function (isValid) {
+            if (isValid) {
+                $('#v_salaryMin').addClass('is-valid');
+                salary_min_check = true;
+            } else {
+                salary_min_check = false;
+            }
+
+        }
+    )
+
+    bootstrapValidate('#v_salaryMax', 'regex:^[0-9]{0,100}$:Поле может содержать цифры от одного до 10 разрядов',
+        function (isValid) {
+            if (isValid) {
+                $('#v_salaryMax').addClass('is-valid');
+                salary_max_check = true;
+            } else {
+                salary_max_check = false;
+            }
+
+        }
+    )
+
+    bootstrapValidate('#v_shortDescription', 'required:', function (isValid) {
+        if (isValid) {
+            $('#v_shortDescription').removeClass('is-invalid');
+            $('#v_shortDescription').addClass('is-valid');
+            shrt_desc_check = true;
+        } else {
+            shrt_desc_check = false;
+        }
+    })
+
+    bootstrapValidate('#v_description', 'required:', function (isValid) {
+        if (isValid) {
+            $('#v_description').removeClass('is-invalid');
+            $('#v_description').addClass('is-valid');
+            desc_check = true;
+        } else {
+            desc_check = false;
+        }
+    })
+
+    $("#search_tags").keyup(function (e) {
         e.preventDefault();
         tags_search();
     });
@@ -89,17 +105,16 @@ function tags_search() {
     let tags_span = $("#tagsWell").find("span");
     tags_span.hide();
     let str = $("#search_tags").val();
-    if (str==""){
+    if (str == "") {
         tags_span.show();
     } else {
-    tags_span.filter("[value ^= '"+str+"']").show();
+        tags_span.filter("[value ^= '" + str + "']").show();
     }
 }
 
 function validateAndPreview() {
-    let bootstrapValidator = $('#vacancy_form').data('bootstrapValidator');
-    bootstrapValidator.validate();
-    let isValid = bootstrapValidator.isValid();
+    var isValid = headline_check&&city_check&&address_check&&remote_check&&salary_min_check&&salary_max_check&&
+        shrt_desc_check&&desc_check;
     if ($("#v_tagsWell").children().length < 2) {
         $("#v_form_group_tags").attr("class", "form-group has-feedback has-error");
         $("#v_tagsWell").css("border-color", "#a94442");
@@ -126,7 +141,7 @@ function validateAndPreview() {
         let point = {'latitudeY': loc.lat, 'longitudeX': loc.lng};
 
         vacancy = {
-            'id' : null,
+            'id': null,
             'headline': headline,
             'city': city,
             'remote': remote,
@@ -136,8 +151,8 @@ function validateAndPreview() {
             'salaryMax': salaryMax,
             'tags': tags,
             'coordinates': point,
-            'state' : null,
-            'expiryBlock' : null
+            'state': null,
+            'expiryBlock': null
         };
 
         $("#VMHeadline").text(vacancy.headline);
@@ -174,7 +189,7 @@ function validateAndPreview() {
         let lat = vacancy.coordinates.latitudeY;
         let lng = vacancy.coordinates.longitudeX;
         showVacancyOnMap(lat, lng);
-        let address = getAddressByCoords(lat,lng);
+        let address = getAddressByCoords(lat, lng);
         $("#VMAddress").text(address);
     }
 }
@@ -187,7 +202,7 @@ function showTags() {
             async: false,
             success: function (data) {
                 $.each(data, function (key, value) {
-                    $("#tagsWell").append("<span class='label label-success' value='"+ value.name +"' id='tagLabel_" + value.id + "' onclick='addTag(" + value.id + ",\"" + value.name + "\")'>" + value.name + "</span>");
+                    $("#tagsWell").append("<span class='label label-success' value='" + value.name + "' id='tagLabel_" + value.id + "' onclick='addTag(" + value.id + ",\"" + value.name + "\")'>" + value.name + "</span>");
                 });
                 flagTag = true;
             }
@@ -212,7 +227,7 @@ function addNewTag() {
 }
 
 function deleteTag(id, name) {
-    $("#tagsWell").append("<span class='label label-success' value='"+ name +"'id='tagLabel_" + id + "' onclick='addTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
+    $("#tagsWell").append("<span class='label label-success' value='" + name + "'id='tagLabel_" + id + "' onclick='addTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
     $("#v_tagLabel_" + id).remove();
 }
 

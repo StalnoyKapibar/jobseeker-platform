@@ -94,10 +94,10 @@ public class InitData {
 
         initAdminProfile();
         initEmployerProfiles();
+        initVacancies();
+
         initSeekerProfile();
         initUsers();
-
-        initVacancies();
 
         initReviews();
         initChat();
@@ -408,17 +408,19 @@ public class InitData {
             e.printStackTrace();
         }
 
-        seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L), portfolios));
+        Set<Vacancy> vacancies = new HashSet<>(vacancyService.getAll());
+
+        seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L), portfolios, vacancies));
 
         portfolios.clear();
         portfolios.add(portfolioService.getById(3L));
         portfolios.add(portfolioService.getById(4L));
-        seekerProfileService.add(new SeekerProfile("Иван", "Игоревич", "Петров", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios));
+        seekerProfileService.add(new SeekerProfile("Иван", "Игоревич", "Петров", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios,vacancies));
 
         portfolios.clear();
         portfolios.add(portfolioService.getById(5L));
         portfolios.add(portfolioService.getById(6L));
-        seekerProfileService.add(new SeekerProfile("Семен", "Александрович", "Иванов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L), portfolios));
+        seekerProfileService.add(new SeekerProfile("Семен", "Александрович", "Иванов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L), portfolios,vacancies));
     }
 
     private Set<Tag> randomTags(Long position) {

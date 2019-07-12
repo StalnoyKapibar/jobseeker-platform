@@ -2,9 +2,11 @@ package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
+import com.jm.jobseekerplatform.service.impl.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
+import java.util.List;
 
 @Controller
 public class AdminController {
@@ -29,6 +32,9 @@ public class AdminController {
 
     @Autowired
     private VacancyService vacancyService;
+
+    @Autowired
+    private TagService tagService;
 
     @RequestMapping("/admin")
     public String adminPage() {

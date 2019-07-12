@@ -1,34 +1,33 @@
 <!doctype html>
 <html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/adminlayouts">
+      layout:decorator="layouts/adminlayouts" th:with="side='chat'">
 <head>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
 </head>
 
 <body>
 <div class="container-fluid" layout:fragment="content">
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main_admin_page">
-        <br/>
-        <h2>Список чатов</h2>
-        <div class="table-responsive">
-            <table id="chatTable" class="table table-sm table-bordered" cellspacing="0" width="100%">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Тема общения</th>
-                    <th>Инициатор</th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </main>
+    <br/>
+    <h2>Список чатов</h2>
+    <div class="table-responsive">
+        <table id="chatTable" class="table table-sm table-bordered" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Тема общения</th>
+                <th>Инициатор</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div class="container-fluid" layout:fragment="content-script">
-    <script src="/js/admin_chats.js"></script>
+    <script src="/js/admin/admin_chats.js"></script>
     <script type="text/javascript" charset="utf8"
             src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>

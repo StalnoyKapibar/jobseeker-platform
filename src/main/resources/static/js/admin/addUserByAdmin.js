@@ -4,6 +4,7 @@ var pass_conf_check = false;
 var role_check = false;
 
 $(document).ready(function () {
+    feather.replace();
     bootstrapValidate('#user_email', 'email:Введите корректный Email-адрес', function (isValid) {
         if (isValid) {
             exists();
@@ -46,13 +47,21 @@ $(document).ready(function () {
             role_check = false;
         }
     })
-});
+})
 
 function alertForm() {
     if (email_check && pass_check && pass_conf_check && role_check) {
         $('#ups_message').hide();
     }
     $('#success_message').hide();
+}
+
+function notifyUser() {
+    if (document.getElementById('notify').checked) {
+        $('#notify').addClass("is-valid");
+    } else {
+        $('#notify').removeClass("is-valid");
+    }
 }
 
 function validityForm() {
@@ -63,12 +72,14 @@ function validityForm() {
     }
 }
 
+
 function addUser() {
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
     var userEmail = $("#user_email").val();
     var userPass = $("#user_password").val();
     var role = {'authority': $("#role").val()};
+    var checkBox = document.getElementById("notify");
 
     var newUser = {
         'email': userEmail,
@@ -77,7 +88,7 @@ function addUser() {
     };
 
     $.ajax({
-        url: "/api/users/add",
+        url: "/api/users/addUserByAdmin/" + checkBox.checked,
         contentType: "application/json; charset=utf-8",
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
@@ -89,17 +100,19 @@ function addUser() {
                 console.log(data);
                 $('#email_ver').text(userEmail);
                 $('#success_message').slideDown({opacity: "show"}, "slow");
+                $('#ups_message').hide();
                 $('#contact_form')[0].reset();
                 $('#user_email').removeClass('is-valid');
                 $('#user_password').removeClass('is-valid');
                 $('#confirm_password').removeClass('is-valid');
+                $('#notify').removeClass('is-valid');
                 $('#role').removeClass('is-valid');
             },
         error: function (error) {
             console.log(error);
             alert(error.responseJSON.message);
         }
-    });
+    })
 }
 
 function exists() {
