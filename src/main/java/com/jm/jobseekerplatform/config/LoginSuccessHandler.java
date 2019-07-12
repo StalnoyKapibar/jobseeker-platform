@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.config;
 
-import com.jm.jobseekerplatform.model.User;
-import com.jm.jobseekerplatform.service.impl.UserService;
+import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;

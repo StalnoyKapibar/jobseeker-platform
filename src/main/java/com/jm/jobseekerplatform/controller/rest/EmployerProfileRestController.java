@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.EmployerProfile;
-import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

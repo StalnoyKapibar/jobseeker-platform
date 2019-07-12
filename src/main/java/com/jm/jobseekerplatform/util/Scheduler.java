@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.util;
 
-import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;

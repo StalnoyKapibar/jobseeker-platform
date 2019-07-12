@@ -18,7 +18,7 @@ function showInviteModal(id) {
         type: "GET",
         async: false,
         success: function (seeker) {
-            $('#seeker-input-add').val(seeker.name);
+            $('#seekerProfile-input-add').val(seeker.name);
             $('#inviteFriendModal').modal();
         },
         error: function (message) {

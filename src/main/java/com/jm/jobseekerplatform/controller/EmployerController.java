@@ -1,9 +1,13 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
-import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
-import com.jm.jobseekerplatform.service.impl.EmployerService;
-import com.jm.jobseekerplatform.service.impl.SeekerService;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,10 +29,10 @@ public class EmployerController {
     private EmployerProfileService employerProfileService;
 
     @Autowired
-    private EmployerService employerService;
+    private EmployerUserService employerUserService;
 
     @Autowired
-    private SeekerService seekerService;
+    private SeekerUserService seekerUserService;
 
     @Autowired
     private VacancyService vacancyService;
@@ -41,7 +45,8 @@ public class EmployerController {
     public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {
         boolean isOwner = false;
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
-        model.addAttribute("eprofile", employerProfile);
+
+        model.addAttribute("employerProfile", employerProfile);
 
         Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
         model.addAttribute("vacancies", vacancies);
@@ -51,13 +56,13 @@ public class EmployerController {
             Long userId = ((User) authentication.getPrincipal()).getId();
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
-                Employer employer = employerService.getById(userId);
-                isOwner = employer.getProfile().getId().equals(employerProfileId);
+                EmployerUser employerUser = employerUserService.getById(userId);
+                isOwner = employerUser.getProfile().getId().equals(employerProfileId);
             }
             if (roles.contains("ROLE_SEEKER") | roles.contains("ROLE_ADMIN")) {
                 if (roles.contains("ROLE_SEEKER")) {
-                    Seeker seeker = seekerService.getById(userId);
-                    model.addAttribute("seekerProfileId", seeker.getProfile().getId());
+                    SeekerUser seekerUser = seekerUserService.getById(userId);
+                    model.addAttribute("seekerProfileId", seekerUser.getProfile().getId());
                 }
             }
             if (!employerProfile.getReviews().isEmpty()) {
@@ -74,8 +79,10 @@ public class EmployerController {
                 model.addAttribute("reviewStatus", false);
             }
         }
+
         model.addAttribute("isOwner", isOwner);
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+
         return "employer";
     }
 }

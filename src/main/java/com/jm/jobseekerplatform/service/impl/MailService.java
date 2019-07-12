@@ -55,7 +55,7 @@ public class MailService {
     }
     // приглашение друга
     public void sendFriendInvitaionEmail(String address, String friendAddres) {
-        String subject = address + "Приглашет вас попробовать нашу платформу";
+        String subject = address + "Приглашает вас попробовать нашу платформу";
         String href = "http://localhost:" + port + "/registration?email=" + friendAddres;
         final Context ctx = new Context();
         ctx.setVariable("inviter", address);

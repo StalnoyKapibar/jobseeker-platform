@@ -1,7 +1,16 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -15,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.NoResultException;
 import javax.annotation.security.RolesAllowed;
-import java.security.Principal;
 import java.util.Base64;
 import java.util.List;
 import java.util.Set;
@@ -34,10 +42,10 @@ public class MainController {
     private UserService userService;
 
     @Autowired
-    private SeekerService seekerService;
+    private SeekerUserService seekerUserService;
 
     @Autowired
-    private EmployerService employerService;
+    private EmployerUserService employerUserService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
@@ -54,11 +62,11 @@ public class MainController {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
                     Long id = ((User) authentication.getPrincipal()).getId();
-                    SeekerProfile profile = seekerService.getById(id).getProfile();
+                    SeekerProfile profile = seekerUserService.getById(id).getProfile();
                     model.addAttribute("favoriteVacancies", profile.getFavoriteVacancy());
                     model.addAttribute("profileId", profile.getId());
 
-                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getProfile().getTags();
+                    Set<Tag> tags = ((SeekerUser) authentication.getPrincipal()).getProfile().getTags();
                     Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
                     model.addAttribute("vacancies", vacancies);
@@ -110,11 +118,11 @@ public class MainController {
             Long id = ((User) authentication.getPrincipal()).getId();
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
-                Employer employer = (Employer) employerService.getById(id);
-                return "redirect:/employer/" + employer.getProfile().getId();
+                EmployerUser employerUser = employerUserService.getById(id);
+                return "redirect:/employer/" + employerUser.getProfile().getId();
             } else if (roles.contains("ROLE_SEEKER")) {
-                Seeker seeker = (Seeker) seekerService.getById(id);
-                return "redirect:/seeker/" + seeker.getProfile().getId();
+                SeekerUser seekerUser = seekerUserService.getById(id);
+                return "redirect:/seeker/" + seekerUser.getProfile().getId();
             } else if (roles.contains("ROLE_ADMIN")) {
                 return "redirect:/admin";
             }
@@ -122,12 +130,24 @@ public class MainController {
         return "index";
     }
 
-    @RequestMapping("/chat/{vacancyId}")
-    public String getChat(@PathVariable("vacancyId") String vacancyId, Principal principal, Model model) {
+    @RequestMapping("/chat/{chatId}")
+    public String getChatById(@PathVariable("chatId") String chatId,  Authentication authentication, Model model) {
 
-        String username = principal.getName();
-        model.addAttribute("username", username);
-        model.addAttribute("vacancyId", vacancyId);
+        User user = (User)authentication.getPrincipal();
+
+        model.addAttribute("userId", user.getId());
+        model.addAttribute("chatId", chatId);
+
+        return "chat";
+    }
+
+    @RequestMapping("/chat/vacancy/{vacancyId:\\d+}/creator/{creatorId:\\d+}") //todo (Nick Dolgopolov)
+    public String getChatByCreatorAndVacancy(@PathVariable("vacancyId") String chatId, @PathVariable("creatorId") String creatorId, Authentication authentication, Model model) {
+
+//        chat
+//
+//        model.addAttribute("userId", user.getId());
+//        model.addAttribute("chatId", chatId);
 
         return "chat";
     }
