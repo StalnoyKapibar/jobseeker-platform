@@ -180,4 +180,13 @@ public class MainController {
 
         return "vacancy";
     }
+
+    @RequestMapping(value = "/admin/tags", method = RequestMethod.GET)
+    public String UsersViewPage(Model model) {
+
+        List<Tag> tags = tagService.getAll();
+        model.addAttribute("tags", tags);
+
+        return "admin_tags";
+    }
 }
