@@ -1,9 +1,12 @@
 package com.jm.jobseekerplatform.controller;
 
-import com.jm.jobseekerplatform.model.Employer;
-import com.jm.jobseekerplatform.model.Seeker;
-import com.jm.jobseekerplatform.service.impl.EmployerService;
-import com.jm.jobseekerplatform.service.impl.SeekerService;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
+import com.jm.jobseekerplatform.service.impl.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,34 +19,41 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
+import java.util.List;
 
 @Controller
 public class AdminController {
 
     @Autowired
-    private EmployerService employerService;
+    private EmployerUserService employerUserService;
 
     @Autowired
-    private SeekerService seekerService;
+    private SeekerUserService seekerUserService;
+
+    @Autowired
+    private VacancyService vacancyService;
+
+    @Autowired
+    private TagService tagService;
 
     @RequestMapping("/admin")
     public String adminPage() {
-        return "admin";
+        return "admin/admin";
     }
 
     @RequestMapping("/admin/addUser")
     public String adminAddUser() {
-        return "admin_addUser";
+        return "admin/admin_addUser";
     }
 
     @RequestMapping("/admin/vacancies")
     public String adminPageVacancies() {
-        return "admin_vacancies";
+        return "admin/admin_vacancies";
     }
 
     @RequestMapping("/admin/chats")
     public String adminPageChats() {
-        return "admin_chats";
+        return "admin/admin_chats";
     }
 
     @RequestMapping(value = "/admin/employers", method = RequestMethod.GET)
@@ -54,6 +64,7 @@ public class AdminController {
         String pageParam = request.getParameter("page");
         String sizeParam = request.getParameter("size");
         String direction = request.getParameter("direction");
+
         Sort lastVisitSort = new Sort(Sort.Direction.DESC, "date");
         if (direction != null && !direction.isEmpty() && direction.equals("ASC")) {
             lastVisitSort = new Sort(Sort.Direction.ASC, "date");
@@ -70,23 +81,23 @@ public class AdminController {
             page = Integer.parseInt(request.getParameter("page")) - 1;
         }
 
-        Page<Employer> employers = employerService.findAll(PageRequest.of(page, size, lastVisitSort));
+        Page<EmployerUser> employerUsers = employerUserService.findAll(PageRequest.of(page, size, lastVisitSort));
 
-        model.addAttribute("employers", employers);
-        return "admin_employers";
+        model.addAttribute("employerUsers", employerUsers);
+
+        return "admin/admin_employers";
     }
 
-    @RequestMapping(value = "/admin/employer/{employerId}", method = RequestMethod.GET)
-    public String adminPageEmployerToEdit(@PathVariable Long employerId, Model model) {
-        Employer employer = employerService.getById(employerId);
-        return getStringForEmployer(model, employer);
-    }
+    @RequestMapping(value = "/admin/employer/{userEmployerId}", method = RequestMethod.GET)
+    public String adminPageEmployerToEdit(@PathVariable Long userEmployerId, Model model) {
+        EmployerUser employerUser = employerUserService.getById(userEmployerId);
 
-    private String getStringForEmployer(Model model, Employer employer) {
-        model.addAttribute("employer", employer);
-        model.addAttribute("employerprof", employer.getProfile());
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(employer.getProfile().getLogo()));
-        return "admin_employer_edit";
+        model.addAttribute("employerUser", employerUser);
+        model.addAttribute("employerProfile", employerUser.getProfile());
+        model.addAttribute("vacancies", vacancyService.getAllByEmployerProfileId(employerUser.getProfile().getId()));
+        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(employerUser.getProfile().getLogo()));
+
+        return "admin/admin_employer_edit";
     }
 
     @RequestMapping(value = "/admin/seekers", method = RequestMethod.GET)
@@ -112,20 +123,29 @@ public class AdminController {
         if (sizeParam != null && !sizeParam.isEmpty()) {
             size = Integer.parseInt(request.getParameter("size"));
         }
-        model.addAttribute("seekers", seekerService.findAll(PageRequest.of(page, size, lastVisitSort)));
-        return "admin_seekers";
+
+        model.addAttribute("seekerUsers", seekerUserService.findAll(PageRequest.of(page, size, lastVisitSort)));
+
+        return "admin/admin_seekers";
     }
 
-    @RequestMapping(value = "/admin/seeker/{seekerId}", method = RequestMethod.GET)
-    public String adminPageSeekerToEdit(@PathVariable Long seekerId, Model model) {
-        Seeker seeker = seekerService.getById(seekerId);
-        return getStringForSeeker(model, seeker);
+    @RequestMapping(value = "/admin/seeker/{seekerUserId}", method = RequestMethod.GET)
+    public String adminPageSeekerToEdit(@PathVariable Long seekerUserId, Model model) {
+        SeekerUser seekerUser = seekerUserService.getById(seekerUserId);
+
+        model.addAttribute("seekerUser", seekerUser);
+        model.addAttribute("seekerProfile", seekerUser.getProfile());
+        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerUser.getProfile().getPhoto()));
+
+        return "admin/admin_seeker_edit";
     }
 
-    private String getStringForSeeker(Model model, Seeker seeker) {
-        model.addAttribute("seeker", seeker);
-        model.addAttribute("seekerprof", seeker.getProfile());
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seeker.getProfile().getPhoto()));
-        return "admin_seeker_edit";
+    @RequestMapping(value = "/admin/tags", method = RequestMethod.GET)
+    public String UsersViewPage(Model model) {
+
+        List<Tag> tags = tagService.getAll();
+        model.addAttribute("tags", tags);
+
+        return "admin/admin_tags";
     }
 }

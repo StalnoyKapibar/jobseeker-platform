@@ -1,8 +1,10 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.google.maps.errors.ApiException;
 import com.jm.jobseekerplatform.model.*;
-import com.jm.jobseekerplatform.service.impl.EmployerProfileService;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,17 +50,17 @@ public class VacancyRestController {
 
     @RequestMapping(value = "/{vacancyId:\\d+}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public void updateVacancyState(@PathVariable("vacancyId") Long id, @RequestBody String state) {
+    public void updateVacancyState(@PathVariable("vacancyId") Long vacancyId, @RequestBody String state) {
         String st = state.substring(1, state.length() - 1);
         State s = State.valueOf(st);
-        Vacancy vacancy = vacancyService.getById(id);
+        Vacancy vacancy = vacancyService.getById(vacancyId);
         vacancy.setState(s);
         vacancyService.update(vacancy);
     }
 
     @RequestMapping(value = "/block/{vacancyId}", method = RequestMethod.POST)
-    public void blockVacancy(@PathVariable("vacancyId") Long id, @RequestBody int periodInDays) {
-        Vacancy vacancy = vacancyService.getById(id);
+    public void blockVacancy(@PathVariable("vacancyId") Long vacancyId, @RequestBody int periodInDays) {
+        Vacancy vacancy = vacancyService.getById(vacancyId);
         if (periodInDays == 0) {
             vacancyService.blockPermanently(vacancy);
         }
@@ -72,7 +73,7 @@ public class VacancyRestController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public boolean addVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
         if (vacancyService.validateVacancy(vacancy)) {
-            EmployerProfile employerProfile = ((Employer) authentication.getPrincipal()).getProfile();
+            EmployerProfile employerProfile = ((EmployerUser) authentication.getPrincipal()).getProfile();
             vacancy.setEmployerProfile(employerProfile);
             vacancyService.addNewVacancyFromRest(vacancy);
             return true;
@@ -93,14 +94,14 @@ public class VacancyRestController {
     }
 
     @RequestMapping("/{city}/page/{page}")
-    public Page<Vacancy> getPageOfVacancies(@RequestBody Point point, @PathVariable("city") String city, @PathVariable("page") int page, Authentication authentication) throws InterruptedException, ApiException, IOException {
+    public Page<Vacancy> getPageOfVacancies(@RequestBody Point point, @PathVariable("city") String city, @PathVariable("page") int page, Authentication authentication) {
         int limit = 10;
 
         if (authentication == null || !authentication.isAuthenticated()) {
             return vacancyService.findVacanciesByPoint(city, point, limit, page);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getProfile().getTags();
+                Set<Tag> tags = ((SeekerProfile) authentication.getPrincipal()).getTags();
                 return vacancyService.findVacanciesByTagsAndByPoint(city, point, tags, limit, page);
             }
         }

@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.config;
 
-import com.jm.jobseekerplatform.service.impl.UserService;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -72,6 +72,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true);
 
         http.authorizeRequests()
+                // делаем страницу регистрации недоступной для авторизированных пользователей
+                .antMatchers("/registration")
+                .anonymous()
                 .antMatchers("/**")
                 .permitAll();
 

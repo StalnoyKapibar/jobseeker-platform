@@ -2,18 +2,18 @@ package com.jm.jobseekerplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.hibernate.annotations.Fetch;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "vacancies")
-public class Vacancy implements Serializable {
+public class Vacancy implements Serializable, CreatedByEmployerProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,10 +54,6 @@ public class Vacancy implements Serializable {
     @Enumerated(value = EnumType.STRING)
     private State state;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @Fetch(value = org.hibernate.annotations.FetchMode.SELECT)
-    private List<ChatMessage> chatMessages;
-
     @Column(name = "expiry_block")
     private Date expiryBlock;
 
@@ -94,6 +90,12 @@ public class Vacancy implements Serializable {
 
     public void setEmployerProfile(EmployerProfile employerProfile) {
         this.employerProfile = employerProfile;
+    }
+
+    @JsonIgnore
+    @Override
+    public EmployerProfile getCreator() {
+        return employerProfile;
     }
 
     public String getHeadline() {
@@ -160,13 +162,7 @@ public class Vacancy implements Serializable {
         this.state = state;
     }
 
-    public void setChatMessages(List<ChatMessage> chatMessages) {
-        this.chatMessages = chatMessages;
-    }
 
-    public List<ChatMessage> getChatMessages() {
-        return chatMessages;
-    }
 
     public String getShortDescription() {
         return shortDescription;
@@ -211,7 +207,6 @@ public class Vacancy implements Serializable {
         if (tags != null ? !tags.equals(vacancy.tags) : vacancy.tags != null) return false;
         if (coordinates != null ? !coordinates.equals(vacancy.coordinates) : vacancy.coordinates != null) return false;
         if (state != vacancy.state) return false;
-        if (chatMessages !=null ? chatMessages.equals(vacancy.chatMessages) : vacancy.chatMessages != null) return false;
         return expiryBlock != null ? expiryBlock.equals(vacancy.expiryBlock) : vacancy.expiryBlock == null;
 
     }
@@ -230,7 +225,6 @@ public class Vacancy implements Serializable {
         result = 31 * result + (coordinates != null ? coordinates.hashCode() : 0);
         result = 31 * result + (state != null ? state.hashCode() : 0);
         result = 31 * result + (expiryBlock != null ? expiryBlock.hashCode() : 0);
-        result = 31 * result + (chatMessages !=null ? chatMessages.hashCode() : 0);
         return result;
     }
 }

@@ -49,6 +49,10 @@ li {
     padding-top: 20px;
 }
 
+.sidebar ul{
+    padding-right: auto;
+}
+
 .sidebar li {
     margin-top: 20px;
 }
@@ -68,6 +72,9 @@ li {
     height: 135%;
     margin-top: 60px;
     width: 85%;
+    /*отступ от сайдбара */
+    position: relative;
+    right: -15%;
 }
 
 .well {
@@ -91,6 +98,18 @@ li {
 }
 #search_advice_wrapper .advice_variant:hover{
     background-color:lightgray;
+}
+
+.pull-right{
+    position: absolute;
+    right: 10%;
+    bottom: 10%;
+    cursor: pointer;
+}
+
+
+.fa-star {
+    color: teal;
 }
 
 /*.form-search {

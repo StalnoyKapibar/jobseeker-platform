@@ -347,81 +347,14 @@ function getCityByCoords(lat, lng) {
         type: "GET",
         async: false,
         success: function (data) {
-            for (var i=0; i<data.results[0].address_components.length; i++) {
-                for (var b=0;b<data.results[0].address_components[i].types.length;b++) {
+            for (var i = 0; i < data.results[0].address_components.length; i++) {
+                for (var b = 0; b < data.results[0].address_components[i].types.length; b++) {
                     if (data.results[0].address_components[i].types[b] == "locality") { //postal_town
-                        city= data.results[0].address_components[i].long_name;
+                        city = data.results[0].address_components[i].long_name;
                         break;
                     }
                 }
             }
         }
-    });
-    return city;
-}
-
-function getAllVacanciesByPoint(point) {
-
-    getSortedVac(point);
-
-    $(window).scroll(function () {
-        if ($(document).height() - $(window).height() === $(window).scrollTop()) {
-            block = true;
-            if (page <= total_pages) {
-                getSortedVac(point);}}});
-}
-
-function getSortedVac(point) {
-    var header = $("meta[name='_csrf_header']").attr("content");
-    var token = $("meta[name='_csrf']").attr("content");
-    $.ajax ({
-        url: "api/vacancies/" + city + "/page/" + page,
-        type: "PUT",
-        async: false,
-        data: JSON.stringify(point),
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader(header, token);
-            xhr.setRequestHeader("Accept", "application/json");
-            xhr.setRequestHeader("Content-Type", "application/json");
-        },
-        success: function (vacancies) {
-            total_pages = vacancies.totalPages;
-            append_page(vacancies);
-            block = false;
-            page++;
-        }
-    })
-}
-
-function append_page(vacancies) {
-    $.each(vacancies.content, function (i, vacancy) {
-        $(".list-group").append(
-            "<div class=\"list-group-item clearfix\"><a href='/vacancy/"+vacancy.id+"' style='color: #333333'>" +
-            vacancy.headline +
-            " </a><button type='button' class='btn btn-xs btn-default' data-toggle='modal' data-target='#vacancyModal' onclick='showVacancy("+vacancy.id+")'>" +
-            " <span class='pull-xs-right'><span class=\"fa fa-angle-right\" aria-hidden=\"true\"></span></span></button>"+
-            "<ul id=id"+vacancy.id+" class=\"list-inline\"></ul></div>");
-
-        if (user_id!==""){ iterate_tags(vacancy); }
-
-    });
-}
-
-function iterate_tags(vacancy) {
-    $.each(vacancy.tags, function (i, tag) {
-        var vac_id = "#id" + vacancy.id;
-        var v_tag = tag.name;
-        var v_tag_ = v_tag.toString().split(' ').join('').toLocaleLowerCase();
-        var tag_id = "#" + vacancy.id + v_tag_;
-        $(vac_id).append("<li id="+vacancy.id + v_tag_+" class='list-inline-item' style='font-size: small'>"+v_tag+"</li>");
-        compare_seeker_tags(v_tag_, tag_id);
-    });
-}
-
-function compare_seeker_tags(v_tag_, tag_id) {
-    $.each(seeker_tags, function (i,s_tag) {
-        var s_tag_ = s_tag.name.toString().split(' ').join('').toLocaleLowerCase();
-        if (s_tag_.localeCompare(v_tag_)==0) {
-            $(tag_id).css({"background-color":"#fff2a8"})}
     })
 }
