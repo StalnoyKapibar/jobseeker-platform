@@ -1,5 +1,7 @@
 package com.jm.jobseekerplatform.model;
 
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -16,14 +18,14 @@ public class SeekerVacancyRecord implements Serializable {
     private LocalDateTime date;
 
     @OneToOne(fetch = FetchType.EAGER)
-    private Seeker seeker;
+    private SeekerProfile seeker;
 
     @OneToOne(fetch = FetchType.EAGER)
     private Vacancy vacancy;
 
     public SeekerVacancyRecord() {}
 
-    public SeekerVacancyRecord(LocalDateTime date, Seeker seeker, Vacancy vacancy) {
+    public SeekerVacancyRecord(LocalDateTime date, SeekerProfile seeker, Vacancy vacancy) {
         this.date = date;
         this.seeker = seeker;
         this.vacancy = vacancy;
@@ -41,11 +43,11 @@ public class SeekerVacancyRecord implements Serializable {
         this.date = date;
     }
 
-    public Seeker getSeeker() {
+    public SeekerProfile getSeeker() {
         return seeker;
     }
 
-    public void setSeeker(Seeker seeker) {
+    public void setSeeker(SeekerProfile seeker) {
         this.seeker = seeker;
     }
 

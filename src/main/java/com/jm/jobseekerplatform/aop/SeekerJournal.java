@@ -1,9 +1,9 @@
 package com.jm.jobseekerplatform.aop;
 
-import com.jm.jobseekerplatform.model.Seeker;
 import com.jm.jobseekerplatform.model.SeekerVacancyRecord;
 import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.service.impl.SeekerHistoryService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.aspectj.lang.JoinPoint;
@@ -38,7 +38,7 @@ public class SeekerJournal {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth.getAuthorities().contains(roleSeeker)) {
-            Seeker seeker = ((Seeker)auth.getPrincipal());
+            SeekerProfile seeker = ((SeekerProfile)auth.getPrincipal());
             Vacancy vacancy = vacancyService.getById(vacancyId);
             LocalDateTime date = LocalDateTime.now();
             seekerHistoryService.add(new SeekerVacancyRecord(date, seeker, vacancy));
