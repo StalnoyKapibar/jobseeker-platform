@@ -48,30 +48,32 @@ public class MainController {
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
 
+
     @RequestMapping("/")
-//    public String mainPage(Model model) {
-//        model.addAttribute("vacMess", "Доступные вакансии:");
-//        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-    public String mainPage(Authentication authentication, Model model) {
+    public String mainPage(Model model, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
             model.addAttribute("vacMess", "Доступные вакансии:");
-            model.addAttribute("vacancies", vacancies);
+            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
+                    Long id = ((User) authentication.getPrincipal()).getId();
+                    SeekerProfile profile = seekerService.getById(id).getProfile();
+                    //model.addAttribute("favoriteVacancies", profile.getFavoriteVacancy());
+                    model.addAttribute("profileId", profile.getId());
+                    model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+
                     Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getProfile().getTags();
                     Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
-                    model.addAttribute("vacancies", vacancies);
                 } catch (NullPointerException e) {
                     List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
+                    model.addAttribute("googleMapsApiKey", googleMapsApiKey);
                     model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
-                    model.addAttribute("vacancies", vacancies);
                 }
             }
         }
-
         return "index";
     }
 

@@ -1,32 +1,23 @@
 package com.jm.jobseekerplatform.service.impl;
 
-<<<<<<< HEAD
 import com.google.maps.errors.ApiException;
-=======
->>>>>>> c4aab85a3b7b18a227459e49349585f8ff7fcbf5
 import com.jm.jobseekerplatform.dao.VacancyDaoI;
 import com.jm.jobseekerplatform.dao.impl.VacancyDAO;
-import com.jm.jobseekerplatform.dto.PageVacancyDTO;
+import com.jm.jobseekerplatform.dto.VacancyPageDTO;
 import com.jm.jobseekerplatform.model.Point;
 import com.jm.jobseekerplatform.model.State;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.service.AbstractService;
-import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-<<<<<<< HEAD
 import java.io.IOException;
 import java.util.*;
-=======
-import java.util.Calendar;
-import java.util.Date;
->>>>>>> c4aab85a3b7b18a227459e49349585f8ff7fcbf5
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,8 +40,6 @@ public class VacancyService extends AbstractService<Vacancy> {
     private Pattern pattern;
     private Matcher matcher;
 
-<<<<<<< HEAD
-=======
     public Set<Vacancy> getAllByEmployerProfileId(Long id, int limit) {
         return dao.getAllByEmployerProfileId(id, limit);
     }
@@ -71,7 +60,6 @@ public class VacancyService extends AbstractService<Vacancy> {
         return dao.getAllByTags(tags, limit);
     }
 
->>>>>>> c4aab85a3b7b18a227459e49349585f8ff7fcbf5
     public void blockPermanently(Vacancy vacancy) {
         vacancy.setState(State.BLOCK_PERMANENT);
         vacancy.setExpiryBlock(null);
@@ -138,60 +126,43 @@ public class VacancyService extends AbstractService<Vacancy> {
         dao.add(vacancy);
     }
 
-    public Page<Vacancy> findAllVacanciesByPoint(Point point, int limit, int page) throws InterruptedException, ApiException, IOException {
-        List<Point> points = pointService.getAll();
-        List<Point> pointsInCity = new ArrayList<>();
-        List<Point> pointsOutside = new ArrayList<>();
-        List<Vacancy> vacancies = new ArrayList<>();
+    public Page<Vacancy> findVacanciesByPoint(String city, Point point, int limit, int page) {
 
-        for (int i=0; i<points.size(); i++) {
-            if (pointService.comparePoints(point, points.get(i))) {
-                pointsInCity.add(points.get(i));
-            } else {
-                pointsOutside.add(points.get(i));
+        Page<Vacancy> vacInCity = dao.getVacanciesInCity(city, limit, page);
+        List<Vacancy> vacOutCity = new ArrayList<>();
+
+        List<Point> sortedPoints = pointService.sortPointsByDistance(point, dao.getPointsNotInCity(city));
+        int countPoints = sortedPoints.size();
+        int pages1 = vacInCity.getTotalPages();
+        int pages2 = (int) Math.ceil((double) countPoints / (double)limit);
+
+        int totalPages = pages1 + pages2;
+
+        if (page <= pages1) {
+            return new VacancyPageDTO(vacInCity.getContent(), totalPages);
+        } else {
+            for (int i=(page-pages1-1)*limit; i<((page-pages1-1)*limit)+limit; i++) {
+                if (i < countPoints) {
+                    vacOutCity.add(vacancyDaoI.findVacancyByCoordinates(sortedPoints.get(i)));
+                }
             }
+            return new VacancyPageDTO(vacOutCity, totalPages);
         }
-
-        for (Point p : pointsInCity) {
-            Vacancy vacancy = vacancyDaoI.findVacancyByCoordinates(p);
-            vacancies.add(vacancy);
-        }
-        return new PageVacancyDTO(vacancies, vacancies.size());
     }
 
-    public Page<Vacancy> getVacanciesByTagsAndByPoint(Point point, Set<Tag> tags, int limit, int page) {
-        return null;
+    public Page<Vacancy> findVacanciesByTagsAndByPoint(String city, Point point, Set<Tag> tags, int limit, int page) {
+        Page<Vacancy> vacanciesInCity = dao.getByTagsAndCity(city, tags, limit, page);
+        Page<Vacancy> vacanciesOutCity = dao.getByTagsAndNotInCity(city, tags, limit, page);
+
+        int pages1 = vacanciesInCity.getTotalPages(); //pages1 = 1
+        int pages2 = vacanciesOutCity.getTotalPages();  //pages2 = 2
+
+        int totalPages = pages1 + pages2;
+
+        if (page < pages1) {
+            return new VacancyPageDTO(vacanciesInCity.getContent(), totalPages);
+        } else {
+            return new VacancyPageDTO(vacanciesOutCity.getContent(), totalPages);
+        }
     }
-
-
-//
-//    public Page<Vacancy> getAllVacanciesBySortPoint(Point point, int limit, int page) throws IOException, JSONException {
-//        List<Point> points = pointService.getAll();
-//        List<Point> sortPoints = pointService.comparePoints(point, points);
-//
-//        List<Vacancy> vacancies = findVacanciesByPoint(sortPoints, limit, page);
-//        int totalPages = vacancyDaoI.findAll().size()/limit;
-//        return new PageVacancyDTO(vacancies, totalPages);
-//    }
-//
-//    public Page<Vacancy> getVacanciesByTagsBySortPoint(Point point, Set<Tag> tags, int limit, int page) throws IOException, JSONException {
-//        List<Point> points = dao.getPointsByTags(tags);
-//        List<Point> sortPoints = pointService.comparePoints(point, points);
-//        List<Vacancy> sortVacancies = findVacanciesByPoint(sortPoints, limit, page);
-//        int totalPages = points.size()/limit;
-//        return new PageVacancyDTO(sortVacancies, totalPages);
-//    }
-//
-//    private List<Vacancy> findVacanciesByPoint(List<Point> sortPoints, int limit, int page) {
-//        List<Vacancy> vacancies = new ArrayList<>();
-//        int firstResult = limit * page;
-//        int maxResult = firstResult + limit;
-//
-//        for (int i = firstResult; i < maxResult; i++) {
-//            Point p = sortPoints.get(i);
-//            Vacancy v = vacancyDaoI.findVacancyByCoordinates(p);
-//            vacancies.add(v);
-//        }
-//        return vacancies;
-//    }
 }

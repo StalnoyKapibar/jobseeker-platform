@@ -1,7 +1,8 @@
 package com.jm.jobseekerplatform.dao.impl;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
-import com.jm.jobseekerplatform.dto.PageVacancyDTO;
+import com.jm.jobseekerplatform.dto.VacancyPageDTO;
+import com.jm.jobseekerplatform.model.Point;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 import org.hibernate.Session;
@@ -16,28 +17,6 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 @Repository("vacancyDAO")
 public class VacancyDAO extends AbstractDAO<Vacancy> {
-
-    public Page<Vacancy> getByTagsAndCity(String city, Set<Tag> tags, int limit, int page) {
-        Set<Long> tagsId = new HashSet<>();
-        for (Tag tag : tags) {
-            tagsId.add(tag.getId());
-        }
-
-        String s = "select * from vacancies as vc inner join (select v.vacancy_id as r_id, count(v.tags_id) as count "
-                + "from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result "
-                + "on vc.id=result.r_id where vc.city='" + city + "' order by result.count desc";
-
-        Query query = entityManager.unwrap(Session.class).createSQLQuery(s).addEntity(Vacancy.class)
-                .setParameter("param", tagsId);
-
-        int totalElements = query.getResultList().size();
-        int totalPages = (int) (Math.ceil(totalElements / limit));
-
-        query.setFirstResult(page * limit);
-        query.setMaxResults(limit);
-
-        return new PageVacancyDTO(query.getResultList(), totalPages);
-    }
 
     //language=SQL
     private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.employerProfile.id = :param";
@@ -79,6 +58,71 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
                 .setParameter("param", currentDate)
                 .executeUpdate();
         return deletedCount;
+    }
+
+
+    public Page<Vacancy> getByTagsAndCity(String city, Set<Tag> tags, int limit, int page) {
+        if (page != 0) { page = page - 1; }
+
+        Set<Long> tagsId = new HashSet<>();
+        for (Tag tag : tags) { tagsId.add(tag.getId()); }
+
+        String s = "select * from vacancies as vc inner join (select v.vacancy_id as r_id, count(v.tags_id) as count "
+                + "from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result "
+                + "on vc.id=result.r_id where vc.city=:city order by result.count desc";
+
+        Query query = entityManager.unwrap(Session.class).createSQLQuery(s).addEntity(Vacancy.class)
+                .setParameter("param", tagsId).setParameter("city", city);
+
+        int totalElements = query.getResultList().size();
+        int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
+
+        query.setFirstResult(page * limit);
+        query.setMaxResults(limit);
+
+        return new VacancyPageDTO(query.getResultList(), totalPages);
+    }
+
+    public Page<Vacancy> getByTagsAndNotInCity(String city, Set<Tag> tags, int limit, int page) {
+        if (page != 0) { page = page - 1; }
+        Set<Long> tagsId = new HashSet<>();
+        for (Tag tag : tags) { tagsId.add(tag.getId()); }
+
+        String s = "select * from vacancies as vc inner join (select v.vacancy_id as r_id, count(v.tags_id) as count "
+                + "from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result "
+                + "on vc.id=result.r_id where vc.city!=:city order by result.count desc";
+
+        Query query = entityManager.unwrap(Session.class).createSQLQuery(s).addEntity(Vacancy.class)
+                .setParameter("param", tagsId).setParameter("city", city);
+
+        int totalElements = query.getResultList().size();
+        int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
+
+        query.setFirstResult(page * limit);
+        query.setMaxResults(limit);
+
+        return new VacancyPageDTO(query.getResultList(), totalPages);
+    }
+
+    public List<Point> getPointsNotInCity(String city) {
+        String s = "select * from points as p inner join (select * from vacancies as vc where vc.city!=:city) as v on p.id=v.coordinates_id";
+        return new ArrayList<>(entityManager.unwrap(Session.class).createSQLQuery(s)
+                .setParameter("city", city)
+                .addEntity(Point.class).getResultList());
+    }
+
+    public Page<Vacancy> getVacanciesInCity(String city, int limit, int page) {
+        if (page != 0) { page = page - 1; }
+        Query query = (Query) entityManager.createQuery("SELECT v FROM Vacancy v  WHERE v.city IN (:param)", Vacancy.class)
+                .setParameter("param", city);
+
+        double totalElements = query.getResultList().size();
+        int totalPages = (int) Math.ceil(totalElements / (double)limit);
+
+        query.setFirstResult(page * limit);
+        query.setMaxResults(limit);
+
+        return new VacancyPageDTO(query.getResultList(), totalPages);
     }
 }
 

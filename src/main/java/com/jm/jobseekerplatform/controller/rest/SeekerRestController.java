@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,17 +63,17 @@ public class SeekerRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-//    @RequestMapping(value = "/seeker_id", method = RequestMethod.GET)
-//    private ResponseEntity<String> getId(Authentication authentication) {
-//        String id = "";
-//        if (authentication == null || !authentication.isAuthenticated()) {
-//            return new ResponseEntity<>(id, HttpStatus.OK);
-//        } else {
-//            if (authentication.getAuthorities().contains(roleSeeker)) {
-//                Seeker seeker = (Seeker) authentication.getPrincipal();
-//                id = Long.toString(seeker.getSeekerProfile().getId());
-//            }
-//        }
-//        return new ResponseEntity<>(id, HttpStatus.OK);
-//    }
+    @RequestMapping(value = "/seeker_id", method = RequestMethod.GET)
+    private ResponseEntity<String> getId(Authentication authentication) {
+        String id = "";
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return new ResponseEntity<>(id, HttpStatus.OK);
+        } else {
+            if (authentication.getAuthorities().contains(roleSeeker)) {
+                Seeker seeker = (Seeker) authentication.getPrincipal();
+                id = Long.toString(seeker.getProfile().getId());
+            }
+        }
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
 }

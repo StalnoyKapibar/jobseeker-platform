@@ -81,28 +81,6 @@ public class VacancyRestController {
         }
     }
 
-//    @RequestMapping("/point/page/{page}")
-//    public Page<Vacancy> getPageOfVacancies(@RequestBody Point point, @PathVariable("page") int page, Authentication authentication) throws InterruptedException, ApiException, IOException {
-//        if (page != 0) {
-//            page = page - 1;
-//        }
-//        int limit = 10;
-//
-//        if (authentication == null || !authentication.isAuthenticated()) {
-//            return vacancyService.findAllVacanciesByPoint(point, limit, page);
-//        } else {
-//            if (authentication.getAuthorities().contains(roleSeeker)) {
-//                try {
-//                    Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getSeekerProfile().getTags();
-//                    return vacancyService.getVacanciesByTagsAndByPoint(point, tags, limit, page);
-//                } catch (NullPointerException e) {
-//                    return vacancyService.findAllVacanciesByPoint(point, limit, page);
-//                }
-//            }
-//        }
-//        return vacancyService.findAllVacanciesByPoint(point, limit, page);
-//    }
-
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public @ResponseBody
     ResponseEntity<Set<Vacancy>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
@@ -112,5 +90,20 @@ public class VacancyRestController {
         List<Vacancy> list = vacancyService.findAllByTags(searchParam,PageRequest.of(pageCount, 10,
                 new Sort(Sort.Direction.ASC, "id"))).getContent();
         return new ResponseEntity<>(new HashSet<>(list), HttpStatus.OK);
+    }
+
+    @RequestMapping("/{city}/page/{page}")
+    public Page<Vacancy> getPageOfVacancies(@RequestBody Point point, @PathVariable("city") String city, @PathVariable("page") int page, Authentication authentication) throws InterruptedException, ApiException, IOException {
+        int limit = 10;
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return vacancyService.findVacanciesByPoint(city, point, limit, page);
+        } else {
+            if (authentication.getAuthorities().contains(roleSeeker)) {
+                Set<Tag> tags = ((Seeker) authentication.getPrincipal()).getProfile().getTags();
+                return vacancyService.findVacanciesByTagsAndByPoint(city, point, tags, limit, page);
+            }
+        }
+        return vacancyService.findVacanciesByPoint(city, point, limit, page);
     }
 }

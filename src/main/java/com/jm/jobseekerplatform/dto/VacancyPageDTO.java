@@ -5,15 +5,15 @@ import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
 
-public class PageVacancyDTO extends PageImpl<Vacancy> {
+public class VacancyPageDTO extends PageImpl<Vacancy> {
 
     int totalPages;
 
-    public PageVacancyDTO(List<Vacancy> content) {
+    public VacancyPageDTO(List<Vacancy> content) {
         super(content);
     }
 
-    public PageVacancyDTO(List<Vacancy> content, int totalPages) {
+    public VacancyPageDTO(List<Vacancy> content, int totalPages) {
         super(content);
         this.totalPages = totalPages;
     }

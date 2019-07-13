@@ -6,6 +6,7 @@
       lang="en">
 <head>
     <title>Hello</title>
+    <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <script type="text/javascript" src="/js/index.js"></script>
 </head>
 <body>
@@ -38,33 +39,8 @@
                     <div class="col-sm-6">
                         <div id="allVacancies">
                             <span th:text="${vacMess}"></span><br/>
-                            <ul class="list-group">
-                                <th:block th:each="vacancy: ${vacancies}">
-                                    <li class="list-group-item clearfix"
-                                        data-toggle="modal" data-target="#vacancyModal"
-                                        th:onclick="'showVacancy('+${vacancy.id}+')'">
-                                        [[${vacancy.headline}]]
-                                        <div class="pull-right">
-                                            <span class="btn btn-xs btn-default"
-                                                  th:onclick="'window.location.href = \'' + @{/vacancy/{id}(id=${vacancy.id})} + '\';event.stopPropagation();'">
-                                                  <!--th:onclick=" location.href = '@Url.Action("NewClass", "Product")'; event.stopPropagation(); ">-->
-                                               <i class="fas fa-play"></i>
-                                            </span>
-                                            <span sec:authorize="hasRole('ROLE_SEEKER')" class="stars"
-                                                  th:id="stars- + ${vacancy.id}">
-                                                <i th:if="${#sets.contains(favoriteVacancies,vacancy)}"
-                                                   th:id="outFavorite + ${vacancy.id}" class="fas fa-star"
-                                                   title="убрать из избранных"
-                                                   th:onclick="'outFavorite(' + ${vacancy.id} + ',' + ${profileId} + ');event.stopPropagation();'"></i>
-                                                <i th:unless="${#sets.contains(favoriteVacancies,vacancy)}"
-                                                   th:id="inFavorite + ${vacancy.id}" class="far fa-star"
-                                                   title="в избранное"
-                                                   th:onclick="'inFavorite(' + ${vacancy.id} + ',' + ${profileId} + ');event.stopPropagation();'"></i>
-                                            </span>
-                                        </div>
-                                    </li>
-                                </th:block>
-                            </ul>
+                            <div class="list-group">
+                            </div>
                             <input id="isAVShow" type="hidden" value="0">
                         </div>
                         <div id="searchVacancies">
@@ -118,3 +94,4 @@
 </div>
 </body>
 </html>
+
