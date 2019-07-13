@@ -164,4 +164,9 @@ public class MainController {
     public String recoveryPassPage(){
         return "recovery";
     }
+
+    @RequestMapping(value = "/ex", method = RequestMethod.GET)
+    public String  exPage(){
+        return "ex";
+    }
 }
