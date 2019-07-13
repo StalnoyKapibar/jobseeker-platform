@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+
+<head>
+    <title>Recovery Password</title>
+    <style>
+        #success_message {
+            display: none;
+        }
+
+        #ups_message {
+            display: none;
+        }
+        #recovery_message{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <div class="container">
+        <br>
+        <form class="card bg-light" style="margin-left: 20%; margin-right: 20%" id="contact_form">
+            <div class="card-header" align="center">
+                <legend align="center">
+                    <b>На ваш E-mail будет отправлено письмо с паролем</b>
+                </legend>
+            </div>
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-10">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="inputGroupContainer">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Введите Email"
+                                           name="user_email" id="user_email" th:value="${login}" required="required">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="alert alert-success" role="alert" id="success_message">
+                                Письмо отправлено <i
+                                    class="fas fa-thumbs-up"></i>
+                                <hr>
+                                Вы можете перейти на <a href="/login">страницу входа</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="form-group" align="center">
+                    <button type="button" class="btn btn-warning"
+                            style="width: 250px;" onclick="sendPass()">
+                        Отправить <i class="fas fa-paper-plane "></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="/js/recovery.js"></script>
+</div>
+</body>
+</html>

@@ -62,7 +62,6 @@ public class UserService extends AbstractService<User> {
         char[] userPass = encodePassword(user.getPasswordChar());
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
         User regNewUser = null;
-
         if (userRole.equals(roleSeeker)) {
             regNewUser  = new Seeker(userEmail, userPass, LocalDateTime.now(), userRole,  null);
         } else if (userRole.equals(roleEmployer)) {
@@ -127,9 +126,5 @@ public class UserService extends AbstractService<User> {
         }
 
         return isCorrect;
-    }
-
-    public void inviteFriend(String user, String friend) {
-        mailService.sendFriendInvitaionEmail(user, friend);
     }
 }

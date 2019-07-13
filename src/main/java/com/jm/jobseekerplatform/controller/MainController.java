@@ -160,4 +160,8 @@ public class MainController {
 
         return "vacancy";
     }
+    @RequestMapping(value = "/recovery", method = RequestMethod.GET)
+    public String recoveryPassPage(){
+        return "recovery";
+    }
 }

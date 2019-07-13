@@ -5,15 +5,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<h1>Здравствуйте, <span th:text="${admin}"></span></h1>
+<h1>Здравствуйте, <span th:text="${your_login}"></span></h1>
 <br>
 <p>
     Мы добавили вас на платформу <b>JobSeeker </b>
     <span th:text="${#dates.format(subscriptionDate)}"></span>
 </p>
-<p>
-    Ваш пароль <b><span th:text="${password}"></span> </b>
-</p>
+<p>    Ваш логин: <b><span th:text="${your_login}"></span> </b></p>
+<p>    Ваш пароль: <b><span th:text="${password}"></span> </b></p>
 
 <p>
     Для ознакомления перейдите по

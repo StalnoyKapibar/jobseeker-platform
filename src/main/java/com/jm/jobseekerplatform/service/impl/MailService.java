@@ -22,6 +22,9 @@ public class MailService {
     private JavaMailSender javaMailSender;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private TemplateEngine templateEngine;
 
     @Value("${server.port}")
@@ -32,6 +35,7 @@ public class MailService {
             MimeMessage msg = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(msg, true);
             helper.setTo(address);
+            //todo : нужен ли он вообще??
             helper.setSubject(subject);
             Multipart mp = new MimeMultipart();
             MimeBodyPart htmlPart = new MimeBodyPart();
@@ -75,4 +79,14 @@ public class MailService {
         sendEmail(address, subject, templateEngine.process("/emails/notificationEmail.html", ctx));
     }
 
+    // востановление пароля
+    public void sendRecoveryPassEmail(String address) {
+        String subject = "Вы сделали запрос на востановление пароля";
+        String href = "http://localhost:" + port + "/login";
+        final Context ctx = new Context();
+        ctx.setVariable("your_login", address);
+        ctx.setVariable("password", userService.findByEmail(address).getPassword());
+        ctx.setVariable("href", href);
+        sendEmail(address, subject, templateEngine.process("/emails/recoveryPassEmail.html", ctx));
+    }
 }

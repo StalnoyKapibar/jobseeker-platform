@@ -11,23 +11,17 @@
 <div layout:fragment="content">
     <div class="container-fluid" id="vacancy_container"  style="margin-left: 15%; margin-right: 15%">
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-6">
                 <h1 th:utext="'<b>'+${vacancyFromServer.getHeadline()}+'</b>'"></h1>
                 <p th:text="(${vacancyFromServer.getSalaryMin()!=null} ? 'от ' + ${vacancyFromServer.getSalaryMin()} + ' ' : '')
                               + (${vacancyFromServer.getSalaryMax()!=null} ? ('до ' + ${vacancyFromServer.getSalaryMax()}) : '')
                               + (${vacancyFromServer.getSalaryMax()==null and vacancyFromServer.getSalaryMin()==null} ? 'не указана' : '')">
                 </p>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-4">
                 <h3><a id="EPcompanyName" th:href="@{'/employer/' + ${EmployerProfileFromServer.id}}"
                        th:text="${EmployerProfileFromServer.getCompanyName()}"></a></h3>
                 <span th:text="${vacancyFromServer.getCity()}"></span>
             </div>
-
-            <div class="col-sm-4 pull-right" style="height:100px; padding-left: 0px;  padding-right: 0px;">
+            <div class="col-sm-4" style="height:100px; padding-left: 0px;  padding-right: 0px;">
                 <img th:src="@{'data:image/png;base64,' + ${logoimg}}"
                      style="max-width:100%; max-height:100%; display: block; vertical-align:center; horiz-align: center;"
                      alt="Logo of company">
