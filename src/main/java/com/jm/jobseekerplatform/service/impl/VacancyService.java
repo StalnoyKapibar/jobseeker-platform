@@ -129,6 +129,7 @@ public class VacancyService extends AbstractService<Vacancy> {
         List<Vacancy> vacOutCity = new ArrayList<>();
 
         List<Point> sortedPoints = pointService.sortPointsByDistance(point, dao.getPointsNotInCity(city));
+
         int countPoints = sortedPoints.size();
         int pages1 = vacInCity.getTotalPages();
         int pages2 = (int) Math.ceil((double) countPoints / (double)limit);
