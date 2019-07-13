@@ -59,21 +59,18 @@ public class MainController {
     @RequestMapping("/")
     public String mainPage(Model model, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
             model.addAttribute("vacMess", "Доступные вакансии:");
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
                     Long id = ((User) authentication.getPrincipal()).getId();
-
                     SeekerProfile profile = seekerProfileService.getById(id);
                     model.addAttribute("favoriteVacancies", profile.getFavoriteVacancy());
                     model.addAttribute("profileId", profile.getId());
                     model.addAttribute("googleMapsApiKey", googleMapsApiKey);
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
                 } catch (NullPointerException e) {
-                    List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
                     model.addAttribute("googleMapsApiKey", googleMapsApiKey);
                     model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
                 }

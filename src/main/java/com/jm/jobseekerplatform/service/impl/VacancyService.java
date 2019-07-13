@@ -11,12 +11,10 @@ import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -127,7 +125,6 @@ public class VacancyService extends AbstractService<Vacancy> {
     }
 
     public Page<Vacancy> findVacanciesByPoint(String city, Point point, int limit, int page) {
-
         Page<Vacancy> vacInCity = dao.getVacanciesInCity(city, limit, page);
         List<Vacancy> vacOutCity = new ArrayList<>();
 
@@ -135,7 +132,6 @@ public class VacancyService extends AbstractService<Vacancy> {
         int countPoints = sortedPoints.size();
         int pages1 = vacInCity.getTotalPages();
         int pages2 = (int) Math.ceil((double) countPoints / (double)limit);
-
         int totalPages = pages1 + pages2;
 
         if (page <= pages1) {
@@ -151,12 +147,11 @@ public class VacancyService extends AbstractService<Vacancy> {
     }
 
     public Page<Vacancy> findVacanciesByTagsAndByPoint(String city, Point point, Set<Tag> tags, int limit, int page) {
-        Page<Vacancy> vacanciesInCity = dao.getByTagsAndCity(city, tags, limit, page);
-        Page<Vacancy> vacanciesOutCity = dao.getByTagsAndNotInCity(city, tags, limit, page);
+        Page<Vacancy> vacanciesInCity = dao.getByTagsInCity(city, tags, limit, page);
+        Page<Vacancy> vacanciesOutCity = dao.getByTagsNotInCity(city, tags, limit, page);
 
-        int pages1 = vacanciesInCity.getTotalPages(); //pages1 = 1
-        int pages2 = vacanciesOutCity.getTotalPages();  //pages2 = 2
-
+        int pages1 = vacanciesInCity.getTotalPages();
+        int pages2 = vacanciesOutCity.getTotalPages();
         int totalPages = pages1 + pages2;
 
         if (page < pages1) {

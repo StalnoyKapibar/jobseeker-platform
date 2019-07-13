@@ -4,6 +4,7 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
@@ -93,15 +94,14 @@ public class VacancyRestController {
         return new ResponseEntity<>(new HashSet<>(list), HttpStatus.OK);
     }
 
-    @RequestMapping("/{city}/page/{page}")
-    public Page<Vacancy> getPageOfVacancies(@RequestBody Point point, @PathVariable("city") String city, @PathVariable("page") int page, Authentication authentication) {
+    @RequestMapping("/city/page/{page}")
+    public Page<Vacancy> getPageOfVacancies(@RequestBody Point point, @RequestParam("city") String city, @PathVariable("page") int page, Authentication authentication) {
         int limit = 10;
-
         if (authentication == null || !authentication.isAuthenticated()) {
             return vacancyService.findVacanciesByPoint(city, point, limit, page);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                Set<Tag> tags = ((SeekerProfile) authentication.getPrincipal()).getTags();
+                Set<Tag> tags = ((SeekerProfile)((User)authentication.getPrincipal()).getProfile()).getTags();
                 return vacancyService.findVacanciesByTagsAndByPoint(city, point, tags, limit, page);
             }
         }

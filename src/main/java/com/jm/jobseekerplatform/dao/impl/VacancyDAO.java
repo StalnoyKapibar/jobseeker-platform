@@ -60,50 +60,6 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         return deletedCount;
     }
 
-
-    public Page<Vacancy> getByTagsAndCity(String city, Set<Tag> tags, int limit, int page) {
-        if (page != 0) { page = page - 1; }
-
-        Set<Long> tagsId = new HashSet<>();
-        for (Tag tag : tags) { tagsId.add(tag.getId()); }
-
-        String s = "select * from vacancies as vc inner join (select v.vacancy_id as r_id, count(v.tags_id) as count "
-                + "from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result "
-                + "on vc.id=result.r_id where vc.city=:city order by result.count desc";
-
-        Query query = entityManager.unwrap(Session.class).createSQLQuery(s).addEntity(Vacancy.class)
-                .setParameter("param", tagsId).setParameter("city", city);
-
-        int totalElements = query.getResultList().size();
-        int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
-
-        query.setFirstResult(page * limit);
-        query.setMaxResults(limit);
-
-        return new VacancyPageDTO(query.getResultList(), totalPages);
-    }
-
-    public Page<Vacancy> getByTagsAndNotInCity(String city, Set<Tag> tags, int limit, int page) {
-        if (page != 0) { page = page - 1; }
-        Set<Long> tagsId = new HashSet<>();
-        for (Tag tag : tags) { tagsId.add(tag.getId()); }
-
-        String s = "select * from vacancies as vc inner join (select v.vacancy_id as r_id, count(v.tags_id) as count "
-                + "from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result "
-                + "on vc.id=result.r_id where vc.city!=:city order by result.count desc";
-
-        Query query = entityManager.unwrap(Session.class).createSQLQuery(s).addEntity(Vacancy.class)
-                .setParameter("param", tagsId).setParameter("city", city);
-
-        int totalElements = query.getResultList().size();
-        int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
-
-        query.setFirstResult(page * limit);
-        query.setMaxResults(limit);
-
-        return new VacancyPageDTO(query.getResultList(), totalPages);
-    }
-
     public List<Point> getPointsNotInCity(String city) {
         String s = "select * from points as p inner join (select * from vacancies as vc where vc.city!=:city) as v on p.id=v.coordinates_id";
         return new ArrayList<>(entityManager.unwrap(Session.class).createSQLQuery(s)
@@ -112,15 +68,52 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     }
 
     public Page<Vacancy> getVacanciesInCity(String city, int limit, int page) {
-        if (page != 0) { page = page - 1; }
+        if (page != 0) {
+            page = --page;
+        }
+
         Query query = (Query) entityManager.createQuery("SELECT v FROM Vacancy v  WHERE v.city IN (:param)", Vacancy.class)
                 .setParameter("param", city);
 
         double totalElements = query.getResultList().size();
         int totalPages = (int) Math.ceil(totalElements / (double)limit);
+        query.setFirstResult(page * limit).setMaxResults(limit);
 
-        query.setFirstResult(page * limit);
-        query.setMaxResults(limit);
+        return new VacancyPageDTO(query.getResultList(), totalPages);
+    }
+
+    public Page<Vacancy> getByTagsInCity(String city, Set<Tag> tags, int limit, int page) {
+
+        String s = "select * from vacancies as vc inner join (select v.vacancy_id as r_id, count(v.tags_id) as count "
+                + "from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result "
+                + "on vc.id=result.r_id where vc.city=:city order by result.count desc";
+
+        return getByTagsAndCityWithQuery(s, city, tags, limit, page);
+
+    }
+
+    public Page<Vacancy> getByTagsNotInCity(String city, Set<Tag> tags, int limit, int page) {
+
+        String s = "select * from vacancies as vc inner join (select v.vacancy_id as r_id, count(v.tags_id) as count "
+                + "from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result "
+                + "on vc.id=result.r_id where vc.city!=:city order by result.count desc";
+
+        return getByTagsAndCityWithQuery(s, city, tags, limit, page);
+    }
+
+    private Page<Vacancy> getByTagsAndCityWithQuery(String sqlQuery, String city, Set<Tag> tags, int limit, int page) {
+        if (page != 0) {
+            page = --page;
+        }
+        Set<Long> tagsId = new HashSet<>();
+        for (Tag tag : tags) { tagsId.add(tag.getId()); }
+
+        Query query = entityManager.unwrap(Session.class).createSQLQuery(sqlQuery).addEntity(Vacancy.class)
+                .setParameter("param", tagsId).setParameter("city", city);
+
+        int totalElements = query.getResultList().size();
+        int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
+        query.setFirstResult(page * limit).setMaxResults(limit);
 
         return new VacancyPageDTO(query.getResultList(), totalPages);
     }
