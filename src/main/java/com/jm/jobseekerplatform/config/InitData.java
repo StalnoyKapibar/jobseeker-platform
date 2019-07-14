@@ -418,9 +418,12 @@ public class InitData {
     }
 
     private Set<Tag> randomTags(Long position) {
+        final Random random = new Random();
         Set<Tag> tags = new HashSet<>();
-        for (Long i = position; i < position + 5; i++) {
-            tags.add(tagService.getById(i + 1));
+        int countAllTags = tagService.getAll().size();
+        for (Long i = position; i < position + 5L; i++) {
+            long number = random.nextInt(countAllTags) + 1L;
+            tags.add(tagService.getById(number));
         }
         return tags;
     }
