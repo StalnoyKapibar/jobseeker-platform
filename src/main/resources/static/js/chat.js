@@ -1,7 +1,7 @@
 var stompClient = null;
 
 var chatId = parseInt(document.getElementById("chatId").getAttribute('value'));
-var userId = parseInt(document.getElementById("userId").getAttribute('value'));
+var profileId = parseInt(document.getElementById("profileId").getAttribute('value'));
 
 var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
@@ -27,7 +27,7 @@ $(function () {
 
     messageForm.addEventListener('submit', sendMessage, true);
 
-    if (userId == "admin@mail.ru") {
+    if (profileId == "admin@mail.ru") { //todo
         count_not_read_messages("admin");
     } else {
         count_not_read_messages(chatId);
@@ -72,7 +72,7 @@ $(function () {
     }
 
     function processReceivedMessage(message) {
-        if ((userId !== message.author) && (!message.read)) {
+        if ((profileId !== message.creatorProfile) && (!message.read)) {
             message.read = true;
             updateMessageOnServer(message);
         }
@@ -82,7 +82,7 @@ $(function () {
             '<div class="media-body"><small>'
             + message.text +
             '</small><br/><small class="text-muted">'
-            + message.author +
+            + message.creatorProfile +
             '</small><hr/></div></div></div></li>');
     }
 
@@ -92,7 +92,7 @@ $(function () {
         var messageContent = messageInput.value.trim();
         if (messageContent && stompClient) {
             var chatMessage = {
-                author: userId,
+                creatorProfileId: profileId,
                 text: messageInput.value
             };
             stompClient.send("/live/chat/" + chatId, {}, JSON.stringify(chatMessage));

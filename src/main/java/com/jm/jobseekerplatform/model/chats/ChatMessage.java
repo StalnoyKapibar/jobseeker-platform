@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.jm.jobseekerplatform.model.profiles.Profile;
-import com.jm.jobseekerplatform.model.users.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,8 +22,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
     private String text;
 
     @ManyToOne
-    @JoinColumn(name = "author")
-    private Profile author;
+    private Profile creatorProfile;
 
     @Column(name = "date")
     private Date date;
@@ -34,9 +32,9 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
 
     public ChatMessage(){ }
 
-    public ChatMessage(String text, Profile author, Date date, boolean isRead) {
+    public ChatMessage(String text, Profile creatorProfile, Date date, boolean isRead) {
         this.text = text;
-        this.author = author;
+        this.creatorProfile = creatorProfile;
         this.date = date;
         this.isRead = isRead;
     }
@@ -53,12 +51,12 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
 
     @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
-    public Profile getAuthor() {
-        return author;
+    public Profile getCreatorProfile() {
+        return creatorProfile;
     }
 
-    public void setAuthor(Profile author) {
-        this.author = author;
+    public void setCreatorProfile(Profile creatorProfile) {
+        this.creatorProfile = creatorProfile;
     }
 
     public Date getDate() {
@@ -82,8 +80,8 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         return "{" +
                 "\"id\":\"" + id + '\"' +
                 ",\"text\":\"" + text + '\"' +
-                ",\"author type\":\"" + author.getClass() + '\"' +
-                ",\"author id\":\"" + author.getId() + '\"' +
+                ",\"author type\":\"" + creatorProfile.getClass() + '\"' +
+                ",\"author id\":\"" + creatorProfile.getId() + '\"' +
                 ",\"createDate\":\"" + date + "\"" +
                 '}';
     }
@@ -96,13 +94,13 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         return isRead == that.isRead &&
                 Objects.equals(id, that.id) &&
                 Objects.equals(text, that.text) &&
-                Objects.equals(author, that.author) &&
+                Objects.equals(creatorProfile, that.creatorProfile) &&
                 Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, author, date, isRead);
+        return Objects.hash(id, text, creatorProfile, date, isRead);
     }
 
     @Override

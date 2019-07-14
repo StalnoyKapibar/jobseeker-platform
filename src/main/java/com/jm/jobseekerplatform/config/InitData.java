@@ -456,7 +456,7 @@ public class InitData {
         int randomId = -1;
 
         while (!ready){
-            randomId = rnd.nextInt(amountOfProfiles);
+            randomId = rnd.nextInt(amountOfProfiles) + 1;
             if (randomId != exceptId) {
                 ready = true;
             }

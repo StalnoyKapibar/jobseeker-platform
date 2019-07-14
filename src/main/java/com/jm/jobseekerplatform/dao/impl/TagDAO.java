@@ -2,12 +2,12 @@ package com.jm.jobseekerplatform.dao.impl;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.Tag;
-import org.aspectj.weaver.ArrayReferenceType;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Repository("tagDAO")
 public class TagDAO extends AbstractDAO<Tag> {

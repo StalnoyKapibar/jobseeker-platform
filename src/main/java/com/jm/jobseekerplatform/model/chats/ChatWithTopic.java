@@ -2,7 +2,6 @@ package com.jm.jobseekerplatform.model.chats;
 
 import com.jm.jobseekerplatform.model.CreatedByProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
-import com.jm.jobseekerplatform.model.users.User;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -18,8 +17,8 @@ public class ChatWithTopic<T extends CreatedByProfile<? extends Profile>> extend
     private T topic;
 
 
-    public ChatWithTopic(Profile creator, T about) {
-        super(creator);
+    public ChatWithTopic(Profile creatorProfile, T about) {
+        super(creatorProfile);
         this.topic = about;
     }
 
