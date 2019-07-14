@@ -51,9 +51,14 @@ public class AdminController {
         return "admin/admin_vacancies";
     }
 
-    @RequestMapping("/admin/chats")
-    public String adminPageChats() {
-        return "admin/admin_chats";
+    @RequestMapping("/admin/chats/all")
+    public String adminPageChatsAll() {
+        return "admin/admin_chats_all";
+    }
+
+    @RequestMapping("/admin/chats/my")
+    public String adminPageChatsMy() {
+        return "admin/admin_chats_my";
     }
 
     @RequestMapping(value = "/admin/employers", method = RequestMethod.GET)

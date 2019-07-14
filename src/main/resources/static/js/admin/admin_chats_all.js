@@ -13,14 +13,23 @@ $(document).ready (function () {
         "aoColumns": [
             {"mData": "id",
                 "mRender": function(data, type, full) {
-                    return '<a href="/chat/' + data + '">' + data + '</a>'}},
-            {"mData": "createdBy"},
-            {"mData": "about"}
+                    return '<a href="/chat/' + data + '">' + data + '</a>'}
+            },
+            {"mData": "creatorProfile",
+                "mRender": function(data, type, full) {
+                    return data}
+            },
+            {"mData": "topic",
+                "mRender": function(data, type, full) {
+                    return data}
+            },
+            {"defaultContent": 'none'
+            }
         ]
     });
 
     var url = "admin";
-    count_not_read_messages(url);
+    //count_not_read_messages(url);
 
 });
 

@@ -1,20 +1,22 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
 import com.jm.jobseekerplatform.dto.MessageDTO;
-import com.jm.jobseekerplatform.model.chats.Chat;
+import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
-import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
-import com.jm.jobseekerplatform.service.impl.chats.ChatService;
+import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicVacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/chats/")
@@ -32,6 +34,9 @@ public class ChatRestController {
     @Autowired
     ChatService chatService;
 
+    @Autowired
+    ChatWithTopicVacancyService chatWithTopicVacancyService;
+
     @GetMapping("/last") //todo (Nick Dolgopolov)
     public HttpEntity getAllLastMessages(@PathVariable("chatId") Long id) { //todo Warning:(36, 57) Cannot resolve path variable 'chatId' in request mapping
         List<MessageWithDateDTO> lastMessages = chatMessageService.getAllLastMessages();
@@ -41,7 +46,7 @@ public class ChatRestController {
 
     @GetMapping("all")
     public HttpEntity getAllChats() {
-        List<Chat> chats = chatService.getAll();
+        List<ChatWithTopicVacancy> chats = chatWithTopicVacancyService.getAll();
         //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov)
         return new ResponseEntity(chats, HttpStatus.OK);
     }

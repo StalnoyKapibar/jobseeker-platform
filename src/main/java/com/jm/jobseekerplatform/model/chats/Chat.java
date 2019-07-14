@@ -1,9 +1,6 @@
 package com.jm.jobseekerplatform.model.chats;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import org.hibernate.annotations.Fetch;
 
@@ -25,6 +22,7 @@ public class Chat implements Serializable {
     private Long id;
 
     @ManyToOne
+    @JsonProperty("creatorProfile")
     @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
     private Profile creatorProfile;
