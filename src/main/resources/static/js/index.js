@@ -410,7 +410,7 @@ $(function () {
         $.each(vacancy.tags, function (i, tag) {
             var vac_id = "#id" + vacancy.id;
             var v_tag = tag.name;
-            var v_tag_ = v_tag.toString().split(' ').join('').toLocaleLowerCase();
+            var v_tag_ = v_tag.toString().split(' ').join('').replace("/", "").toLocaleLowerCase();
             var tag_id = "#" + vacancy.id + v_tag_;
             $(vac_id).append("<li id="+vacancy.id + v_tag_+" class='list-inline-item' style='font-size: small'>"+v_tag+"</li>");
             compare_seeker_tags(v_tag_, tag_id);
@@ -419,7 +419,7 @@ $(function () {
 
     function compare_seeker_tags(v_tag_, tag_id) {
         $.each(seeker_tags, function (i,s_tag) {
-            var s_tag_ = s_tag.name.toString().split(' ').join('').toLocaleLowerCase();
+            var s_tag_ = s_tag.name.toString().split(' ').join('').replace("/", "").toLocaleLowerCase();
             if (s_tag_.localeCompare(v_tag_)==0) {
                 $(tag_id).css({"background-color":"#fff2a8"})}
         })

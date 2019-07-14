@@ -138,7 +138,7 @@ public class VacancyService extends AbstractService<Vacancy> {
         if (page <= pages1) {
             return new VacancyPageDTO(vacInCity.getContent(), totalPages);
         } else {
-            for (int i=(page-pages1-1)*limit; i<((page-pages1-1)*limit)+limit; i++) {
+            for (int i = (page - pages1 - 1) * limit; i < ((page - pages1 - 1) * limit)+limit; i++) {
                 if (i < countPoints) {
                     vacOutCity.add(vacancyDaoI.findVacancyByCoordinates(sortedPoints.get(i)));
                 }

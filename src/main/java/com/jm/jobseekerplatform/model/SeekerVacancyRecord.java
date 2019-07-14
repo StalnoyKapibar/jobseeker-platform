@@ -17,10 +17,10 @@ public class SeekerVacancyRecord implements Serializable {
     @Column(name = "date")
     private LocalDateTime date;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     private SeekerProfile seeker;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     private Vacancy vacancy;
 
     public SeekerVacancyRecord() {}

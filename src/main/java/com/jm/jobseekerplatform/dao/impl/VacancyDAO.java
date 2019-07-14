@@ -69,14 +69,14 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
 
     public Page<Vacancy> getVacanciesInCity(String city, int limit, int page) {
         if (page != 0) {
-            page = --page;
+            --page;
         }
 
         Query query = (Query) entityManager.createQuery("SELECT v FROM Vacancy v  WHERE v.city IN (:param)", Vacancy.class)
                 .setParameter("param", city);
 
         double totalElements = query.getResultList().size();
-        int totalPages = (int) Math.ceil(totalElements / (double)limit);
+        int totalPages = (int) Math.ceil(totalElements / (double) limit);
         query.setFirstResult(page * limit).setMaxResults(limit);
 
         return new VacancyPageDTO(query.getResultList(), totalPages);
@@ -84,26 +84,26 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
 
     public Page<Vacancy> getByTagsInCity(String city, Set<Tag> tags, int limit, int page) {
 
-        String s = "select * from vacancies as vc inner join (select v.vacancy_id as r_id, count(v.tags_id) as count "
+        String query = "select * from vacancies as vc inner join (select v.vacancy_id as r_id, count(v.tags_id) as count "
                 + "from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result "
                 + "on vc.id=result.r_id where vc.city=:city order by result.count desc";
 
-        return getByTagsAndCityWithQuery(s, city, tags, limit, page);
+        return getByTagsAndCityWithQuery(query, city, tags, limit, page);
 
     }
 
     public Page<Vacancy> getByTagsNotInCity(String city, Set<Tag> tags, int limit, int page) {
 
-        String s = "select * from vacancies as vc inner join (select v.vacancy_id as r_id, count(v.tags_id) as count "
+        String query = "select * from vacancies as vc inner join (select v.vacancy_id as r_id, count(v.tags_id) as count "
                 + "from vacancies_tags as v where v.tags_id in (:param) group by v.vacancy_id ) as result "
                 + "on vc.id=result.r_id where vc.city!=:city order by result.count desc";
 
-        return getByTagsAndCityWithQuery(s, city, tags, limit, page);
+        return getByTagsAndCityWithQuery(query, city, tags, limit, page);
     }
 
     private Page<Vacancy> getByTagsAndCityWithQuery(String sqlQuery, String city, Set<Tag> tags, int limit, int page) {
         if (page != 0) {
-            page = --page;
+            --page;
         }
         Set<Long> tagsId = new HashSet<>();
         for (Tag tag : tags) { tagsId.add(tag.getId()); }
