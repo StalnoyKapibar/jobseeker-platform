@@ -6,13 +6,36 @@
 <head>
     <title>Новая вакансия</title>
     <meta name="apiKey" th:content="${googleMapsApiKey}"/>
-    <style>.label {
-        font-size: 110%;
-        display: inline-block;
-        margin: 1px;
-    }</style>
+    <style>
+        .label {
+            font-size: 110%;
+            display: inline-block;
+            margin: 2px;
+            background-color: #5CB85C;
+            border-radius: 7px;
+            color: white;
+            border-style: solid;
+            border-color: #5CB85C;
+        }
+
+        .col-md-7.inputGroupContainer{
+            flex: none;
+            max-width: none;
+            padding-left: 10%;
+        }
+
+        #techLabel{
+            flex: none;
+            max-width: none;
+            padding-left: 10%;
+        }
+
+    </style>
     <!--<script type="text/javascript"-->
     <!--src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>-->
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.css" rel="stylesheet">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
+
     <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
     <script type="text/javascript" src="/js/new_vacancy.js"></script>
     <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey})}"
@@ -36,8 +59,8 @@
 
                         <div class="form-group row">
                             <div class="col-sm-1"></div>
-                            <label class="col-md-1 col-form-label">Должность</label>
-                            <div class="col-md-9 inputGroupContainer">
+                            <label class="col-md-2 col-form-label">Должность</label>
+                            <div class="col-md-8 inputGroupContainer">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
@@ -50,8 +73,8 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-1"></div>
-                            <label class="col-md-1 control-label">Город</label>
-                            <div class="col-md-9 inputGroupContainer">
+                            <label class="col-md-2 control-label">Город</label>
+                            <div class="col-md-8 inputGroupContainer">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-globe"></i></span>
@@ -63,12 +86,12 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-1"></div>
-                            <label class="col-md-1 control-label">Адрес</label>
-                            <div class="col-md-9 inputGroupContainer">
+                            <label class="col-md-2 control-label">Адрес</label>
+                            <div class="col-md-8 inputGroupContainer">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-secondary" type="button" data-toggle="modal"
+                                            <button class="btn btn-primary" type="button" data-toggle="modal"
                                                     data-target="#mapModal"
                                                     onclick="initV_Map()"><i class="fas fa-map"></i>
                                             </button>
@@ -82,8 +105,8 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-1"></div>
-                            <label class="col-md-1 control-label">Место работы</label>
-                            <div class="col-md-9 selectContainer">
+                            <label class="col-md-2 control-label">Место работы</label>
+                            <div class="col-md-8 selectContainer">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-home"></i></span>
@@ -98,8 +121,8 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-1"></div>
-                            <label class="col-md-1 control-label">Зарплата: от</label>
-                            <div class="col-md-9 inputGroupContainer">
+                            <label class="col-md-2 control-label">Зарплата: от</label>
+                            <div class="col-md-8 inputGroupContainer">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-ruble-sign"></i></span>
@@ -111,8 +134,8 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-1"></div>
-                            <label class="col-md-1 control-label">до</label>
-                            <div class="col-md-9 inputGroupContainer">
+                            <label class="col-md-2 control-label">до</label>
+                            <div class="col-md-8 inputGroupContainer">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-ruble-sign"></i></span>
@@ -124,9 +147,9 @@
                         </div>
                         <div class="form-group row" id="v_form_group_tags">
                             <div class="col-sm-1"></div>
-                            <label class="col-md-2 control-label">Технологии (минимум одна)</label>
+                            <label id="techLabel" class="col-md-2 control-label">Технологии (минимум одна)</label>
                             <div class="col-md-7 inputGroupContainer">
-                                <div class="input-group" style="width: 100%;">
+                                <div class="input-group mb-4" style="width: 100%;">
                                     <div class="well well-sm" name="v_tagsWell" id="v_tagsWell"
                                          style="margin-bottom: 0px;">
                                         <button type="button" class="btn btn-primary" data-toggle="modal"
@@ -160,11 +183,12 @@
                             <label class="col-md-11 control-label">Подробное описание вакансии</label>
                             <div class="col-sm-1"></div>
                             <div class="col-md-10 inputGroupContainer">
+                                <form method="post">
+                                    <textarea id="v_description" name="editordata"></textarea>
+                                </form>
                                 <div class="input-group">
-                                    <textarea name="v_description" id="v_description" placeholder="Обязательно к заполнению" class="form-control is-invalid"
-                                              rows="15"></textarea>
-                                    <div class="invalid-feedback">
-                                        сделайте полное описание
+                                    <div class="invalid-feedback-description" style="width: 100%; margin-top: .25rem; font-size: 80%; color: #dc3545">
+                                        сделайте полное описание, не менее 100 символов
                                     </div>
                                 </div>
                             </div>
@@ -196,7 +220,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <h3><span id="VMTags"></span><br></h3>
+                    <h4><span id="VMTags"></span><br></h4>
                     <h3><span id="VMHeadline"></span><br/></h3>
                     <span id="VMCity"></span>
                     <span id="VMRemote"> (Удаленная работа)</span><br/>
@@ -237,7 +261,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <div class="input-group">
+                    <div class="input-group mb-4">
                         <input id="search_tags" class="form-control width100" placeholder="Фильтр по названию"
                                maxlength="50">
                         <span class="input-group-btn">
