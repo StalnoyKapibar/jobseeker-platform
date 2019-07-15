@@ -2,20 +2,33 @@ package com.jm.jobseekerplatform.service.impl.users;
 
 import com.jm.jobseekerplatform.dao.impl.users.UserDAO;
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.profiles.AdminProfile;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.AdminUser;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
+import com.jm.jobseekerplatform.service.impl.ImageService;
 import com.jm.jobseekerplatform.service.impl.MailService;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.VerificationTokenService;
+import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,6 +51,13 @@ public class UserService extends AbstractService<User> {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private ProfileService profileService;
+
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
     private UserRole roleEmployer = new UserRole("ROLE_EMPLOYER");
@@ -66,9 +86,14 @@ public class UserService extends AbstractService<User> {
         User userNew = null;
 
         if (userRole.equals(roleSeeker)) {
-            userNew = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            SeekerProfile seekerProfile = (SeekerProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(seekerProfile);
+            userNew = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, seekerProfile);
         } else if (userRole.equals(roleEmployer)) {
-            userNew = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
+
+            EmployerProfile employerProfile = (EmployerProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(employerProfile);
+            userNew = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, employerProfile);
         }
 
         add(userNew);
@@ -83,18 +108,25 @@ public class UserService extends AbstractService<User> {
     }
 
     public void addNewUserByAdmin(User user, boolean check) {
+
         String userEmail = user.getEmail();
         char[] userPass = encodePassword(user.getPasswordChar());
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
         User newUser = null;
         if (userRole.equals(roleSeeker)) {
-            newUser = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
-        } else if (userRole.equals(roleEmployer)) {
-            newUser = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
-        } else if (userRole.equals(roleAdmin)) {
-            newUser = new AdminUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
-        }
 
+            SeekerProfile seekerProfile = (SeekerProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(seekerProfile);
+            newUser = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, seekerProfile);
+        } else if (userRole.equals(roleEmployer)) {
+            EmployerProfile employerProfile = (EmployerProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(employerProfile);
+            newUser = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, employerProfile);
+        } else if (userRole.equals(roleAdmin)) {
+            AdminProfile adminProfile = (AdminProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(adminProfile);
+            newUser = new AdminUser(userEmail, userPass, LocalDateTime.now(), userRole, adminProfile);
+        }
         newUser.setConfirm(true);
         add(newUser);
 
@@ -136,4 +168,39 @@ public class UserService extends AbstractService<User> {
     public void inviteFriend(String user, String friend) {
         mailService.sendFriendInvitaionEmail(user, friend);
     }
+
+    private Profile getDefaultProfile(String typeProfile){
+        typeProfile  = typeProfile.toLowerCase();
+        if (typeProfile.contains("seeker")) {
+            String nameProfile = "";
+            String patronymicProfile = "";
+            String surenameProfile = "";
+            String discriptionProfile = "";
+            Set<Vacancy> vacancyes = new HashSet<>();
+            Set<Tag> tags = new HashSet<>();
+            Set<Portfolio> portfolios = new HashSet<>();
+            BufferedImage image = null;
+            try {
+                image = ImageIO.read(new File("src/main/resources/static/img/default_seeker_avatar.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return new SeekerProfile(nameProfile, patronymicProfile, surenameProfile, discriptionProfile, imageService.resizePhotoSeeker(image), tags, portfolios, vacancyes);
+        } else if (typeProfile.contains("employer")) {
+            String companyName = "";
+            String website = "";
+            String discription = "";
+            BufferedImage logo = null;
+            try {
+                logo = ImageIO.read(new File("src/main/resources/static/img/default_company_logo.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return new EmployerProfile(companyName, website, discription, imageService.resizeLogoEmployer(logo));
+        } else if (typeProfile.contains("admin")) {
+            return new AdminProfile();
+        }
+        return new Profile();
+        }
 }
+

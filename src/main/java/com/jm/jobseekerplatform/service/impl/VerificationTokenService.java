@@ -7,6 +7,8 @@ import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.NoResultException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -31,6 +33,10 @@ public class VerificationTokenService extends AbstractService<VerificationToken>
 
     public VerificationToken findByToken(String token) {
         return dao.findByToken(token);
+    }
+
+    public VerificationToken findeByUserId (long id) {
+        return dao.findeByUserId(id);
     }
 
     public boolean tokenIsNonExpired(VerificationToken token) {
