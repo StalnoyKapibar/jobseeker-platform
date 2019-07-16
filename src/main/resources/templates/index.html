@@ -14,9 +14,8 @@
         <div class="main-block chromeFix" layout:fragment="content">
             <div id="vacancyDiv" class="container-fluid" style="margin-top: 30px">
                 <div class="row">
-                    <div class="col-sm-4"></div>
-                    <div class="col-sm-6">
-
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10">
                         <div class="search_area">
                             <form class="form-inline" style="margin-bottom: 5px;">
                                 <input class="form-control mr-sm-2 form-search" id="search_box" type="search"
@@ -33,9 +32,9 @@
                     </div>
                 </div>
                 <div class="row" style="margin-top: 30px">
-                    <div class="col-sm-4">
+                    <div class="col-sm-1">
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-10">
                         <div id="allVacancies">
                             <span th:text="${vacMess}"></span><br/>
                             <ul class="list-group">
@@ -43,12 +42,29 @@
                                     <li class="list-group-item clearfix"
                                         data-toggle="modal" data-target="#vacancyModal"
                                         th:onclick="'showVacancy('+${vacancy.id}+')'">
-                                        [[${vacancy.headline}]]
+                                        <div class="headLine">
+                                            <span th:text="${vacancy.headline}"></span>
+                                        </div>
+                                        <div class="vacancyTags">
+                                            <span th:each="tag : ${vacancy.tags}"
+                                                  class="badge badge-pill badge-success btnClick"
+                                                  th:text="${tag.name}"></span>
+                                        </div>
+                                        <div class="companyData">
+                                            <span th:text="'Компания: ' + ${vacancy.employerProfile.companyName}"></span>
+                                            <br>
+                                            <span th:text="'Город: ' + ${vacancy.city}"></span>
+                                        </div>
+                                        <div class="vacancyDescription">
+                                            <span th:text="${vacancy.shortDescription}"></span>
+                                        </div>
+                                        <div class="salary" th:if="${vacancy.salaryMin}">
+                                            <span th:text="'Зарплата от: ' + ${vacancy.salaryMin} + ' руб.'"></span>
+                                        </div>
                                         <div class="pull-right">
-                                            <span class="btn btn-xs btn-default"
+                                            <span class="btn btn-outline-info btn-sm btnOnVacancyPage"
                                                   th:onclick="'window.location.href = \'' + @{/vacancy/{id}(id=${vacancy.id})} + '\';event.stopPropagation();'">
-                                                  <!--th:onclick=" location.href = '@Url.Action("NewClass", "Product")'; event.stopPropagation(); ">-->
-                                               <i class="fas fa-play"></i>
+                                                На страницу вакансии
                                             </span>
                                             <span sec:authorize="hasRole('ROLE_SEEKER')" class="stars"
                                                   th:id="stars- + ${vacancy.id}">
