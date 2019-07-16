@@ -1,5 +1,6 @@
 let vacancy;
 let flagTag = false;
+let tagId = 0;
 
 let headline_check = false;
 let city_check = false;
@@ -232,11 +233,10 @@ function addTag(id, name) {
 }
 
 function addNewTag() {
-
-    var id = -1;
-    var searchTag = $("#search_tags");
-    var name = searchTag.val();
-    $("#v_tagsWell").append("<span class='label label-success' id='v_tagLabel_" + id + "' onclick='deleteTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
+    tagId--;
+    let searchTag = $("#search_tags");
+    let name = searchTag.val();
+    $("#v_tagsWell").append("<span class='label label-success' id='v_tagLabel_" + tagId + "' onclick='deleteTag(" + tagId + ",\"" + name + "\")'>" + name + "</span>");
 
     searchTag.val(""); // clear filter after adding tag
     tags_search(); // refresh visible tags with empty filter
