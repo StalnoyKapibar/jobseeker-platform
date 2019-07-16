@@ -23,8 +23,7 @@ public abstract class ChatWithTopicDAO<T extends ChatWithTopic> extends Abstract
                             .setParameter("creatorProfileId", creatorProfileId)
                             .setParameter("topicId", topicId)
                             .getSingleResult();
-        }
-        catch (NoResultException e){
+        } catch (NoResultException e) {
             e.printStackTrace();
             chat = null;
         }

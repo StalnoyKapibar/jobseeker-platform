@@ -17,8 +17,8 @@ import javax.persistence.MappedSuperclass;
 public class ChatWithTopic<T extends CreatedByProfile> extends Chat {
 
     @ManyToOne
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
-    @JsonIdentityReference(alwaysAsId=true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private T topic;
 
 

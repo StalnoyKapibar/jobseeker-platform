@@ -30,7 +30,8 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
     @Column(name = "isread")
     private boolean isRead;
 
-    public ChatMessage(){ }
+    public ChatMessage() {
+    }
 
     public ChatMessage(String text, Profile creatorProfile, Date date, boolean isRead) {
         this.text = text;
@@ -39,7 +40,9 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         this.isRead = isRead;
     }
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
     public String getText() {
         return text;
@@ -49,8 +52,8 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         this.text = text;
     }
 
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
-    @JsonIdentityReference(alwaysAsId=true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     public Profile getCreatorProfile() {
         return creatorProfile;
     }

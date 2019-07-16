@@ -52,8 +52,7 @@ public class ChatRestController {
 
         List<ChatInfoDTO> chatsInfo = new ArrayList<>();
 
-        for (ChatWithTopicVacancy chat : chats)
-        {
+        for (ChatWithTopicVacancy chat : chats) {
             ChatInfoDTO chatInfoDTO = ChatInfoDTO.fromChatWithTopic(chat);
             chatInfoDTO.setLastMessage(chatService.getLastMessage(chat.getId()));
             chatsInfo.add(chatInfoDTO);

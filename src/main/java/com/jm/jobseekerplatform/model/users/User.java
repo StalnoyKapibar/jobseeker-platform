@@ -32,7 +32,7 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
-    @OneToOne(fetch = FetchType.EAGER, targetEntity=Profile.class)
+    @OneToOne(fetch = FetchType.EAGER, targetEntity = Profile.class)
     private T profile;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -73,8 +73,8 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
         this.email = email;
     }
 
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
-    @JsonIdentityReference(alwaysAsId=true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     public T getProfile() {
         return profile;
     }

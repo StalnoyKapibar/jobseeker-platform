@@ -10,7 +10,6 @@ import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 public class ChatInfoDTO {
 
 
-
     private long id;
 
     private long creatorProfileId;
@@ -33,7 +32,7 @@ public class ChatInfoDTO {
 
     private ChatMessage lastMessage;
 
-    public static  ChatInfoDTO fromChatWithTopic(ChatWithTopicVacancy chatWithTopic){
+    public static ChatInfoDTO fromChatWithTopic(ChatWithTopicVacancy chatWithTopic) {
         ChatInfoDTO chatInfoDTO = new ChatInfoDTO();
 
         chatInfoDTO = fromChatWithTopicCommon(chatInfoDTO, chatWithTopic);
@@ -43,7 +42,7 @@ public class ChatInfoDTO {
         return chatInfoDTO;
     }
 
-    private static ChatInfoDTO fromChatWithTopicCommon(ChatInfoDTO chatInfoDTO, ChatWithTopic chatWithTopic){
+    private static ChatInfoDTO fromChatWithTopicCommon(ChatInfoDTO chatInfoDTO, ChatWithTopic chatWithTopic) {
 
         chatInfoDTO.id = chatWithTopic.getId();
 

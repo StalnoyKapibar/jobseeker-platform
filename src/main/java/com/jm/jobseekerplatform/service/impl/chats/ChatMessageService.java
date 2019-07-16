@@ -22,8 +22,8 @@ public class ChatMessageService extends AbstractService<ChatMessage> {
     }
 
     public List<MessageWithDateDTO> getAllLastMessages() { //todo (Nick Dolgopolov) test
-        List<MessageWithDateDTO> list =  chatMessageDAO.getAllLastMessages();
-        for (int i=0; i<list.size(); i++) {
+        List<MessageWithDateDTO> list = chatMessageDAO.getAllLastMessages();
+        for (int i = 0; i < list.size(); i++) {
             Long creatorProfileId = chatMessageDAO.getById(list.get(i).getId()).getCreatorProfile().getId();
             list.get(i).setCreatorProfileId(creatorProfileId);
         }

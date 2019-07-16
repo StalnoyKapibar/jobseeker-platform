@@ -21,14 +21,14 @@ public class ChatService extends AbstractService<Chat> {
     }
 
     //todo (Nick Dolgopolov) птимизировать
-    public ChatMessage getLastMessage(Long chatId){
+    public ChatMessage getLastMessage(Long chatId) {
         Chat chat = getById(chatId);
         List<ChatMessage> chatMessages = chat.getChatMessages();
 
         ChatMessage lastChatMessage = chatMessages.get(0);
 
         for (int i = 1; i < chatMessages.size(); i++) {
-            if (lastChatMessage.getDate().before(chatMessages.get(i).getDate())){
+            if (lastChatMessage.getDate().before(chatMessages.get(i).getDate())) {
                 lastChatMessage = chatMessages.get(i);
             }
         }

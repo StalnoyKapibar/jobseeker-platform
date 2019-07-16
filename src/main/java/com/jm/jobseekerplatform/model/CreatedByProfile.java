@@ -7,5 +7,6 @@ import com.jm.jobseekerplatform.model.profiles.Profile;
  */
 public interface CreatedByProfile<T extends Profile> {
     Long getId();
+
     T getCreator();
 }
