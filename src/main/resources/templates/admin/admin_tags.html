@@ -30,14 +30,10 @@
                     </div>
                 </td>
                 <td>
-                    <button th:onclick="'deleteTag(' + ${tag.getId()} + ');'" type="button" class="btn btn-primary">
+                    <button th:onclick="'deleteTag(' + ${tag.getId()} + ');'" type="button" class="btn btn-danger">
                         удалить
                     </button>
                 </td>
-                <!--<th >-->
-                <!---->
-                <!--</th>-->
-
             </tr>
             </tbody>
         </table>
@@ -45,6 +41,7 @@
 </div>
 <div  layout:fragment="content-script">
     <script type="text/javascript" src="/js/admin/admin.js"></script>
+    <script type="text/javascript" src="/js/admin/admin_tags.js"></script>
 </div>
 </body>
 </html>
