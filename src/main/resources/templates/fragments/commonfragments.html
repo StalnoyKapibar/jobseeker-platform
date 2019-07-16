@@ -25,28 +25,9 @@
 <th:block th:fragment="sidebar">
     <div class="sidebar">
         <!-- <div class="sidebar-paths center fixed-left">-->
-        <ul sec:authorize="!isAuthenticated()">
-            <li><a href="#"><span>Все вакансии</span></a></li>
-        </ul>
-        <ul sec:authorize="hasRole('ROLE_SEEKER')">
-            <li><a href="#"><span>Все вакансии</span></a></li>
-            <li><a href="#"><span>Все компании</span></a></li>
-
-            <li><a class="font-color" href="#">Мои чаты<span
-                    id="count_not_read_messages"></span></a></li>
-
-            <li><span id="username" th:utext="${username}"></span></li>
-            <li><span id="vacancyId" th:utext="${vacancyId}"></span></li>
-        </ul>
-        <ul sec:authorize="hasRole('ROLE_EMPLOYER')">
-            <li><a href="#"><span>Все резюме</span></a></li>
-
-            <li><a class="font-color" href="#">Мои чаты<span
-                    id="count_not_read_messages"></span></a></li>
-
-            <li><span id="username" th:utext="${username}"></span></li>
-            <li><span id="vacancyId" th:utext="${vacancyId}"></span></li>
-        </ul>
+        <th:block th:replace="fragments/not_authenticated_sidebar :: sidebar"></th:block>
+        <th:block th:replace="fragments/seeker_sidebar :: sidebar"></th:block>
+        <th:block th:replace="fragments/employer_sidebar :: sidebar"></th:block>
         <!--</div>-->
     </div>
 </th:block>
