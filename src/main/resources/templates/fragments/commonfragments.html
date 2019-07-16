@@ -26,9 +26,10 @@
     <div class="sidebar">
         <!-- <div class="sidebar-paths center fixed-left">-->
         <ul>
-            <li><a href="#"><span>Все вакансии</span></a></li>
-            <li><a href="#"><span>Все компании</span></a></li>
-            <li><a href="#"><span>Все резюме</span></a></li>
+            <li sec:authorize="!isAuthenticated() or hasRole('ROLE_SEEKER')"><a href="#"><span>Все вакансии</span></a>
+            </li>
+            <li sec:authorize="hasRole('ROLE_SEEKER')"><a href="#"><span>Все компании</span></a></li>
+            <li sec:authorize="hasRole('ROLE_EMPLOYER')"><a href="#"><span>Все резюме</span></a></li>
 
             <li sec:authorize="isAuthenticated()"><a class="font-color" href="#">Мои чаты<span
                     id="count_not_read_messages"></span></a></li>
