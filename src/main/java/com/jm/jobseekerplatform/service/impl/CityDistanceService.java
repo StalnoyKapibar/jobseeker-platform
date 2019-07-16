@@ -42,7 +42,5 @@ public class CityDistanceService extends AbstractService<CityDistance> {
         }
         city.setCityDistances(cityDistanceList);
         cityService.update(city);
-
-
     }
 }

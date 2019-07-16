@@ -1,13 +1,8 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.google.maps.errors.ApiException;
 import com.jm.jobseekerplatform.dao.VacancyDaoI;
 import com.jm.jobseekerplatform.dao.impl.VacancyDAO;
-import com.jm.jobseekerplatform.dto.VacancyPageDTO;
-import com.jm.jobseekerplatform.model.Point;
-import com.jm.jobseekerplatform.model.State;
-import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,6 +29,9 @@ public class VacancyService extends AbstractService<Vacancy> {
 
     @Autowired
     private PointService pointService;
+
+    @Autowired
+    private CityService cityService;
 
     private Pattern pattern;
     private Matcher matcher;
@@ -99,7 +97,7 @@ public class VacancyService extends AbstractService<Vacancy> {
         String city_pattern = "^[A-Za-z0-9А-Яа-я ()\\-]{3,100}$";
         boolean isCorrect;
 
-        if (vacancy.getHeadline().isEmpty() || vacancy.getCity().isEmpty() || vacancy.getShortDescription().isEmpty() || vacancy.getDescription().isEmpty()) {
+        if (vacancy.getHeadline().isEmpty() || vacancy.getCity().getName().isEmpty() || vacancy.getShortDescription().isEmpty() || vacancy.getDescription().isEmpty()) {
             throw new IllegalArgumentException("Some fields is empty");
         }
         pattern = Pattern.compile(headline_pattern);
@@ -107,7 +105,7 @@ public class VacancyService extends AbstractService<Vacancy> {
         isCorrect = matcher.matches();
 
         pattern = Pattern.compile(city_pattern);
-        matcher = pattern.matcher(vacancy.getCity());
+        matcher = pattern.matcher(vacancy.getCity().getName());
         isCorrect &= matcher.matches();
 
         isCorrect &= vacancy.getTags().size() > 0;
@@ -121,44 +119,18 @@ public class VacancyService extends AbstractService<Vacancy> {
         vacancy.setCoordinates(point);
         Set<Tag> matchedTags = tagService.matchTagsByName(vacancy.getTags());
         vacancy.setTags(matchedTags);
+        City city = cityService.checkCityOrAdd(vacancy.getCity().getName(), point);
+        vacancy.setCity(city);
         dao.add(vacancy);
     }
 
-    public Page<Vacancy> findVacanciesByPoint(String city, Point point, int limit, int page) {
-        Page<Vacancy> vacInCity = dao.getVacanciesInCity(city, limit, page);
-        List<Vacancy> vacOutCity = new ArrayList<>();
-
-        List<Point> sortedPoints = pointService.sortPointsByDistance(point, dao.getPointsNotInCity(city));
-
-        int countPoints = sortedPoints.size();
-        int pages1 = vacInCity.getTotalPages();
-        int pages2 = (int) Math.ceil((double) countPoints / (double)limit);
-        int totalPages = pages1 + pages2;
-
-        if (page <= pages1) {
-            return new VacancyPageDTO(vacInCity.getContent(), totalPages);
-        } else {
-            for (int i = (page - pages1 - 1) * limit; i < ((page - pages1 - 1) * limit)+limit; i++) {
-                if (i < countPoints) {
-                    vacOutCity.add(vacancyDaoI.findVacancyByCoordinates(sortedPoints.get(i)));
-                }
-            }
-            return new VacancyPageDTO(vacOutCity, totalPages);
-        }
+    public Page<Vacancy> findVacanciesByPoint(String currentCity, Point point, int limit, int page) {
+        String city = cityService.checkCityOrGetNearest(currentCity, point);
+        return dao.getVacanciesSortByCity(city, limit, page);
     }
 
-    public Page<Vacancy> findVacanciesByTagsAndByPoint(String city, Point point, Set<Tag> tags, int limit, int page) {
-        Page<Vacancy> vacanciesInCity = dao.getByTagsInCity(city, tags, limit, page);
-        Page<Vacancy> vacanciesOutCity = dao.getByTagsNotInCity(city, tags, limit, page);
-
-        int pages1 = vacanciesInCity.getTotalPages();
-        int pages2 = vacanciesOutCity.getTotalPages();
-        int totalPages = pages1 + pages2;
-
-        if (page < pages1) {
-            return new VacancyPageDTO(vacanciesInCity.getContent(), totalPages);
-        } else {
-            return new VacancyPageDTO(vacanciesOutCity.getContent(), totalPages);
-        }
+    public Page<Vacancy> findVacanciesByTagsAndByPoint(String currentCity, Point point, Set<Tag> tags, int limit, int page) {
+        String city = cityService.checkCityOrGetNearest(currentCity, point);
+        return dao.getVacanciesByTagsAndSortByCity(city, tags, limit, page);
     }
 }

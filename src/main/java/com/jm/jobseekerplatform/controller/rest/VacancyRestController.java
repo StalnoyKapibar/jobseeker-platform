@@ -98,7 +98,8 @@ public class VacancyRestController {
     public Page<Vacancy> getPageOfVacancies(@RequestBody Point point, @RequestParam("city") String city, @PathVariable("page") int page, Authentication authentication) {
         int limit = 10;
         if (authentication == null || !authentication.isAuthenticated()) {
-            return vacancyService.findVacanciesByPoint(city, point, limit, page);
+            Page<Vacancy> vacancyPage = vacancyService.findVacanciesByPoint(city, point, limit, page);
+            return vacancyPage;
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 Set<Tag> tags = ((SeekerProfile)((User)authentication.getPrincipal()).getProfile()).getTags();

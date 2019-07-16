@@ -138,7 +138,12 @@ function validateAndPreview() {
         });
         let loc = getCoordsByAddress($("#v_address").val());
         let point = {'latitudeY': loc.lat, 'longitudeX': loc.lng};
-        let city = getCityByCoords(loc.lat, loc.lng);
+        let city = {
+            'id' : null,
+            'name' : getCityByCoords(loc.lat, loc.lng),
+            'centerPoint' : point,
+            'cityDistances' : null
+        };
 
         vacancy = {
             'id': null,
@@ -156,7 +161,7 @@ function validateAndPreview() {
         };
 
         $("#VMHeadline").text(vacancy.headline);
-        $("#VMCity").text(vacancy.city);
+        $("#VMCity").text(vacancy.city.name);
         $("#VMShortDescription").text(vacancy.shortDescription);
         $("#VMDescription").text(vacancy.description);
 
