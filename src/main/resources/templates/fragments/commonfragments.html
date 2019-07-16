@@ -25,17 +25,27 @@
 <th:block th:fragment="sidebar">
     <div class="sidebar">
         <!-- <div class="sidebar-paths center fixed-left">-->
-        <ul>
-            <li sec:authorize="!isAuthenticated() or hasRole('ROLE_SEEKER')"><a href="#"><span>Все вакансии</span></a>
-            </li>
-            <li sec:authorize="hasRole('ROLE_SEEKER')"><a href="#"><span>Все компании</span></a></li>
-            <li sec:authorize="hasRole('ROLE_EMPLOYER')"><a href="#"><span>Все резюме</span></a></li>
+        <ul sec:authorize="!isAuthenticated()">
+            <li><a href="#"><span>Все вакансии</span></a></li>
+        </ul>
+        <ul sec:authorize="hasRole('ROLE_SEEKER')">
+            <li><a href="#"><span>Все вакансии</span></a></li>
+            <li><a href="#"><span>Все компании</span></a></li>
 
-            <li sec:authorize="isAuthenticated()"><a class="font-color" href="#">Мои чаты<span
+            <li><a class="font-color" href="#">Мои чаты<span
                     id="count_not_read_messages"></span></a></li>
 
-            <li sec:authorize="isAuthenticated()"><span id="username" th:utext="${username}"></span></li>
-            <li sec:authorize="isAuthenticated()"><span id="vacancyId" th:utext="${vacancyId}"></span></li>
+            <li><span id="username" th:utext="${username}"></span></li>
+            <li><span id="vacancyId" th:utext="${vacancyId}"></span></li>
+        </ul>
+        <ul sec:authorize="hasRole('ROLE_EMPLOYER')">
+            <li><a href="#"><span>Все резюме</span></a></li>
+
+            <li><a class="font-color" href="#">Мои чаты<span
+                    id="count_not_read_messages"></span></a></li>
+
+            <li><span id="username" th:utext="${username}"></span></li>
+            <li><span id="vacancyId" th:utext="${vacancyId}"></span></li>
         </ul>
         <!--</div>-->
     </div>
