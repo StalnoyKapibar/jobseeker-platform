@@ -15,15 +15,27 @@ $(document).ready (function () {
                 "mRender": function(data, type, full) {
                     return '<a href="/chat/' + data + '">' + data + '</a>'}
             },
-            {"mData": "creatorProfile",
+            {"mData": "null",
                 "mRender": function(data, type, full) {
-                    return data}
+                    return full.creatorProfileId + " "
+                        + full.creatorName + " "
+                        + full.creatorType;}
             },
-            {"mData": "topic",
+            {"mData": "null",
                 "mRender": function(data, type, full) {
-                    return data}
+                    return full.participantProfileId + " "
+                        + full.participantName + " "
+                        + full.participantType;}
             },
-            {"defaultContent": 'none'
+            {"mData": "null",
+                "mRender": function(data, type, full) {
+                    return full.topicId + " "
+                        + full.topicType + " "
+                        + full.topicTitle;}
+            },
+            {"mData": "null",
+                "mRender": function(data, type, full) {
+                    return full.lastMessage.text + " " + full.lastMessage.date;}
             }
         ]
     });

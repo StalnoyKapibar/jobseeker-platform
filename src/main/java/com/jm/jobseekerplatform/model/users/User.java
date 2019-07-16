@@ -17,7 +17,7 @@ import java.util.Collection;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "users")
-public class User<T extends Profile> implements Serializable, UserDetails {
+public abstract class User<T extends Profile> implements Serializable, UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

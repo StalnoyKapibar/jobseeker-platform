@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.dto.ChatInfoDTO;
 import com.jm.jobseekerplatform.dto.MessageDTO;
 import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,8 +49,18 @@ public class ChatRestController {
     @GetMapping("all")
     public HttpEntity getAllChats() {
         List<ChatWithTopicVacancy> chats = chatWithTopicVacancyService.getAll();
+
+        List<ChatInfoDTO> chatsInfo = new ArrayList<>();
+
+        for (ChatWithTopicVacancy chat : chats)
+        {
+            ChatInfoDTO chatInfoDTO = ChatInfoDTO.fromChatWithTopic(chat);
+            chatInfoDTO.setLastMessage(chatService.getLastMessage(chat.getId()));
+            chatsInfo.add(chatInfoDTO);
+        }
+
         //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov)
-        return new ResponseEntity(chats, HttpStatus.OK);
+        return new ResponseEntity(chatsInfo, HttpStatus.OK);
     }
 
 

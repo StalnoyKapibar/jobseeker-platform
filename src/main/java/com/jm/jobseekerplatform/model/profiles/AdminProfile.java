@@ -10,4 +10,9 @@ import javax.persistence.Entity;
 public class AdminProfile extends Profile {
     public AdminProfile() {
     }
+
+    @Override
+    public String GetNameForUi() {
+        return "Admin";
+    }
 }

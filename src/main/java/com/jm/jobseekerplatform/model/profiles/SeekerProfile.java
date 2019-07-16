@@ -40,6 +40,11 @@ public class SeekerProfile extends Profile implements Serializable {
     public SeekerProfile() {
     }
 
+    @Override
+    public String GetNameForUi() {
+        return surname + " " + name  + " " + patronymic;
+    }
+
     public SeekerProfile(String name, String patronymic, String surname, String description, byte[] photo, Set<Tag> tags,
                          Set<Portfolio> portfolios, Set<Vacancy> favoriteVacancy) {
         this.name = name;
