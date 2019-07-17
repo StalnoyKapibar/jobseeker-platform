@@ -70,10 +70,13 @@ public class MainController {
                     model.addAttribute("profileId", profile.getId());
                     model.addAttribute("googleMapsApiKey", googleMapsApiKey);
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
+                    model.addAttribute("seekerAuthority", seekerUserService.getById(id).getAuthority());
                 } catch (NullPointerException e) {
                     model.addAttribute("googleMapsApiKey", googleMapsApiKey);
                     model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
                 }
+            } else {
+                model.addAttribute("googleMapsApiKey", googleMapsApiKey);
             }
         }
         return "index";

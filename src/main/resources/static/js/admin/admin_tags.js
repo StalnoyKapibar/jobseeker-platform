@@ -1,5 +1,15 @@
-function deleteTag(userId) {
+$(document).ready(function(){
+    $("body").on("click",".btn-danger", function(){
+        $(this).parents("tr").hide();
+    });
 
+    $("body").on("click",".btn-primary", function(){
+        $(this).hide();
+    });
+});
+
+
+function deleteTag(userId) {
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
     $.ajax({
@@ -11,7 +21,6 @@ function deleteTag(userId) {
             request.setRequestHeader(header, token);
         },
         success: function () {
-            location.href = '/admin/tags';
         },
         error: function (error) {
             console.log(error);
@@ -33,7 +42,6 @@ function changeVerifiedTag(userId) {
             request.setRequestHeader(header, token);
         },
         success: function (data, status, jqXHR) {
-            location.href = '/admin/tags';
         },
         error: function (error) {
             console.log(error);

@@ -15,9 +15,8 @@
         <div class="main-block chromeFix" layout:fragment="content">
             <div id="vacancyDiv" class="container-fluid" style="margin-top: 30px">
                 <div class="row">
-                    <div class="col-sm-4"></div>
-                    <div class="col-sm-6">
-
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10">
                         <div class="search_area">
                             <form class="form-inline" style="margin-bottom: 5px;">
                                 <input class="form-control mr-sm-2 form-search" id="search_box" type="search"
@@ -34,9 +33,9 @@
                     </div>
                 </div>
                 <div class="row" style="margin-top: 30px">
-                    <div class="col-sm-4">
+                    <div class="col-sm-1">
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-10">
                         <div id="allVacancies">
                             <span th:text="${vacMess}"></span><br/>
 
@@ -63,6 +62,7 @@
                             <input type="hidden" class="favoriteVacancies" th:value="${fvac.id}">
                         </div>
                         <input type="hidden" id="profileId" th:value="${profileId}">
+                        <input type="hidden" id="seekerAuthority" th:value="${seekerAuthority}">
                     </div>
                 </div>
             </div>
