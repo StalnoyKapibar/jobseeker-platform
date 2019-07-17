@@ -65,6 +65,7 @@ public class MainController {
                     SeekerProfile profile = seekerUserService.getById(id).getProfile();
                     model.addAttribute("favoriteVacancies", profile.getFavoriteVacancy());
                     model.addAttribute("profileId", profile.getId());
+                    model.addAttribute("seekerAuthority", seekerUserService.getById(id).getAuthority());
 
                     Set<Tag> tags = ((SeekerUser) authentication.getPrincipal()).getProfile().getTags();
                     Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
