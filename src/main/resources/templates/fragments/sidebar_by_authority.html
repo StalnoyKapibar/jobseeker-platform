@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<th:block th:fragment="not_authority_sidebar">
+    <li><a href="#"><span>Все вакансии</span></a></li>
+</th:block>
+<th:block th:fragment="seeker_sidebar">
+    <li><a href="#"><span>Все вакансии</span></a></li>
+    <li><a href="#"><span>Все компании</span></a></li>
+    <li><a class="font-color" href="#">Мои чаты<span id="count_not_read_messages"></span></a></li>
+    <li><span id="username" th:utext="${username}"></span></li>
+    <li><span id="vacancyId" th:utext="${vacancyId}"></span></li>
+</th:block>
+<th:block th:fragment="employer_sidebar">
+    <li><a href="#"><span>Все резюме</span></a></li>
+    <li><a class="font-color" href="#">Мои чаты<span id="count_not_read_messages"></span></a></li>
+    <li><span id="username" th:utext="${username}"></span></li>
+    <li><span id="vacancyId" th:utext="${vacancyId}"></span></li>
+</th:block>
+</body>
