@@ -22,7 +22,7 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
             "select * from vacancies inner join (select result3.distance, city.id as sort_id, city.name from (select distances.distance, distances.city_id from " +
             "(select city.name, dist.city_distances_id from city inner join city_city_distances as dist where city.id=dist.city_id and city.name=:city) as result2 " +
             "inner join distances on result2.city_distances_id=distances.id) as result3 inner join city on result3.city_id=city.id order by result3.distance) as sort_dist " +
-            "on vacancies.city_id=sort_dist.sort_id order by sort_dist.distance";
+            "on vacancies.city_id=sort_dist.sort_id where vacancies.state='ACCESS' order by sort_dist.distance";
 
     //language=SQL
     private final static String query_for_find_vacancies_by_tags_and_sorted_by_city =
@@ -31,7 +31,7 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
             "inner join (select result3.distance, city.id as sort_id, city.name from (select distances.distance, distances.city_id from " +
             "(select city.name, dist.city_distances_id from city inner join city_city_distances as dist where city.id=dist.city_id and city.name=:city) as result2 " +
             "inner join distances on result2.city_distances_id=distances.id) as result3 inner join city on result3.city_id=city.id order by result3.distance) as sort_dist " +
-            "on result_vac.city_id=sort_dist.sort_id order by result_vac.count desc, sort_dist.distance";
+            "on result_vac.city_id=sort_dist.sort_id where result_vac.state='ACCESS' order by result_vac.count desc, sort_dist.distance";
 
     //language=SQL
     private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.employerProfile.id = :param";
