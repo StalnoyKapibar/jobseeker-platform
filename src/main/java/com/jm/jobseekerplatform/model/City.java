@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "city")
@@ -18,10 +17,10 @@ public class City implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "point", nullable = false)
+    @OneToOne(fetch = FetchType.EAGER)
     private Point centerPoint;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<CityDistance> cityDistances;
 
     public City() {}
@@ -66,21 +65,5 @@ public class City implements Serializable {
     @JsonValue
     public String toJson(){
         return this.name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        City city = (City) o;
-        return Objects.equals(id, city.id) &&
-                Objects.equals(name, city.name) &&
-                Objects.equals(centerPoint, city.centerPoint) &&
-                Objects.equals(cityDistances, city.cityDistances);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, centerPoint, cityDistances);
     }
 }

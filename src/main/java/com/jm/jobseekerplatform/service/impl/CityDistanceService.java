@@ -24,6 +24,9 @@ public class CityDistanceService extends AbstractService<CityDistance> {
     private PointService pointService;
 
     public void initCityDistances(City city) {
+        Point centerPoint = city.getCenterPoint();
+        pointService.add(centerPoint);
+        city.setCenterPoint(centerPoint);
         cityService.add(city);
         List<City> cities = cityService.getAll();
         List<CityDistance> cityDistanceList = new ArrayList<>();
