@@ -69,6 +69,7 @@ public class MainController {
                     model.addAttribute("favoriteVacancies", profile.getFavoriteVacancy());
                     model.addAttribute("profileId", profile.getId());
                     model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+                    model.addAttribute("seekerAuthority", seekerUserService.getById(id).getAuthority());
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
                     model.addAttribute("seekerAuthority", seekerUserService.getById(id).getAuthority());
                 } catch (NullPointerException e) {

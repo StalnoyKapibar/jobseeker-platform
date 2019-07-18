@@ -274,11 +274,11 @@ function printVacancies(data) {
                 if (s_tag.localeCompare(v_tag)==0) {
                     bool = true;
                 }
-            })
+            });
             return bool;
 
         }
-    });
+    }git);
 }
 
 function inFavorite(vacancyId, profileId) {
