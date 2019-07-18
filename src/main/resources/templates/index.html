@@ -6,6 +6,7 @@
       lang="en">
 <head>
     <title>Hello</title>
+    <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <script type="text/javascript" src="/js/index.js"></script>
 </head>
 <body>
@@ -37,50 +38,10 @@
                     <div class="col-sm-10">
                         <div id="allVacancies">
                             <span th:text="${vacMess}"></span><br/>
-                            <ul class="list-group">
-                                <th:block th:each="vacancy: ${vacancies}">
-                                    <li class="list-group-item clearfix"
-                                        data-toggle="modal" data-target="#vacancyModal"
-                                        th:onclick="'showVacancy('+${vacancy.id}+')'">
-                                        <div class="headLine">
-                                            <span th:text="${vacancy.headline}"></span>
-                                        </div>
-                                        <div class="vacancyTags">
-                                            <span th:each="tag : ${vacancy.tags}"
-                                                  class="badge badge-pill badge-success btnClick"
-                                                  th:text="${tag.name}"></span>
-                                        </div>
-                                        <div class="companyData">
-                                            <span th:text="'Компания: ' + ${vacancy.employerProfile.companyName}"></span>
-                                            <br>
-                                            <span th:text="'Город: ' + ${vacancy.city}"></span>
-                                        </div>
-                                        <div class="vacancyDescription">
-                                            <span th:text="${vacancy.shortDescription}"></span>
-                                        </div>
-                                        <div class="salary" th:if="${vacancy.salaryMin}">
-                                            <span th:text="'Зарплата от: ' + ${vacancy.salaryMin} + ' руб.'"></span>
-                                        </div>
-                                        <div class="pull-right">
-                                            <span class="btn btn-outline-info btn-sm btnOnVacancyPage"
-                                                  th:onclick="'window.location.href = \'' + @{/vacancy/{id}(id=${vacancy.id})} + '\';event.stopPropagation();'">
-                                                На страницу вакансии
-                                            </span>
-                                            <span sec:authorize="hasRole('ROLE_SEEKER')" class="stars"
-                                                  th:id="stars- + ${vacancy.id}">
-                                                <i th:if="${#sets.contains(favoriteVacancies,vacancy)}"
-                                                   th:id="outFavorite + ${vacancy.id}" class="fas fa-star"
-                                                   title="убрать из избранных"
-                                                   th:onclick="'outFavorite(' + ${vacancy.id} + ',' + ${profileId} + ');event.stopPropagation();'"></i>
-                                                <i th:unless="${#sets.contains(favoriteVacancies,vacancy)}"
-                                                   th:id="inFavorite + ${vacancy.id}" class="far fa-star"
-                                                   title="в избранное"
-                                                   th:onclick="'inFavorite(' + ${vacancy.id} + ',' + ${profileId} + ');event.stopPropagation();'"></i>
-                                            </span>
-                                        </div>
-                                    </li>
-                                </th:block>
+
+                            <ul class="list-group" id="vacanciesByPoint">
                             </ul>
+
                             <input id="isAVShow" type="hidden" value="0">
                         </div>
                         <div id="searchVacancies">
@@ -135,3 +96,4 @@
 </div>
 </body>
 </html>
+

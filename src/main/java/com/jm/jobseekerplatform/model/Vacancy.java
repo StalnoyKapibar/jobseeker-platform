@@ -9,6 +9,7 @@ import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -26,8 +27,8 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     @Column(name = "headline", nullable = false)
     private String headline;
 
-    @Column(name = "city", nullable = false)
-    private String city;
+    @OneToOne(fetch = FetchType.LAZY)
+    private City city;
 
     @Column(name = "remote", nullable = false)
     private Boolean remote;
@@ -60,7 +61,7 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     public Vacancy() {
     }
 
-    public Vacancy(EmployerProfile employerProfile, String headline, String city, Boolean remote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags, Point coordinates) {
+    public Vacancy(EmployerProfile employerProfile, String headline, City city, Boolean remote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags, Point coordinates) {
         this.employerProfile = employerProfile;
         this.headline = headline;
         this.city = city;
@@ -130,11 +131,11 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
         this.salaryMax = salaryMax;
     }
 
-    public String getCity() {
+    public City getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(City city) {
         this.city = city;
     }
 
@@ -189,42 +190,21 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Vacancy vacancy = (Vacancy) o;
-
-        if (id != null ? !id.equals(vacancy.id) : vacancy.id != null) return false;
-        if (headline != null ? !headline.equals(vacancy.headline) : vacancy.headline != null) return false;
-        if (city != null ? !city.equals(vacancy.city) : vacancy.city != null) return false;
-        if (remote != null ? !remote.equals(vacancy.remote) : vacancy.remote != null) return false;
-        if (shortDescription != null ? !shortDescription.equals(vacancy.shortDescription) : vacancy.shortDescription != null)
-            return false;
-        if (description != null ? !description.equals(vacancy.description) : vacancy.description != null) return false;
-        if (salaryMin != null ? !salaryMin.equals(vacancy.salaryMin) : vacancy.salaryMin != null) return false;
-        if (salaryMax != null ? !salaryMax.equals(vacancy.salaryMax) : vacancy.salaryMax != null) return false;
-        if (tags != null ? !tags.equals(vacancy.tags) : vacancy.tags != null) return false;
-        if (coordinates != null ? !coordinates.equals(vacancy.coordinates) : vacancy.coordinates != null) return false;
-        if (state != vacancy.state) return false;
-        return expiryBlock != null ? expiryBlock.equals(vacancy.expiryBlock) : vacancy.expiryBlock == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (headline != null ? headline.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (remote != null ? remote.hashCode() : 0);
-        result = 31 * result + (shortDescription != null ? shortDescription.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (salaryMin != null ? salaryMin.hashCode() : 0);
-        result = 31 * result + (salaryMax != null ? salaryMax.hashCode() : 0);
-        result = 31 * result + (tags != null ? tags.hashCode() : 0);
-        result = 31 * result + (coordinates != null ? coordinates.hashCode() : 0);
-        result = 31 * result + (state != null ? state.hashCode() : 0);
-        result = 31 * result + (expiryBlock != null ? expiryBlock.hashCode() : 0);
-        return result;
+    public String toString() {
+        return "Vacancy{" +
+                "id=" + id +
+                ", employerProfile=" + employerProfile +
+                ", headline='" + headline + '\'' +
+                ", city=" + city.getName() +
+                ", remote=" + remote +
+                ", shortDescription='" + shortDescription + '\'' +
+                ", description='" + description + '\'' +
+                ", salaryMin=" + salaryMin +
+                ", salaryMax=" + salaryMax +
+                ", tags=" + tags +
+                ", coordinates=" + coordinates +
+                ", state=" + state +
+                ", expiryBlock=" + expiryBlock +
+                '}';
     }
 }
