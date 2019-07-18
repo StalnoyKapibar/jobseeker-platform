@@ -50,7 +50,7 @@ li {
 }
 
 .sidebar ul {
-    padding-right: auto;
+    padding: 0 20%;
 }
 
 .sidebar li {
@@ -83,7 +83,7 @@ li {
 
 #search_advice_wrapper {
     display: none;
-    width: 555px;
+    width: 58%;
     background-color: white;
     border: 1px solid #ced4da;
     border-radius: .25rem;
@@ -106,7 +106,6 @@ li {
     left: 75%;
     bottom: 5%;
     cursor: pointer;
-    padding-top: 5%;
 }
 
 .btnOnVacancyPage{
@@ -123,10 +122,8 @@ li {
 
 .vacancyTags {
     position: absolute;
-    right: 0;
     top: 5%;
-    padding-left: 75%;
-    padding-bottom: 10%;
+    left: 75%;
 }
 
 .btnClick {

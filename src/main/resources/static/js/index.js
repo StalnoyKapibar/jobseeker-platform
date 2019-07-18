@@ -38,8 +38,25 @@ function showVacancy(id) {
 
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
+var seeker_tags = null;
+var page = 1;
+var total_pages;
+var block = false;
+var point;
+var city;
 
 $(function () {
+    var user_id = null;
+    var seekerAuthority = $('#seekerAuthority').val();
+
+    if (seekerAuthority) {
+        user_id = $('#profileId').val();
+        seeker_tags = getSeekerTags(user_id);
+    }
+
+    getCurrentLocation(function () {
+        getAllVacanciesByPoint(point);
+    });
 
     $('#search_box').bind("input keyup click", function () {
         if (this.value == '') {
@@ -127,11 +144,6 @@ function searchResults() {
     } else {
         var pageCount = 0;
         $('#isAVShow').val('1');
-        var favoriteVacancies = [];
-        $('.favoriteVacancies').each(function (key, value) {
-            favoriteVacancies.push($(this).val())
-        });
-        var profileId = $('#profileId').val();
         $.ajax({
             type: 'post',
             url: "api/vacancies/search?pageCount=" + pageCount,
@@ -153,37 +165,7 @@ function searchResults() {
                     } else {
                         $('#searchHeader').text('Вакансии по тегам :');
                     }
-                    $.each(data, function (key, value) {
-                        var favVac = '';
-                        var vacancyTags = '';
-                        var minSalary = '';
-                        $.each(favoriteVacancies, function (i, item) {
-                            if (item === value.id.toString()) {
-                                favVac = '<span class="stars" id="stars-' + value.id + '"><i id="outFavorite' + value.id + '" class="fas fa-star" onclick="outFavorite(' + value.id + ',' + profileId + ');event.stopPropagation();" title="убрать из избранных"></i></span>';
-                            }
-                        });
-                        if (favVac === '') {
-                            favVac = '<span class="stars" id="stars-' + value.id + '"><i id="inFavorite' + value.id + '" class="far fa-star" onclick="inFavorite(' + value.id + ',' + profileId + ');event.stopPropagation();" title="в избранное"></i></span>';
-                        }
-                        if (value.salaryMin) {
-                            minSalary = '<div class="salary"><span>Зарплата от: ' + value.salaryMin + ' руб.</span></div>';
-                        }
-                        $.each(value.tags, function (i, item) {
-                            vacancyTags += '<span class="badge badge-pill badge-success btnClick">' + item.name + '</span>';
-                        });
-                        $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
-                            ' data-target="#vacancyModal" onclick="showVacancy(\'' + value.id + '\')">' +
-                            '<div class="headLine"><span>' + value.headline + '</span></div>' +
-                            '<div class="vacancyTags">' + vacancyTags + '</div>' +
-                            '<div class="companyData"><span>Компания: ' + value.employerProfile.companyName + '</span><br><span>Город: ' + value.city + '</span></div>' +
-                            '<div class="vacancyDescription"><span>' + value.shortDescription + '</span></div>' +
-                            minSalary +
-                            '<div class="pull-right">' +
-                            '<span class="btn btn-outline-info btn-sm btnOnVacancyPage"' +
-                            'onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span>' +
-                            favVac + '</div>' +
-                            '</li>');
-                    });
+                    printVacancies(data);
                     pageCount++;
                     $('#scrollPageCount').val(pageCount);
                 }
@@ -213,11 +195,6 @@ $(window).scroll(function () {
             });
 
             var pageCount = $('#scrollPageCount').val();
-            var favoriteVacancies = [];
-            $('.favoriteVacancies').each(function (key, value) {
-                favoriteVacancies.push($(this).val())
-            });
-            var profileId = $('#profileId').val();
             $.ajax({
                 type: 'post',
                 url: "api/vacancies/search?pageCount=" + pageCount,
@@ -227,37 +204,7 @@ $(window).scroll(function () {
                 },
                 data: JSON.stringify(param),
                 success: function (data) {
-                    $.each(data, function (key, value) {
-                        var favVac = '';
-                        var vacancyTags = '';
-                        var minSalary = '';
-                        $.each(favoriteVacancies, function (i, item) {
-                            if (item === value.id.toString()) {
-                                favVac = '<span class="stars" id="stars-' + value.id + '"><i id="outFavorite' + value.id + '" class="fas fa-star" onclick="outFavorite(' + value.id + ',' + profileId + ');event.stopPropagation();" title="убрать из избранных"></i></span>';
-                            }
-                        });
-                        if (favVac === '') {
-                            favVac = '<span class="stars" id="stars-' + value.id + '"><i id="inFavorite' + value.id + '" class="far fa-star" onclick="inFavorite(' + value.id + ',' + profileId + ');event.stopPropagation();" title="в избранное"></i></span>';
-                        }
-                        if (value.salaryMin) {
-                            minSalary = '<div class="salary"><span>Зарплата от: ' + value.salaryMin + ' руб.</span></div>';
-                        }
-                        $.each(value.tags, function (i, item) {
-                            vacancyTags += '<span class="badge badge-pill badge-success btnClick">' + item.name + '</span>';
-                        });
-                        $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
-                            ' data-target="#vacancyModal" onclick="showVacancy(\'' + value.id + '\')">' +
-                            '<div class="headLine"><span>' + value.headline + '</span></div>' +
-                            '<div class="vacancyTags">' + vacancyTags + '</div>' +
-                            '<div class="companyData"><span>Компания: ' + value.employerProfile.companyName + '</span><br><span>Город: ' + value.city + '</span></div>' +
-                            '<div class="vacancyDescription"><span>' + value.shortDescription + '</span></div>' +
-                            minSalary +
-                            '<div class="pull-right">' +
-                            '<span class="btn btn-outline-info btn-sm btnOnVacancyPage"' +
-                            'onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span>' +
-                            favVac + '</div>' +
-                            '</li>');
-                    });
+                    printVacancies(data);
                     pageCount++;
                     $('#scrollPageCount').val(pageCount);
                 },
@@ -269,6 +216,70 @@ $(window).scroll(function () {
         }
     }
 });
+
+function printVacancies(data) {
+    var favoriteVacancies = [];
+    $('.favoriteVacancies').each(function (key, value) {
+        favoriteVacancies.push($(this).val())
+    });
+    var profileId = $('#profileId').val();
+    $.each(data, function (key, value) {
+        var favVac = '';
+        var vacancyTags = '';
+        var minSalary = '';
+        var seekerAuthority = $('#seekerAuthority').val();
+        if (seekerAuthority) {
+            $.each(favoriteVacancies, function (i, item) {
+                if (item === value.id.toString()) {
+                    favVac = '<span class="stars" id="stars-' + value.id + '"><i id="outFavorite' + value.id + '" class="fas fa-star" onclick="outFavorite(' + value.id + ',' + profileId + ');event.stopPropagation();" title="убрать из избранных"></i></span>';
+                }
+            });
+            if (favVac === '') {
+                favVac = '<span class="stars" id="stars-' + value.id + '"><i id="inFavorite' + value.id + '" class="far fa-star" onclick="inFavorite(' + value.id + ',' + profileId + ');event.stopPropagation();" title="в избранное"></i></span>';
+            }
+        }
+        if (value.salaryMin) {
+            minSalary = '<div class="salary"><span>Зарплата от: ' + value.salaryMin + ' руб.</span></div>';
+        }
+        $.each(value.tags, function (i, item) {
+            if (seekerAuthority) {
+                var bool = check_seeker_tags(item);
+                if(bool==true){
+                    vacancyTags += '<span class="badge badge-pill badge-success btnClick">' + item.name + '<i class="fas fa-tag"></i></span>';
+                } else {
+                    vacancyTags += '<span class="badge badge-pill badge-success btnClick">' + item.name + '</span>';
+                }
+            } else {
+                vacancyTags += '<span class="badge badge-pill badge-success btnClick">' + item.name + '</span>';
+            }
+        });
+        $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
+            ' data-target="#vacancyModal" onclick="showVacancy(\'' + value.id + '\')">' +
+            '<div class="headLine"><span>' + value.headline + '</span></div>' +
+            '<div class="vacancyTags">' + vacancyTags + '</div>' +
+            '<div class="companyData"><span>Компания: ' + value.employerProfile.companyName + '</span><br><span>Город: ' + value.city + '</span></div>' +
+            '<div class="vacancyDescription"><span>' + value.shortDescription + '</span></div>' +
+            minSalary +
+            '<div class="pull-right">' +
+            '<span class="btn btn-outline-info btn-sm btnOnVacancyPage"' +
+            'onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span>' +
+            favVac + '</div>' +
+            '</li>');
+
+        function check_seeker_tags(tag) {
+            var bool = false;
+            $.each(seeker_tags, function (i,item) {
+                var s_tag = item.name.toString().split(' ').join('').replace("/", "").toLocaleLowerCase();
+                var v_tag = tag.name.toString().split(' ').join('').replace("/", "").toLocaleLowerCase();
+                if (s_tag.localeCompare(v_tag)==0) {
+                    bool = true;
+                }
+            });
+            return bool;
+
+        }
+    }git);
+}
 
 function inFavorite(vacancyId, profileId) {
     $.ajax({
@@ -308,3 +319,89 @@ function outFavorite(vacancyId, profileId) {
         }
     })
 }
+
+function getSeekerTags(user_id) {
+    var seeker_tags;
+    $.ajax({
+        url: "/api/tags/seeker/" + user_id,
+        type: "GET",
+        async: false,
+        success: function (data) {
+            seeker_tags=data;
+        }
+    })
+    return seeker_tags;
+}
+
+
+function getCurrentLocation(callback) {
+    if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+            point = {'latitudeY': lat, 'longitudeX': lng};
+            getCityByCoords(lat, lng);
+            callback(point);
+        });
+    }
+    else {
+        throw new Error("Your browser does not support geolocation.");
+    }
+}
+
+function getCityByCoords(lat, lng) {
+        $.ajax({
+            url: "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=" + $("meta[name='apiKey']").attr("content"),
+            type: "GET",
+            async: false,
+            success: function (data) {
+                for (var i = 0; i < data.results[0].address_components.length; i++) {
+                    for (var b = 0; b < data.results[0].address_components[i].types.length; b++) {
+                        if (data.results[0].address_components[i].types[b] == "locality") { //postal_town
+                            city = data.results[0].address_components[i].long_name;
+                            break;
+                        }
+                    }
+                }
+            }})
+}
+
+function getAllVacanciesByPoint(point) {
+    getSortedVac(point);
+    $(window).scroll(function () {
+        if ($(document).height() - $(window).height() === $(window).scrollTop()) {
+            block = true;
+            if (page <= total_pages) {
+                getSortedVac(point);
+            }
+        }
+    });
+}
+
+function getSortedVac(point) {
+    $.ajax ({
+        url: "api/vacancies/city/page/" + page + "?city=" + city,
+        type: "PUT",
+        async: false,
+        data: JSON.stringify(point),
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            },
+        success: function (vacancies) {
+            total_pages = vacancies.totalPages;
+            printVacancies(vacancies.content);
+            block = false;
+            page++;
+        }
+    })
+}
+
+
+
+
+
+
+
+
