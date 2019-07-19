@@ -9,9 +9,9 @@ import org.hibernate.query.Query;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.*;
 
 @SuppressWarnings("unchecked")
 @Repository("vacancyDAO")

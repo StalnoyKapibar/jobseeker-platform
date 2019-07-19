@@ -3,7 +3,6 @@ package com.jm.jobseekerplatform.dao.impl.chats;
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.CreatedByProfile;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
-import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
