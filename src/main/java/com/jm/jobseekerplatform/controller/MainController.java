@@ -4,6 +4,7 @@ import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.VerificationToken;
+import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
@@ -11,6 +12,7 @@ import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.VerificationTokenService;
@@ -58,7 +60,7 @@ public class MainController {
     private EmployerUserService employerUserService;
 
     @Autowired
-    private ChatWithTopicVacancyService chatWithTopicVacancyService;
+    private ChatWithTopicService chatWithTopicService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
@@ -161,12 +163,14 @@ public class MainController {
         User authenticatedUser = ((User) authentication.getPrincipal());
         Profile authenticatedProfile = authenticatedUser.getProfile();
 
-        ChatWithTopicVacancy chat = chatWithTopicVacancyService.getByTopicIdAndCreatorProfileId(vacancyId, authenticatedProfile.getId());
+        //ChatWithTopicVacancy chat = chatWithTopicVacancyService.getByTopicIdAndCreatorProfileId(vacancyId, authenticatedProfile.getId());
+        //ChatWithTopic<Vacancy> chat = chatWithTopicService.getByTopicIdCreatorProfileIdTopicType(vacancyId, authenticatedProfile.getId(), Vacancy.class);
+        ChatWithTopic<Vacancy> chat = chatWithTopicService.getByTopicIdCreatorProfileIdChatType(vacancyId, authenticatedProfile.getId(), ChatWithTopicVacancy.class);
 
         if (chat == null) {
             chat = new ChatWithTopicVacancy(authenticatedProfile, vacancyService.getById(vacancyId));
 
-            chatWithTopicVacancyService.add(chat);
+            chatWithTopicService.add(chat);
         }
 
         return "redirect:/chat/" + chat.getId();

@@ -4,5 +4,5 @@ import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ChatWithTopicVacancyDAO extends ChatWithTopicDAO<ChatWithTopicVacancy> {
+public class ChatWithTopicVacancyDAO extends ChatWithTopicAbstractDAO<ChatWithTopicVacancy> {
 }
