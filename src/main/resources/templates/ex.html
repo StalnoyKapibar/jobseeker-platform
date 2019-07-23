@@ -3,12 +3,19 @@
 <head>
     <title>Recovery Password</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
-          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link  th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet"
+          >
+    <!--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"-->
+          <!--integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">-->
+    <script type="text/javascript" th:src="@{//maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+    <!--<link th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css}"-->
+          <!--rel="stylesheet" media="screen"/>-->
+    <!--<link th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css}"-->
+          <!--rel="stylesheet" media="screen"/>-->
+
+    <!--<script type="text/javascript" th:src="@{//code.jquery.com/jquery-2.0.3.min.js}"></script>-->
+    <!--<script type="text/javascript" th:src="@{//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.js}"></script>-->
+
 </head>
 <body>
 <div class="container">
@@ -17,45 +24,68 @@
         <div class="card-header" align="center">
             <legend align="center">
                 Вы пытались востановить пароль на сайте <b>JobSeeker </b>
-                <span th:text="${#dates.format(subscriptionDate)}"></span>
+                <!--<span th:text="${#dates.format(subscriptionDate)}"></span>-->
             </legend>
         </div>
         <div class="row">
             <div class="col-sm-1"></div>
             <div class="col-sm-10">
                 <div class="card-body">
-                    <div class="form-group">
-                        <div class="inputGroupContainer">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="Введите Email"
-                                       name="user_email" id="user_email" th:value="${login}" required="required">
-                            </div>
-                        </div>
-                    </div>
+                    <!--<div class="form-group">-->
+                        <!--<div class="inputGroupContainer">-->
+                            <!--<div class="input-group">-->
+                                <!--<div class="input-group-prepend">-->
+                                    <!--<span class="input-group-text"><i class="fas fa-envelope"></i></span>-->
+                                <!--</div>-->
+                                <!--<input type="text" class="form-control" placeholder=" Email"-->
+                                       <!--name="user_email" id="user_email" th:value="${your_login}" required="required">-->
+                            <!--</div>-->
+                            <!--<div class="input-group">-->
+                                <!--<div class="input-group-prepend">-->
+                                    <!--<span class="input-group-text"><i class="fas fa-envelope"></i></span>-->
+                                <!--</div>-->
+                                <!--<input type="text" class="form-control" placeholder=" Password"-->
+                                       <!--name="user_password" id="user_password" th:value="${password}" required="required">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <h1>    Ваш логин: <b><span th:text="${your_login}"></span> </b></h1>
+                    <h2>    Ваш пароль: <b><span th:text="${password}"></span> </b></h2>
 
-                    <div class="form-group">
-                        <div class="alert alert-success" role="alert" id="success_message">
-                            Письмо отправлено <i
-                                class="fas fa-thumbs-up"></i>
-                            <hr>
-                            Вы можете перейти на <a href="/login">страницу входа</a>
-                        </div>
-                    </div>
+
                 </div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <div class="form-group" align="center">
-                <button type="button" class="btn btn-warning"
-                        style="width: 250px;" onclick="sendPass()">
-                    Отправить <i class="fas fa-paper-plane "></i>
-                </button>
             </div>
         </div>
     </form>
 </div>
 </body>
 </html>
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<img src="tr.png" alt="Smiley face" height="42" width="42">-->
+<!--<div class="container">-->
+    <!--<h2>Dropdowns</h2>-->
+    <!--<p>The .dropdown class is used to indicate a dropdown menu.</p>-->
+    <!--<p>Use the .dropdown-menu class to actually build the dropdown menu.</p>-->
+    <!--<p>To open the dropdown menu, use a button or a link with a class of .dropdown-toggle and data-toggle="dropdown".</p>-->
+    <!--<div class="dropdown">-->
+        <!--<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example-->
+            <!--<span class="caret"></span></button>-->
+        <!--<ul class="dropdown-menu">-->
+            <!--<li><a href="https://www.w3schools.com/html/default.asp">HTML</a></li>-->
+            <!--<li><a href="https://www.w3schools.com/css/default.asp">CSS</a></li>-->
+            <!--<li><a href="https://www.w3schools.com/js/default.asp">JavaScript</a></li>-->
+        <!--</ul>-->
+    <!--</div>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
