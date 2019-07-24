@@ -5,10 +5,13 @@ package com.jm.jobseekerplatform.dao.impl.chats;
         import org.springframework.stereotype.Repository;
 
         import javax.persistence.NoResultException;
+        import java.util.List;
 
 /**
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
  */
+
+//todo (Nick Dolgopolov) написать, зачем нужны ChatWithTopicAbstractDAO и ChatWithTopicDAO одновременно
 
 @Repository
 public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends AbstractDAO<T> {
@@ -29,5 +32,14 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
         }
 
         return chat;
+    }
+
+    public List<T> getAllByParticipantProfileId(Long participantProfileId){ //todo (Nick Dolgopolov)
+
+        List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE c.creatorProfile.id = :creatorProfileId").getResultList();
+
+
+
+        return chats;
     }
 }

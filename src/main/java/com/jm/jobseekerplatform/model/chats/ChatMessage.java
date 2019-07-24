@@ -8,7 +8,9 @@ import com.jm.jobseekerplatform.model.profiles.Profile;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "chatmessages")
@@ -27,17 +29,19 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
     @Column(name = "date")
     private Date date;
 
-    @Column(name = "isread")
-    private boolean isRead;
+    @Column
+    @ElementCollection
+    private Set<Long> isReadByProfilesId;
 
     public ChatMessage() {
     }
 
-    public ChatMessage(String text, Profile creatorProfile, Date date, boolean isRead) {
+    public ChatMessage(String text, Profile creatorProfile, Date date) {
         this.text = text;
         this.creatorProfile = creatorProfile;
         this.date = date;
-        this.isRead = isRead;
+        this.isReadByProfilesId = new HashSet<>();
+        //isReadByProfilesId.add(creatorProfile.getId()); //todo (Nick Dolgopolov) добавлять?
     }
 
     public Long getId() {
@@ -70,12 +74,12 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         this.date = date;
     }
 
-    public boolean isRead() {
-        return isRead;
+    public Set<Long> getIsReadByProfilesId() {
+        return isReadByProfilesId;
     }
 
-    public void setRead(boolean read) {
-        isRead = read;
+    public void setIsReadByProfilesId(Set<Long> isReadByProfilesId) {
+        this.isReadByProfilesId = isReadByProfilesId;
     }
 
     @Override
@@ -94,7 +98,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChatMessage that = (ChatMessage) o;
-        return isRead == that.isRead &&
+        return isReadByProfilesId == that.isReadByProfilesId && //todo как использовать isReadByProfilesId?
                 Objects.equals(id, that.id) &&
                 Objects.equals(text, that.text) &&
                 Objects.equals(creatorProfile, that.creatorProfile) &&
@@ -103,7 +107,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, creatorProfile, date, isRead);
+        return Objects.hash(id, text, creatorProfile, date, isReadByProfilesId); //todo как использовать isReadByProfilesId?
     }
 
     @Override

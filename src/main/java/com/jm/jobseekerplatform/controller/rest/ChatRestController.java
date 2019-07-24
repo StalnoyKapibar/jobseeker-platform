@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.dto.ChatInfoDTO;
-import com.jm.jobseekerplatform.dto.MessageDTO;
+import com.jm.jobseekerplatform.dto.MessageReadDataDTO;
 import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
@@ -70,11 +70,36 @@ public class ChatRestController {
         return new ResponseEntity(chatMessageList, HttpStatus.OK);
     }
 
-    @PutMapping("update_message")
-    public HttpEntity updateMessage(@RequestBody MessageDTO message) {
-        ChatMessage chatMessage = chatMessageService.getById(message.getId());
-        chatMessage.setRead(message.isRead()); //todo (Nick Dolgopolov) менять всё остальное или переименовать метод
-        chatMessageService.update(chatMessage);
+    @PutMapping("set_chat_read_by_profile_id")
+    public HttpEntity setChatReadByProfileId(@RequestBody MessageReadDataDTO messageReadDataDTO) {
+
+        List<ChatMessage> chatMessageList = chatService.getById(messageReadDataDTO.getChatId()).getChatMessages();
+
+        for (int i = chatMessageList.size() - 1; i >= 0; i--) {
+            ChatMessage chatMessage = chatMessageList.get(i);
+            if (chatMessage.getId() <= messageReadDataDTO.getLastReadMessageId() && //todo (Nick Dolgopolov) по id или надо по дате?
+                    chatMessage.getCreatorProfile().getId() != messageReadDataDTO.getReaderProfileId() &&
+                    !chatMessage.getIsReadByProfilesId().contains(messageReadDataDTO.getReaderProfileId())) {
+                chatMessage.getIsReadByProfilesId().add(messageReadDataDTO.getReaderProfileId());
+
+                chatMessageService.update(chatMessage);
+            }
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PutMapping("set_message_read_by_profile_id")
+    public HttpEntity setMessageReadByProfileId(@RequestBody MessageReadDataDTO messageReadDataDTO) {
+
+        ChatMessage chatMessage = chatMessageService.getById(messageReadDataDTO.getLastReadMessageId());
+
+        if (chatMessage.getCreatorProfile().getId() != messageReadDataDTO.getReaderProfileId() &&
+                !chatMessage.getIsReadByProfilesId().contains(messageReadDataDTO.getReaderProfileId())) {
+
+            chatMessage.getIsReadByProfilesId().add(messageReadDataDTO.getReaderProfileId());
+            chatMessageService.update(chatMessage);
+        }
 
         return new ResponseEntity(HttpStatus.OK);
     }

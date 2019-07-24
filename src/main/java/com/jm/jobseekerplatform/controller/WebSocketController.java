@@ -36,7 +36,7 @@ public class WebSocketController {
         Long chatId = Long.parseLong(id);
         Profile creatorProfile = profileService.getById(messageDTO.getCreatorProfileId());
 
-        ChatMessage chatMessage = new ChatMessage(messageDTO.getText(), creatorProfile, new Date(), false);
+        ChatMessage chatMessage = new ChatMessage(messageDTO.getText(), creatorProfile, new Date());
         chatMessageService.add(chatMessage);
 
         chatService.addChatMessage(chatId, chatMessage);

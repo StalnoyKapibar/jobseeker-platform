@@ -16,11 +16,10 @@ public class ChatService extends AbstractService<Chat> {
     public void addChatMessage(Long chatId, ChatMessage chatMessage) {
         Chat chat = getById(chatId);
         chat.getChatMessages().add(chatMessage);
-        //todo
         update(chat);
     }
 
-    //todo (Nick Dolgopolov) птимизировать
+    //todo (Nick Dolgopolov) оптимизировать
     public ChatMessage getLastMessage(Long chatId) {
         Chat chat = getById(chatId);
         List<ChatMessage> chatMessages = chat.getChatMessages();
