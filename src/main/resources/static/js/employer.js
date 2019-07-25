@@ -12,7 +12,7 @@ function showVacancy(id) {
             $("#VMHeadline").text(data.headline);
             $("#VMCity").text(data.city);
             $("#VMShortDescription").text(data.shortDescription);
-            $("#VMDescription").text(data.description);
+            $("#VMDescription").html(data.description);
             $("#VMId").text(data.id);
 
             var str = "Зарплата: ";

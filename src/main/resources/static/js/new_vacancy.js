@@ -1,14 +1,14 @@
-var vacancy;
-var flagTag = false;
+let vacancy;
+let flagTag = false;
+let tagId = 0;
 
-var headline_check = false;
-var city_check = false;
-var address_check = false;
-var remote_check = false;
-var salary_min_check = true;
-var salary_max_check = true;
-var shrt_desc_check = false;
-var desc_check = false;
+let headline_check = false;
+let address_check = false;
+let remote_check = false;
+let salary_min_check = true;
+let salary_max_check = true;
+let shrt_desc_check = false;
+let desc_check = false;
 
 $(document).ready(function () {
     bootstrapValidate('#v_headline', 'regex:^[A-Za-z0-9А-Яа-я ()\\-]{3,100}$:Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов',
@@ -19,18 +19,7 @@ $(document).ready(function () {
             } else {
                 headline_check = false;
             }
-        }
-    )
-    bootstrapValidate('#v_city', 'regex:^[A-Za-z0-9А-Яа-я ()\\-]{3,100}$:Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов',
-        function (isValid) {
-            if (isValid) {
-                $('#v_city').addClass('is-valid');
-                city_check = true;
-            } else {
-                city_check = false;
-            }
-        }
-    )
+        });
 
     bootstrapValidate('#v_address', 'required:', function (isValid) {
         if (isValid) {
@@ -40,7 +29,7 @@ $(document).ready(function () {
         } else {
             address_check = false;
         }
-    })
+    });
     bootstrapValidate('#v_remote', 'required:', function (isValid) {
         if (isValid) {
             $('#v_remote').removeClass('is-invalid');
@@ -49,7 +38,7 @@ $(document).ready(function () {
         } else {
             remote_check = false;
         }
-    })
+    });
 
     bootstrapValidate('#v_salaryMin', 'regex:^[0-9]{0,100}$:Поле может содержать цифры от одного до 10 разрядов',
         function (isValid) {
@@ -61,7 +50,7 @@ $(document).ready(function () {
             }
 
         }
-    )
+    );
 
     bootstrapValidate('#v_salaryMax', 'regex:^[0-9]{0,100}$:Поле может содержать цифры от одного до 10 разрядов',
         function (isValid) {
@@ -73,7 +62,7 @@ $(document).ready(function () {
             }
 
         }
-    )
+    );
 
     bootstrapValidate('#v_shortDescription', 'required:', function (isValid) {
         if (isValid) {
@@ -83,21 +72,37 @@ $(document).ready(function () {
         } else {
             shrt_desc_check = false;
         }
-    })
-
-    bootstrapValidate('#v_description', 'required:', function (isValid) {
-        if (isValid) {
-            $('#v_description').removeClass('is-invalid');
-            $('#v_description').addClass('is-valid');
-            desc_check = true;
-        } else {
-            desc_check = false;
-        }
-    })
+    });
 
     $("#search_tags").keyup(function (e) {
         e.preventDefault();
         tags_search();
+    });
+
+    $('#v_description').summernote({
+        height: 300,                 // set editor height
+        minHeight: null,             // set minimum height of editor
+        maxHeight: null,
+        popover: {
+            air: [
+                ['color', ['color']],
+                ['font', ['bold', 'underline', 'clear']]
+            ]
+        } // set maximum height of editor
+    });
+
+    // Валидация поля подробного описания ( не менее 100 символов )
+    $(".note-editor.note-frame").css("border", "1px solid #dc3545");
+    $(".note-editable").keydown(function(){
+        if($(".note-editable").text().length >= 100){
+            $(".invalid-feedback-description").hide();
+            $(".note-editor.note-frame").css("border", "1px solid #28a745"); //#a9a9a9
+            desc_check = true;
+        } else {
+            $(".invalid-feedback-description").show();
+            $(".note-editor.note-frame").css("border", "1px solid #dc3545");
+            desc_check = false;
+        }
     });
 });
 
@@ -105,7 +110,7 @@ function tags_search() {
     let tags_span = $("#tagsWell").find("span");
     tags_span.hide();
     let str = $("#search_tags").val();
-    if (str == "") {
+    if (str === "") {
         tags_span.show();
     } else {
         tags_span.filter("[value ^= '" + str + "']").show();
@@ -113,8 +118,9 @@ function tags_search() {
 }
 
 function validateAndPreview() {
-    var isValid = headline_check&&city_check&&address_check&&remote_check&&salary_min_check&&salary_max_check&&
-        shrt_desc_check&&desc_check;
+    let isValid = headline_check&&address_check&&remote_check
+        &&salary_min_check&&salary_max_check&&shrt_desc_check&&desc_check;
+
     if ($("#v_tagsWell").children().length < 2) {
         $("#v_form_group_tags").attr("class", "form-group has-feedback has-error");
         $("#v_tagsWell").css("border-color", "#a94442");
@@ -127,10 +133,9 @@ function validateAndPreview() {
     }
     if (isValid) {
         let headline = $("#v_headline").val();
-        let city = $("#v_city").val();
         let remote = $("#v_remote").val() == "true";
         let shortDescription = $("#v_shortDescription").val();
-        let description = $("#v_description").val();
+        let description = $('#v_description').summernote('code');
         let salaryMin = $("#v_salaryMin").val().length > 0 ? $("#v_salaryMin").val() : null;
         let salaryMax = $("#v_salaryMax").val().length > 0 ? $("#v_salaryMax").val() : null;
         let tags = [];
@@ -139,6 +144,12 @@ function validateAndPreview() {
         });
         let loc = getCoordsByAddress($("#v_address").val());
         let point = {'latitudeY': loc.lat, 'longitudeX': loc.lng};
+        let city = {
+            'id' : null,
+            'name' : getCityByCoords(loc.lat, loc.lng),
+            'centerPoint' : point,
+            'cityDistances' : null
+        };
 
         vacancy = {
             'id': null,
@@ -156,9 +167,9 @@ function validateAndPreview() {
         };
 
         $("#VMHeadline").text(vacancy.headline);
-        $("#VMCity").text(vacancy.city);
+        $("#VMCity").text(vacancy.city.name);
         $("#VMShortDescription").text(vacancy.shortDescription);
-        $("#VMDescription").text(vacancy.description);
+        $("#VMDescription").html(description);
 
         let str = "Зарплата: ";
         if (vacancy.salaryMin != null) {
@@ -216,11 +227,10 @@ function addTag(id, name) {
 }
 
 function addNewTag() {
-
-    var id = -1;
-    var searchTag = $("#search_tags");
-    var name = searchTag.val();
-    $("#v_tagsWell").append("<span class='label label-success' id='v_tagLabel_" + id + "' onclick='deleteTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
+    tagId--;
+    let searchTag = $("#search_tags");
+    let name = searchTag.val();
+    $("#v_tagsWell").append("<span class='label label-success' id='v_tagLabel_" + tagId + "' onclick='deleteTag(" + tagId + ",\"" + name + "\")'>" + name + "</span>");
 
     searchTag.val(""); // clear filter after adding tag
     tags_search(); // refresh visible tags with empty filter

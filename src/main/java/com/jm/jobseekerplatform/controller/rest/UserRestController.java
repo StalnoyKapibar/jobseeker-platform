@@ -3,6 +3,8 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.User;
 import com.jm.jobseekerplatform.service.impl.MailService;
 import com.jm.jobseekerplatform.service.impl.UserService;
+import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,9 +45,9 @@ public class UserRestController {
         return ResponseEntity.ok(userService.isExistEmail(email));
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/getUser/{id}")
-    public User getUser(@PathVariable(required = false) Long id) {
-        return userService.getById(id);
+    @RequestMapping(method = RequestMethod.GET, value = "/getUser/{userId}")
+    public User getUser(@PathVariable(required = false) Long userId) {
+        return userService.getById(userId);
     }
 
     // отправка приглашения

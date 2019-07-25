@@ -2,7 +2,19 @@ package com.jm.jobseekerplatform.config;
 
 import com.github.javafaker.Faker;
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.chats.Chat;
+import com.jm.jobseekerplatform.model.chats.ChatMessage;
+import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
+import com.jm.jobseekerplatform.model.profiles.*;
+import com.jm.jobseekerplatform.model.users.*;
 import com.jm.jobseekerplatform.service.impl.*;
+import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
+import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +39,9 @@ public class InitData {
     private VacancyService vacancyService;
 
     @Autowired
+    private ProfileService profileService;
+
+    @Autowired
     private AdminProfileService adminProfileService;
 
     @Autowired
@@ -45,10 +60,10 @@ public class InitData {
     private TagService tagService;
 
     @Autowired
-    private EmployerService employerService;
+    private EmployerUserService employerUserService;
 
     @Autowired
-    private SeekerService seekerService;
+    private SeekerUserService seekerUserService;
 
     @Autowired
     private EmployerReviewsService employerReviewsService;
@@ -57,13 +72,23 @@ public class InitData {
     private ChatMessageService chatMessageService;
 
     @Autowired
+    private ChatService chatService;
+
+    @Autowired
     private PointService pointService;
+
+    @Autowired
+    private CityService cityService;
+
+    @Autowired
+    private CityDistanceService cityDistanceService;
 
     private Faker faker = new Faker(new Locale("ru"));
 
     private Random rnd = new Random();
 
     public void initData() {
+        initCities();
         initTags();
         initUserRoles();
         initPortfolio();
@@ -174,52 +199,52 @@ public class InitData {
     public void initUsers() {
         UserRole role;
         User user;
-        Employer employer;
-        Seeker seeker;
+        EmployerUser employerUser;
+        SeekerUser seekerUser;
 
         role = userRoleService.findByAuthority("ROLE_ADMIN");
-        user = new Admin("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), role, adminProfileService.getById(1L));
+        user = new AdminUser("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), role, adminProfileService.getById(1L));
         user.setConfirm(true);
         userService.add(user);
 
         role = userRoleService.findByAuthority("ROLE_EMPLOYER");
-        employer = new Employer("employer@mail.ru", userService.encodePassword("employer".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(2L));
-        employer.setConfirm(true);
-        employerService.add(employer);
+        employerUser = new EmployerUser("employer@mail.ru", userService.encodePassword("employer".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(2L));
+        employerUser.setConfirm(true);
+        employerUserService.add(employerUser);
 
-        employer = new Employer("employer2@mail.ru", userService.encodePassword("employer2".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(3L));
-        employer.setConfirm(true);
-        employerService.add(employer);
+        employerUser = new EmployerUser("employer2@mail.ru", userService.encodePassword("employer2".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(3L));
+        employerUser.setConfirm(true);
+        employerUserService.add(employerUser);
 
-        employer = new Employer("employer3@mail.ru", userService.encodePassword("employer3".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(4L));
-        employer.setConfirm(true);
-        employerService.add(employer);
+        employerUser = new EmployerUser("employer3@mail.ru", userService.encodePassword("employer3".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(4L));
+        employerUser.setConfirm(true);
+        employerUserService.add(employerUser);
 
-        employer = new Employer("employer4@mail.ru", userService.encodePassword("employer4".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(5L));
-        employer.setConfirm(true);
-        employerService.add(employer);
+        employerUser = new EmployerUser("employer4@mail.ru", userService.encodePassword("employer4".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(5L));
+        employerUser.setConfirm(true);
+        employerUserService.add(employerUser);
 
-        employer = new Employer("employer5@mail.ru", userService.encodePassword("employer5".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(6L));
-        employer.setConfirm(true);
-        employerService.add(employer);
+        employerUser = new EmployerUser("employer5@mail.ru", userService.encodePassword("employer5".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(6L));
+        employerUser.setConfirm(true);
+        employerUserService.add(employerUser);
 
-        employer = new Employer("employer6@mail.ru", userService.encodePassword("employer6".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(7L));
-        employer.setConfirm(true);
-        employerService.add(employer);
+        employerUser = new EmployerUser("employer6@mail.ru", userService.encodePassword("employer6".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(7L));
+        employerUser.setConfirm(true);
+        employerUserService.add(employerUser);
 
         role = userRoleService.findByAuthority("ROLE_SEEKER");
 
-        seeker = new Seeker("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(8L));
-        seeker.setConfirm(true);
-        seekerService.add(seeker);
+        seekerUser = new SeekerUser("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(8L));
+        seekerUser.setConfirm(true);
+        seekerUserService.add(seekerUser);
 
-        seeker = new Seeker("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(9L));
-        seeker.setConfirm(true);
-        seekerService.add(seeker);
+        seekerUser = new SeekerUser("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(9L));
+        seekerUser.setConfirm(true);
+        seekerUserService.add(seekerUser);
 
-        seeker = new Seeker("seeker3@mail.ru", userService.encodePassword("seeker3".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(10L));
-        seeker.setConfirm(true);
-        seekerService.add(seeker);
+        seekerUser = new SeekerUser("seeker3@mail.ru", userService.encodePassword("seeker3".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(10L));
+        seekerUser.setConfirm(true);
+        seekerUserService.add(seekerUser);
     }
 
     public void initVacancies() {
@@ -245,21 +270,12 @@ public class InitData {
                 "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!";
 
         Vacancy vacancy;
-        String city;
-        Float latitudeY = 0f;
-        Float longitudeX = 0f;
+        Point point;
+        City city;
+        List<City> cities = cityService.getAll();
         for (int i = 0; i < 30; i++) {
-            city = Math.random() < 0.5 ? "Москва" : "Санкт-Петербург";
-            if (city.equals("Санкт-Петербург")) {
-                latitudeY = (float) (0.16 * Math.random()) + 59.88f;
-                longitudeX = (float) (0.19 * Math.random()) + 30.24f;
-            }
-            if (city.equals("Москва")) {
-                latitudeY = (float) (0.2 * Math.random()) + 55.66f;
-                longitudeX = (float) (0.32 * Math.random()) + 37.45f;
-            }
-
-            Point point = new Point(latitudeY, longitudeX);
+            city = cities.get(rnd.nextInt(cities.size() ));
+            point = new Point(city.getCenterPoint().getLatitudeY(), city.getCenterPoint().getLongitudeX());
             pointService.add(point);
 
             vacancy = new Vacancy(
@@ -277,11 +293,6 @@ public class InitData {
             vacancy.setState(State.ACCESS);
             vacancyService.add(vacancy);
         }
-    }
-
-    private EmployerProfile getRandomEmployerProfile() {
-        List<EmployerProfile> all = employerProfileService.getAll();
-        return all.get(rnd.nextInt(all.size()));
     }
 
     private void initAdminProfile() {
@@ -406,13 +417,16 @@ public class InitData {
 
     private Set<Tag> randomTags(Long position) {
         Set<Tag> tags = new HashSet<>();
-        for (Long i = position; i < position + 5; i++) {
-            tags.add(tagService.getById(i + 1));
+        int countAllTags = tagService.getAll().size();
+        for (Long i = position; i < position + 5L; i++) {
+            tags.add(tagService.getById(rnd.nextInt(countAllTags) + 1L));
         }
         return tags;
     }
 
     public void initChat() {
+
+        Random rnd = new Random();
 
         for (Long i = 1L; i < 6L; i++) {
             List<ChatMessage> messages = new ArrayList<>();
@@ -421,9 +435,46 @@ public class InitData {
                 chatMessageService.add(chatMessage);
                 messages.add(chatMessage);
             }
-            Vacancy vacancy = vacancyService.getById(i);
-            vacancy.setChatMessages(messages);
-            vacancyService.update(vacancy);
+
+            Vacancy randomVacancy = vacancyService.getById(rnd.nextInt(30) + 1L);
+            Profile chatCreator = getRandomProfileExceptWithId(randomVacancy.getEmployerProfile().getId());
+
+            Chat chat = new ChatWithTopicVacancy(chatCreator, randomVacancy);
+            chat.setChatMessages(messages);
+
+            chatService.add(chat);
         }
+    }
+
+    private Profile getRandomProfileExceptWithId(Long exceptId){
+        boolean ready = false;
+
+        int amountOfProfiles = profileService.getAll().size();
+        int randomId = -1;
+
+        while (!ready){
+            randomId = rnd.nextInt(amountOfProfiles);
+            if (randomId != exceptId) {
+                ready = true;
+            }
+        }
+
+        Profile randomProfile = profileService.getById((long) randomId);
+
+        return randomProfile;
+    }
+
+    private EmployerProfile getRandomEmployerProfile() {
+        List<EmployerProfile> all = employerProfileService.getAll();
+        return all.get(rnd.nextInt(all.size()));
+    }
+
+    private void initCities() {
+        cityDistanceService.initCityDistances(new City(new Point(55.752030F, 37.633685F), "Москва"));
+        cityDistanceService.initCityDistances(new City(new Point(59.943122F, 30.276844F), "Санкт-Петербург"));
+        cityDistanceService.initCityDistances(new City(new Point(57.650630F, 39.860908F), "Ярославль"));
+        cityDistanceService.initCityDistances(new City(new Point(55.825853F, 49.117538F), "Казань"));
+        cityDistanceService.initCityDistances(new City(new Point(56.825312F, 60.608923F), "Екатеринбург"));
+        cityDistanceService.initCityDistances(new City(new Point(56.299846F, 43.904104F), "Нижний Новгород"));
     }
 }

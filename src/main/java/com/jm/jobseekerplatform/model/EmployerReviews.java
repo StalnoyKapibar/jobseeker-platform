@@ -1,5 +1,7 @@
 package com.jm.jobseekerplatform.model;
 
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;

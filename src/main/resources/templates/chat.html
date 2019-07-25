@@ -16,19 +16,27 @@
 </head>
 <body>
 <div class="main-block chromeFix" layout:fragment="content">
-    <div id="chat-container" class="panel-body">
-        <div class="message-area">
-            <ul id="messageArea" class="media-list">
-            </ul>
-        </div>
 
-        <form id="messageForm" name="messageForm">
-            <div class="input-message input-group">
-                <input class="form-control" type="text" id="message" autocomplete="off"
-                       placeholder="Type a message..."/>
-                <button class="input-group-addon" type="submit">Send</button>
+            <div id="chat-container" class="panel-body">
+                <div id="chatId" th:value="${chatId}"></div>
+                <div id="userId" th:value="${userId}"></div>
+
+                <div class="message-area">
+                    <ul id="messageArea" class="media-list">
+                    </ul>
+                </div>
+
+                <form id="messageForm" name="messageForm">
+                    <div class="input-message input-group">
+                        <input class="form-control" type="text" id="message" autocomplete="off"
+                               placeholder="Type a message..."/>
+                        <button class="input-group-addon" type="submit">Send</button>
+                    </div>
+                </form>
             </div>
-        </form>
+
+            <script th:src="@{/js/chat.js}"></script>
+        </div>
     </div>
     <script th:src="@{/js/chat.js}"></script>
 </div>
