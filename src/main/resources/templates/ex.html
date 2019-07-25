@@ -1,91 +1,191 @@
 <!DOCTYPE html>
+<html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Recovery Password</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link  th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet"
-          >
-    <!--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"-->
-          <!--integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">-->
-    <script type="text/javascript" th:src="@{//maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
-    <!--<link th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css}"-->
-          <!--rel="stylesheet" media="screen"/>-->
-    <!--<link th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css}"-->
-          <!--rel="stylesheet" media="screen"/>-->
+    <!--<style>-->
+    <!--body {-->
+    <!--background-color: powderblue;-->
+    <!--}-->
 
-    <!--<script type="text/javascript" th:src="@{//code.jquery.com/jquery-2.0.3.min.js}"></script>-->
-    <!--<script type="text/javascript" th:src="@{//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.js}"></script>-->
+    <!--h1 {-->
+    <!--color: blue;-->
+    <!--}-->
 
+    <!--p {-->
+    <!--color: red;-->
+    <!--}-->
+    <!--</style>-->
 </head>
 <body>
-<div class="container">
-    <br>
-    <form class="card bg-light" style="margin-left: 20%; margin-right: 20%" id="contact_form">
-        <div class="card-header" align="center">
-            <legend align="center">
-                Вы пытались востановить пароль на сайте <b>JobSeeker </b>
-                <!--<span th:text="${#dates.format(subscriptionDate)}"></span>-->
-            </legend>
-        </div>
-        <div class="row">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-10">
-                <div class="card-body">
-                    <!--<div class="form-group">-->
-                        <!--<div class="inputGroupContainer">-->
-                            <!--<div class="input-group">-->
-                                <!--<div class="input-group-prepend">-->
-                                    <!--<span class="input-group-text"><i class="fas fa-envelope"></i></span>-->
-                                <!--</div>-->
-                                <!--<input type="text" class="form-control" placeholder=" Email"-->
-                                       <!--name="user_email" id="user_email" th:value="${your_login}" required="required">-->
-                            <!--</div>-->
-                            <!--<div class="input-group">-->
-                                <!--<div class="input-group-prepend">-->
-                                    <!--<span class="input-group-text"><i class="fas fa-envelope"></i></span>-->
-                                <!--</div>-->
-                                <!--<input type="text" class="form-control" placeholder=" Password"-->
-                                       <!--name="user_password" id="user_password" th:value="${password}" required="required">-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <h1>    Ваш логин: <b><span th:text="${your_login}"></span> </b></h1>
-                    <h2>    Ваш пароль: <b><span th:text="${password}"></span> </b></h2>
+<h1><span th:text="${your_login}"></span></h1>
+<p><span th:text="${password}"></span></p>
+<!--<tbody>-->
+<!--<tr>-->
+<!--<td style="vertical-align: top;padding: 0">-->
+<!--<center>-->
+<!--<table id="body_mailru_css_attribute_postfix" class="card_mailru_css_attribute_postfix"-->
+<!--style="border: 0;border-collapse: collapse;margin: 0 auto;background: white;border-radius: 8px;margin-bottom: 16px;">-->
+<!--<tbody>-->
+<!--<tr>-->
+<!--<td style="width: 546px;vertical-align: top;padding-top: 32px">-->
+<!--<div style="max-width: 600px;margin: 0 auto;"><img-->
+<!--style="width: 38px;height: 38px;margin: 0 0 15px 0;padding-right: 30px;padding-left: 30px;"-->
+<!--src="https://proxy.imgsmail.ru?email=123casper%40mail.ru&amp;e=1564242113&amp;h=rzLWzriP5V2wunA_-iXoBg&amp;url171=amF2YW1lbnRvci5zbGFjay5jb20veC1wNzg0OTMzMDYwNTUtNDkwMDA3NTAxNjA3LTY5NzUyOTIwNjI3OS9pbWcvZW1haWwvc2xhY2tfaGFzaEAyeC5wbmc~&amp;is_https=1"-->
+<!--alt="" width="38" height="38">-->
+<!--<div class="card_mailru_css_attribute_postfix"-->
+<!--style="background: white;border-radius: 8px;margin-bottom: 16px;"><h1-->
+<!--style="font-size: 30px;padding-right: 30px;padding-left: 30px;">Slack account login-->
+<!--from a new browser</h1>-->
+<!--<p style="font-size: 17px;padding-right: 30px;padding-left: 30px;margin-bottom: 30px;">-->
+<!--It looks like you’ve recently signed in to Slack from a new browser.</p>-->
+<!--<div style="background: #F4F4F4;padding: 30px;border-radius: 6px;margin-bottom: 20px;margin-left: 30px;margin-right: 30px;">-->
+<!--<p style="font-size: 17px;margin: 0;margin-bottom: 0px"><img class="emoji"-->
+<!--draggable="false"-->
+<!--alt="💻"-->
+<!--src="https://img.imgsmail.ru/emoji/1f4bb.svg">-->
+<!--<b>New browser in Mahilyowskaya Voblasts', BLR</b></p>-->
+<!--<p style="font-size: 17px;margin: 0;margin-bottom: 0px">Signed in to Java Mentoring-->
+<!--on 7/16/19</p>-->
+<!--<p style="font-size: 17px;font-size: 0.9rem;color: #666;margin: 0;">IP address:-->
+<!--37.214.20.194</p></div>-->
+<!--<p style="font-size: 17px;padding-right: 30px;padding-left: 30px;">If this was you,-->
+<!--you’re all set!<br><br>If this wasn’t you, please <a-->
+<!--style="font-weight: bold;color: #439fe0;text-decoration: none;"-->
+<!--href="https://javamentor.slack.com/x-p78493306055-490007501607-697529206279/account/settings#password"-->
+<!--target="_blank" rel=" noopener noreferrer">change your password</a>. You can-->
+<!--also <a style="font-weight: bold;color: #439fe0;text-decoration: none;"-->
+<!--href="https://javamentor.slack.com/x-p78493306055-490007501607-697529206279/account/settings#two_factor"-->
+<!--target="_blank" rel=" noopener noreferrer">enable two-factor-->
+<!--authentication</a> to help secure your account.</p></div>-->
+<!--</div>-->
+<!--</td>-->
+<!--</tr>-->
+<!--</tbody>-->
+<!--</table>-->
+<!--</center>-->
+<!--</td>-->
+<!--</tr>-->
+<!--<tr>-->
+<!--<td class="email_footer_mailru_css_attribute_postfix"-->
+<!--style="font-size: 15px;color: #717274;text-align: center;width: 100%;border-top: 1px solid #E1E1E4">-->
+<!--<table style="margin-top: 20px;background-color: white;border: 0;text-align: center;border-collapse: collapse;">-->
+<!--<tbody>-->
+<!--<tr>-->
+<!--<td>&nbsp;</td>-->
+<!--<td><span style="display: block;"> Made by <a href="https://slack.com"-->
+<!--style="text-decoration: none;color: #434245;"-->
+<!--target="_blank" rel=" noopener noreferrer">Slack Technologies, Inc</a>-->
+<!--<br>-->
+<!--One Park Place, 4th Floor&nbsp;&nbsp;Hatch Street, Dublin 2&nbsp;&nbsp;Ireland </span></td>-->
+<!--<td>&nbsp;</td>-->
+<!--</tr>-->
+<!--<tr>-->
+<!--<td>&nbsp;</td>-->
+<!--<td style="padding: 16px 8px 24px;vertical-align: top;text-align: center"><span><a-->
+<!--href="https://slackhq.com" style="text-decoration: none;color: #434245;" target="_blank"-->
+<!--rel=" noopener noreferrer">Our Blog</a> <span style="color: #D8D8D8;">&nbsp;•&nbsp;</span> <a-->
+<!--href="https://slack.com/legal" style="text-decoration: none;color: #434245;" target="_blank"-->
+<!--rel=" noopener noreferrer">Policies</a></span></td>-->
+<!--</tr>-->
+<!--</tbody>-->
+<!--</table>-->
+<!--</td>-->
+<!--</tr>-->
+<!--</tbody>-->
 
-
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
+<table style="background-color: #ffffff;padding-top: 20px;color: #434245;width: 100%;-webkit-font-smoothing:antialiased;
+       -moz-osx-font-smoothing:grayscale;border: 0;text-align: center;border-collapse: collapse;"
+       class="background_main_mailru_css_attribute_postfix">
+    <tbody>
+    <tr>
+        <td style="vertical-align: top;padding: 0">
+            <center>
+                <table id="body_mailru_css_attribute_postfix"
+                       class="card_mailru_css_attribute_postfix"
+                       style="border: 0;border-collapse: collapse;margin: 0 auto;background: white;border-radius: 8px;margin-bottom: 16px;">
+                    <tbody>
+                    <tr>
+                        <td style="width: 546px;vertical-align: top;padding-top: 32px">
+                            <div style="max-width: 600px;margin: 0 auto;">
+                                    <!--<img-->
+                                    <!--style="width: 38px;height: 38px;margin: 0 0 15px 0;padding-right: 30px;padding-left: 30px;"-->
+                                    <!--src="https://proxy.imgsmail.ru?email=123casper%40mail.ru&amp;e=1564330294&amp;h=AknejSTm8_2iypYms3c_9A&amp;url171=c2xhY2suY29tL3gtYTY5NTY3NDI0MzY2NC9pbWcvZW1haWwvc2xhY2tfaGFzaEAyeC5wbmc~&amp;is_https=1"-->
+                                    <!--alt="" width="38" height="38">-->
+                                <h1 style="font-size: 30px;padding-right: 30px;padding-left: 30px;">
+                                    Вы сделали запрос на востановление пароля на платформе JobSeeker</h1>
+                                <p style="font-size: 17px;padding-right: 30px;padding-left: 30px;">
+                                    Once you've confirmed that <strong><a
+                                        href="/compose?To=123casper@mail.ru"
+                                        rel="noopener">123casper@mail.ru</a></strong>
+                                    is your email address, we’ll help you find your Slack
+                                    workspaces.</p>
+                                <div style="padding-right: 30px;padding-left: 30px;margin-top: 40px;margin-bottom: 30px;">
+                                    <table style="width: 100%;"
+                                           class="sm_table_mailru_css_attribute_postfix">
+                                        <tbody>
+                                        <tr style="width: 100%;">
+                                            <td style="width: 100%;"><span
+                                                    style="display: inline-block;border-radius:4px;background-color:#2ea664;"
+                                                    class="sm_full_width_mailru_css_attribute_postfix"><a
+                                                    class="button_link_mailru_css_attribute_postfix sm_full_width_mailru_css_attribute_postfix sm_border_box_mailru_css_attribute_postfix"
+                                                    href="https://go.slack.com/get-started/enQtNjg0MjYzNTIwODgyLTI5ZGJhMWQwOTE2YThiNzY3MjliODU4NjAwMDhhNmNhMjIwNzRiNDRlZThhZDZhODVkMDVmNmE4NTIxMWY3ZTA?e=MTIzY2FzcGVyQG1haWwucnU%3D&amp;i=default&amp;x=x-a695674243664"
+                                                    style="min-width:196px;border-top:13px solid;border-bottom:13px solid;border-right:24px solid;border-left:24px solid;border-color:#2ea664;border-radius:4px;background-color:#2ea664;color:#ffffff;font-size:18px;line-height:18px;word-break:break-word;text-shadow:0 1px 1px #2e9a5f;display: inline-block;text-align: center;font-weight: 900;text-decoration: none !important;"
+                                                    target="_blank"
+                                                    rel=" noopener noreferrer">Confirm Email Address</a></span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p style="font-size: 17px;padding-right: 30px;padding-left: 30px;margin-top: 40px;margin-bottom: 30px;">
+                                    If you didn’t request this email, there’s nothing to
+                                    worry about — you can safely ignore it.</p></div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </center>
+        </td>
+    </tr>
+    <tr>
+        <td class="email_footer_mailru_css_attribute_postfix"
+            style="font-size: 15px;color: #717274;text-align: center;width: 100%;border-top: 1px solid #E1E1E4">
+            <table style="margin-top: 20px;background-color: white;border: 0;text-align: center;border-collapse: collapse;">
+                <tbody>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td><span style="display: block;"> Made by <a href="https://slack.com"
+                                                                  style="text-decoration: none;color: #434245;"
+                                                                  target="_blank"
+                                                                  rel=" noopener noreferrer">Slack Technologies, Inc</a>
+                <br>
+                500 Howard Street&nbsp;&nbsp;San&nbsp;Francisco,&nbsp;CA&nbsp;94105&nbsp;&nbsp;United States </span>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td style="padding: 16px 8px 24px;vertical-align: top;text-align: center">
+                                                    <span><a href="https://slackhq.com"
+                                                             style="text-decoration: none;color: #434245;"
+                                                             target="_blank"
+                                                             rel=" noopener noreferrer">Our Blog</a> <span
+                                                            style="color: #D8D8D8;">&nbsp;•&nbsp;</span> <a
+                                                            href="https://slack.com/x-a695674243664/account/notifications"
+                                                            style="text-decoration: none;color: #434245;"
+                                                            target="_blank"
+                                                            rel=" noopener noreferrer">Email Preferences</a> <span
+                                                            style="color: #D8D8D8;">&nbsp;•&nbsp;</span> <a
+                                                            href="https://slack.com/legal"
+                                                            style="text-decoration: none;color: #434245;"
+                                                            target="_blank"
+                                                            rel=" noopener noreferrer">Policies</a></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>
-<!--<!DOCTYPE html>-->
-<!--<html>-->
-<!--<head>-->
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
-    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
-<!--</head>-->
-<!--<body>-->
-
-<!--<img src="tr.png" alt="Smiley face" height="42" width="42">-->
-<!--<div class="container">-->
-    <!--<h2>Dropdowns</h2>-->
-    <!--<p>The .dropdown class is used to indicate a dropdown menu.</p>-->
-    <!--<p>Use the .dropdown-menu class to actually build the dropdown menu.</p>-->
-    <!--<p>To open the dropdown menu, use a button or a link with a class of .dropdown-toggle and data-toggle="dropdown".</p>-->
-    <!--<div class="dropdown">-->
-        <!--<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example-->
-            <!--<span class="caret"></span></button>-->
-        <!--<ul class="dropdown-menu">-->
-            <!--<li><a href="https://www.w3schools.com/html/default.asp">HTML</a></li>-->
-            <!--<li><a href="https://www.w3schools.com/css/default.asp">CSS</a></li>-->
-            <!--<li><a href="https://www.w3schools.com/js/default.asp">JavaScript</a></li>-->
-        <!--</ul>-->
-    <!--</div>-->
-<!--</div>-->
-
-<!--</body>-->
-<!--</html>-->
