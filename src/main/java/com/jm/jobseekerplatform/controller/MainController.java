@@ -7,7 +7,7 @@ import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
-import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
@@ -45,6 +45,9 @@ public class MainController {
     private SeekerUserService seekerUserService;
 
     @Autowired
+    private SeekerProfileService seekerProfileService;
+
+    @Autowired
     private EmployerUserService employerUserService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
@@ -52,29 +55,29 @@ public class MainController {
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
 
+
     @RequestMapping("/")
-    public String mainPage(Authentication authentication, Model model) {
+    public String mainPage(Model model, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
             model.addAttribute("vacMess", "Доступные вакансии:");
-            model.addAttribute("vacancies", vacancies);
+            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
                     Long id = ((User) authentication.getPrincipal()).getId();
-                    SeekerProfile profile = seekerUserService.getById(id).getProfile();
+                    SeekerProfile profile = seekerProfileService.getById(id);
                     model.addAttribute("favoriteVacancies", profile.getFavoriteVacancy());
                     model.addAttribute("profileId", profile.getId());
-
-                    Set<Tag> tags = ((SeekerUser) authentication.getPrincipal()).getProfile().getTags();
-                    Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
+                    model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+                    model.addAttribute("seekerAuthority", seekerUserService.getById(id).getAuthority());
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
-                    model.addAttribute("vacancies", vacancies);
+                    model.addAttribute("seekerAuthority", seekerUserService.getById(id).getAuthority());
                 } catch (NullPointerException e) {
-                    List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
+                    model.addAttribute("googleMapsApiKey", googleMapsApiKey);
                     model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
-                    model.addAttribute("vacancies", vacancies);
                 }
+            } else {
+                model.addAttribute("googleMapsApiKey", googleMapsApiKey);
             }
         }
         return "index";
@@ -131,9 +134,9 @@ public class MainController {
     }
 
     @RequestMapping("/chat/{chatId}")
-    public String getChatById(@PathVariable("chatId") String chatId,  Authentication authentication, Model model) {
+    public String getChatById(@PathVariable("chatId") String chatId, Authentication authentication, Model model) {
 
-        User user = (User)authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
 
         model.addAttribute("userId", user.getId());
         model.addAttribute("chatId", chatId);

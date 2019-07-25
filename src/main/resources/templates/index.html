@@ -6,6 +6,7 @@
       lang="en">
 <head>
     <title>Hello</title>
+    <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <script type="text/javascript" src="/js/index.js"></script>
 </head>
 <body>
@@ -14,9 +15,8 @@
         <div class="main-block chromeFix" layout:fragment="content">
             <div id="vacancyDiv" class="container-fluid" style="margin-top: 30px">
                 <div class="row">
-                    <div class="col-sm-4"></div>
-                    <div class="col-sm-6">
-
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10">
                         <div class="search_area">
                             <form class="form-inline" style="margin-bottom: 5px;">
                                 <input class="form-control mr-sm-2 form-search" id="search_box" type="search"
@@ -33,38 +33,15 @@
                     </div>
                 </div>
                 <div class="row" style="margin-top: 30px">
-                    <div class="col-sm-4">
+                    <div class="col-sm-1">
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-10">
                         <div id="allVacancies">
                             <span th:text="${vacMess}"></span><br/>
-                            <ul class="list-group">
-                                <th:block th:each="vacancy: ${vacancies}">
-                                    <li class="list-group-item clearfix"
-                                        data-toggle="modal" data-target="#vacancyModal"
-                                        th:onclick="'showVacancy('+${vacancy.id}+')'">
-                                        [[${vacancy.headline}]]
-                                        <div class="pull-right">
-                                            <span class="btn btn-xs btn-default"
-                                                  th:onclick="'window.location.href = \'' + @{/vacancy/{id}(id=${vacancy.id})} + '\';event.stopPropagation();'">
-                                                  <!--th:onclick=" location.href = '@Url.Action("NewClass", "Product")'; event.stopPropagation(); ">-->
-                                               <i class="fas fa-play"></i>
-                                            </span>
-                                            <span sec:authorize="hasRole('ROLE_SEEKER')" class="stars"
-                                                  th:id="stars- + ${vacancy.id}">
-                                                <i th:if="${#sets.contains(favoriteVacancies,vacancy)}"
-                                                   th:id="outFavorite + ${vacancy.id}" class="fas fa-star"
-                                                   title="убрать из избранных"
-                                                   th:onclick="'outFavorite(' + ${vacancy.id} + ',' + ${profileId} + ');event.stopPropagation();'"></i>
-                                                <i th:unless="${#sets.contains(favoriteVacancies,vacancy)}"
-                                                   th:id="inFavorite + ${vacancy.id}" class="far fa-star"
-                                                   title="в избранное"
-                                                   th:onclick="'inFavorite(' + ${vacancy.id} + ',' + ${profileId} + ');event.stopPropagation();'"></i>
-                                            </span>
-                                        </div>
-                                    </li>
-                                </th:block>
+
+                            <ul class="list-group" id="vacanciesByPoint">
                             </ul>
+
                             <input id="isAVShow" type="hidden" value="0">
                         </div>
                         <div id="searchVacancies">
@@ -85,6 +62,7 @@
                             <input type="hidden" class="favoriteVacancies" th:value="${fvac.id}">
                         </div>
                         <input type="hidden" id="profileId" th:value="${profileId}">
+                        <input type="hidden" id="seekerAuthority" th:value="${seekerAuthority}">
                     </div>
                 </div>
             </div>
@@ -118,3 +96,4 @@
 </div>
 </body>
 </html>
+

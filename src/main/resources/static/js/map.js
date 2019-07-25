@@ -68,3 +68,23 @@ function getCoordsByAddress(address) {
     });
     return location;
 }
+
+function getCityByCoords(lat, lng) {
+    var city;
+    $.ajax({
+        url: "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=" + $("meta[name='apiKey']").attr("content"),
+        type: "GET",
+        async: false,
+        success: function (data) {
+            for (var i = 0; i < data.results[0].address_components.length; i++) {
+                for (var b = 0; b < data.results[0].address_components[i].types.length; b++) {
+                    if (data.results[0].address_components[i].types[b] == "locality") {
+                        city = data.results[0].address_components[i].long_name;
+                        break;
+                    }
+                }
+            }
+        }
+    });
+    return city;
+}
