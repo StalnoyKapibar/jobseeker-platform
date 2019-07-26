@@ -2,10 +2,9 @@ package com.jm.jobseekerplatform.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Entity
-@Table(name = "distances")
+@Table(name = "city_distances")
 public class CityDistance implements Serializable {
 
     @Id
@@ -13,14 +12,20 @@ public class CityDistance implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private City city;
+    @JoinColumn(name = "from_city_id")
+    private City from;
 
-    private float distance;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_city_id")
+    private City to;
+
+    private Float distance;
 
     public CityDistance() {}
 
-    public CityDistance(City city, float distance) {
-        this.city = city;
+    public CityDistance(City from, City to, float distance) {
+        this.from = from;
+        this.to = to;
         this.distance = distance;
     }
 
@@ -28,38 +33,27 @@ public class CityDistance implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public City getFrom() {
+        return from;
     }
 
-    public City getCity() {
-        return city;
+    public void setFrom(City from) {
+        this.from = from;
     }
 
-    public void setCity(City city) {
-        this.city = city;
+    public City getTo() {
+        return to;
     }
 
-    public double getDistance() {
+    public void setTo(City to) {
+        this.to = to;
+    }
+
+    public float getDistance() {
         return distance;
     }
 
     public void setDistance(float distance) {
         this.distance = distance;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CityDistance that = (CityDistance) o;
-        return Float.compare(that.distance, distance) == 0 &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(city, that.city);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, city, distance);
     }
 }
