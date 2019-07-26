@@ -73,11 +73,9 @@ public class UserService extends AbstractService<User> {
 
         add(userNew);
 
-        //так нужно сделать
         User registeredUser = findByEmail(userEmail);
 
         String token = UUID.randomUUID().toString();
-        //так нкжно сделать
         verificationTokenService.createVerificationToken(token, registeredUser);
         mailService.sendVerificationEmail(userEmail, token);
     }
