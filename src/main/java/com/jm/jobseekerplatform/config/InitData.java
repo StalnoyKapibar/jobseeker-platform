@@ -5,8 +5,14 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
-import com.jm.jobseekerplatform.model.profiles.*;
-import com.jm.jobseekerplatform.model.users.*;
+import com.jm.jobseekerplatform.model.profiles.AdminProfile;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import com.jm.jobseekerplatform.model.users.AdminUser;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
 import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
@@ -77,6 +83,9 @@ public class InitData {
     @Autowired
     private PointService pointService;
 
+    @Autowired
+    private NewsService newsService;
+
     private Faker faker = new Faker(new Locale("ru"));
 
     private Random rnd = new Random();
@@ -95,6 +104,43 @@ public class InitData {
 
         initReviews();
         initChat();
+
+        initNews();
+    }
+
+    private void initNews() {
+        for (int i = 0; i < 60; i++) {
+            News news = new News(faker.witcher().witcher(), faker.lorem().characters(), null, LocalDateTime.now());
+            newsService.add(news);
+        }
+
+        List<News> newsList = newsService.getAll();
+        for (int i = 0; i < newsList.size(); i++) {
+            if (i < 10) {
+                newsList.get(i).setAuthor(employerProfileService.getById(2L));
+                newsService.update(newsList.get(i));
+            }
+            if (i >= 10 && i < 20) {
+                newsList.get(i).setAuthor(employerProfileService.getById(3L));
+                newsService.update(newsList.get(i));
+            }
+            if (i >= 20 && i < 30) {
+                newsList.get(i).setAuthor(employerProfileService.getById(4L));
+                newsService.update(newsList.get(i));
+            }
+            if (i >= 30 && i < 40) {
+                newsList.get(i).setAuthor(employerProfileService.getById(5L));
+                newsService.update(newsList.get(i));
+            }
+            if (i >= 40 && i < 50) {
+                newsList.get(i).setAuthor(employerProfileService.getById(6L));
+                newsService.update(newsList.get(i));
+            }
+            if (i >= 50 && i < 60) {
+                newsList.get(i).setAuthor(employerProfileService.getById(7L));
+                newsService.update(newsList.get(i));
+            }
+        }
     }
 
     public void initReviews() {
@@ -331,7 +377,6 @@ public class InitData {
         employerProfile = new EmployerProfile("Рога и копыта", "www.roga.ru", description, imageService.resizeLogoEmployer(image));
         employerProfile.setState(State.ACCESS);
         employerProfileService.add(employerProfile);
-
         try {
             URL url = new URL("https://0oq.ru/reshebnik-onlajn/ru.onlinemschool.com/pictures/vector/points-to-vector.png");
             image = ImageIO.read(url);
@@ -404,17 +449,17 @@ public class InitData {
 
         Set<Vacancy> vacancies = new HashSet<>(vacancyService.getAll());
 
-        seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L), portfolios, vacancies));
+        seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L), portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
         portfolios.add(portfolioService.getById(3L));
         portfolios.add(portfolioService.getById(4L));
-        seekerProfileService.add(new SeekerProfile("Иван", "Игоревич", "Петров", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios,vacancies));
+        seekerProfileService.add(new SeekerProfile("Иван", "Игоревич", "Петров", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
         portfolios.add(portfolioService.getById(5L));
         portfolios.add(portfolioService.getById(6L));
-        seekerProfileService.add(new SeekerProfile("Семен", "Александрович", "Иванов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L), portfolios,vacancies));
+        seekerProfileService.add(new SeekerProfile("Семен", "Александрович", "Иванов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L), portfolios, vacancies, new HashSet<>()));
     }
 
     private Set<Tag> randomTags(Long position) {
@@ -447,13 +492,13 @@ public class InitData {
         }
     }
 
-    private Profile getRandomProfileExceptWithId(Long exceptId){
+    private Profile getRandomProfileExceptWithId(Long exceptId) {
         boolean ready = false;
 
         int amountOfProfiles = profileService.getAll().size();
         int randomId = -1;
 
-        while (!ready){
+        while (!ready) {
             randomId = rnd.nextInt(amountOfProfiles);
             if (randomId != exceptId) {
                 ready = true;
