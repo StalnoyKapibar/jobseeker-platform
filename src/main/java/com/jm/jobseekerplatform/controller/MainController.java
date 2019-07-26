@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
