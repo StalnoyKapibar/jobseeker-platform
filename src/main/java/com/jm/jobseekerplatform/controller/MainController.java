@@ -187,6 +187,12 @@ public class MainController {
         return "recovery";
     }
 
+    @RequestMapping(value = "/new_password/{email}", method = RequestMethod.GET)
+    public String newPassPage(@PathVariable String email,Model model){
+        model.addAttribute("email",email);
+        return "new_password";
+    }
+
     @RequestMapping(value = "/ex", method = RequestMethod.GET)
     public String  exPage(){
         return "ex";

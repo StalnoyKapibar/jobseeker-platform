@@ -1,8 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.User;
 import com.jm.jobseekerplatform.service.impl.MailService;
-import com.jm.jobseekerplatform.service.impl.UserService;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +57,13 @@ public class UserRestController {
     @RequestMapping(method = RequestMethod.GET, value = "/recovery/{email}")
     public void inviteFriend(@PathVariable String email) {
         mailService.sendRecoveryPassEmail(email);
+    }
+    //востановление пароля
+    @RequestMapping(method = RequestMethod.GET, value = "/new_password/{email}/{password}")
+    public void newPassword(@PathVariable String email, @PathVariable char[] password) {
+        User newPassUser = userService.findByEmail(email);
+        char [] newPass = userService.encodePassword(password);
+        newPassUser.setPassword(newPass);
+        userService.update(newPassUser);
     }
 }

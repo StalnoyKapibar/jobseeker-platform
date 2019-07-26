@@ -1,4 +1,4 @@
-function sendPass() {
+function sendEmail() {
     $.ajax({
         url: '/api/users/recovery/' + $('#user_email').val(),
         success: function () {
@@ -12,3 +12,17 @@ function sendPass() {
 
 }
 
+function validityEmailAndSend() {
+    $.ajax({
+        url: '/api/users/email/'
+            + $('#user_email').val(),
+        success: function (result) {
+            if (result) {
+                $('#ups_message').hide();
+                sendEmail();
+            } else {
+                $('#ups_message').slideDown({opacity:"show"},"slow");
+            }
+        }
+    })
+}

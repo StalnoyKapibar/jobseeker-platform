@@ -1,89 +1,80 @@
 <!DOCTYPE html>
+<html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Recovery Password</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
-          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-1">
-            <div class="col-sm-10">
-                <h1>Здравствуйте, <span th:text="${your_login}"></span></h1>
-                <br>
-                <p>
-                    Вы пытались востановить пароль на сайте <b>JobSeeker </b>
-                    <span th:text="${#dates.format(subscriptionDate)}"></span>
-                </p>
-                <p>
-                    Ваш логин: <b><span th:text="${your_login}"></span> </b><br>
-                    Ваш пароль: <b><span th:text="${password}"></span> </b>
-                </p>
-
-                <p>
-                    Для входа перейдите по
-                    <a th:href="${href}"> ссылке </a>
-                </p>
-                <p>
-                    С наилучшими пожеланиями , <br/>
-                    <em> команда JobSeeker</em>
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
+<table style="background-color: #ffffff;padding-top: 20px;color: #434245;width: 100%;-webkit-font-smoothing:antialiased;
+       -moz-osx-font-smoothing:grayscale;border: 0;text-align: center;border-collapse: collapse;"
+       class="background">
+    <tbody>
+    <tr>
+        <td style="font-size: 15px;color: #717274;text-align: center;width: 100%;border-bottom: 1px solid #E1E1E4">
+            <table style="margin-top: 20px;background-color: white;border: 0;text-align: center;border-collapse: collapse;">
+                <tbody>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td> Здравствуйте, <strong><span th:text="${your_login}"></span></strong></td>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+    <tr>
+        <td style="vertical-align: top;padding: 0" align="center">
+            <table
+                    style="border: 0;border-collapse: collapse;margin: 0 auto;background: white;border-radius: 8px;margin-bottom: 16px;">
+                <tbody>
+                <tr>
+                    <td style="width: 546px;vertical-align: top;padding-top: 32px">
+                        <div style="max-width: 600px;margin: 0 auto;">
+                            <h1 style="font-size: 30px;padding-right: 30px;padding-left: 30px;">
+                                Вы сделали запрос на востановление пароля на платформе JobSeeker</h1>
+                            <p style="font-size: 17px;padding-right: 30px;padding-left: 30px;">
+                                Подтвердив свой E-mail адрес
+                                вы перейдете на старницу <strong>создания нового пароля</strong>
+                            </p>
+                            <div style="padding-right: 30px;padding-left: 30px;margin-top: 40px;margin-bottom: 30px;">
+                                <table style="width: 100%;">
+                                    <tbody>
+                                    <tr style="width: 100%;">
+                                        <td style="width: 100%;"><span
+                                                style="display: inline-block;border-radius:4px;background-color:#2ea664;"><a
+                                                class="button"
+                                                th:href="${href}"
+                                                style="min-width:196px;border-top:13px solid;border-bottom:13px solid;border-right:24px solid;border-left:24px solid;border-color:#2ea664;border-radius:4px;background-color:#2ea664;color:#ffffff;font-size:18px;line-height:18px;word-break:break-word;text-shadow:0 1px 1px #2e9a5f;display: inline-block;text-align: center;font-weight: 900;text-decoration: none !important;"
+                                                target="_blank"
+                                                rel=" noopener noreferrer">Подтвердить</a></span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 15px;color: #717274;text-align: center;width: 100%;border-top: 1px solid #E1E1E4">
+            <table style="margin-top: 20px;background-color: white;border: 0;text-align: center;border-collapse: collapse;">
+                <tbody>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td> C нилучшими пожеланиями, команда <strong> JobSeeker</strong></td>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-    <!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>-->
-    <!--<title>Login</title>-->
-    <!--<link th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css}"-->
-          <!--rel="stylesheet" media="screen"/>-->
-    <!--<link th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css}"-->
-          <!--rel="stylesheet" media="screen"/>-->
-<!--</head>-->
-
-<!--<body>-->
-<!--<div class="container">-->
-    <!--<div class="row">-->
-        <!--<div class="col-lg-4 col-lg-offset-3">-->
-            <!--<h1 class="page-header">Welcome</h1>-->
-            <!--<div th:unless="${isNotValid}">-->
-                <!--<div th:unless="${logout}">-->
-                    <!--<div class="empty-block"></div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div th:if="${isNotValid}">-->
-                <!--<div class="alert alert-danger">-->
-                    <!--<h3>Invalid login or password!</h3>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div th:if="${logout}">-->
-                <!--<div class="alert alert-success">-->
-                    <!--<h3>Logout has bean successful</h3>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<h2>Please sign in</h2>-->
-            <!--<form th:action="@{/processing-url}" method="POST">-->
-                <!--<div class="form-group login-group">-->
-                    <!--<input type="text" class="form-control"  name="login"-->
-                           <!--required="required"/>-->
-                    <!--<input type="password" class="form-control"  name="password"-->
-                           <!--required="required"/>-->
-                <!--</div>-->
-                <!--<input type="submit" class="btn btn-default btn-block" value="Sign in"/>-->
-            <!--</form>-->
-            <!--<a class="btn   btn-primary btn-block" th:href="@{/loginoauth}">Google Auth</a>-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->

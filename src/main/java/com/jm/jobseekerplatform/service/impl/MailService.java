@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -46,6 +47,7 @@ public class MailService {
             e.printStackTrace();
         }
     }
+
     //подтверждение регистрации
     public void sendVerificationEmail(String address, String token) {
         String subject = "Подтвердите свой E-mail адрес и закончите регистрацию";
@@ -56,6 +58,7 @@ public class MailService {
         ctx.setVariable("subscriptionDate", new Date());
         sendEmail(address, subject, templateEngine.process("/emails/regemail.html", ctx));
     }
+
     // приглашение друга
     public void sendFriendInvitaionEmail(String address, String friendAddres) {
         String subject = address + "Приглашает вас попробовать нашу платформу";
@@ -81,11 +84,10 @@ public class MailService {
     // востановление пароля
     public void sendRecoveryPassEmail(String address) {
         String subject = "Вы сделали запрос на востановление пароля";
-        //String href = "http://localhost:" + port + "/login";
+        String href = "http://localhost:" + port + "/new_password/" + address;
         final Context ctx = new Context();
         ctx.setVariable("your_login", address);
-        ctx.setVariable("password", userService.encodePassword(userService.findByEmail(address).getPasswordChar()));
-//        ctx.setVariable("href", href);
-        sendEmail(address, subject, templateEngine.process("ex.html", ctx));
+        ctx.setVariable("href", href);
+        sendEmail(address, subject, templateEngine.process("/emails/recoveryPassEmail.html", ctx));
     }
 }
