@@ -71,21 +71,36 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-5 col-sm-offset-5">
+            <div class="col-sm-8 col-sm-offset-8">
                 <div sec:authorize="hasRole('ROLE_SEEKER')" id="buttons" style="padding: 15px;">
                     <button type="button" class="btn btn-success"
-                            onclick="alert('кнопка не работает')" style="width: 150px;">Откликнуться
+                            onclick="alert('кнопка не работает')">Откликнуться
                         <i class="fas fa-envelope"></i>
                     </button>
-                    <button th:if="${isContain}" id="outFavorite" class="btn btn-primary"
-                            th:onclick="'outFavorite(' + ${vacancyFromServer.id} + ',' + ${profileId} + ')'">
-                        Убрать из
-                        избранное
-                    </button>
-                    <button th:unless="${isContain}" id="inFavorite" class="btn btn-primary"
-                            th:onclick="'inFavorite(' + ${vacancyFromServer.id} + ',' + ${profileId} + ')'">
-                        В избранное
-                    </button>
+                    <span id="btnFavorite">
+                        <button th:if="${isContain}" id="outFavorite" class="btn btn-primary"
+                                th:onclick="'outFavorite(' + ${vacancyFromServer.id} + ',' + ${seekerProfileId} + ')'">
+                            Убрать из
+                            избранное
+                        </button>
+                        <button th:unless="${isContain}" id="inFavorite" class="btn btn-primary"
+                                th:onclick="'inFavorite(' + ${vacancyFromServer.id} + ',' + ${seekerProfileId} + ')'">
+                            В избранное
+                        </button>
+                    </span>
+                    <span id="btnSubscribe">
+                        <button th:if="${isSubscribe}" type="button" id="unSubscribe" class="btn btn-outline-primary"
+                                th:onclick="'unSubscribe(' + ${vacancyFromServer.id} + ',' + ${seekerProfileId} + ')'">
+                            Отписаться
+                            <i class="fas fa-envelope"></i>
+                        </button>
+                        <button th:unless="${isSubscribe}" type="button" id="toSubscribe"
+                                class="btn btn-outline-primary"
+                                th:onclick="'toSubscribe(' + ${vacancyFromServer.id} + ',' + ${seekerProfileId} + ')'">
+                            Подписаться
+                            <i class="fas fa-envelope"></i>
+                        </button>
+                    </span>
                 </div>
             </div>
         </div>
