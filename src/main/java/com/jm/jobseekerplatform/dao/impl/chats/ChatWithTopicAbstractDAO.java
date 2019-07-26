@@ -5,13 +5,24 @@ package com.jm.jobseekerplatform.dao.impl.chats;
         import org.springframework.stereotype.Repository;
 
         import javax.persistence.NoResultException;
+        import javax.persistence.Query;
         import java.util.List;
 
 /**
+ * <p> Классы <code>ChatWithTopicAbstractDAO</code> (и его наследники)
+ * и <code>ChatWithTopicDAO</code> дублируют функционал,
+ * однако используют разные реализации.
+ *
+ * В проектке существует оба класса для демонстрации разных подходов:
+ * - класс <code>ChatWithTopicAbstractDAO</code> требует создавать наследников
+ * для каждого типа чатов,
+ * - класс <code>ChatWithTopicDAO</code> не требует создания наследников, но
+ * требует в качестве параметра методов передавать класс чата или класс темы чата.
+ *
+ * @see ChatWithTopicDAO
+ *
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
  */
-
-//todo (Nick Dolgopolov) написать, зачем нужны ChatWithTopicAbstractDAO и ChatWithTopicDAO одновременно
 
 @Repository
 public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends AbstractDAO<T> {
@@ -37,8 +48,6 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
     public List<T> getAllByParticipantProfileId(Long participantProfileId){ //todo (Nick Dolgopolov)
 
         List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE c.creatorProfile.id = :creatorProfileId").getResultList();
-
-
 
         return chats;
     }
