@@ -1,37 +1,34 @@
 package com.jm.jobseekerplatform.dao.impl.chats;
 
-        import com.jm.jobseekerplatform.dao.AbstractDAO;
-        import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
-        import org.springframework.stereotype.Repository;
+import com.jm.jobseekerplatform.dao.AbstractDAO;
+import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
+import org.springframework.stereotype.Repository;
 
-        import javax.persistence.NoResultException;
-        import javax.persistence.Query;
-        import java.util.List;
+import javax.persistence.NoResultException;
+import java.util.List;
 
 /**
- * <p> Классы <code>ChatWithTopicAbstractDAO</code> (и его наследники)
+ * <p>Классы <code>ChatWithTopicAbstractDAO</code> (и его наследники)
  * и <code>ChatWithTopicDAO</code> дублируют функционал,
  * однако используют разные реализации.
  *
- * В проектке существует оба класса для демонстрации разных подходов:
+ * <p> В проектке существует обе реализации для демонстрации разных подходов:
  * - класс <code>ChatWithTopicAbstractDAO</code> требует создавать наследников
  * для каждого типа чатов,
  * - класс <code>ChatWithTopicDAO</code> не требует создания наследников, но
  * требует в качестве параметра методов передавать класс чата или класс темы чата.
  *
- * @see ChatWithTopicDAO
- *
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
+ * @see ChatWithTopicDAO
  */
 
 @Repository
 public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends AbstractDAO<T> {
 
-
     /**
      * Методы <code>getByTopicIdCreatorProfileIdTopicType</code>, <code>getByTopicIdCreatorProfileIdChatType</code>
      * и <code>getByTopicIdCreatorProfileId</code> дублируют функционал, однако используют разгную реализацию.
-     *
+     * <p>
      * В проекте существуют разные реализации для демонстрации разных подходов.
      *
      * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdTopicType}
@@ -55,9 +52,16 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
         return chat;
     }
 
-    public List<T> getAllByParticipantProfileId(Long participantProfileId){ //todo (Nick Dolgopolov)
+    /**
+     * Возвращает список чатов в которых профиль является участником чата.
+     * Участник чата - это профиль, который написал в чат хотя бы одно сообщение
+     *
+     * @param participantProfileId id профиля
+     */
 
-        List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE c.creatorProfile.id = :creatorProfileId").getResultList();
+    public List<T> getAllByParticipantProfileId(Long participantProfileId) { //todo (Nick Dolgopolov)
+
+        List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE :creatorProfileId IN c.chatMessages. ").getResultList();
 
         return chats;
     }
