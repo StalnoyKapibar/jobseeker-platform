@@ -1,13 +1,14 @@
 package com.jm.jobseekerplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Table(name = "city")
+@Immutable
 public class City implements Serializable {
 
     @Id
@@ -17,16 +18,13 @@ public class City implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    private Point centerPoint;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<CityDistance> cityDistances;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Point point;
 
     public City() {}
 
-    public City(Point centerPoint, String name) {
-        this.centerPoint = centerPoint;
+    public City(String name, Point point) {
+        this.point = point;
         this.name = name;
     }
 
@@ -46,20 +44,12 @@ public class City implements Serializable {
         this.name = name;
     }
 
-    public Point getCenterPoint() {
-        return centerPoint;
+    public Point getPoint() {
+        return point;
     }
 
-    public void setCenterPoint(Point centerPoint) {
-        this.centerPoint = centerPoint;
-    }
-
-    public List<CityDistance> getCityDistances() {
-        return cityDistances;
-    }
-
-    public void setCityDistances(List<CityDistance> cityDistances) {
-        this.cityDistances = cityDistances;
+    public void setpoint(Point centerPoint) {
+        this.point = point;
     }
 
     @JsonValue
