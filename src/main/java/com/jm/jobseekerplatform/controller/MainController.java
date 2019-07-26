@@ -1,17 +1,13 @@
 package com.jm.jobseekerplatform.controller;
 
-import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.UserRole;
-import com.jm.jobseekerplatform.model.Vacancy;
-import com.jm.jobseekerplatform.model.VerificationToken;
-import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
-import com.jm.jobseekerplatform.service.impl.VacancyService;
-import com.jm.jobseekerplatform.service.impl.VerificationTokenService;
+import com.jm.jobseekerplatform.service.impl.*;
+import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
@@ -26,8 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.annotation.security.RolesAllowed;
 import javax.persistence.NoResultException;
+import javax.annotation.security.RolesAllowed;
 import java.util.Base64;
 import java.util.List;
 import java.util.Set;
@@ -49,6 +45,9 @@ public class MainController {
     private SeekerUserService seekerUserService;
 
     @Autowired
+    private SeekerProfileService seekerProfileService;
+
+    @Autowired
     private EmployerUserService employerUserService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
@@ -58,29 +57,27 @@ public class MainController {
     private String googleMapsApiKey;
 
     @RequestMapping("/")
-    public String mainPage(Authentication authentication, Model model) {
+    public String mainPage(Model model, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
             model.addAttribute("vacMess", "Доступные вакансии:");
-            model.addAttribute("vacancies", vacancies);
+            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
                     Long id = ((User) authentication.getPrincipal()).getId();
-                    SeekerProfile profile = seekerUserService.getById(id).getProfile();
+                    SeekerProfile profile = seekerProfileService.getById(id);
                     model.addAttribute("favoriteVacancies", profile.getFavoriteVacancy());
                     model.addAttribute("seekerProfileId", profile.getId());
+                    model.addAttribute("googleMapsApiKey", googleMapsApiKey);
                     model.addAttribute("seekerAuthority", seekerUserService.getById(id).getAuthority());
-
-                    Set<Tag> tags = ((SeekerUser) authentication.getPrincipal()).getProfile().getTags();
-                    Set<Vacancy> vacancies = vacancyService.getByTags(tags, 10);
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
-                    model.addAttribute("vacancies", vacancies);
+                    model.addAttribute("seekerAuthority", seekerUserService.getById(id).getAuthority());
                 } catch (NullPointerException e) {
-                    List<Vacancy> vacancies = vacancyService.getAllWithLimit(10);
+                    model.addAttribute("googleMapsApiKey", googleMapsApiKey);
                     model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
-                    model.addAttribute("vacancies", vacancies);
                 }
+            } else {
+                model.addAttribute("googleMapsApiKey", googleMapsApiKey);
             }
 
             if (authentication.getAuthorities().contains(roleEmployer)) {

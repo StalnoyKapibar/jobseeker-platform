@@ -5,14 +5,8 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
-import com.jm.jobseekerplatform.model.profiles.AdminProfile;
-import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
-import com.jm.jobseekerplatform.model.profiles.Profile;
-import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
-import com.jm.jobseekerplatform.model.users.AdminUser;
-import com.jm.jobseekerplatform.model.users.EmployerUser;
-import com.jm.jobseekerplatform.model.users.SeekerUser;
-import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.model.profiles.*;
+import com.jm.jobseekerplatform.model.users.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
@@ -84,6 +78,12 @@ public class InitData {
     private PointService pointService;
 
     @Autowired
+    private CityService cityService;
+
+    @Autowired
+    private CityDistanceService cityDistanceService;
+
+    @Autowired
     private NewsService newsService;
 
     private Faker faker = new Faker(new Locale("ru"));
@@ -91,6 +91,7 @@ public class InitData {
     private Random rnd = new Random();
 
     public void initData() {
+        initCities();
         initTags();
         initUserRoles();
         initPortfolio();
@@ -309,21 +310,12 @@ public class InitData {
                 "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!";
 
         Vacancy vacancy;
-        String city;
-        Float latitudeY = 0f;
-        Float longitudeX = 0f;
+        Point point;
+        City city;
+        List<City> cities = cityService.getAll();
         for (int i = 0; i < 30; i++) {
-            city = Math.random() < 0.5 ? "Москва" : "Санкт-Петербург";
-            if (city.equals("Санкт-Петербург")) {
-                latitudeY = (float) (0.16 * Math.random()) + 59.88f;
-                longitudeX = (float) (0.19 * Math.random()) + 30.24f;
-            }
-            if (city.equals("Москва")) {
-                latitudeY = (float) (0.2 * Math.random()) + 55.66f;
-                longitudeX = (float) (0.32 * Math.random()) + 37.45f;
-            }
-
-            Point point = new Point(latitudeY, longitudeX);
+            city = cities.get(rnd.nextInt(cities.size() ));
+            point = new Point(city.getCenterPoint().getLatitudeY(), city.getCenterPoint().getLongitudeX());
             pointService.add(point);
 
             vacancy = new Vacancy(
@@ -377,6 +369,7 @@ public class InitData {
         employerProfile = new EmployerProfile("Рога и копыта", "www.roga.ru", description, imageService.resizeLogoEmployer(image));
         employerProfile.setState(State.ACCESS);
         employerProfileService.add(employerProfile);
+
         try {
             URL url = new URL("https://0oq.ru/reshebnik-onlajn/ru.onlinemschool.com/pictures/vector/points-to-vector.png");
             image = ImageIO.read(url);
@@ -464,8 +457,9 @@ public class InitData {
 
     private Set<Tag> randomTags(Long position) {
         Set<Tag> tags = new HashSet<>();
-        for (Long i = position; i < position + 5; i++) {
-            tags.add(tagService.getById(i + 1));
+        int countAllTags = tagService.getAll().size();
+        for (Long i = position; i < position + 5L; i++) {
+            tags.add(tagService.getById(rnd.nextInt(countAllTags) + 1L));
         }
         return tags;
     }
@@ -513,5 +507,14 @@ public class InitData {
     private EmployerProfile getRandomEmployerProfile() {
         List<EmployerProfile> all = employerProfileService.getAll();
         return all.get(rnd.nextInt(all.size()));
+    }
+
+    private void initCities() {
+        cityDistanceService.initCityDistances(new City(new Point(55.752030F, 37.633685F), "Москва"));
+        cityDistanceService.initCityDistances(new City(new Point(59.943122F, 30.276844F), "Санкт-Петербург"));
+        cityDistanceService.initCityDistances(new City(new Point(57.650630F, 39.860908F), "Ярославль"));
+        cityDistanceService.initCityDistances(new City(new Point(55.825853F, 49.117538F), "Казань"));
+        cityDistanceService.initCityDistances(new City(new Point(56.825312F, 60.608923F), "Екатеринбург"));
+        cityDistanceService.initCityDistances(new City(new Point(56.299846F, 43.904104F), "Нижний Новгород"));
     }
 }

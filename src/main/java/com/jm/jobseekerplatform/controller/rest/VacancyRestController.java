@@ -2,11 +2,14 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -28,6 +31,8 @@ public class VacancyRestController {
 
     @Autowired
     private EmployerProfileService employerProfileService;
+
+    private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
     @Autowired
     private TagService tagService;
@@ -87,5 +92,19 @@ public class VacancyRestController {
         List<Vacancy> list = vacancyService.findAllByTags(searchParam,PageRequest.of(pageCount, 10,
                 new Sort(Sort.Direction.ASC, "id"))).getContent();
         return new ResponseEntity<>(new HashSet<>(list), HttpStatus.OK);
+    }
+
+    @RequestMapping("/city/page/{page}")
+    public Page<Vacancy> getPageOfVacancies(@RequestBody Point point, @RequestParam("city") String city, @PathVariable("page") int page, Authentication authentication) {
+        int limit = 10;
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return vacancyService.findVacanciesByPoint(city, point, limit, page);
+        } else {
+            if (authentication.getAuthorities().contains(roleSeeker)) {
+                Set<Tag> tags = ((SeekerProfile)((User)authentication.getPrincipal()).getProfile()).getTags();
+                return vacancyService.findVacanciesByTagsAndByPoint(city, point, tags, limit, page);
+            }
+        }
+        return vacancyService.findVacanciesByPoint(city, point, limit, page);
     }
 }

@@ -17,17 +17,18 @@ public class TagRestController {
     private TagService tagService;
 
     @Autowired
-    private VacancyService vacancyService;
-
-    @Autowired
     private SeekerProfileService seekerProfileService;
+
+    @RequestMapping("/seeker/{seeker_id}")
+    public Set<Tag> getSeekerTags(@PathVariable("seeker_id") Long seekerId) {
+        return seekerProfileService.getById(seekerId).getTags();
+    }
 
     @RequestMapping("/")
     public List<Tag> getVerified() {
         List<Tag> tags = tagService.getVerified();
         return tags;
     }
-
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<List<Tag>> getSearchTags(@RequestBody String param) {

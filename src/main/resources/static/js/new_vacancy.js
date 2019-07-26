@@ -3,7 +3,6 @@ let flagTag = false;
 let tagId = 0;
 
 let headline_check = false;
-let city_check = false;
 let address_check = false;
 let remote_check = false;
 let salary_min_check = true;
@@ -20,18 +19,7 @@ $(document).ready(function () {
             } else {
                 headline_check = false;
             }
-        }
-    );
-    bootstrapValidate('#v_city', 'regex:^[A-Za-z0-9А-Яа-я ()\\-]{3,100}$:Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов',
-        function (isValid) {
-            if (isValid) {
-                $('#v_city').addClass('is-valid');
-                city_check = true;
-            } else {
-                city_check = false;
-            }
-        }
-    );
+        });
 
     bootstrapValidate('#v_address', 'required:', function (isValid) {
         if (isValid) {
@@ -130,8 +118,9 @@ function tags_search() {
 }
 
 function validateAndPreview() {
-    let isValid = headline_check&&city_check&&address_check&&remote_check
+    let isValid = headline_check&&address_check&&remote_check
         &&salary_min_check&&salary_max_check&&shrt_desc_check&&desc_check;
+
     if ($("#v_tagsWell").children().length < 2) {
         $("#v_form_group_tags").attr("class", "form-group has-feedback has-error");
         $("#v_tagsWell").css("border-color", "#a94442");
@@ -144,7 +133,6 @@ function validateAndPreview() {
     }
     if (isValid) {
         let headline = $("#v_headline").val();
-        let city = $("#v_city").val();
         let remote = $("#v_remote").val() == "true";
         let shortDescription = $("#v_shortDescription").val();
         let description = $('#v_description').summernote('code');
@@ -156,6 +144,12 @@ function validateAndPreview() {
         });
         let loc = getCoordsByAddress($("#v_address").val());
         let point = {'latitudeY': loc.lat, 'longitudeX': loc.lng};
+        let city = {
+            'id' : null,
+            'name' : getCityByCoords(loc.lat, loc.lng),
+            'centerPoint' : point,
+            'cityDistances' : null
+        };
 
         vacancy = {
             'id': null,
@@ -173,7 +167,7 @@ function validateAndPreview() {
         };
 
         $("#VMHeadline").text(vacancy.headline);
-        $("#VMCity").text(vacancy.city);
+        $("#VMCity").text(vacancy.city.name);
         $("#VMShortDescription").text(vacancy.shortDescription);
         $("#VMDescription").html(description);
 
