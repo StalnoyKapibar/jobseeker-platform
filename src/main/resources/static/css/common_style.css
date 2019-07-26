@@ -63,7 +63,7 @@ li {
     display: block;
 }
 
-.sidebar a :hover {
+.sidebar li :hover {
     color: #4177A3;
 }
 
@@ -108,7 +108,14 @@ li {
     cursor: pointer;
 }
 
-.btnOnVacancyPage{
+.pull-right-subscriptions {
+    position: absolute;
+    left: 55%;
+    top: 25%;
+    cursor: pointer;
+}
+
+.btnOnVacancyPage {
     border-radius: 20px;
 }
 
@@ -158,9 +165,32 @@ li {
     padding-top: 0;
 }
 
-.list-group-item:hover {
+.clearfix:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 1;
+}
+
+.btnNews {
+    position: absolute;
+    left: 75%;
+    bottom: 25%;
+    top: 30%;
+}
+
+#buttons button {
+    width: 200px;
+    margin-top: 5px;
+}
+
+#btnSubscribe i {
+    margin-left: 2%;
+}
+
+.seekerNewsDate {
+    position: absolute;
+    top: 5%;
+    left: 80%;
+    color: #777777;
 }
 
 /*.form-search {
