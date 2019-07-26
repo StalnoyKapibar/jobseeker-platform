@@ -90,16 +90,23 @@
             <artifactId>aspectjtools</artifactId>
             <version>1.9.1</version>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.vaadin.external.google</groupId>-->
+            <!--<artifactId>android-json</artifactId>-->
+            <!--<version>0.0.20131108.vaadin1</version>-->
+            <!--<scope>compile</scope>-->
+        <!--</dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-jcache -->
         <dependency>
-            <groupId>com.vaadin.external.google</groupId>
-            <artifactId>android-json</artifactId>
-            <version>0.0.20131108.vaadin1</version>
-            <scope>compile</scope>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jcache</artifactId>
+            <version>5.4.3.Final</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.ehcache/ehcache -->
         <dependency>
-            <groupId>com.google.maps</groupId>
-            <artifactId>google-maps-services</artifactId>
-            <version>0.9.3</version>
+            <groupId>org.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>3.8.0</version>
         </dependency>
     </dependencies>
 
