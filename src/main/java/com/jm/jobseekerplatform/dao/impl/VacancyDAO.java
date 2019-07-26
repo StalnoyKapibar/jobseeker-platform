@@ -19,10 +19,8 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
 
     //language=SQL
     private final static String query_for_find_vacancies_sorted_by_city =
-            "select * from vacancies inner join (select result3.distance, city.id as sort_id, city.name from (select distances.distance, distances.city_id from " +
-            "(select city.name, dist.city_distances_id from city inner join city_city_distances as dist where city.id=dist.city_id and city.name=:city) as result2 " +
-            "inner join distances on result2.city_distances_id=distances.id) as result3 inner join city on result3.city_id=city.id order by result3.distance) as sort_dist " +
-            "on vacancies.city_id=sort_dist.sort_id where vacancies.state='ACCESS' order by sort_dist.distance";
+            "select * from vacancies as v inner join (select d.distance, d.to_city_id from city_distances as d "+
+            "where d.from_city_id=(select city.id from city where city.name=:city)) as c on v.city_id=c.to_city_id where v.state='ACCESS' order by(c.distance)";
 
     //language=SQL
     private final static String query_for_find_vacancies_by_tags_and_sorted_by_city =
@@ -79,16 +77,13 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         if (page != 0) {
             --page;
         }
-
         Query query = entityManager.unwrap(Session.class).createSQLQuery(query_for_find_vacancies_sorted_by_city)
-                .addEntity(Vacancy.class)
-                .setParameter("city", city);
-
-        int totalElements = query.getResultList().size();
+                .addEntity(Vacancy.class).setParameter("city", city).setCacheable(true);
+        long totalElements = (Long)entityManager.createQuery("select count(v) from Vacancy v where v.state='ACCESS'").getSingleResult();
         int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
         query.setFirstResult(page * limit).setMaxResults(limit);
-
-        return new VacancyPageDTO(query.getResultList(), totalPages);
+        List<Vacancy> vacancies = query.getResultList();
+        return new VacancyPageDTO(vacancies, totalPages);
 
     }
 

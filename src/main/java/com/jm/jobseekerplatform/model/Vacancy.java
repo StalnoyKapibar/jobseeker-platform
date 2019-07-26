@@ -5,15 +5,19 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "vacancies")
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class Vacancy implements Serializable, CreatedByEmployerProfile {
 
     @Id
@@ -28,6 +32,7 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     private String headline;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @Embedded
     private City city;
 
     @Column(name = "remote", nullable = false)
@@ -48,7 +53,7 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Tag> tags;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     private Point coordinates;
 
     @Column(name = "state", nullable = false)
