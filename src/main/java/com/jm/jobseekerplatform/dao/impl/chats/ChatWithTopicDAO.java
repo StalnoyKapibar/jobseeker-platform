@@ -26,6 +26,15 @@ import javax.persistence.NoResultException;
 @Repository
 public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
 
+    /**
+     * Методы <code>getByTopicIdCreatorProfileIdTopicType</code>, <code>getByTopicIdCreatorProfileIdChatType</code>
+     * и <code>getByTopicIdCreatorProfileId</code> дублируют функционал, однако используют разгную реализацию.
+     *
+     * В проекте существуют разные реализации для демонстрации разных подходов.
+     *
+     * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdChatType}
+     * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicAbstractDAO#getByTopicIdCreatorProfileId}
+     */
     public <T extends CreatedByProfile> ChatWithTopic<T> getByTopicIdCreatorProfileIdTopicType(Long topicId, Long creatorProfileId, Class<T> topicClass) {
 
         ChatWithTopic<T> chat;
@@ -45,7 +54,15 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
         return chat;
     }
 
-
+    /**
+     * Методы <code>getByTopicIdCreatorProfileIdTopicType</code>, <code>getByTopicIdCreatorProfileIdChatType</code>
+     * и <code>getByTopicIdCreatorProfileId</code> дублируют функционал, однако используют разгную реализацию.
+     *
+     * В проекте существуют разные реализации для демонстрации разных подходов.
+     *
+     * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdTopicType}
+     * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicAbstractDAO#getByTopicIdCreatorProfileId}
+     */
     public <T extends ChatWithTopic> T getByTopicIdCreatorProfileIdChatType(Long topicId, Long creatorProfileId, Class<T> ChatClass) {
 
         T chat;

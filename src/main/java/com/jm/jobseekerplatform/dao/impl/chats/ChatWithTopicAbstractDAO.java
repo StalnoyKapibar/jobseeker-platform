@@ -27,6 +27,16 @@ package com.jm.jobseekerplatform.dao.impl.chats;
 @Repository
 public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends AbstractDAO<T> {
 
+
+    /**
+     * Методы <code>getByTopicIdCreatorProfileIdTopicType</code>, <code>getByTopicIdCreatorProfileIdChatType</code>
+     * и <code>getByTopicIdCreatorProfileId</code> дублируют функционал, однако используют разгную реализацию.
+     *
+     * В проекте существуют разные реализации для демонстрации разных подходов.
+     *
+     * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdTopicType}
+     * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdChatType}
+     */
     public T getByTopicIdCreatorProfileId(Long topicId, Long creatorProfileId) {
 
         T chat;
