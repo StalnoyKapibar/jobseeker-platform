@@ -1,13 +1,17 @@
 package com.jm.jobseekerplatform.controller;
 
-import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.UserRole;
+import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.VerificationToken;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
-import com.jm.jobseekerplatform.service.impl.*;
-import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
+import com.jm.jobseekerplatform.service.impl.VerificationTokenService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
@@ -22,8 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.persistence.NoResultException;
 import javax.annotation.security.RolesAllowed;
+import javax.persistence.NoResultException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Set;
@@ -48,6 +52,7 @@ public class MainController {
     private EmployerUserService employerUserService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
+    private UserRole roleEmployer = new UserRole("ROLE_EMPLOYER");
 
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
@@ -64,7 +69,7 @@ public class MainController {
                     Long id = ((User) authentication.getPrincipal()).getId();
                     SeekerProfile profile = seekerUserService.getById(id).getProfile();
                     model.addAttribute("favoriteVacancies", profile.getFavoriteVacancy());
-                    model.addAttribute("profileId", profile.getId());
+                    model.addAttribute("seekerProfileId", profile.getId());
                     model.addAttribute("seekerAuthority", seekerUserService.getById(id).getAuthority());
 
                     Set<Tag> tags = ((SeekerUser) authentication.getPrincipal()).getProfile().getTags();
@@ -76,6 +81,12 @@ public class MainController {
                     model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
                     model.addAttribute("vacancies", vacancies);
                 }
+            }
+
+            if (authentication.getAuthorities().contains(roleEmployer)) {
+                Long id = ((User) authentication.getPrincipal()).getId();
+                EmployerProfile profile = employerUserService.getById(id).getProfile();
+                model.addAttribute("employerProfileId", profile.getId());
             }
         }
         return "index";
@@ -132,9 +143,9 @@ public class MainController {
     }
 
     @RequestMapping("/chat/{chatId}")
-    public String getChatById(@PathVariable("chatId") String chatId,  Authentication authentication, Model model) {
+    public String getChatById(@PathVariable("chatId") String chatId, Authentication authentication, Model model) {
 
-        User user = (User)authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
 
         model.addAttribute("userId", user.getId());
         model.addAttribute("chatId", chatId);
@@ -160,19 +171,29 @@ public class MainController {
         return "new_vacancy";
     }
 
+    @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
+    @RequestMapping(value = "/add_news", method = RequestMethod.GET)
+    public String addNewsPage(Model model, Authentication authentication) {
+        model.addAttribute("employerProfileId", ((User) authentication.getPrincipal()).getId());
+        return "add_news";
+    }
+
     @RequestMapping(value = "/vacancy/{vacancyId}", method = RequestMethod.GET)
     public String viewVacancy(@PathVariable Long vacancyId, Model model, Authentication authentication) {
 
         Vacancy vacancy = vacancyService.getById(vacancyId);
         if (authentication != null) {
             boolean isContain;
+            boolean isSubscribe;
             Long id = ((User) authentication.getPrincipal()).getId();
             Profile profile = userService.getById(id).getProfile();
             if (profile instanceof SeekerProfile) {
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
+                isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(vacancy.getEmployerProfile());
                 model.addAttribute("isContain", isContain);
+                model.addAttribute("isSubscribe", isSubscribe);
+                model.addAttribute("seekerProfileId", profile.getId());
             }
-            model.addAttribute("profileId", profile.getId());
         }
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("vacancyFromServer", vacancy);
