@@ -11,7 +11,7 @@ import java.util.List;
 public abstract class AbstractService <T extends Serializable> {
 
     @Autowired
-    private AbstractDAO<T> abstractDAO;
+    protected AbstractDAO<T> abstractDAO;
 
     public void add(T entity) {
         abstractDAO.add(entity);

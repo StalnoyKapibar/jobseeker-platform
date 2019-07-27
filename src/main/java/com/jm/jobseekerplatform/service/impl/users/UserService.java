@@ -8,15 +8,14 @@ import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
 import com.jm.jobseekerplatform.service.impl.MailService;
-import com.jm.jobseekerplatform.service.impl.PasswordResetTokenService;
+import com.jm.jobseekerplatform.service.impl.tokens.PasswordResetTokenService;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
-import com.jm.jobseekerplatform.service.impl.VerificationTokenService;
+import com.jm.jobseekerplatform.service.impl.tokens.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
 import java.time.LocalDateTime;
 
 import java.util.UUID;
@@ -82,7 +81,7 @@ public class UserService extends AbstractService<User> {
         User registeredUser = findByEmail(userEmail);
 
         String token = UUID.randomUUID().toString();
-        verificationTokenService.createVerificationToken(token, registeredUser);
+        verificationTokenService.createToken(token, registeredUser);
         mailService.sendVerificationEmail(userEmail, token);
     }
 
@@ -90,7 +89,7 @@ public class UserService extends AbstractService<User> {
         User recoveryUser = findByEmail(email);
 
         String token = UUID.randomUUID().toString();
-        passwordResetTokenService.createPasswordResetToken(token, recoveryUser);
+        passwordResetTokenService.createToken(token, recoveryUser);
         mailService.sendRecoveryPassEmail(email, token);
     }
 
