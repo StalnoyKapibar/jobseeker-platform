@@ -82,9 +82,9 @@ public class MailService {
     }
 
     // востановление пароля
-    public void sendRecoveryPassEmail(String address) {
+    public void sendRecoveryPassEmail(String address, String token) {
         String subject = "Вы сделали запрос на востановление пароля";
-        String href = "http://localhost:" + port + "/new_password/" + address;
+        String href = "http://localhost:" + port + "/password_reset/" + token;
         final Context ctx = new Context();
         ctx.setVariable("your_login", address);
         ctx.setVariable("href", href);

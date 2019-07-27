@@ -43,7 +43,7 @@ function validityPassAndSend() {
 
 function sendPass() {
     $.ajax({
-        url: '/api/users/new_password/' +$('#user_email').val() +'/' + $('#user_password').val(),
+        url: '/api/users/password_reset/' +$('#user_email').val() +'/' + $('#user_password').val(),
         success: function () {
             $('#success_message').slideDown({opacity:"show"},"slow");
         },

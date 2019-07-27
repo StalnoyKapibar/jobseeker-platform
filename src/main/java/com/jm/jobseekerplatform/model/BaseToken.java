@@ -7,27 +7,25 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "password_reset_tokens")
-public class PasswordResetToken implements Serializable {
-
-    private static final int EXPIRATION = 60 *  24;
+public abstract class BaseToken implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false , unique = true)
+    @Column(name = "token", nullable = false, unique = true)
     private String token;
 
     @OneToOne(fetch = FetchType.EAGER)
     private User user;
 
+    @Column(name = "expiry_date", nullable = false)
     private Date expiryDate;
 
-    public PasswordResetToken() {
+    public BaseToken() {
     }
 
-    public PasswordResetToken(String token, User user, Date expiryDate) {
+    public BaseToken(String token, User user, Date expiryDate) {
         this.token = token;
         this.user = user;
         this.expiryDate = expiryDate;

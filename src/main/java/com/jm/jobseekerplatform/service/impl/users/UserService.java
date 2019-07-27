@@ -8,12 +8,15 @@ import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
 import com.jm.jobseekerplatform.service.impl.MailService;
+import com.jm.jobseekerplatform.service.impl.PasswordResetTokenService;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.NoResultException;
 import java.time.LocalDateTime;
 
 import java.util.UUID;
@@ -35,6 +38,9 @@ public class UserService extends AbstractService<User> {
 
     @Autowired
     private VerificationTokenService verificationTokenService;
+
+    @Autowired
+    private PasswordResetTokenService passwordResetTokenService;
 
     @Autowired
     private MailService mailService;
@@ -80,6 +86,31 @@ public class UserService extends AbstractService<User> {
         mailService.sendVerificationEmail(userEmail, token);
     }
 
+    public void recoveryPassRequest(String email){
+        User recoveryUser = findByEmail(email);
+
+        String token = UUID.randomUUID().toString();
+        passwordResetTokenService.createPasswordResetToken(token, recoveryUser);
+        mailService.sendRecoveryPassEmail(email, token);
+    }
+
+    public void passwordReset(String token,char[] password){
+//        try {
+//            PasswordResetToken passwordResetToken= passwordResetTokenService.findByToken(token);
+//            boolean exists = passwordResetTokenService.tokenIsNonExpired(passwordResetToken);
+//            if (exists) {
+//                String email = passwordResetToken.getUser().getEmail();
+//                passwordResetTokenService.completeRecovery(passwordResetToken);
+//
+//            }
+//        } catch (NoResultException e) {
+//            e.printStackTrace();
+//        }
+        User newPassUser = findByEmail(token);
+        char [] newPass = encodePassword(password);
+        newPassUser.setPassword(newPass);
+        update(newPassUser);
+    }
     public void addNewUserByAdmin(User user, boolean check) {
         String userEmail = user.getEmail();
         char[] userPass = encodePassword(user.getPasswordChar());

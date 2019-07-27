@@ -36,6 +36,9 @@ public class MainController {
     private VacancyService vacancyService;
 
     @Autowired
+    private PasswordResetTokenService passwordResetTokenService;
+
+    @Autowired
     private VerificationTokenService verificationTokenService;
 
     @Autowired
@@ -187,10 +190,22 @@ public class MainController {
         return "recovery";
     }
 
-    @RequestMapping(value = "/new_password/{email}", method = RequestMethod.GET)
-    public String newPassPage(@PathVariable String email,Model model){
-        model.addAttribute("email",email);
-        return "new_password";
+    @RequestMapping(value = "/password_reset/{token}", method = RequestMethod.GET)
+    public String newPassPage(@PathVariable String token,Model model){
+        try {
+            PasswordResetToken passwordResetToken= passwordResetTokenService.findByToken(token);
+            boolean exists = passwordResetTokenService.tokenIsNonExpired(passwordResetToken);
+            if (exists) {
+                String email = passwordResetToken.getUser().getEmail();
+                model.addAttribute("email", email);
+                model.addAttribute("token", token);
+                passwordResetTokenService.completeRecovery(passwordResetToken);
+            }
+        } catch (NoResultException e) {
+            e.printStackTrace();
+        } finally {
+            return "password_reset";
+        }
     }
 
     @RequestMapping(value = "/ex", method = RequestMethod.GET)

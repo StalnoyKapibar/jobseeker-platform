@@ -42,8 +42,7 @@ public class PasswordResetTokenService extends AbstractService<PasswordResetToke
         return isNonExpired;
     }
 
-    public void completeRegistration(PasswordResetToken token) {
-        token.getUser().setConfirm(true);
+    public void completeRecovery(PasswordResetToken token) {
         dao.delete(token);
     }
 }

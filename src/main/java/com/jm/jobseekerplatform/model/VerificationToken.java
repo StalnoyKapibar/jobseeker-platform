@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "verification_tokens")
-public class VerificationToken implements Serializable {
+public class VerificationToken extends BaseToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

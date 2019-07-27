@@ -56,14 +56,11 @@ public class UserRestController {
     //востановление пароля
     @RequestMapping(method = RequestMethod.GET, value = "/recovery/{email}")
     public void inviteFriend(@PathVariable String email) {
-        mailService.sendRecoveryPassEmail(email);
+        userService.recoveryPassRequest(email);
     }
     //востановление пароля
-    @RequestMapping(method = RequestMethod.GET, value = "/new_password/{email}/{password}")
-    public void newPassword(@PathVariable String email, @PathVariable char[] password) {
-        User newPassUser = userService.findByEmail(email);
-        char [] newPass = userService.encodePassword(password);
-        newPassUser.setPassword(newPass);
-        userService.update(newPassUser);
+    @RequestMapping(method = RequestMethod.GET, value = "/password_reset/{token}/{password}")
+    public void newPassword(@PathVariable String token, @PathVariable char[] password) {
+        userService.passwordReset(token,password);
     }
 }
