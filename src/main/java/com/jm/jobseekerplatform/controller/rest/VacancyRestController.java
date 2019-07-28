@@ -110,6 +110,7 @@ public class VacancyRestController {
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 Set<Tag> tags = ((SeekerProfile) ((User) authentication.getPrincipal()).getProfile()).getTags();
+                /*не учитывает параметр city*/
                 return vacancyService.findVacanciesByTagsAndByPoint(city, point, tags, limit, page);
             }
         }
