@@ -342,7 +342,9 @@ function getCurrentLocation(callback) {
         getCityByCoords(lat, lng);
         callback(point);
     }, function () {
-        throw new Error("Your browser does not support geolocation.");
+        point = {'latitudeY': 0, 'longitudeX': 0};
+        getAllVacanciesByPoint(point);
+        // throw new Error("Your browser does not support geolocation.");
     });
 }
 
@@ -364,6 +366,8 @@ function getCityByCoords(lat, lng) {
 }
 
 function getAllVacanciesByPoint(point) {
+
+
     getSortedVac(point);
     $(window).scroll(function () {
         if ($(document).height() - $(window).height() === $(window).scrollTop()) {
