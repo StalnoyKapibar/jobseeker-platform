@@ -32,7 +32,9 @@ public class User<T extends Profile> implements Serializable, UserDetails {
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
-    @OneToOne(fetch = FetchType.EAGER, targetEntity=Profile.class)
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = CascadeType.MERGE,
+            targetEntity=Profile.class)
     private T profile;
 
     @ManyToOne(fetch = FetchType.EAGER)
