@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
@@ -164,18 +165,26 @@ public class MainController {
 
     @RequestMapping(value = "/vacancy/{vacancyId}", method = RequestMethod.GET)
     public String viewVacancy(@PathVariable Long vacancyId, Model model, Authentication authentication) {
-
+        boolean isOwner = false;
         Vacancy vacancy = vacancyService.getById(vacancyId);
         if (authentication != null) {
             boolean isContain;
+            boolean hasResponded;
             Long id = ((User) authentication.getPrincipal()).getId();
             Profile profile = userService.getById(id).getProfile();
             if (profile instanceof SeekerProfile) {
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
+                hasResponded = ((SeekerProfile) profile).getMeetings()
+                        .stream().filter(meeting -> meeting.getSeekerProfile().getId().equals(id)).findFirst().isPresent();
                 model.addAttribute("isContain", isContain);
+                model.addAttribute("hasResponded", hasResponded);
+            }
+            if (id.equals(vacancy.getEmployerProfile().getId())) {
+                isOwner=true;
             }
             model.addAttribute("profileId", profile.getId());
         }
+        model.addAttribute("isOwner", isOwner);
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("vacancyFromServer", vacancy);
         model.addAttribute("EmployerProfileFromServer", vacancy.getEmployerProfile());

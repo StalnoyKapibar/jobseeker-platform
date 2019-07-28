@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.model.profiles;
 
+import com.jm.jobseekerplatform.model.Meeting;
 import com.jm.jobseekerplatform.model.Portfolio;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
@@ -36,6 +37,11 @@ public class SeekerProfile extends Profile implements Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Vacancy> favoriteVacancy;
+
+    @OneToMany(cascade = CascadeType.PERSIST,
+            fetch = FetchType.EAGER,
+            mappedBy = "seekerProfile")
+    private Set<Meeting> meetings;
 
     public SeekerProfile() {
     }
@@ -115,4 +121,13 @@ public class SeekerProfile extends Profile implements Serializable {
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
+
+    public Set<Meeting> getMeetings() {
+        return meetings;
+    }
+
+    public void setMeetings(Set<Meeting> meetings) {
+        this.meetings = meetings;
+    }
+
 }

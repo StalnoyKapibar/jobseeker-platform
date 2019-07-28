@@ -143,7 +143,7 @@ public class AdminController {
     @RequestMapping(value = "/admin/tags", method = RequestMethod.GET)
     public String UsersViewPage(Model model) {
 
-        List<Tag> tags = tagService.getAll();
+        List<Tag> tags = tagService.getSortedAll();
         model.addAttribute("tags", tags);
 
         return "admin/admin_tags";

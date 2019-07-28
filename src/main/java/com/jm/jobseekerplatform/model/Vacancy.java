@@ -58,6 +58,11 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     @Column(name = "expiry_block")
     private Date expiryBlock;
 
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            mappedBy = "vacancy")
+    private Set<Meeting> meetings;
+
     public Vacancy() {
     }
 
@@ -189,6 +194,14 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
         this.coordinates = coordinates;
     }
 
+    public Set<Meeting> getMeetings() {
+        return meetings;
+    }
+
+    public void setMeetings(Set<Meeting> meetings) {
+        this.meetings = meetings;
+    }
+
     @Override
     public String toString() {
         return "Vacancy{" +
@@ -205,6 +218,7 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
                 ", coordinates=" + coordinates +
                 ", state=" + state +
                 ", expiryBlock=" + expiryBlock +
+                ", meetings=" + meetings +
                 '}';
     }
 }

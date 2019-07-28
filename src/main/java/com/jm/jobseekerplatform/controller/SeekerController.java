@@ -1,9 +1,14 @@
 package com.jm.jobseekerplatform.controller;
 
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,11 +22,22 @@ import java.util.Set;
 public class SeekerController {
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private SeekerProfileService seekerProfileService;
 
     @RequestMapping("/{seekerProfileId}")
-    public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
+    public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        boolean isOwner = false;
+        if (authentication != null) {
+            Long id = ((User) authentication.getPrincipal()).getId();
+            if(seekerProfileId.equals(id)){
+                isOwner=true;
+            }
+        }
+        model.addAttribute("isOwner", isOwner);
         model.addAttribute("seekerProfile", seekerProfile);
         model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerProfile.getPhoto()));
         return "seeker";

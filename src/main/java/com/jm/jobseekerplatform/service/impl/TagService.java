@@ -82,6 +82,12 @@ public class TagService extends AbstractService<Tag> {
         return dao.getVerified(verified);
     }
 
+    public List<Tag> getSortedAll(){
+        List<Tag> all = getUnverified();
+        all.addAll(getVerified());
+        return all;
+    }
+
     @Override
     public void deleteById(Long id) {
         dao.deleteById(id);

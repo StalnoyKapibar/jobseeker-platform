@@ -9,6 +9,8 @@
     <title>Вакансия</title>
     <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <script type="text/javascript" src="/js/seeker.js"></script>
+    <script type="text/javascript" src="/js/responding.js"></script>
+    <script type="text/javascript" src="/js/date_status_format.js"></script>
 </head>
 
 <body>
@@ -71,10 +73,10 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-5 col-sm-offset-5">
+            <div>
                 <div sec:authorize="hasRole('ROLE_SEEKER')" id="buttons" style="padding: 15px;">
-                    <button type="button" class="btn btn-success"
-                            onclick="alert('кнопка не работает')" style="width: 150px;">Откликнуться
+                    <button th:if="not ${hasResponded}" id="respond" type="button" class="btn btn-success"
+                            th:onclick="'sendRespond(' + ${vacancyFromServer.id} + ',' + ${profileId} + ')'" style="width: 150px;">Откликнуться
                         <i class="fas fa-envelope"></i>
                     </button>
                     <button th:if="${isContain}" id="outFavorite" class="btn btn-primary"
@@ -86,6 +88,66 @@
                             th:onclick="'inFavorite(' + ${vacancyFromServer.id} + ',' + ${profileId} + ')'">
                         В избранное
                     </button>
+                </div>
+                <div th:if="${isOwner}" id="table" style="padding: 15px;">
+                    <table class="table table-striped">
+                        <thead class="" style="border-width: 0px;">
+                        <h3>Откликнулись</h3>
+                        <tr style="font-weight: bold; ">
+                            <th scope="col">№</th>
+                            <th scope="col">Соискатель</th>
+                            <th scope="col">Профиль</th>
+                            <th scope="col">Статус</th>
+                            <th scope="col">Дата встречи</th>
+                            <th scope="col">Управление</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${!vacancyFromServer.meetings.isEmpty()}" id="tableRows" th:each="meeting,mCount: ${vacancyFromServer.meetings}" style="font-weight: normal;">
+                            <td th:text="${mCount.count}"></td>
+                            <td th:text="${meeting.seekerProfile.name} + ' ' + ${meeting.seekerProfile.surname}"></td>
+                            <td><a th:href="@{'/seeker/' +  ${meeting.seekerProfile.id}}">подробнее</a></td>
+                            <td class="tableStatus" th:text="${meeting.status}"></td>
+                            <td class="tableDate" th:text="${meeting.date!=null ? meeting.date : 'N/A'}"></td>
+                            <td>
+                                <button th:if="${meeting.status==meeting.status.NOT_CONFIRMED}" th:onclick="'editMeeting(' + ${meeting.id} + ')'"
+                                        type="button" class="btn btn-dark">Назначить дату</button>
+                                <button th:if="${meeting.status==meeting.status.SCHEDUALED}" type="button" disabled="disabled"
+                                        class="btn btn-warning disabled">Ожидание подверждения</button>
+                                <button th:if="${meeting.status==meeting.status.CONFIRMED_BY_USER}"
+                                        th:onclick="'updateMeeting(' + ${meeting.id} + ')'" type="button"
+                                        class="btn btn-dark">Подтвердить встречу</button>
+                                <button th:if="${meeting.status==meeting.status.CONFIRMED}" type="button" disabled="disabled"
+                                        class="btn btn-success disabled">Встреча назначена</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div  th:if="${vacancyFromServer.meetings.isEmpty()}">
+                        <h5>список заявок пуст</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meeting model -->
+    <div id="meetingModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Управление встречей</h2>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input id="dateTimeLocal" type="datetime-local">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="sendMeetingEdition()">
+                        Сохранить
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
                 </div>
             </div>
         </div>
@@ -112,3 +174,4 @@
 </div>
 
 </body>
+</html>
