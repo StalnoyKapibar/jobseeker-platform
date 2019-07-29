@@ -4,18 +4,12 @@ import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.service.impl.ImageService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.List;
 
@@ -30,8 +24,6 @@ public class EmployerProfileRestController {
     @Autowired
     private ImageService imageService;
 
-    @Value("${path.img.employer.avatar}")
-    private String avaFolderPath;
 
     @RequestMapping("/")
     public List<EmployerProfile> getAllEmployerProfiles() {
@@ -78,36 +70,12 @@ public class EmployerProfileRestController {
 
     @RequestMapping(value = "/update_image", method = RequestMethod.POST)
     public String updateImage(@RequestParam(value = "id") long id,
-                              @RequestParam(value = "image") MultipartFile img) {
+                              @RequestParam(value = "image") MultipartFile img) throws IOException {
         EmployerProfile profile = employerProfileService.getById(id);
         if (img != null) {
-            try {
-                saveUploadedFiles(img);
-                BufferedImage image = null;
-                try {
-                    image = ImageIO.read(new File(avaFolderPath + img.getOriginalFilename()));
-                    profile.setLogo(imageService.resizePhotoSeeker(image));
-                    employerProfileService.update(profile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.getStackTrace();
-            }
+            profile.setLogo(imageService.resizePhotoSeeker(ImageIO.read(new ByteArrayInputStream(img.getBytes()))));
+            employerProfileService.update(profile);
         }
         return Base64.getEncoder().encodeToString(profile.getLogo());
     }
-
-    private void saveUploadedFiles(MultipartFile file) throws IOException {
-        byte[] bytes = file.getBytes();
-        Path path = Paths.get(avaFolderPath + file.getOriginalFilename());
-        Files.write(path, bytes);
-    }
-
-    private long getCurrentUserId() {
-        EmployerProfile user = (EmployerProfile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return user.getId();
-    }
-
-
 }

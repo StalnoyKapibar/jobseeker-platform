@@ -80,9 +80,7 @@ public class UserService extends AbstractService<User> {
         String userEmail = user.getEmail();
         char[] userPass = encodePassword(user.getPasswordChar());
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
-
         User userNew = null;
-
         if (userRole.equals(roleSeeker)) {
             SeekerProfile seekerProfile = (SeekerProfile) getDefaultProfile(userRole.getAuthority());
             profileService.add(seekerProfile);

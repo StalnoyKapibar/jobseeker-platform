@@ -47,6 +47,5 @@ public abstract class AbstractService<T extends Serializable> {
             tokenService.delete(token);
         }
         abstractDAO.deleteById(id);
-
     }
 }
