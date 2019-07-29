@@ -5,13 +5,11 @@ import com.jm.jobseekerplatform.model.VerificationToken;
 import com.jm.jobseekerplatform.service.impl.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.NoResultException;
 import java.io.Serializable;
 import java.util.List;
 
 @Transactional
-public abstract class AbstractService <T extends Serializable> {
+public abstract class AbstractService<T extends Serializable> {
 
     @Autowired
     private AbstractDAO<T> abstractDAO;
@@ -45,10 +43,9 @@ public abstract class AbstractService <T extends Serializable> {
 
     public void deleteById(Long id) {
         VerificationToken token = tokenService.findeByUserId(id);
-        if(token!=null){
+        if (token != null) {
             tokenService.delete(token);
         }
-
         abstractDAO.deleteById(id);
 
     }

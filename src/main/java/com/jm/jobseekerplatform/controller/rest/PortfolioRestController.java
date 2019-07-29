@@ -29,7 +29,7 @@ public class PortfolioRestController {
     }
 
     @RequestMapping("/{portfolioId}")
-    public Portfolio getUserById(@PathVariable Long portfolioId){
+    public Portfolio getUserById(@PathVariable Long portfolioId) {
         Portfolio portfolio = portfolioService.getById(portfolioId);
         return portfolio;
     }
@@ -38,8 +38,7 @@ public class PortfolioRestController {
     public Portfolio updatePortfolio(@RequestParam Long id,
                                      @RequestParam String name,
                                      @RequestParam String link,
-                                     @RequestParam String description
-    ){
+                                     @RequestParam String description) {
         Portfolio portfolio = portfolioService.getById(id);
         portfolio.setProjectName(name);
         portfolio.setLink(link);
@@ -49,11 +48,10 @@ public class PortfolioRestController {
     }
 
     @RequestMapping("/add")
-    public Portfolio addPortfolio(   @RequestParam Long id,
-                                     @RequestParam String name,
-                                     @RequestParam String link,
-                                     @RequestParam String description
-    ){
+    public Portfolio addPortfolio(@RequestParam Long id,
+                                  @RequestParam String name,
+                                  @RequestParam String link,
+                                  @RequestParam String description) {
         Portfolio portfolio = new Portfolio(name, link, description);
         portfolioService.add(portfolio);
         SeekerProfile profile = seekerProfileService.getById(id);
@@ -64,9 +62,8 @@ public class PortfolioRestController {
 
 
     @RequestMapping("/delete")
-    public SeekerProfile deletePortfolio(   @RequestParam Long profileid,
-                                            @RequestParam Long portfolioid
-    ){
+    public SeekerProfile deletePortfolio(@RequestParam Long profileid,
+                                         @RequestParam Long portfolioid) {
         SeekerProfile profile = seekerProfileService.getById(profileid);
         Portfolio portfolio = portfolioService.getById(portfolioid);
         profile.getPortfolios().remove(portfolio);

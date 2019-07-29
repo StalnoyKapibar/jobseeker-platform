@@ -58,11 +58,9 @@ public class UserService extends AbstractService<User> {
     @Autowired
     private ProfileService profileService;
 
-
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
     private UserRole roleEmployer = new UserRole("ROLE_EMPLOYER");
     private UserRole roleAdmin = new UserRole("ROLE_ADMIN");
-
     private Pattern pattern;
     private Matcher matcher;
 
@@ -90,17 +88,13 @@ public class UserService extends AbstractService<User> {
             profileService.add(seekerProfile);
             userNew = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, seekerProfile);
         } else if (userRole.equals(roleEmployer)) {
-
             EmployerProfile employerProfile = (EmployerProfile) getDefaultProfile(userRole.getAuthority());
             profileService.add(employerProfile);
             userNew = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, employerProfile);
         }
-
         add(userNew);
-
         //так нужно сделать
         User registeredUser = findByEmail(userEmail);
-
         String token = UUID.randomUUID().toString();
         //так нкжно сделать
         verificationTokenService.createVerificationToken(token, registeredUser);
@@ -108,13 +102,11 @@ public class UserService extends AbstractService<User> {
     }
 
     public void addNewUserByAdmin(User user, boolean check) {
-
         String userEmail = user.getEmail();
         char[] userPass = encodePassword(user.getPasswordChar());
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
         User newUser = null;
         if (userRole.equals(roleSeeker)) {
-
             SeekerProfile seekerProfile = (SeekerProfile) getDefaultProfile(userRole.getAuthority());
             profileService.add(seekerProfile);
             newUser = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, seekerProfile);
@@ -129,7 +121,6 @@ public class UserService extends AbstractService<User> {
         }
         newUser.setConfirm(true);
         add(newUser);
-
         if (check) {
             mailService.sendNotificationAboutAddEmail(userEmail, user.getPassword());
         }
@@ -140,7 +131,6 @@ public class UserService extends AbstractService<User> {
         String email_pattern = "^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\\.)*(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$";
         String pass_pattern = "^(?=.*[a-z].*)(?=.*[0-9].*)[A-Za-z0-9]{6,20}$";
         boolean isCorrect;
-
         if (user.getEmail().isEmpty() || user.getPassword().isEmpty() || user.getAuthority().getAuthority().isEmpty()) {
             throw new IllegalArgumentException("Some fields is empty");
         }
@@ -149,15 +139,12 @@ public class UserService extends AbstractService<User> {
         }
 
         isCorrect = (userRole.equals(roleSeeker) | userRole.equals(roleEmployer) | userRole.equals(roleAdmin));
-
         pattern = Pattern.compile(email_pattern);
         matcher = pattern.matcher(user.getEmail());
         isCorrect &= matcher.matches();
-
         pattern = Pattern.compile(pass_pattern);
         matcher = pattern.matcher(user.getPassword());
         isCorrect &= matcher.matches();
-
         if (!isCorrect) {
             throw new IllegalArgumentException("Some fields is incorrect");
         }
@@ -169,38 +156,16 @@ public class UserService extends AbstractService<User> {
         mailService.sendFriendInvitaionEmail(user, friend);
     }
 
-    private Profile getDefaultProfile(String typeProfile){
-        typeProfile  = typeProfile.toLowerCase();
+    private Profile getDefaultProfile(String typeProfile) {
+        typeProfile = typeProfile.toLowerCase();
         if (typeProfile.contains("seeker")) {
-            String nameProfile = "";
-            String patronymicProfile = "";
-            String surenameProfile = "";
-            String discriptionProfile = "";
-            Set<Vacancy> vacancyes = new HashSet<>();
-            Set<Tag> tags = new HashSet<>();
-            Set<Portfolio> portfolios = new HashSet<>();
-            BufferedImage image = null;
-            try {
-                image = ImageIO.read(new File("src/main/resources/static/img/default_seeker_avatar.png"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return new SeekerProfile(nameProfile, patronymicProfile, surenameProfile, discriptionProfile, imageService.resizePhotoSeeker(image), tags, portfolios, vacancyes);
+            return new SeekerProfile();
         } else if (typeProfile.contains("employer")) {
-            String companyName = "";
-            String website = "";
-            String discription = "";
-            BufferedImage logo = null;
-            try {
-                logo = ImageIO.read(new File("src/main/resources/static/img/default_company_logo.png"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return new EmployerProfile(companyName, website, discription, imageService.resizeLogoEmployer(logo));
+            return new EmployerProfile();
         } else if (typeProfile.contains("admin")) {
             return new AdminProfile();
         }
         return new Profile();
-        }
+    }
 }
 

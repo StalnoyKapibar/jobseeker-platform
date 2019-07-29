@@ -58,7 +58,6 @@ public class SeekerProfileRestController {
     @RequestMapping(value = "/outFavoriteVacancy", method = RequestMethod.POST)
     public ResponseEntity outFavoriteVacancy(@RequestParam("vacancyId") Long vacancyId,
                                              @RequestParam("profileId") Long profileId) {
-
         SeekerProfile seekerProfile = seekerProfileService.getById(profileId);
         Vacancy vacancy = vacancyService.getById(vacancyId);
         seekerProfile.getFavoriteVacancy().remove(vacancy);
@@ -69,7 +68,6 @@ public class SeekerProfileRestController {
     @RequestMapping(value = "/inFavoriteVacancy", method = RequestMethod.POST)
     public ResponseEntity inFavoriteVacancy(@RequestParam("vacancyId") Long vacancyId,
                                             @RequestParam("profileId") Long profileId) {
-
         SeekerProfile seekerProfile = seekerProfileService.getById(profileId);
         Vacancy vacancy = vacancyService.getById(vacancyId);
         seekerProfile.getFavoriteVacancy().add(vacancy);
@@ -77,53 +75,44 @@ public class SeekerProfileRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-
     @PostMapping("/update")
     @ResponseBody
-    public SeekerProfile editProfile (@RequestParam(value = "id") long id,
-                                      @RequestParam(value = "name", required = false) String name,
-                                      @RequestParam(value = "patronymic", required = false) String patronymic,
-                                      @RequestParam(value = "surname", required = false) String surname,
-                                      @RequestParam(value = "tags", required = false) List<String> tags,
-                                      @RequestParam(value = "description", required = false)String description,
-                                      @RequestParam(value = "image", required = false) MultipartFile img) {
-
+    public SeekerProfile editProfile(@RequestParam(value = "id") long id,
+                                     @RequestParam(value = "name", required = false) String name,
+                                     @RequestParam(value = "patronymic", required = false) String patronymic,
+                                     @RequestParam(value = "surname", required = false) String surname,
+                                     @RequestParam(value = "tags", required = false) List<String> tags,
+                                     @RequestParam(value = "description", required = false) String description) {
         SeekerProfile profile = seekerProfileService.getById(id);
-        if(name!=null && patronymic!=null && surname!=null){
+        if (name != null && patronymic != null && surname != null) {
             profile.setName(name);
             profile.setPatronymic(patronymic);
             profile.setSurname(surname);
         }
-        if(tags!=null){
-            List<Tag> tagsFromDB =tagService.getVerified();
+        if (tags != null) {
+            List<Tag> tagsFromDB = tagService.getVerified();
             Set<Tag> newTags = new HashSet<>();
-            for(String tagstr: tags){
-                for( Tag tag: tagsFromDB){
-                    if(tag.getName().equalsIgnoreCase(tagstr)){
+            for (String tagstr : tags) {
+                for (Tag tag : tagsFromDB) {
+                    if (tag.getName().equalsIgnoreCase(tagstr)) {
                         newTags.add(tagService.findByName(tag.getName()));
                     }
                 }
             }
             profile.setTags(newTags);
         }
-
-        if(description!=null){
+        if (description != null) {
             profile.setDescription(description);
         }
-
-
-
         seekerProfileService.update(profile);
-
         return seekerProfileService.getById(id);
-
     }
 
     @RequestMapping(value = "/update_image", method = RequestMethod.POST)
     public String updateImage(@RequestParam(value = "id") long id,
                               @RequestParam(value = "image", required = false) MultipartFile img) {
         SeekerProfile profile = seekerProfileService.getById(id);
-        if (img!=null) {
+        if (img != null) {
             try {
                 saveUploadedFiles(img);
                 BufferedImage image = null;
@@ -142,14 +131,11 @@ public class SeekerProfileRestController {
         return Base64.getEncoder().encodeToString(profile.getPhoto());
     }
 
-
     private void saveUploadedFiles(MultipartFile file) throws IOException {
-
         byte[] bytes = file.getBytes();
         Path path = Paths.get(avaFolderPath + file.getOriginalFilename());
         Files.write(path, bytes);
     }
-
 
 
 }

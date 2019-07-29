@@ -25,12 +25,14 @@ public class SeekerController {
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         model.addAttribute("seekerProfile", seekerProfile);
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerProfile.getPhoto()));
+        if (seekerProfile.getPhoto() != null) {
+            model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerProfile.getPhoto()));
+        }
         return "seeker";
     }
 
     @RequestMapping("/vacancies/{seekerProfileId}")
-    public String seekerFavoriteVacancies(@PathVariable Long seekerProfileId, Model model){
+    public String seekerFavoriteVacancies(@PathVariable Long seekerProfileId, Model model) {
         Set<Vacancy> favoriteVacancy = seekerProfileService.getById(seekerProfileId).getFavoriteVacancy();
         model.addAttribute("favoriteVacancy", favoriteVacancy);
         return "seeker_favorite_vacancies";
