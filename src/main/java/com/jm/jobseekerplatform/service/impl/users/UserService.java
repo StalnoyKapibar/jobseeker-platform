@@ -2,6 +2,8 @@ package com.jm.jobseekerplatform.service.impl.users;
 
 import com.jm.jobseekerplatform.dao.impl.users.UserDAO;
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.tokens.PasswordResetToken;
+import com.jm.jobseekerplatform.model.tokens.VerificationToken;
 import com.jm.jobseekerplatform.model.users.AdminUser;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
@@ -81,19 +83,25 @@ public class UserService extends AbstractService<User> {
         User registeredUser = findByEmail(userEmail);
 
         String token = UUID.randomUUID().toString();
-        verificationTokenService.createToken(token, registeredUser);
+        VerificationToken verificationToken =
+                new VerificationToken(token, registeredUser, verificationTokenService.calculateExpiryDate());
+        verificationTokenService.add(verificationToken);
+//        verificationTokenService.createToken(token,registeredUser);
         mailService.sendVerificationEmail(userEmail, token);
     }
 
-    public void recoveryPassRequest(String email){
+    public void recoveryPassRequest(String email) {
         User recoveryUser = findByEmail(email);
 
         String token = UUID.randomUUID().toString();
-        passwordResetTokenService.createToken(token, recoveryUser);
+        PasswordResetToken passwordResetToken =
+                new PasswordResetToken(token, recoveryUser, passwordResetTokenService.calculateExpiryDate());
+        passwordResetTokenService.add(passwordResetToken);
+//        passwordResetTokenService.createToken(token);
         mailService.sendRecoveryPassEmail(email, token);
     }
 
-    public void passwordReset(String token,char[] password){
+    public void passwordReset(String token, char[] password) {
 //        try {
 //            PasswordResetToken passwordResetToken= passwordResetTokenService.findByToken(token);
 //            boolean exists = passwordResetTokenService.tokenIsNonExpired(passwordResetToken);
@@ -106,10 +114,11 @@ public class UserService extends AbstractService<User> {
 //            e.printStackTrace();
 //        }
         User newPassUser = findByEmail(token);
-        char [] newPass = encodePassword(password);
+        char[] newPass = encodePassword(password);
         newPassUser.setPassword(newPass);
         update(newPassUser);
     }
+
     public void addNewUserByAdmin(User user, boolean check) {
         String userEmail = user.getEmail();
         char[] userPass = encodePassword(user.getPasswordChar());
