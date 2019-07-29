@@ -1,15 +1,30 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.service.impl.ImageService;
+import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/seekerprofiles")
@@ -20,6 +35,15 @@ public class SeekerProfileRestController {
 
     @Autowired
     private VacancyService vacancyService;
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Value("${path.img.seeker.avatar}")
+    String avaFolderPath;
 
     @RequestMapping("/")
     public List<SeekerProfile> getAllSeekerProfiles() {
@@ -34,7 +58,6 @@ public class SeekerProfileRestController {
     @RequestMapping(value = "/outFavoriteVacancy", method = RequestMethod.POST)
     public ResponseEntity outFavoriteVacancy(@RequestParam("vacancyId") Long vacancyId,
                                              @RequestParam("profileId") Long profileId) {
-
         SeekerProfile seekerProfile = seekerProfileService.getById(profileId);
         Vacancy vacancy = vacancyService.getById(vacancyId);
         seekerProfile.getFavoriteVacancy().remove(vacancy);
@@ -45,11 +68,74 @@ public class SeekerProfileRestController {
     @RequestMapping(value = "/inFavoriteVacancy", method = RequestMethod.POST)
     public ResponseEntity inFavoriteVacancy(@RequestParam("vacancyId") Long vacancyId,
                                             @RequestParam("profileId") Long profileId) {
-
         SeekerProfile seekerProfile = seekerProfileService.getById(profileId);
         Vacancy vacancy = vacancyService.getById(vacancyId);
         seekerProfile.getFavoriteVacancy().add(vacancy);
         seekerProfileService.update(seekerProfile);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @PostMapping("/update")
+    @ResponseBody
+    public SeekerProfile editProfile(@RequestParam(value = "id") long id,
+                                     @RequestParam(value = "name", required = false) String name,
+                                     @RequestParam(value = "patronymic", required = false) String patronymic,
+                                     @RequestParam(value = "surname", required = false) String surname,
+                                     @RequestParam(value = "tags", required = false) List<String> tags,
+                                     @RequestParam(value = "description", required = false) String description) {
+        SeekerProfile profile = seekerProfileService.getById(id);
+        if (name != null && patronymic != null && surname != null) {
+            profile.setName(name);
+            profile.setPatronymic(patronymic);
+            profile.setSurname(surname);
+        }
+        if (tags != null) {
+            List<Tag> tagsFromDB = tagService.getVerified();
+            Set<Tag> newTags = new HashSet<>();
+            for (String tagstr : tags) {
+                for (Tag tag : tagsFromDB) {
+                    if (tag.getName().equalsIgnoreCase(tagstr)) {
+                        newTags.add(tagService.findByName(tag.getName()));
+                    }
+                }
+            }
+            profile.setTags(newTags);
+        }
+        if (description != null) {
+            profile.setDescription(description);
+        }
+        seekerProfileService.update(profile);
+        return seekerProfileService.getById(id);
+    }
+
+    @RequestMapping(value = "/update_image", method = RequestMethod.POST)
+    public String updateImage(@RequestParam(value = "id") long id,
+                              @RequestParam(value = "image", required = false) MultipartFile img) {
+        SeekerProfile profile = seekerProfileService.getById(id);
+        if (img != null) {
+            try {
+                saveUploadedFiles(img);
+                BufferedImage image = null;
+                try {
+                    image = ImageIO.read(new File(avaFolderPath + img.getOriginalFilename()));
+                    profile.setPhoto(imageService.resizePhotoSeeker(image));
+                    seekerProfileService.update(profile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (IOException e) {
+                e.getStackTrace();
+            }
+        }
+        return Base64.getEncoder().encodeToString(profile.getPhoto());
+    }
+
+    private void saveUploadedFiles(MultipartFile file) throws IOException {
+        byte[] bytes = file.getBytes();
+        Path path = Paths.get(avaFolderPath + file.getOriginalFilename());
+        Files.write(path, bytes);
+    }
+
+
 }

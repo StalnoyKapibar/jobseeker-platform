@@ -11,6 +11,7 @@ import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
@@ -40,18 +41,17 @@ public class EmployerController {
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
 
-
+    @PreAuthorize("#employerProfileId == authentication.getPrincipal().getId()")
     @RequestMapping("/employer/{employerProfileId}")
     public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {
         boolean isOwner = false;
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
-
         model.addAttribute("employerProfile", employerProfile);
-
         Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
         model.addAttribute("vacancies", vacancies);
-        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
-
+        if(employerProfile.getLogo()!=null){
+            model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
+        }
         if (authentication != null && authentication.isAuthenticated()) {
             Long userId = ((User) authentication.getPrincipal()).getId();
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
@@ -79,10 +79,8 @@ public class EmployerController {
                 model.addAttribute("reviewStatus", false);
             }
         }
-
         model.addAttribute("isOwner", isOwner);
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-
         return "employer";
     }
 }
