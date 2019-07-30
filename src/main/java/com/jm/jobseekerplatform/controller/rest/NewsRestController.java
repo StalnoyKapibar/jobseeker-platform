@@ -61,8 +61,9 @@ public class NewsRestController {
     }
 
     @RequestMapping(value = "/all_seeker_news", method = RequestMethod.GET)
-    public ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
-                                                                  @RequestParam("newsPageCount") int newsPageCount) {
+    public @ResponseBody
+    ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
+                                                           @RequestParam("newsPageCount") int newsPageCount) {
         Set<EmployerProfile> employerProfiles = seekerProfileService.getById(seekerProfileId).getSubscriptions();
         if (employerProfiles.size() == 0) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
