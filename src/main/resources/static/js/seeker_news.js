@@ -31,12 +31,24 @@ function printSeekerNews() {
                 var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
                 var month = date.getMonth() + 1;
                 month = month < 10 ? '0' + month : month;
-                cardHTML += '<div class="card" style="margin-top: 10px">' +
+                var description;
+                if (item.description.length > 150) {
+                    description = item.description.substr(0, 150) +
+                        '<span><button id="readMoreButton_' + item.id + '" value="' + item.description + '" style="text-decoration: none;font-size: 0.9em; line-height: 1.6em;" onclick="getFullDescription(' + item.id + ')" class="btn btn-link">... Читать больше' +
+                        '</button></span>';
+                } else description = item.description;
+                cardHTML += '<div class="card newsCard" id="newsCard_' + item.id + '" style="margin-top: 10px">' +
                     '<div class="card-body">' +
-                    '<h4 class="card-title">' + item.headline + '</h4>' +
-                    '<p class="card-text">' + item.description + '</p>' +
+                    '<h4 class="card-title seekerNewsHeadLine">' + item.headline + '</h4>' +
+                    '<p class="card-text newsDescription" id="description_' + item.id + '"><span id="newsDescription_' + item.id + '">' + description + '</span></p>' +
                     '<p class="card-text seekerNewsDate">' + 'от: ' + day + '.' + month + '.' + date.getFullYear() + '</p>' +
                     '<a href="/employer/' + item.author.id + '" class="card-link">' + item.author.companyName + '</a>' +
+                    '</div>' +
+                    // Див с классом "newsAction" сделан для примера работы функционала карточки новости
+                    '<div class="card-footer newsAction">' +
+                    '<div class="views"><i class="far fa-eye"></i></i>2,907</div>' +
+                    '<div class="like" id="like_' + item.id + '"><span id="newsLike_' + item.id + '" onclick="like(' + item.id + ')"><i class="far fa-heart"></i>623</span></div>' +
+                    '<div class="comments" id="comments_' + item.id + '"><span id="viewComments_' + item.id + '" onclick="printComments(' + item.id + ')"><i class="far fa-comments"></i>23</span></div>' +
                     '</div>' +
                     '</div>';
             });
@@ -50,3 +62,52 @@ function printSeekerNews() {
         }
     })
 }
+
+function getFullDescription(newsId) {
+    var description = $('#readMoreButton_' + newsId).val();
+    $('#newsDescription_' + newsId).remove();
+    $('#description_' + newsId).append('<span id="newsDescription_' + newsId + '">' + description +
+        '<span><button id="readLessButton_' + newsId + '" value="' + description + '" style="text-decoration: none;font-size: 0.9em; line-height: 1.6em;" onclick="getShortDescription(' + newsId + ')" class="btn btn-link">... Свернуть' +
+        '</button></span></span>');
+}
+
+function getShortDescription(newsId) {
+    var description = $('#readLessButton_' + newsId).val();
+    $('#newsDescription_' + newsId).remove();
+    $('#description_' + newsId).append('<span id="newsDescription_' + newsId + '">' + description.substr(0, 150) +
+        '<span><button id="readMoreButton_' + newsId + '" value="' + description + '" style="text-decoration: none;font-size: 0.9em; line-height: 1.6em;" onclick="getFullDescription(' + newsId + ')" class="btn btn-link">... Читать больше' +
+        '</button></span></span>');
+}
+
+//**********************************************************************************************************************
+// Пример как должна работать информационная строка в карточке новости , включая счетчик просмотров , лайки и коментарии
+
+function like(id) {
+    $('#newsLike_' + id).remove();
+    $('#like_' + id).append('<span id="newsLike_' + id + '" onclick="dislike(' + id + ')"><i class="fas fa-heart"></i>624</span>');
+    $('#like_' + id).attr('class', 'dislike');
+}
+
+function dislike(id) {
+    $('#newsLike_' + id).remove();
+    $('#like_' + id).append('<span id="newsLike_' + id + '" onclick="like(' + id + ')"><i class="far fa-heart"></i>623</span>');
+    $('#like_' + id).attr('class', 'like');
+}
+
+function printComments(id) {
+    $('#newsCard_' + id).append('<div class="card-body" id="newsComments_' + id + '"><div>asdasdasdasdasdasdasd</div><hr><div>cvxdvsdsa</div><hr><div>efcvedgchbnwjdnxiwndxjnwhdx</div></div>');
+    $('#viewComments_' + id).remove();
+    $('#comments_' + id).append('<span id="viewComments_' + id + '" onclick="hideComments(' + id + ')"><i class="fas fa-comments"></i>23</span>');
+    $('#comments_' + id).attr('class', 'comments_viewing');
+
+}
+
+function hideComments(id) {
+    $('#viewComments_' + id).remove();
+    $('#newsComments_' + id).remove();
+    $('#comments_' + id).append('<span id="viewComments_' + id + '" onclick="printComments(' + id + ')"><i class="far fa-comments"></i>23</span>');
+    $('#comments_' + id).attr('class', 'comments');
+}
+
+//**********************************************************************************************************************
+

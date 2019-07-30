@@ -50,7 +50,7 @@ $(function () {
     var seekerAuthority = $('#seekerAuthority').val();
 
     if (seekerAuthority) {
-        user_id = $('#profileId').val();
+        user_id = $('#seekerProfileId').val();
         seeker_tags = getSeekerTags(user_id);
     }
 
@@ -278,7 +278,7 @@ function printVacancies(data) {
             return bool;
 
         }
-    }git);
+    });
 }
 
 function inFavorite(vacancyId, seekerProfileId) {
