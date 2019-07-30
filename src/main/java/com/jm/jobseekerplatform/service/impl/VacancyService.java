@@ -133,4 +133,21 @@ public class VacancyService extends AbstractService<Vacancy> {
         String city = cityService.checkCityOrGetNearest(currentCity, point);
         return dao.getVacanciesByTagsAndSortByCity(city, tags, limit, page);
     }
+    public boolean updateVacancy(Vacancy vacancy){
+        vacancy.setState(State.ACCESS);
+    //    dao.update(vacancy);
+        System.out.println(vacancy);
+        Vacancy oldVacancy = getById(vacancy.getId());
+        oldVacancy.setHeadline(vacancy.getHeadline());
+        oldVacancy.setCoordinates(vacancy.getCoordinates());
+        oldVacancy.setDescription(vacancy.getDescription());
+        oldVacancy.setSalaryMax(vacancy.getSalaryMax());
+        oldVacancy.setSalaryMin(vacancy.getSalaryMin());
+        oldVacancy.setCity(vacancy.getCity());
+        oldVacancy.setRemote(vacancy.getRemote());
+        oldVacancy.setShortDescription(vacancy.getShortDescription());
+        oldVacancy.setTags(vacancy.getTags());
+        dao.update(oldVacancy);
+        return true;
+    }
 }

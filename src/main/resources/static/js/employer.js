@@ -1,4 +1,5 @@
 function showVacancy(id) {
+    $("a#VMedit_butt").attr("href","/edit_vacancy/"+id)
     $.ajax({
         url: "/api/vacancies/" + id,
         type: "GET",

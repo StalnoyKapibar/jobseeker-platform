@@ -83,6 +83,13 @@ public class VacancyRestController {
         }
     }
 
+    @RequestMapping(value = "/update", method= RequestMethod.POST)
+    public boolean updateVacancy(@RequestBody Vacancy vacancy, Authentication authentication){
+        vacancyService.updateVacancy(vacancy);
+//        vacancyService.update(oldVacancy);
+        return true;
+    }
+
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public @ResponseBody
     ResponseEntity<Set<Vacancy>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {

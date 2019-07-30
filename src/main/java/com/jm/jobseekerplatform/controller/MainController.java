@@ -1,12 +1,14 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
@@ -49,6 +51,9 @@ public class MainController {
 
     @Autowired
     private EmployerUserService employerUserService;
+
+    @Autowired
+    private EmployerProfileService employerProfileService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
@@ -159,8 +164,34 @@ public class MainController {
     @RequestMapping(value = "/new_vacancy", method = RequestMethod.GET)
     public String new_vacancyPage(Model model) {
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-        return "new_vacancy";
+        return "/vacancy/new_vacancy";
     }
+
+    @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
+    @RequestMapping(value = "/edit_vacancy/{vacancyId}", method = RequestMethod.GET)
+    public String edit_vacancyPage(@PathVariable("vacancyId") Long vacancyId, Authentication authentication, Model model) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        EmployerProfile employerProfile = employerProfileService.getById(userId);
+        model.addAttribute("employer",employerProfile);
+        String employerName= ((User) authentication.getPrincipal()).getUsername();
+      /*  Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(userId);*/
+
+        if (vacancyService.getById(vacancyId).getEmployerProfile().getId()==employerProfile.getId()) {
+            model.addAttribute("vacancy", vacancyService.getById(vacancyId));
+        }
+        /*    long qu = vacancies.stream()
+                .filter(vacancy -> {
+                    return vacancy.getId() == vacancyId;
+                }).count();
+        if (qu == 1) {
+            Vacancy vacancy = vacancyService.getById(vacancyId);
+            model.addAttribute("vacancy", vacancy);
+        }*/
+
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+        return "/vacancy/edit_vacancy";
+    }
+
 
     @RequestMapping(value = "/vacancy/{vacancyId}", method = RequestMethod.GET)
     public String viewVacancy(@PathVariable Long vacancyId, Model model, Authentication authentication) {
@@ -181,6 +212,6 @@ public class MainController {
         model.addAttribute("EmployerProfileFromServer", vacancy.getEmployerProfile());
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getEmployerProfile().getLogo()));
 
-        return "vacancy";
+        return "/vacancy/vacancy";
     }
 }

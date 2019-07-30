@@ -27,7 +27,7 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     @Column(name = "headline", nullable = false)
     private String headline;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne (fetch = FetchType.LAZY,cascade = CascadeType.DETACH)//LAZY)
     private City city;
 
     @Column(name = "remote", nullable = false)
@@ -45,7 +45,7 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     @Column(name = "salarymax")
     private Integer salaryMax;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
     private Set<Tag> tags;
 
     @OneToOne(fetch = FetchType.EAGER)
