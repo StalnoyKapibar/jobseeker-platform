@@ -24,7 +24,6 @@ public class EmployerProfileRestController {
     @Autowired
     private ImageService imageService;
 
-
     @RequestMapping("/")
     public List<EmployerProfile> getAllEmployerProfiles() {
         List<EmployerProfile> employerprofiles = employerProfileService.getAll();

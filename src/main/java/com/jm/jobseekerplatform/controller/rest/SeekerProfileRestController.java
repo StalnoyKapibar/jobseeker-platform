@@ -1,14 +1,23 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.service.impl.ImageService;
+import com.jm.jobseekerplatform.service.impl.TagService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -96,8 +105,6 @@ public class SeekerProfileRestController {
         }
         return Base64.getEncoder().encodeToString(profile.getPhoto());
     }
-
-
 
     @RequestMapping(value = "/unSubscribe", method = RequestMethod.POST)
     public ResponseEntity unSubscribeCompany(@RequestParam("vacancyId") Long vacancyId,
