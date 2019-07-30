@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.dao.impl.chats;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
-import com.jm.jobseekerplatform.model.CreatedByProfile;
+import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfile;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import org.springframework.stereotype.Repository;
 
@@ -28,12 +28,12 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
 
     /**
      * Методы <code>getByTopicIdCreatorProfileIdTopicType</code>, <code>getByTopicIdCreatorProfileIdChatType</code>
-     * и <code>getByTopicIdCreatorProfileId</code> дублируют функционал, однако используют разгную реализацию.
+     * и <code>getChatByTopicIdCreatorProfileId</code> дублируют функционал, однако используют разгную реализацию.
      *
      * В проекте существуют разные реализации для демонстрации разных подходов.
      *
      * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdChatType}
-     * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicAbstractDAO#getByTopicIdCreatorProfileId}
+     * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicAbstractDAO#getChatByTopicIdCreatorProfileId}
      */
     public <T extends CreatedByProfile> ChatWithTopic<T> getByTopicIdCreatorProfileIdTopicType(Long topicId, Long creatorProfileId, Class<T> topicClass) {
 
@@ -56,12 +56,12 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
 
     /**
      * Методы <code>getByTopicIdCreatorProfileIdTopicType</code>, <code>getByTopicIdCreatorProfileIdChatType</code>
-     * и <code>getByTopicIdCreatorProfileId</code> дублируют функционал, однако используют разгную реализацию.
+     * и <code>getChatByTopicIdCreatorProfileId</code> дублируют функционал, однако используют разгную реализацию.
      *
      * В проекте существуют разные реализации для демонстрации разных подходов.
      *
      * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdTopicType}
-     * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicAbstractDAO#getByTopicIdCreatorProfileId}
+     * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicAbstractDAO#getChatByTopicIdCreatorProfileId}
      */
     public <T extends ChatWithTopic> T getByTopicIdCreatorProfileIdChatType(Long topicId, Long creatorProfileId, Class<T> ChatClass) {
 

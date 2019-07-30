@@ -1,4 +1,4 @@
-package com.jm.jobseekerplatform.model;
+package com.jm.jobseekerplatform.model.createdByProfile;
 
 import com.jm.jobseekerplatform.model.profiles.Profile;
 
@@ -8,5 +8,5 @@ import com.jm.jobseekerplatform.model.profiles.Profile;
 public interface CreatedByProfile<T extends Profile> {
     Long getId();
 
-    T getCreator();
+    T getCreatorProfile();
 }

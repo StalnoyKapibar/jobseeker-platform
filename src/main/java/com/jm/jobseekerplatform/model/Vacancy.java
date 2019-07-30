@@ -1,9 +1,6 @@
 package com.jm.jobseekerplatform.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.jm.jobseekerplatform.model.createdByProfile.CreatedByEmployerProfileBase;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 
 import javax.persistence.*;
@@ -13,15 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "vacancies")
-public class Vacancy implements Serializable, CreatedByEmployerProfile {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "employer_profile_id")
-    private EmployerProfile employerProfile;
+public class Vacancy extends CreatedByEmployerProfileBase implements Serializable {
 
     @Column(name = "headline", nullable = false)
     private String headline;
@@ -61,7 +50,7 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     }
 
     public Vacancy(EmployerProfile employerProfile, String headline, City city, Boolean remote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags, Point coordinates) {
-        this.employerProfile = employerProfile;
+        super(employerProfile);
         this.headline = headline;
         this.city = city;
         this.remote = remote;
@@ -72,30 +61,6 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
         this.tags = tags;
         this.coordinates = coordinates;
         state = State.NO_ACCESS;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
-    @JsonIdentityReference(alwaysAsId=true)
-    public EmployerProfile getEmployerProfile() {
-        return employerProfile;
-    }
-
-    public void setEmployerProfile(EmployerProfile employerProfile) {
-        this.employerProfile = employerProfile;
-    }
-
-    @JsonIgnore
-    @Override
-    public EmployerProfile getCreator() {
-        return employerProfile;
     }
 
     public String getHeadline() {
@@ -191,8 +156,7 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     @Override
     public String toString() {
         return "Vacancy{" +
-                "id=" + id +
-                ", employerProfile=" + employerProfile +
+                super.toString() +
                 ", headline='" + headline + '\'' +
                 ", city=" + city.getName() +
                 ", remote=" + remote +

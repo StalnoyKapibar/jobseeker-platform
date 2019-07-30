@@ -50,9 +50,9 @@ public class ChatInfoDTO {
         chatInfoDTO.creatorName = chatWithTopic.getCreator().GetNameForUi();
         chatInfoDTO.creatorType = chatWithTopic.getCreator().getClass().getName();
 
-        chatInfoDTO.participantProfileId = chatWithTopic.getTopic().getCreator().getId();
-        chatInfoDTO.participantName = chatWithTopic.getTopic().getCreator().GetNameForUi();
-        chatInfoDTO.participantType = chatWithTopic.getTopic().getCreator().getClass().getName();
+        chatInfoDTO.participantProfileId = chatWithTopic.getTopic().getCreatorProfile().getId();
+        chatInfoDTO.participantName = chatWithTopic.getTopic().getCreatorProfile().GetNameForUi();
+        chatInfoDTO.participantType = chatWithTopic.getTopic().getCreatorProfile().getClass().getName();
 
         chatInfoDTO.topicId = chatWithTopic.getTopic().getId();
         chatInfoDTO.topicType = chatWithTopic.getTopic().getClass().getName();

@@ -27,14 +27,14 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
 
     /**
      * Методы <code>getByTopicIdCreatorProfileIdTopicType</code>, <code>getByTopicIdCreatorProfileIdChatType</code>
-     * и <code>getByTopicIdCreatorProfileId</code> дублируют функционал, однако используют разгную реализацию.
+     * и <code>getChatByTopicIdCreatorProfileId</code> дублируют функционал, однако используют разгную реализацию.
      * <p>
      * В проекте существуют разные реализации для демонстрации разных подходов.
      *
      * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdTopicType}
      * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdChatType}
      */
-    public T getByTopicIdCreatorProfileId(Long topicId, Long creatorProfileId) {
+    public T getChatByTopicIdCreatorProfileId(Long topicId, Long creatorProfileId) {
 
         T chat;
 
@@ -53,15 +53,50 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
     }
 
     /**
-     * Возвращает список чатов в которых профиль является участником чата.
+     * Возвращает список чатов в которых указанный профиль является участником чата.
      * Участник чата - это профиль, который написал в чат хотя бы одно сообщение
      *
-     * @param participantProfileId id профиля
+     * @param participantProfileId id профиля автора сообщений
      */
 
-    public List<T> getAllByParticipantProfileId(Long participantProfileId) { //todo (Nick Dolgopolov)
+    public List<T> getAllChatsByParticipantProfileId(Long participantProfileId) {
 
-        List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE :creatorProfileId IN c.chatMessages. ").getResultList();
+        List<T> chats = entityManager.createQuery("SELECT DISTINCT c FROM " + clazz.getName() + " c JOIN c.chatMessages m WHERE m.creatorProfile.id = :participantProfileId").
+                setParameter("participantProfileId", participantProfileId)
+                .getResultList();
+
+        return chats;
+    }
+
+
+    /**
+     * Возвращает список чатов в которых указанный профиль является создателем чата.
+     *
+     * @param chatCreatorProfileId id профиля создателя чата
+     */
+
+    public List<T> getAllChatsByChatCreatorProfileId(Long chatCreatorProfileId) {
+
+        List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE c.creatorProfile.id = :chatCreatorProfileId").
+                setParameter("chatCreatorProfileId", chatCreatorProfileId)
+                .getResultList();
+
+        return chats;
+    }
+
+
+    /**
+     * Возвращает список чатов в которых указанный профиль является создателем темы чата
+     * (т.е. создателем сущности, которая является темой чата)
+     *
+     * @param topicCreatorProfileId id профиля создателя чата
+     */
+
+    public List<T> getAllChatsByTopicCreatorProfileId(Long topicCreatorProfileId) {
+
+        List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE c.topic.id = :topicCreatorProfileId").
+                setParameter("topicCreatorProfileId", topicCreatorProfileId)
+                .getResultList();
 
         return chats;
     }

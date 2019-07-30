@@ -3,7 +3,7 @@ package com.jm.jobseekerplatform.model.chats;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.jm.jobseekerplatform.model.CreatedByProfile;
+import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 
 import javax.persistence.ManyToOne;

@@ -1,4 +1,4 @@
-package com.jm.jobseekerplatform.model;
+package com.jm.jobseekerplatform.model.createdByProfile;
 
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 

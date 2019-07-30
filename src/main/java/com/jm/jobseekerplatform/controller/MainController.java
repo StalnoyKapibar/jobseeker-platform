@@ -195,8 +195,8 @@ public class MainController {
         }
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("vacancyFromServer", vacancy);
-        model.addAttribute("EmployerProfileFromServer", vacancy.getEmployerProfile());
-        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getEmployerProfile().getLogo()));
+        model.addAttribute("EmployerProfileFromServer", vacancy.getCreatorProfile());
+        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getCreatorProfile().getLogo()));
 
         return "vacancy";
     }

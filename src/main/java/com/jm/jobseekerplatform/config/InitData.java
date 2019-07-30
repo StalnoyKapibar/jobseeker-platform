@@ -10,6 +10,7 @@ import com.jm.jobseekerplatform.model.users.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicVacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
@@ -77,6 +78,9 @@ public class InitData {
     private ChatService chatService;
 
     @Autowired
+    private ChatWithTopicVacancyService chatWithTopicVacancyService;
+
+    @Autowired
     private PointService pointService;
 
     @Autowired
@@ -104,6 +108,21 @@ public class InitData {
 
         initReviews();
         initChat();
+
+        test(); //todo (Nikolay Dolgopolov) delete
+    }
+
+    private void test() {
+        List<ChatWithTopicVacancy> allByParticipantProfileId = chatWithTopicVacancyService.getAllByParticipantProfileId(1L);
+
+        System.out.println(allByParticipantProfileId.size());
+        allByParticipantProfileId.forEach(chatWithTopicVacancy -> System.out.println(chatWithTopicVacancy.getId()));
+
+
+        List<ChatWithTopicVacancy> allByChatCreatorProfileId = chatWithTopicVacancyService.getAllByChatCreatorProfileId(1L);
+
+        System.out.println(allByChatCreatorProfileId.size());
+        allByChatCreatorProfileId.forEach(chatWithTopicVacancy -> System.out.println(chatWithTopicVacancy.getId()));
     }
 
     public void initReviews() {
@@ -439,7 +458,7 @@ public class InitData {
             }
 
             Vacancy randomVacancy = vacancyService.getById(rnd.nextInt(30) + 1L);
-            Profile chatCreator = getRandomProfileExceptWithId(randomVacancy.getEmployerProfile().getId());
+            Profile chatCreator = getRandomProfileExceptWithId(randomVacancy.getCreatorProfile().getId());
 
             Chat chat = new ChatWithTopicVacancy(chatCreator, randomVacancy);
             chat.setChatMessages(messages);
