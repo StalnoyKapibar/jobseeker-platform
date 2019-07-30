@@ -1,14 +1,14 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.service.impl.ImageService;
 import com.jm.jobseekerplatform.service.impl.TagService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +35,9 @@ public class SeekerProfileRestController {
     private SeekerProfileService seekerProfileService;
 
     @Autowired
+    private EmployerProfileService employerProfileService;
+
+    @Autowired
     private VacancyService vacancyService;
 
     @Autowired
@@ -55,8 +58,9 @@ public class SeekerProfileRestController {
 
     @RequestMapping(value = "/outFavoriteVacancy", method = RequestMethod.POST)
     public ResponseEntity outFavoriteVacancy(@RequestParam("vacancyId") Long vacancyId,
-                                             @RequestParam("profileId") Long profileId) {
-        SeekerProfile seekerProfile = seekerProfileService.getById(profileId);
+                                             @RequestParam("seekerProfileId") Long seekerProfileId) {
+
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Vacancy vacancy = vacancyService.getById(vacancyId);
         seekerProfile.getFavoriteVacancy().remove(vacancy);
         seekerProfileService.update(seekerProfile);
@@ -65,8 +69,9 @@ public class SeekerProfileRestController {
 
     @RequestMapping(value = "/inFavoriteVacancy", method = RequestMethod.POST)
     public ResponseEntity inFavoriteVacancy(@RequestParam("vacancyId") Long vacancyId,
-                                            @RequestParam("profileId") Long profileId) {
-        SeekerProfile seekerProfile = seekerProfileService.getById(profileId);
+                                            @RequestParam("seekerProfileId") Long seekerProfileId) {
+
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Vacancy vacancy = vacancyService.getById(vacancyId);
         seekerProfile.getFavoriteVacancy().add(vacancy);
         seekerProfileService.update(seekerProfile);
@@ -109,4 +114,37 @@ public class SeekerProfileRestController {
     }
 
 
+
+    @RequestMapping(value = "/unSubscribe", method = RequestMethod.POST)
+    public ResponseEntity unSubscribeCompany(@RequestParam("vacancyId") Long vacancyId,
+                                             @RequestParam("seekerProfileId") Long seekerProfileId) {
+
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        EmployerProfile employerProfile = vacancyService.getById(vacancyId).getEmployerProfile();
+        seekerProfile.getSubscriptions().remove(employerProfile);
+        seekerProfileService.update(seekerProfile);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/toSubscribe", method = RequestMethod.POST)
+    public ResponseEntity toSubscribeCompany(@RequestParam("vacancyId") Long vacancyId,
+                                             @RequestParam("seekerProfileId") Long seekerProfileId) {
+
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        EmployerProfile employerProfile = vacancyService.getById(vacancyId).getEmployerProfile();
+        seekerProfile.getSubscriptions().add(employerProfile);
+        seekerProfileService.update(seekerProfile);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/deleteSubscription")
+    public ResponseEntity deleteSubscription(@RequestParam("employerProfileId") Long employerProfileId,
+                                             @RequestParam("seekerProfileId") Long seekerProfileId) {
+
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
+        seekerProfile.getSubscriptions().remove(employerProfile);
+        seekerProfileService.update(seekerProfile);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
