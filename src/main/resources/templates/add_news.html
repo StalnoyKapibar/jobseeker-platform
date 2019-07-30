@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <title>Добавление новости</title>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.css" rel="stylesheet">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
+    <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
+    <script type="text/javascript" src="/js/add_news.js"></script>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-8">
+                <form class="well form-horizontal" id="news_form">
+                    <fieldset>
+                        <legend align="center">
+                            <h2><b>Добавление новости</b></h2>
+                        </legend>
+                        <br>
+
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-11 control-label">Оглавление</label>
+                            <div class="col-sm-1"></div>
+                            <div class="col-md-10 inputGroupContainer">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="far fa-newspaper"></i></span>
+                                    </div>
+                                    <input name="n_headline" id="n_headline"
+                                           placeholder="Введите заголовок новости (обязательно)"
+                                           class="form-control is-invalid" type="text">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--tied-->
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-11 control-label">Описание новости</label>
+                            <div class="col-sm-1"></div>
+                            <div class="col-md-10 inputGroupContainer">
+                                <div class="form-group">
+                                    <textarea name="n_description" id="n_description"
+                                              class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Button -->
+                        <div class="form-group" align="center">
+                            <label class="col-md-2 control-label"></label>
+                            <div class="col-md-10" style="display: flex; justify-content: center;"><br>
+                                <button type="button" class="btn btn-warning"
+                                        onclick="validateAndPreview()" style="width: 150px;"> Добавить
+                                    <i class="fas fa-paper-plane "></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+                <div>
+                    <input type="hidden" id="employerProfileId" th:value="${employerProfileId}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

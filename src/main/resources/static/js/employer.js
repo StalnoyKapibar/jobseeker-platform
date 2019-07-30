@@ -76,7 +76,7 @@ $(document).ready(function () {
         });
     });
 
-    $("#reviewsModal").on('show.bs.modal', function(){
+    $("#reviewsModal").on('show.bs.modal', function () {
         var review = {};
         review["seekerProfiles_id"] = $("#review_evaluation").data("seeker-profile-id");
         review["employerProfiles_id"] = $("#review_evaluation").data("employer-profile-id");
@@ -89,7 +89,7 @@ $(document).ready(function () {
             beforeSend: function (request) {
                 return request.setRequestHeader('X-CSRF-Token', $("input[name=_csrf]").val());
             },
-            success: function (data){
+            success: function (data) {
                 $("#reviewsText").val(data.reviews);
                 $("#review_evaluation").rating('update', data.evaluation);
                 $(".postReview").html('Редактировать');
@@ -140,7 +140,7 @@ function blockEmployerProfile(period) {
         beforeSend: function (request) {
             return request.setRequestHeader(header, token);
         },
-        success: function (data){
+        success: function (data) {
             alert(data);
         }
     });
@@ -275,6 +275,7 @@ function update_website(id, website) {
         }
     })
 }
+
 
 
 function show_update_description_modal(id) {
