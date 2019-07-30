@@ -210,6 +210,12 @@ li {
     line-height: 1.6em;
 }
 
+.newsDescription .btn {
+    text-decoration: none;
+    font-size: 0.9em;
+    line-height: 1.6em;
+}
+
 .newsCard {
     font-family: 'Open Sans', Arial, sans-serif;
     overflow: hidden;

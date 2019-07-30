@@ -34,7 +34,7 @@ function printSeekerNews() {
                 var description;
                 if (item.description.length > 150) {
                     description = item.description.substr(0, 150) +
-                        '<span><button id="readMoreButton_' + item.id + '" value="' + item.description + '" style="text-decoration: none;font-size: 0.9em; line-height: 1.6em;" onclick="getFullDescription(' + item.id + ')" class="btn btn-link">... Читать больше' +
+                        '<span><button id="readMoreButton_' + item.id + '" value="' + item.description + '" onclick="getFullDescription(' + item.id + ')" class="btn btn-link">... Читать полностью' +
                         '</button></span>';
                 } else description = item.description;
                 cardHTML += '<div class="card newsCard" id="newsCard_' + item.id + '" style="margin-top: 10px">' +
@@ -67,7 +67,7 @@ function getFullDescription(newsId) {
     var description = $('#readMoreButton_' + newsId).val();
     $('#newsDescription_' + newsId).remove();
     $('#description_' + newsId).append('<span id="newsDescription_' + newsId + '">' + description +
-        '<span><button id="readLessButton_' + newsId + '" value="' + description + '" style="text-decoration: none;font-size: 0.9em; line-height: 1.6em;" onclick="getShortDescription(' + newsId + ')" class="btn btn-link">... Свернуть' +
+        '<span><button id="readLessButton_' + newsId + '" value="' + description + '" onclick="getShortDescription(' + newsId + ')" class="btn btn-link">... Свернуть' +
         '</button></span></span>');
 }
 
@@ -75,7 +75,7 @@ function getShortDescription(newsId) {
     var description = $('#readLessButton_' + newsId).val();
     $('#newsDescription_' + newsId).remove();
     $('#description_' + newsId).append('<span id="newsDescription_' + newsId + '">' + description.substr(0, 150) +
-        '<span><button id="readMoreButton_' + newsId + '" value="' + description + '" style="text-decoration: none;font-size: 0.9em; line-height: 1.6em;" onclick="getFullDescription(' + newsId + ')" class="btn btn-link">... Читать больше' +
+        '<span><button id="readMoreButton_' + newsId + '" value="' + description + '" onclick="getFullDescription(' + newsId + ')" class="btn btn-link">... Читать полностью' +
         '</button></span></span>');
 }
 
