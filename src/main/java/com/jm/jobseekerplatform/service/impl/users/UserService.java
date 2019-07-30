@@ -2,20 +2,33 @@ package com.jm.jobseekerplatform.service.impl.users;
 
 import com.jm.jobseekerplatform.dao.impl.users.UserDAO;
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.profiles.AdminProfile;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.AdminUser;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
+import com.jm.jobseekerplatform.service.impl.ImageService;
 import com.jm.jobseekerplatform.service.impl.MailService;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.VerificationTokenService;
+import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,10 +52,15 @@ public class UserService extends AbstractService<User> {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private ProfileService profileService;
+
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
     private UserRole roleEmployer = new UserRole("ROLE_EMPLOYER");
     private UserRole roleAdmin = new UserRole("ROLE_ADMIN");
-
     private Pattern pattern;
     private Matcher matcher;
 
@@ -62,20 +80,19 @@ public class UserService extends AbstractService<User> {
         String userEmail = user.getEmail();
         char[] userPass = encodePassword(user.getPasswordChar());
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
-
         User userNew = null;
-
         if (userRole.equals(roleSeeker)) {
-            userNew = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            SeekerProfile seekerProfile = (SeekerProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(seekerProfile);
+            userNew = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, seekerProfile);
         } else if (userRole.equals(roleEmployer)) {
-            userNew = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            EmployerProfile employerProfile = (EmployerProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(employerProfile);
+            userNew = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, employerProfile);
         }
-
         add(userNew);
-
         //так нужно сделать
         User registeredUser = findByEmail(userEmail);
-
         String token = UUID.randomUUID().toString();
         //так нкжно сделать
         verificationTokenService.createVerificationToken(token, registeredUser);
@@ -88,16 +105,20 @@ public class UserService extends AbstractService<User> {
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
         User newUser = null;
         if (userRole.equals(roleSeeker)) {
-            newUser = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            SeekerProfile seekerProfile = (SeekerProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(seekerProfile);
+            newUser = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, seekerProfile);
         } else if (userRole.equals(roleEmployer)) {
-            newUser = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            EmployerProfile employerProfile = (EmployerProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(employerProfile);
+            newUser = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, employerProfile);
         } else if (userRole.equals(roleAdmin)) {
-            newUser = new AdminUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            AdminProfile adminProfile = (AdminProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(adminProfile);
+            newUser = new AdminUser(userEmail, userPass, LocalDateTime.now(), userRole, adminProfile);
         }
-
         newUser.setConfirm(true);
         add(newUser);
-
         if (check) {
             mailService.sendNotificationAboutAddEmail(userEmail, user.getPassword());
         }
@@ -108,7 +129,6 @@ public class UserService extends AbstractService<User> {
         String email_pattern = "^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\\.)*(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$";
         String pass_pattern = "^(?=.*[a-z].*)(?=.*[0-9].*)[A-Za-z0-9]{6,20}$";
         boolean isCorrect;
-
         if (user.getEmail().isEmpty() || user.getPassword().isEmpty() || user.getAuthority().getAuthority().isEmpty()) {
             throw new IllegalArgumentException("Some fields is empty");
         }
@@ -117,15 +137,12 @@ public class UserService extends AbstractService<User> {
         }
 
         isCorrect = (userRole.equals(roleSeeker) | userRole.equals(roleEmployer) | userRole.equals(roleAdmin));
-
         pattern = Pattern.compile(email_pattern);
         matcher = pattern.matcher(user.getEmail());
         isCorrect &= matcher.matches();
-
         pattern = Pattern.compile(pass_pattern);
         matcher = pattern.matcher(user.getPassword());
         isCorrect &= matcher.matches();
-
         if (!isCorrect) {
             throw new IllegalArgumentException("Some fields is incorrect");
         }
@@ -136,4 +153,17 @@ public class UserService extends AbstractService<User> {
     public void inviteFriend(String user, String friend) {
         mailService.sendFriendInvitaionEmail(user, friend);
     }
+
+    private Profile getDefaultProfile(String typeProfile) {
+        typeProfile = typeProfile.toLowerCase();
+        if (typeProfile.contains("seeker")) {
+            return new SeekerProfile();
+        } else if (typeProfile.contains("employer")) {
+            return new EmployerProfile();
+        } else if (typeProfile.contains("admin")) {
+            return new AdminProfile();
+        }
+        return new Profile();
+    }
 }
+

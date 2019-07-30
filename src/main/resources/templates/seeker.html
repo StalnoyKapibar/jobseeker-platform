@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layouts/commonlayouts}"
       lang="en">
 <head>
@@ -14,53 +15,350 @@
             <div class="col-sm-1">
             </div>
             <div class="col-sm-3">
-                <h1><span th:text="${seekerProfile.name}"></span></h1>
-                <h3><span th:each="tag : ${seekerProfile.tags}" th:text="${tag.name} + ' '"></span></h3>
-                <span>Мои проекты:</span><br/>
-                <div class="list-group">
-                    <a th:each="portfolio, index: ${seekerProfile.portfolios}" class="list-group-item"
-                       th:text="${portfolio.projectName}" data-toggle="modal" data-target="#portfolioModal"
-                       th:onclick="'showPortfolio('+${portfolio.id}+')'"></a>
+
+                <span id = "profile_name_content" class="h3">
+                    <span th:text="${seekerProfile.name}+' '
+                    +${seekerProfile.surname}+' '
+                    +${seekerProfile.patronymic}" id ="profile_name"></span>
+                </span>
+                <div sec:authorize="hasRole('ROLE_SEEKER')">
+                    <p><a href="#" class="text-primary"
+                          data-toggle="modal"
+                          data-target="#update_name_modal"
+                          id = "update_name_modal_btn"
+                          th:onclick="'showUpdateNameModal('+${seekerProfile.id}+')'">edit</a></p>
+                </div>
+
+                <br/>
+                <p class="h5">Тэги:</p>
+                <div id = "profile_tags" >
+                    <span class="badge badge-light shadow-sm" th:each="tag : ${seekerProfile.tags}" th:text="${tag.name} + ' '"></span>&nbsp;
+                </div>
+                <div sec:authorize="hasRole('ROLE_SEEKER')">
+                    <p><a href="#" class="text-primary"
+                          data-toggle="modal"
+                          data-target="#update_tags_modal"
+                          th:onclick="'showModalUpdateTag('+${seekerProfile.id}+')'">edit</a></p>
+                </div>
+                <!--                <br/>-->
+                <p class="h5">Мои проекты:</p>
+                <table class="table table-hover" id = 'table_projects' >
+                    <tbody th:each="portfolio, index: ${seekerProfile.portfolios}" id = "tbody_projects">
+                    <tr  class="table-light" id="projects_tr">
+                        <th scope="row"
+                            style="width: 60%"
+                            data-toggle="modal"
+                            data-target="#portfolioModal"
+                            th:onclick="'showPortfolio('+${portfolio.id}+')'"
+                            th:id="'project_td_'+${portfolio.id}"
+                            th:text="${portfolio.projectName}"
+                        ></th>
+                        <div sec:authorize="hasRole('ROLE_SEEKER')">
+                            <td> <a href="#" class="text-primary"
+                                    data-toggle="modal"
+                                    data-target="#update_project_modal"
+                                    th:onclick="'showModalUpdatePortfolio('+${portfolio.id}+')'">edit</a></td>
+
+                            <td> <a href="#" class="text-danger"
+                                    th:onclick="'showDeliteAllert('+${seekerProfile.id}+', '+${portfolio.id}+')'"
+                                    data-toggle="modal" data-target="#delete_portfolio_alert_modal">delete</a></td>
+                        </div>
+
+                    </tr>
+                    </tbody>
+                </table>
+                <div sec:authorize="hasRole('ROLE_SEEKER')">
+                    <button type="button"
+                            class="btn btn-outline-primary"
+                            data-toggle="modal"
+                            data-target="#add_new_project_modal"
+                            th:onclick="'showModalAddNewProject('+${seekerProfile.id}+')'">
+                        Add new project +
+                    </button>
+                </div>
+
+            </div>
+            <div class="col-sm-3" align="left">
+                <div id = "profile_img">
+                    <img th:src="@{'data:image/png;base64,' + ${photoimg}}" class="img-rounded" alt="Photo">
+                </div>
+                <br/>
+                <div sec:authorize="hasRole('ROLE_SEEKER')">
+                    <div class="input-group mb-3">
+                        <form method="POST" enctype="multipart/form-data" id="fileUploadForm">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="image" id="customFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+
+                    <button type="submit" id="btnSubmit" class="btn btn-outline-primary" th:onclick="'add_seeker_img('+${seekerProfile.id}+')'" style="width: 100%">submit</button>
+                    </form>
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-3" align="right">
-                <img th:src="@{'data:image/png;base64,' + ${photoimg}}" class="img-rounded" alt="Photo">
-            </div>
         </div>
+
         <div class="row">
             <div class="col-sm-1">
             </div>
             <div class="col-sm-6">
                 <span>Обо мне:</span><br/>
-                <div class="well well-sm">
-                    <span th:text="${seekerProfile.description}"></span>
+                <div class="well well-sm" id="about_me">
+                    <span th:text="${seekerProfile.description}">
+                    </span>
                 </div>
-                <br>
+                <!-- Кнопка модального окна изменеия обо мне -->
+                <div sec:authorize="hasRole('ROLE_SEEKER')">
+                    <p><a href="#" class="text-primary"
+                          data-toggle="modal"
+                          data-target="#about_me_update_modal"
+                          th:onclick="'showModalAboutMe('+${seekerProfile.id}+')'">edit</a></p>
+                    <br>
+                </div>
+
+
                 <!-- кнопка приглашения -->
-                <button type="button" th:onclick="'showInviteModal('+${seekerProfile.id}+')'"
-                        class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i>
-                    InviteFriend
-                </button>
-
-                    <button class="btn btn-secondary" th:onclick="'window.location.href = \'' + @{/seeker/vacancies/{id}(id=${seekerProfile.id})} + '\''">Избранное</button>
-
+                <div sec:authorize="hasRole('ROLE_SEEKER')">
+                    <button type="button"
+                            class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i>
+                        InviteFriend
+                    </button>
+                </div>
             </div>
         </div>
     </div>
+
+
+    <!-- Модальное окно удаления портфолио -->
+    <div class="modal fade" id="delete_portfolio_alert_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete portfolio</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type ="hidden" id ="portfolio_id_to_delete">
+                    <input type ="hidden" id ="profile_id_to_delete">
+                    <p class="h5">Вы уверены что хотите удалить:</p>
+                    <p class="h5" id="name_of_portfolio_to_delete"></p>
+                    <br/>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Нет</button>
+                    <button type="button" class="btn btn-outline-danger"
+                            onclick="delete_project(document.getElementById('profile_id_to_delete').value,
+                             document.getElementById('portfolio_id_to_delete').value)
+                             ">Да</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="delete_portfolio_modal_close_btn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Модальное окно изменеия обо мне  -->
+    <div class="modal fade" id="about_me_update_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Обо мне</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type ="hidden" id ="seeker_id_for_update_about_me">
+                        <label for="about_me_text_area">Обо мне:</label>
+                        <textarea class="form-control" rows="5" id="about_me_text_area"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="about_me_update_close_btn">Close</button>
+                    <button type="button" class="btn btn-primary"
+                            onclick="updateAboutMe(document.getElementById('seeker_id_for_update_about_me').value,
+                            document.getElementById('about_me_text_area').value)">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно добавление и удаления тэгов -->
+    <div class="modal fade" id="update_tags_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="card" style = "height: auto" >
+                        <div class="card-body" id = "tag_list">
+                            <!--card body-->
+                        </div>
+                    </div>
+                    <input type ="hidden" id ="seeker_id_for_add_new_tags">
+                    <div id = "tags_from_base">
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="update_tag_modal_close_btn">Close</button>
+                    <button type="button"
+                            class="btn btn-primary"
+                            onclick="add_tags(document.getElementById('tag_list').getElementsByTagName('button'),
+                            document.getElementById('seeker_id_for_add_new_tags').value)">
+                        Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Модальное окно добавления нового проекта -->
+    <div class="modal fade" id="add_new_project_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add new project</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <input type ="hidden" id ="project_id_for_add_new_project">
+                        <label for="add_new_project_name_input">Project name</label>
+                        <input type="text" class="form-control" id="add_new_project_name_input" placeholder="Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="add_new_project_link_input">Link</label>
+                        <input type="text" class="form-control" id="add_new_project_link_input" placeholder="Name">
+                    </div>
+                    <label for="add_new_project_description_textarea">Description:</label>
+                    <textarea class="form-control" rows="5" id="add_new_project_description_textarea"></textarea>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id ="add_new_project_modal_close_btn">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="add_new_project(
+                    document.getElementById('project_id_for_add_new_project').value,
+                    document.getElementById('add_new_project_name_input').value,
+                    document.getElementById('add_new_project_link_input').value,
+                    document.getElementById('add_new_project_description_textarea').value)" >Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования проекта -->
+    <div class="modal fade" id="update_project_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type ="hidden" id ="project_id_for_update">
+                    <div class="form-group">
+                        <label for="update_project_name_input">Project name</label>
+                        <input type="text" class="form-control" id="update_project_name_input" placeholder="Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="update_project_link_input">Link</label>
+                        <input type="text" class="form-control" id="update_project_link_input" placeholder="Name">
+                    </div>
+                    <label for="update_project_description_textarea">Description:</label>
+                    <textarea class="form-control" rows="5" id="update_project_description_textarea"></textarea>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="update_project_close_btn">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="updateProject(document.getElementById('project_id_for_update').value,
+                    document.getElementById('update_project_name_input').value,
+                    document.getElementById('update_project_link_input').value,
+                    document.getElementById('update_project_description_textarea').value)">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Модальное окно изменения имени -->
+    <div class="modal fade" id="update_name_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="update_name_input">Name</label>
+                        <input type="text" class="form-control" id="update_name_input" placeholder="Name">
+                        <input type ="hidden" id ="profile_id_for_name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="update_patronymic_input">Patronymic</label>
+                        <input type="text" class="form-control" id="update_patronymic_input" placeholder="Patronymic">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="update_patronymic_input">Sure name</label>
+                        <input type="text" class="form-control" id="update_sure_name_input" placeholder="Patronymic">
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="update_name_close_btn">Close</button>
+                    <button type="button" class="btn btn-primary" id = "save_changes_name_update_btn"
+                            onclick="updateName(document.getElementById('profile_id_for_name').value,
+                            document.getElementById('update_name_input').value,
+                            document.getElementById('update_patronymic_input').value,
+                            document.getElementById('update_sure_name_input').value)"
+                    >Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
     <!-- Modal -->
     <div id="portfolioModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2 class="modal-title"><span id="PMHeadline"></span></h2>
+                    <h2 class="modal-title"><span id="PMHeadline"></span>PMHeadline</h2>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <h4><a id="PMlink"></a></h4>
+                    <h4><a id="PMlink">PMlink</a></h4>
                     <div class="well well-sm">
                         <span id="PMDescription"></span>
+                        PMDescription
                     </div>
                 </div>
                 <div class="modal-footer">
