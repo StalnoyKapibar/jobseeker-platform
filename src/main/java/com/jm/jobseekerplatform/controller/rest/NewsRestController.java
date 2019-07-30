@@ -32,9 +32,9 @@ public class NewsRestController {
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public @ResponseBody
-    ResponseEntity addNews(@RequestBody News news,
-                           @RequestParam("employerProfileId") Long employerProfileId) {
+    @ResponseBody
+    public ResponseEntity addNews(@RequestBody News news,
+                                  @RequestParam("employerProfileId") Long employerProfileId) {
         news.setAuthor(employerProfileService.getById(employerProfileId));
         newsService.add(news);
         return new ResponseEntity(HttpStatus.OK);
@@ -52,6 +52,7 @@ public class NewsRestController {
     }
 
     @RequestMapping(value = "/all_employer_news", method = RequestMethod.GET)
+    @ResponseBody
     public ResponseEntity<List<News>> getAllNewsByEmployerProfileId(@RequestParam("employerProfileId") Long employerProfileId,
                                                                     @RequestParam("newsPageCount") int newsPageCount) {
         Sort sort = new Sort(Sort.Direction.DESC, "date");
@@ -61,9 +62,9 @@ public class NewsRestController {
     }
 
     @RequestMapping(value = "/all_seeker_news", method = RequestMethod.GET)
-    public @ResponseBody
-    ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
-                                                           @RequestParam("newsPageCount") int newsPageCount) {
+    @ResponseBody
+    public ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
+                                                                  @RequestParam("newsPageCount") int newsPageCount) {
         Set<EmployerProfile> employerProfiles = seekerProfileService.getById(seekerProfileId).getSubscriptions();
         if (employerProfiles.size() == 0) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
