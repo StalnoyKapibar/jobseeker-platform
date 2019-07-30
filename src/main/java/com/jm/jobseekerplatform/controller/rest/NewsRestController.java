@@ -32,7 +32,6 @@ public class NewsRestController {
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    @ResponseBody
     public ResponseEntity addNews(@RequestBody News news,
                                   @RequestParam("employerProfileId") Long employerProfileId) {
         news.setAuthor(employerProfileService.getById(employerProfileId));
@@ -47,6 +46,7 @@ public class NewsRestController {
     }
 
     @RequestMapping(value = "/{newsId}", method = RequestMethod.GET)
+    @ResponseBody
     public ResponseEntity<News> getNewsById(@PathVariable("newsId") Long newsId) {
         return new ResponseEntity<>(newsService.getById(newsId), HttpStatus.OK);
     }
