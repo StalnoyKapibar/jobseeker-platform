@@ -41,6 +41,8 @@ public class EmployerController {
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
 
+
+    //TODO сделать преавторизацию только для страницы изменения профиля
     @PreAuthorize("#employerProfileId == authentication.getPrincipal().getId()")
     @RequestMapping("/employer/{employerProfileId}")
     public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {

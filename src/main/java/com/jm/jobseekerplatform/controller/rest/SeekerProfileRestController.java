@@ -43,9 +43,6 @@ public class SeekerProfileRestController {
     @Autowired
     private ImageService imageService;
 
-//    @Value("${path.img.seeker.avatar}")
-//    String avaFolderPath;
-
     @RequestMapping("/")
     public List<SeekerProfile> getAllSeekerProfiles() {
         return seekerProfileService.getAll();
@@ -91,22 +88,13 @@ public class SeekerProfileRestController {
             profile.setSurname(surname);
         }
         if (tags != null) {
-            List<Tag> tagsFromDB = tagService.getVerified();
-            Set<Tag> newTags = new HashSet<>();
-            for (String tagstr : tags) {
-                for (Tag tag : tagsFromDB) {
-                    if (tag.getName().equalsIgnoreCase(tagstr)) {
-                        newTags.add(tagService.findByName(tag.getName()));
-                    }
-                }
-            }
-            profile.setTags(newTags);
+            profile.setTags(seekerProfileService.getNewTags(tags));
         }
         if (description != null) {
             profile.setDescription(description);
         }
         seekerProfileService.update(profile);
-        return seekerProfileService.getById(id);
+        return profile;
     }
 
     @RequestMapping(value = "/update_image", method = RequestMethod.POST)
@@ -119,7 +107,6 @@ public class SeekerProfileRestController {
         }
         return Base64.getEncoder().encodeToString(profile.getPhoto());
     }
-
 
 
 }

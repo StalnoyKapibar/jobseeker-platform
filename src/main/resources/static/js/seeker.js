@@ -98,12 +98,12 @@ function showUpdateNameModal(id) {
     });
 }
 
-$(document).ready(function(){
-    $('#save_changes_name_update_btn').on('click', function(){
-
-
-    });
-});
+// $(document).ready(function(){
+//     $('#save_changes_name_update_btn').on('click', function(){
+//
+//
+//     });
+// });
 
 function updateName(id, name, patronymic, surname) {
 
