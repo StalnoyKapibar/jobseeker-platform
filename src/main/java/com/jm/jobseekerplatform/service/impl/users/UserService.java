@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
 import java.time.LocalDateTime;
 
 import java.util.UUID;
@@ -83,9 +84,9 @@ public class UserService extends AbstractService<User> {
         User registeredUser = findByEmail(userEmail);
 
         String token = UUID.randomUUID().toString();
-        VerificationToken verificationToken =
-                new VerificationToken(token, registeredUser, verificationTokenService.calculateExpiryDate());
-        verificationTokenService.add(verificationToken);
+//        VerificationToken verificationToken =
+//                new VerificationToken(token, registeredUser, verificationTokenService.calculateExpiryDate());
+//        verificationTokenService.add(verificationToken);
 //        verificationTokenService.createToken(token,registeredUser);
         mailService.sendVerificationEmail(userEmail, token);
     }
@@ -97,26 +98,26 @@ public class UserService extends AbstractService<User> {
         PasswordResetToken passwordResetToken =
                 new PasswordResetToken(token, recoveryUser, passwordResetTokenService.calculateExpiryDate());
         passwordResetTokenService.add(passwordResetToken);
-//        passwordResetTokenService.createToken(token);
+//        passwordResetTokenService.createToken(token,recoveryUser);
         mailService.sendRecoveryPassEmail(email, token);
     }
 
     public void passwordReset(String token, char[] password) {
-//        try {
-//            PasswordResetToken passwordResetToken= passwordResetTokenService.findByToken(token);
-//            boolean exists = passwordResetTokenService.tokenIsNonExpired(passwordResetToken);
-//            if (exists) {
-//                String email = passwordResetToken.getUser().getEmail();
-//                passwordResetTokenService.completeRecovery(passwordResetToken);
-//
-//            }
-//        } catch (NoResultException e) {
-//            e.printStackTrace();
-//        }
-        User newPassUser = findByEmail(token);
-        char[] newPass = encodePassword(password);
-        newPassUser.setPassword(newPass);
-        update(newPassUser);
+        try {
+            PasswordResetToken passwordResetToken= passwordResetTokenService.findByToken(token);
+            boolean exists = passwordResetTokenService.tokenIsNonExpired(passwordResetToken);
+            if (exists) {
+                String email = passwordResetToken.getUser().getEmail();
+                User newPassUser = findByEmail(email);
+                char[] newPass = encodePassword(password);
+                newPassUser.setPassword(newPass);
+                update(newPassUser);
+                passwordResetTokenService.delete(passwordResetToken);
+            }
+        } catch (NoResultException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void addNewUserByAdmin(User user, boolean check) {

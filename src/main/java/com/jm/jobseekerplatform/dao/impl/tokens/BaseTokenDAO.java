@@ -4,7 +4,7 @@ import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.tokens.BaseToken;
 
 
-public  class BaseTokenDAO<T extends BaseToken> extends AbstractDAO<T>  {
+public  class BaseTokenDAO<T extends BaseToken> extends AbstractDAO<T> {
 
     public T findByToken(String token) {
         return entityManager

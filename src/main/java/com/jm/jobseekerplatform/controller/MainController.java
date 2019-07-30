@@ -202,7 +202,6 @@ public class MainController {
                 String email = passwordResetToken.getUser().getEmail();
                 model.addAttribute("email", email);
                 model.addAttribute("token", token);
-                passwordResetTokenService.completeRecovery(passwordResetToken);
             }
         } catch (NoResultException e) {
             e.printStackTrace();
