@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
@@ -51,10 +52,10 @@ public class MainController {
     private EmployerUserService employerUserService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
+    private UserRole roleEmployer = new UserRole("ROLE_EMPLOYER");
 
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
-
 
     @RequestMapping("/")
     public String mainPage(Model model, Authentication authentication) {
@@ -67,7 +68,7 @@ public class MainController {
                     Long id = ((User) authentication.getPrincipal()).getId();
                     SeekerProfile profile = seekerProfileService.getById(id);
                     model.addAttribute("favoriteVacancies", profile.getFavoriteVacancy());
-                    model.addAttribute("profileId", profile.getId());
+                    model.addAttribute("seekerProfileId", profile.getId());
                     model.addAttribute("googleMapsApiKey", googleMapsApiKey);
                     model.addAttribute("seekerAuthority", seekerUserService.getById(id).getAuthority());
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
@@ -78,6 +79,12 @@ public class MainController {
                 }
             } else {
                 model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+            }
+
+            if (authentication.getAuthorities().contains(roleEmployer)) {
+                Long id = ((User) authentication.getPrincipal()).getId();
+                EmployerProfile profile = employerUserService.getById(id).getProfile();
+                model.addAttribute("employerProfileId", profile.getId());
             }
         }
         return "index";
@@ -162,19 +169,29 @@ public class MainController {
         return "new_vacancy";
     }
 
+    @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
+    @RequestMapping(value = "/add_news", method = RequestMethod.GET)
+    public String addNewsPage(Model model, Authentication authentication) {
+        model.addAttribute("employerProfileId", ((User) authentication.getPrincipal()).getId());
+        return "add_news";
+    }
+
     @RequestMapping(value = "/vacancy/{vacancyId}", method = RequestMethod.GET)
     public String viewVacancy(@PathVariable Long vacancyId, Model model, Authentication authentication) {
 
         Vacancy vacancy = vacancyService.getById(vacancyId);
         if (authentication != null) {
             boolean isContain;
+            boolean isSubscribe;
             Long id = ((User) authentication.getPrincipal()).getId();
             Profile profile = userService.getById(id).getProfile();
             if (profile instanceof SeekerProfile) {
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
+                isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(vacancy.getEmployerProfile());
                 model.addAttribute("isContain", isContain);
+                model.addAttribute("isSubscribe", isSubscribe);
+                model.addAttribute("seekerProfileId", profile.getId());
             }
-            model.addAttribute("profileId", profile.getId());
         }
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("vacancyFromServer", vacancy);
