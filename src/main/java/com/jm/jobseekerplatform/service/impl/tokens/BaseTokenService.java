@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.service.impl.tokens;
 
+import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.dao.impl.tokens.BaseTokenDAO;
 import com.jm.jobseekerplatform.model.tokens.BaseToken;
 import com.jm.jobseekerplatform.service.AbstractService;
@@ -12,8 +13,8 @@ public abstract class BaseTokenService<T extends BaseToken> extends AbstractServ
 
     protected final BaseTokenDAO<T> baseTokenDAO;
 
-    public BaseTokenService() {
-        this.baseTokenDAO = (BaseTokenDAO<T>) abstractDAO;
+    public BaseTokenService(BaseTokenDAO<T> baseTokenDAO) {
+        this.baseTokenDAO =  baseTokenDAO;
     }
 
     public Date calculateExpiryDate() {

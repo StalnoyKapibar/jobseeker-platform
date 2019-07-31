@@ -14,6 +14,10 @@ import com.jm.jobseekerplatform.service.impl.tokens.PasswordResetTokenService;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.tokens.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.NoResultException;
 import java.time.LocalDateTime;
 
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,6 +63,30 @@ public class UserService extends AbstractService<User> {
         return dao.findByEmail(email);
     }
 
+    public User findUserByTokenValue(String token){
+        try {
+            PasswordResetToken passwordResetToken = passwordResetTokenService.findByToken(token);
+            boolean existsPassResetToken = passwordResetTokenService.tokenIsNonExpired(passwordResetToken);
+            if (existsPassResetToken) {
+                return passwordResetToken.getUser();
+            }
+            else {
+                VerificationToken verificationToken = verificationTokenService.findByToken(token);
+                boolean existsVerificationToken = verificationTokenService.tokenIsNonExpired(verificationToken);
+                if (existsVerificationToken){
+                    return verificationToken.getUser();
+                }
+                else {
+                    return null;
+                }
+            }
+        } catch (NoResultException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
     public char[] encodePassword(char[] password) {
         return passwordEncoder.encode(String.valueOf(password)).toCharArray();
     }
@@ -84,40 +113,35 @@ public class UserService extends AbstractService<User> {
         User registeredUser = findByEmail(userEmail);
 
         String token = UUID.randomUUID().toString();
-//        VerificationToken verificationToken =
-//                new VerificationToken(token, registeredUser, verificationTokenService.calculateExpiryDate());
-//        verificationTokenService.add(verificationToken);
-//        verificationTokenService.createToken(token,registeredUser);
+        VerificationToken verificationToken =
+                new VerificationToken(token, registeredUser, verificationTokenService.calculateExpiryDate());
+        verificationTokenService.add(verificationToken);
+
         mailService.sendVerificationEmail(userEmail, token);
     }
 
     public void recoveryPassRequest(String email) {
+        //TODO : проверка на наличие токена
         User recoveryUser = findByEmail(email);
-
         String token = UUID.randomUUID().toString();
         PasswordResetToken passwordResetToken =
                 new PasswordResetToken(token, recoveryUser, passwordResetTokenService.calculateExpiryDate());
         passwordResetTokenService.add(passwordResetToken);
-//        passwordResetTokenService.createToken(token,recoveryUser);
+// TODO: нужно протестить
+//        Authentication auth = new UsernamePasswordAuthenticationToken(
+//                recoveryUser, null, Arrays.asList(
+//                new SimpleGrantedAuthority("CHANGE__PASSWORD__PRIVILEGE")));
+//        SecurityContextHolder.getContext().setAuthentication(auth);
+
         mailService.sendRecoveryPassEmail(email, token);
     }
 
     public void passwordReset(String token, char[] password) {
-        try {
-            PasswordResetToken passwordResetToken= passwordResetTokenService.findByToken(token);
-            boolean exists = passwordResetTokenService.tokenIsNonExpired(passwordResetToken);
-            if (exists) {
-                String email = passwordResetToken.getUser().getEmail();
-                User newPassUser = findByEmail(email);
-                char[] newPass = encodePassword(password);
-                newPassUser.setPassword(newPass);
-                update(newPassUser);
-                passwordResetTokenService.delete(passwordResetToken);
-            }
-        } catch (NoResultException e) {
-            e.printStackTrace();
-        }
-
+        User newPassUser = findUserByTokenValue(token);
+        char[] newPass = encodePassword(password);
+        newPassUser.setPassword(newPass);
+        update(newPassUser);
+        passwordResetTokenService.delete(passwordResetTokenService.findByToken(token));
     }
 
     public void addNewUserByAdmin(User user, boolean check) {

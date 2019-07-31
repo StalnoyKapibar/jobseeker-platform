@@ -188,6 +188,7 @@ public class MainController {
 
         return "vacancy";
     }
+
     @RequestMapping(value = "/recovery", method = RequestMethod.GET)
     public String recoveryPassPage(){
         return "recovery";
@@ -195,19 +196,10 @@ public class MainController {
 
     @RequestMapping(value = "/password_reset/{token}", method = RequestMethod.GET)
     public String newPassPage(@PathVariable String token,Model model){
-        try {
-            PasswordResetToken passwordResetToken= passwordResetTokenService.findByToken(token);
-            boolean exists = passwordResetTokenService.tokenIsNonExpired(passwordResetToken);
-            if (exists) {
-                String email = passwordResetToken.getUser().getEmail();
-                model.addAttribute("email", email);
-                model.addAttribute("token", token);
-            }
-        } catch (NoResultException e) {
-            e.printStackTrace();
-        } finally {
-            return "password_reset";
-        }
+        String email = userService.findUserByTokenValue(token).getEmail();
+        model.addAttribute("email", email);
+        model.addAttribute("token", token);
+        return "password_reset";
     }
 
     @RequestMapping(value = "/ex", method = RequestMethod.GET)
