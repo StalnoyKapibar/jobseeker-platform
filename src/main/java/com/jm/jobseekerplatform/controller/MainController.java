@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.persistence.NoResultException;
 import javax.annotation.security.RolesAllowed;
 import java.util.Base64;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,6 +49,9 @@ public class MainController {
 
     @Autowired
     private EmployerUserService employerUserService;
+
+    @Autowired
+    private SubscriptionService subscriptionService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
     private UserRole roleEmployer = new UserRole("ROLE_EMPLOYER");
@@ -186,8 +188,9 @@ public class MainController {
             Long id = ((User) authentication.getPrincipal()).getId();
             Profile profile = userService.getById(id).getProfile();
             if (profile instanceof SeekerProfile) {
+                Subscription subscription= subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, vacancy.getEmployerProfile());
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
-                isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(vacancy.getEmployerProfile());
+                isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(subscription);
                 model.addAttribute("isContain", isContain);
                 model.addAttribute("isSubscribe", isSubscribe);
                 model.addAttribute("seekerProfileId", profile.getId());
