@@ -14,13 +14,13 @@ public class Subscription implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private EmployerProfile employerProfile;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private SeekerProfile seekerProfile;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     private Set<Tag> tags;
 
     public Subscription() {
