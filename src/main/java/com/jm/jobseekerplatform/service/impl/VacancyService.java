@@ -135,19 +135,25 @@ public class VacancyService extends AbstractService<Vacancy> {
     }
     public boolean updateVacancy(Vacancy vacancy){
         vacancy.setState(State.ACCESS);
-    //    dao.update(vacancy);
-        System.out.println(vacancy);
-        Vacancy oldVacancy = getById(vacancy.getId());
+
+        Vacancy oldVacancy= getById(vacancy.getId());
         oldVacancy.setHeadline(vacancy.getHeadline());
-        oldVacancy.setCoordinates(vacancy.getCoordinates());
+//        oldVacancy.setCoordinates(vacancy.getCoordinates());
         oldVacancy.setDescription(vacancy.getDescription());
         oldVacancy.setSalaryMax(vacancy.getSalaryMax());
         oldVacancy.setSalaryMin(vacancy.getSalaryMin());
-        oldVacancy.setCity(vacancy.getCity());
+        oldVacancy.setCity(cityService.checkCityOrAdd(vacancy.getCity().getName(),vacancy.getCoordinates()));
+        Point point= vacancy.getCoordinates();
+        pointService.add(point);
+        oldVacancy.setCoordinates(point);
         oldVacancy.setRemote(vacancy.getRemote());
         oldVacancy.setShortDescription(vacancy.getShortDescription());
-        oldVacancy.setTags(vacancy.getTags());
-        dao.update(oldVacancy);
+        oldVacancy.setTags(tagService.matchTagsByName(vacancy.getTags()));
+    //    dao.update(vacancy);
+        System.out.println(vacancy);
+//        Vacancy oldVacancy = getById(vacancy.getId());
+
+  //      dao.updateVacancy(vacancy);
         return true;
     }
 }

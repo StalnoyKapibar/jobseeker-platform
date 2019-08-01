@@ -27,7 +27,7 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     @Column(name = "headline", nullable = false)
     private String headline;
 
-    @OneToOne (fetch = FetchType.LAZY,cascade = CascadeType.DETACH)//LAZY)
+    @OneToOne (fetch = FetchType.LAZY,cascade = CascadeType.MERGE)//LAZY)
     private City city;
 
     @Column(name = "remote", nullable = false)
@@ -48,7 +48,7 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
     private Set<Tag> tags;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     private Point coordinates;
 
     @Column(name = "state", nullable = false)
@@ -191,20 +191,20 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
 
     @Override
     public String toString() {
-        return "Vacancy{" +
+        return "Vacancy{" + "\n" +
                 "id=" + id +
-                ", employerProfile=" + employerProfile +
-                ", headline='" + headline + '\'' +
-                ", city=" + city.getName() +
-                ", remote=" + remote +
-                ", shortDescription='" + shortDescription + '\'' +
-                ", description='" + description + '\'' +
-                ", salaryMin=" + salaryMin +
-                ", salaryMax=" + salaryMax +
-                ", tags=" + tags +
-                ", coordinates=" + coordinates +
-                ", state=" + state +
-                ", expiryBlock=" + expiryBlock +
+                "," +"\n" + "employerProfile=" + employerProfile +
+                "," +"\n" + " headline='" + headline +
+                "," +"\n" + " city=" + city.getName() +
+                "," +"\n" + " remote=" + remote +
+                "," +"\n" + " shortDescription='" + shortDescription +
+                "," +"\n" + " description='" + description +
+                "," +"\n" + " salaryMin=" + salaryMin +
+                "," +"\n" + " salaryMax=" + salaryMax +
+                "," +"\n" + " tags=" + tags +
+                "," +"\n" + " coordinates=" + coordinates +
+                "," +"\n" + " state=" + state +
+                "," +"\n" + " expiryBlock=" + expiryBlock +
                 '}';
     }
 }

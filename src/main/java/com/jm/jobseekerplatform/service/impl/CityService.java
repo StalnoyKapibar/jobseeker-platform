@@ -68,5 +68,7 @@ public class CityService extends AbstractService<City> {
             return newCity;
         }
     }
-
+    public City getCityByName(String cityName){
+        return cityDAO.getCityByName(cityName);
+    }
 }

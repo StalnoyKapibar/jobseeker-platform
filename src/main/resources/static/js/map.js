@@ -12,8 +12,14 @@ function initMap() {
 
 function initV_Map() {
     v_map = new google.maps.Map(document.getElementById('v_map'), {
-        center: {lat: 55.752030, lng: 37.633685},
+        center: {lat: lat, lng: lng},
         zoom: 12
+    });
+
+    v_marker= new google.maps.Marker({
+        position: {lat,lng},
+        map: v_map,
+        draggable: true
     });
     google.maps.event.addListener(v_map, 'click', function (event) {
         v_marker == undefined ? null : v_marker.setMap(null);

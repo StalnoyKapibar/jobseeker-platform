@@ -17,7 +17,7 @@ $(document).ready(function () {
     lat = parseFloat($("#lat").val());
     lng = parseFloat($("#long").val());
     let address = getAddressByCoords(lat, lng);
-    alert(address);
+ //   alert(address);
 
     $("#v_address").val(address);
 
@@ -325,7 +325,7 @@ $(document).ready(function () {
             },
             success: function (data) {
                 $("#vacancy_container").empty();
-                $("#vacancy_container").append("<div class='alert alert-success' role='alert'>Вакансия добавлена!<br/>Вы также можете <a href='/user'>посмотреть свой профиль</a></div>");
+                $("#vacancy_container").append("<div class='alert alert-success' role='alert'>Вакансия обновлена!<br/>Вы также можете <a href='/user'>посмотреть свой профиль</a></div>");
             },
             error: function (error) {
                 console.log(error);

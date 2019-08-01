@@ -278,7 +278,7 @@ function printVacancies(data) {
             return bool;
 
         }
-    }git);
+    });
 }
 
 function inFavorite(vacancyId, profileId) {

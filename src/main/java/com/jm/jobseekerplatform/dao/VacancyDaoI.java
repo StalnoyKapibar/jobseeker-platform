@@ -16,4 +16,6 @@ public interface VacancyDaoI extends JpaRepository<Vacancy,Long> {
 
     @Query(value = "SELECT distinct v FROM Vacancy v JOIN v.tags t WHERE t IN ?1")
     Page<Vacancy> findAllByTags(Set<Tag> tags, Pageable pageable);
+
+
 }
