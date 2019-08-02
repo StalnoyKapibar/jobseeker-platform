@@ -119,26 +119,32 @@ public class InitData {
         for (int i = 0; i < newsList.size(); i++) {
             if (i < 10) {
                 newsList.get(i).setAuthor(employerProfileService.getById(2L));
+                newsList.get(i).setTags(randomTags(1L));
                 newsService.update(newsList.get(i));
             }
             if (i >= 10 && i < 20) {
                 newsList.get(i).setAuthor(employerProfileService.getById(3L));
+                newsList.get(i).setTags(randomTags(2L));
                 newsService.update(newsList.get(i));
             }
             if (i >= 20 && i < 30) {
                 newsList.get(i).setAuthor(employerProfileService.getById(4L));
+                newsList.get(i).setTags(randomTags(3L));
                 newsService.update(newsList.get(i));
             }
             if (i >= 30 && i < 40) {
                 newsList.get(i).setAuthor(employerProfileService.getById(5L));
+                newsList.get(i).setTags(randomTags(4L));
                 newsService.update(newsList.get(i));
             }
             if (i >= 40 && i < 50) {
                 newsList.get(i).setAuthor(employerProfileService.getById(6L));
+                newsList.get(i).setTags(randomTags(5L));
                 newsService.update(newsList.get(i));
             }
             if (i >= 50 && i < 60) {
                 newsList.get(i).setAuthor(employerProfileService.getById(7L));
+                newsList.get(i).setTags(randomTags(6L));
                 newsService.update(newsList.get(i));
             }
         }
