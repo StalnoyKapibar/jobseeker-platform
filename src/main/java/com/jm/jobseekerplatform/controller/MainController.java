@@ -57,6 +57,9 @@ public class MainController {
     private EmployerUserService employerUserService;
 
     @Autowired
+    private SubscriptionService subscriptionService;
+
+    @Autowired
     private ChatWithTopicService chatWithTopicService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
@@ -203,8 +206,9 @@ public class MainController {
             Long id = ((User) authentication.getPrincipal()).getId();
             Profile profile = userService.getById(id).getProfile();
             if (profile instanceof SeekerProfile) {
+                Subscription subscription= subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, vacancy.getEmployerProfile());
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
-                isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(vacancy.getCreatorProfile());
+                isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(subscription);
                 model.addAttribute("isContain", isContain);
                 model.addAttribute("isSubscribe", isSubscribe);
                 model.addAttribute("seekerProfileId", profile.getId());

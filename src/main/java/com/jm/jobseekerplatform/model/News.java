@@ -5,6 +5,8 @@ import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "news")
@@ -25,6 +27,12 @@ public class News implements Serializable {
 
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "news_tags",
+            joinColumns = @JoinColumn(name = "news_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags = new HashSet<>();
 
     public News() {
     }
@@ -74,5 +82,13 @@ public class News implements Serializable {
 
     public void setAuthor(EmployerProfile author) {
         this.author = author;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }
