@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.controller;
 
+import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.VerificationToken;
@@ -11,10 +12,11 @@ import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
-import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
-import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.SubscriptionService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.VerificationTokenService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
+import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
@@ -59,8 +61,6 @@ public class MainController {
     @Autowired
     private SubscriptionService subscriptionService;
 
-    @Autowired
-    private ChatWithTopicService chatWithTopicService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
     private UserRole roleEmployer = new UserRole("ROLE_EMPLOYER");
@@ -151,36 +151,7 @@ public class MainController {
         return "index";
     }
 
-    @RequestMapping("/chat/{chatId}")
-    public String getChatById(@PathVariable("chatId") String chatId, Authentication authentication, Model model) {
 
-        User user = (User) authentication.getPrincipal();
-
-        model.addAttribute("profileId", user.getProfile().getId());
-        model.addAttribute("chatId", chatId);
-
-        return "chat";
-    }
-
-    @RequestMapping("/chat/vacancy/{vacancyId:\\d+}")
-    public String getChatByVacancyAndAuthenticatedUser(@PathVariable("vacancyId") Long vacancyId,
-                                                       Authentication authentication, Model model) {
-
-        User authenticatedUser = ((User) authentication.getPrincipal());
-        Profile authenticatedProfile = authenticatedUser.getProfile();
-
-        //ChatWithTopicVacancy chat = chatWithTopicVacancyService.getByTopicIdAndCreatorProfileId(vacancyId, authenticatedProfile.getId());
-        //ChatWithTopic<Vacancy> chat = chatWithTopicService.getByTopicIdCreatorProfileIdTopicType(vacancyId, authenticatedProfile.getId(), Vacancy.class);
-        ChatWithTopic<Vacancy> chat = chatWithTopicService.getByTopicIdCreatorProfileIdChatType(vacancyId, authenticatedProfile.getId(), ChatWithTopicVacancy.class);
-
-        if (chat == null) {
-            chat = new ChatWithTopicVacancy(authenticatedProfile, vacancyService.getById(vacancyId));
-
-            chatWithTopicService.add(chat);
-        }
-
-        return "redirect:/chat/" + chat.getId();
-    }
 
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/new_vacancy", method = RequestMethod.GET)
@@ -206,7 +177,7 @@ public class MainController {
             Long id = ((User) authentication.getPrincipal()).getId();
             Profile profile = userService.getById(id).getProfile();
             if (profile instanceof SeekerProfile) {
-                Subscription subscription= subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, vacancy.getEmployerProfile());
+                Subscription subscription= subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, vacancy.getCreatorProfile());
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
                 isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(subscription);
                 model.addAttribute("isContain", isContain);

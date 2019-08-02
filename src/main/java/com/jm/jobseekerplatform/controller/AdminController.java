@@ -1,12 +1,12 @@
 package com.jm.jobseekerplatform.controller;
 
+import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
-import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.service.impl.TagService;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
-import com.jm.jobseekerplatform.service.impl.VacancyService;
-import com.jm.jobseekerplatform.service.impl.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
