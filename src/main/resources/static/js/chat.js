@@ -13,12 +13,6 @@ $(function () {
     getAllChatMessagesByChatId(currentChatId);
 
     messageForm.addEventListener('submit', sendMessage, true);
-
-    // if (profileId == "admin@mail.ru") { //todo (Nick Dolgopolov)
-    //     count_not_read_messages("admin");
-    // } else {
-    //     count_not_read_messages(currentChatId);
-    // }
 });
 
 function connectToServerByChatId(chatId) {
@@ -170,16 +164,4 @@ function updateMessageReadStatusOnServer(message, readerProfileId) {
 function scrollMessageArea() {
     $container = $('.message-area');
     $container[0].scrollTop = $container[0].scrollHeight;
-}
-
-function count_not_read_messages(url) { //todo (Nick Dolgopolov)
-    // $.ajax({
-    //     url: "/api/chats/count_not_read_messages/" + url,
-    //     type: "GET",
-    //     async: false,
-    //     success: function (data) {
-    //             var str = "   " + data;
-    //             document.getElementById("count_not_read_messages").textContent=str;}
-    //
-    // })
 }

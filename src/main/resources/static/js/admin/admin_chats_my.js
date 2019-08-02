@@ -8,7 +8,7 @@ $(document).ready(function () {
         searching: false,
         info: false,
 
-        "sAjaxSource": "/api/chats/my/" + currentProfileId, //todo (Nick Dolgopolov) ChatMessageRestController.getAllLastMessages()
+        "sAjaxSource": "/api/chats/my/" + currentProfileId,
         "sAjaxDataProp": "",
         "order": [[1, "desc"]],
         "aoColumns": [
@@ -50,7 +50,7 @@ $(document).ready(function () {
     });
 
     var url = "admin";
-    //count_not_read_messages(url);
+    //count_not_read_messages(url); //todo (Nick Dolgopolov) добавить данные по кол-ву непрочитанных чатов и кол-ву непрочитанных сообщений в чатах
 
 });
 
