@@ -88,14 +88,14 @@
                     </button>
                     <span id="btnFavorite">
                         <button th:if="${isContain}" id="outFavorite" class="btn btn-primary"
-                                th:onclick="'outFavorite(' + ${vacancyFromServer.id} + ',' + ${seekerProfileId} + ')'">
-                            Убрать из
-                            избранное
-                        </button>
-                        <button th:unless="${isContain}" id="inFavorite" class="btn btn-primary"
-                                th:onclick="'inFavorite(' + ${vacancyFromServer.id} + ',' + ${seekerProfileId} + ')'">
-                            В избранное
-                        </button>
+                                th:onclick="'outFavorite(' + ${vacancyFromServer.id} + ',' + ${profileId} + ')'">
+                        Убрать из
+                        избранное
+                    </button>
+                    <button th:unless="${isContain}" id="inFavorite" class="btn btn-primary"
+                            th:onclick="'inFavorite(' + ${vacancyFromServer.id} + ',' + ${profileId} + ')'">
+                        В избранное
+                    </button>
                     </span>
                     <span id="btnSubscribe">
                         <button th:if="${isSubscribe}" type="button" id="unSubscribe" class="btn btn-outline-primary"
@@ -137,15 +137,7 @@
                             Подтвердить
                         </button>
                     </div>
-                    <button th:if="${isContain}" id="outFavorite" class="btn btn-primary"
-                            th:onclick="'outFavorite(' + ${vacancyFromServer.id} + ',' + ${profileId} + ')'">
-                        Убрать из
-                        избранное
-                    </button>
-                    <button th:unless="${isContain}" id="inFavorite" class="btn btn-primary"
-                            th:onclick="'inFavorite(' + ${vacancyFromServer.id} + ',' + ${profileId} + ')'">
-                        В избранное
-                    </button>
+
                 </div>
                 <div th:if="${isOwner}" id="table" style="padding: 15px;">
                     <table class="table table-striped">

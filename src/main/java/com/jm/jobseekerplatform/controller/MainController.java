@@ -190,7 +190,7 @@ public class MainController {
                 model.addAttribute("seekerProfileId", profile.getId());
                 model.addAttribute("hasResponded", hasResponded);
             }
-            if (id.equals(vacancy.getEmployerProfile().getId())) {
+            if (id.equals(vacancy.getCreatorProfile().getId())) {
                 isOwner=true;
             }
             model.addAttribute("profileId", profile.getId());

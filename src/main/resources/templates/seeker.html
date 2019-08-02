@@ -63,7 +63,7 @@
                         <tbody>
                         <tr id="tableRows" th:each="meeting,mCount: ${seekerProfile.meetings}" style="font-weight: normal;">
                             <td th:text="${mCount.count}"></td>
-                            <td th:text="${meeting.vacancy.creator.companyName}"></td>
+                            <td th:text="${meeting.vacancy.creatorProfile.companyName}"></td>
                             <td th:text="${meeting.vacancy.headline}"></td>
                             <td><a th:href="@{'/vacancy/' +  ${meeting.vacancy.id}}">вакансия</a></td>
                             <td class="tableStatus" th:text="${meeting.status}"></td>
