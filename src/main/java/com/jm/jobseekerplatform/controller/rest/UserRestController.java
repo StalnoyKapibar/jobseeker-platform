@@ -55,8 +55,8 @@ public class UserRestController {
     }
     //востановление пароля
     @RequestMapping(method = RequestMethod.GET, value = "/recovery/{email}")
-    public void inviteFriend(@PathVariable String email) {
-        userService.recoveryPassRequest(email);
+    public ResponseEntity<Boolean> recoveryPassRequset(@PathVariable String email) {
+        return ResponseEntity.ok(userService.recoveryPassRequest(email));
     }
     //востановление пароля
     @RequestMapping(method = RequestMethod.GET, value = "/password_reset/{token}/{password}")

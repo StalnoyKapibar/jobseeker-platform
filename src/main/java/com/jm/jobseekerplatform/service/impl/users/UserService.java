@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,25 +62,23 @@ public class UserService extends AbstractService<User> {
         return dao.findByEmail(email);
     }
 
-    public User findUserByTokenValue(String token){
-        try {
-            PasswordResetToken passwordResetToken = passwordResetTokenService.findByToken(token);
+    public User findUserByTokenValue(String token) {
+
+        PasswordResetToken passwordResetToken = passwordResetTokenService.findByToken(token);
+        if (passwordResetToken != null) {
             boolean existsPassResetToken = passwordResetTokenService.tokenIsNonExpired(passwordResetToken);
             if (existsPassResetToken) {
                 return passwordResetToken.getUser();
-            }
-            else {
+            } else {
                 VerificationToken verificationToken = verificationTokenService.findByToken(token);
                 boolean existsVerificationToken = verificationTokenService.tokenIsNonExpired(verificationToken);
-                if (existsVerificationToken){
+                if (existsVerificationToken) {
                     return verificationToken.getUser();
-                }
-                else {
+                } else {
                     return null;
                 }
             }
-        } catch (NoResultException e) {
-            e.printStackTrace();
+        } else {
             return null;
         }
     }
@@ -120,20 +117,20 @@ public class UserService extends AbstractService<User> {
         mailService.sendVerificationEmail(userEmail, token);
     }
 
-    public void recoveryPassRequest(String email) {
-        //TODO : проверка на наличие токена
+    public boolean recoveryPassRequest(String email) {
         User recoveryUser = findByEmail(email);
-        String token = UUID.randomUUID().toString();
-        PasswordResetToken passwordResetToken =
-                new PasswordResetToken(token, recoveryUser, passwordResetTokenService.calculateExpiryDate());
-        passwordResetTokenService.add(passwordResetToken);
-// TODO: нужно протестить
-//        Authentication auth = new UsernamePasswordAuthenticationToken(
-//                recoveryUser, null, Arrays.asList(
-//                new SimpleGrantedAuthority("CHANGE__PASSWORD__PRIVILEGE")));
-//        SecurityContextHolder.getContext().setAuthentication(auth);
+        boolean existsToken = passwordResetTokenService.existsTokenByUserId(recoveryUser.getId());
 
-        mailService.sendRecoveryPassEmail(email, token);
+        if (!existsToken) {
+            String token = UUID.randomUUID().toString();
+            PasswordResetToken passwordResetToken =
+                    new PasswordResetToken(token, recoveryUser, passwordResetTokenService.calculateExpiryDate());
+            passwordResetTokenService.add(passwordResetToken);
+            mailService.sendRecoveryPassEmail(email, token);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void passwordReset(String token, char[] password) {

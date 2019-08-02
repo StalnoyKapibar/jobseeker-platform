@@ -30,7 +30,7 @@ public abstract class AbstractService <T extends Serializable> {
     }
 
     public T getById(Long id) {
-        return (T) abstractDAO.getById(id);
+        return  abstractDAO.getById(id);
     }
 
     public void delete(T entity) {

@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class PasswordResetTokenService extends BaseTokenService<PasswordResetToken> {
 
     @Autowired
- BaseTokenDAO<PasswordResetToken> baseTokenDAO;
-
     public PasswordResetTokenService(BaseTokenDAO<PasswordResetToken> baseTokenDAO) {
         super(baseTokenDAO);
     }

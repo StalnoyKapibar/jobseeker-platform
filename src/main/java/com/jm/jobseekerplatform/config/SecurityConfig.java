@@ -77,12 +77,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anonymous()
                 .antMatchers("/**")
                 .permitAll();
-        //Todo: нужно протестить
-        //        http.authorizeRequests()
-//                .antMatchers("/password_reset** ",
-//                        "/users/password_reset** ")
-//                .hasAuthority("CHANGE__PASSWORD__PRIVILEGE");
-
     }
 
 }

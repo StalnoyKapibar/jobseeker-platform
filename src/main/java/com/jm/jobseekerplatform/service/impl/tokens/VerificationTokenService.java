@@ -11,8 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class VerificationTokenService extends BaseTokenService<VerificationToken> {
 
     @Autowired
-    BaseTokenDAO<VerificationToken> baseTokenDAO;
-
     public VerificationTokenService(BaseTokenDAO<VerificationToken> baseTokenDAO) {
         super(baseTokenDAO);
     }

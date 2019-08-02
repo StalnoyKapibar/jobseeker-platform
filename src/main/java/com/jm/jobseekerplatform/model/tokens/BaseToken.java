@@ -7,11 +7,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-//@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public  class BaseToken implements Serializable {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class BaseToken implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "token", nullable = false, unique = true)
