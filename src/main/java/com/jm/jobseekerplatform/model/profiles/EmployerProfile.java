@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.model.profiles;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.jm.jobseekerplatform.model.EmployerReviews;
 import org.hibernate.annotations.Type;
 
@@ -48,6 +49,7 @@ public class EmployerProfile extends Profile implements Serializable {
         this.logo = logo;
     }
 
+    @JsonValue
     public String getCompanyName() {
         return companyName;
     }
