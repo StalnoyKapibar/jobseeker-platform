@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 public class CityDAO extends AbstractDAO<City> {
 
     public City findCityByName(String name) {
-        return (City)entityManager.createQuery("select c from City c where c.name=:city").setParameter("city", name).getSingleResult();
+        return (City)entityManager.createQuery("select c from City c join fetch c.point where c.name=:city").setParameter("city", name)
+                .setHint("org.hibernate.cacheable", true).getSingleResult();
     }
-
 }
