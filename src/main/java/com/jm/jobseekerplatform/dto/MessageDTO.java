@@ -6,24 +6,24 @@ public class MessageDTO {
 
     private Long id;
 
-    private Long authorId;
+    private Long creatorProfileId;
 
     private String text;
 
     private boolean isRead;
 
-    public MessageDTO(Long authorId, String text, boolean isRead) {
-        this.authorId = authorId;
+    public MessageDTO(Long creatorProfileId, String text, boolean isRead) {
+        this.creatorProfileId = creatorProfileId;
         this.text = text;
         this.isRead = isRead;
     }
 
-    public Long getAuthor() {
-        return authorId;
+    public Long getCreatorProfileId() {
+        return creatorProfileId;
     }
 
-    public void setAuthor(Long authorId) {
-        this.authorId = authorId;
+    public void setCreatorProfileId(Long creatorProfileId) {
+        this.creatorProfileId = creatorProfileId;
     }
 
     public String getText() {
@@ -57,12 +57,12 @@ public class MessageDTO {
         MessageDTO that = (MessageDTO) o;
         return isRead == that.isRead &&
                 id.equals(that.id) &&
-                authorId.equals(that.authorId) &&
+                creatorProfileId.equals(that.creatorProfileId) &&
                 text.equals(that.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, authorId, text, isRead);
+        return Objects.hash(id, creatorProfileId, text, isRead);
     }
 }

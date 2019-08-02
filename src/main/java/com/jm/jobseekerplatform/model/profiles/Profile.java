@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.model.profiles;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jm.jobseekerplatform.model.State;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.io.Serializable;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class Profile implements Serializable {
+public abstract class Profile implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,5 +40,18 @@ public class Profile implements Serializable {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    //@JsonIgnore //todo указывать или нет?
+    public abstract String getNameForUi();
+
+    //@JsonIgnore //todo указывать или нет?
+    public abstract String getTypeForUi();
+
+    @Override
+    public String toString() {
+        return "Profile{" +
+                "id=" + id +
+                '}';
     }
 }

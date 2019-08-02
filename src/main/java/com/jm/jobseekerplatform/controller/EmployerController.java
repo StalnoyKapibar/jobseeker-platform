@@ -1,14 +1,15 @@
 package com.jm.jobseekerplatform.controller;
 
-import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.EmployerReviews;
+import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
-import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.Base64;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -84,5 +86,12 @@ public class EmployerController {
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
 
         return "employer";
+    }
+
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @RequestMapping("/employer/get_news/{employerProfileId}")
+    public String getEmployerProfileNews(@PathVariable Long employerProfileId, Model model) {
+        model.addAttribute("employerProfileId", employerProfileId);
+        return "employer_all_news";
     }
 }

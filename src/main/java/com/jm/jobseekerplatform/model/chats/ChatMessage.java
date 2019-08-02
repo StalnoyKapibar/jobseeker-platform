@@ -3,12 +3,14 @@ package com.jm.jobseekerplatform.model.chats;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.model.profiles.Profile;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "chatmessages")
@@ -22,25 +24,29 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
     private String text;
 
     @ManyToOne
-    @JoinColumn(name = "author")
-    private User author;
+    private Profile creatorProfile;
 
     @Column(name = "date")
     private Date date;
 
-    @Column(name = "isread")
-    private boolean isRead;
+    @Column
+    @ElementCollection
+    private Set<Long> isReadByProfilesId;
 
-    public ChatMessage(){ }
-
-    public ChatMessage(String text, User author, Date date, boolean isRead) {
-        this.text = text;
-        this.author = author;
-        this.date = date;
-        this.isRead = isRead;
+    public ChatMessage() {
     }
 
-    public Long getId() { return id; }
+    public ChatMessage(String text, Profile creatorProfile, Date date) {
+        this.text = text;
+        this.creatorProfile = creatorProfile;
+        this.date = date;
+        this.isReadByProfilesId = new HashSet<>();
+        //isReadByProfilesId.add(creatorProfile.getId()); //todo (Nick Dolgopolov) добавлять?
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public String getText() {
         return text;
@@ -50,14 +56,14 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         this.text = text;
     }
 
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
-    @JsonIdentityReference(alwaysAsId=true)
-    public User getAuthor() {
-        return author;
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    public Profile getCreatorProfile() {
+        return creatorProfile;
     }
 
-    public void setAuthor(User author) {
-        this.author = author;
+    public void setCreatorProfile(Profile creatorProfile) {
+        this.creatorProfile = creatorProfile;
     }
 
     public Date getDate() {
@@ -68,12 +74,12 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         this.date = date;
     }
 
-    public boolean isRead() {
-        return isRead;
+    public Set<Long> getIsReadByProfilesId() {
+        return isReadByProfilesId;
     }
 
-    public void setRead(boolean read) {
-        isRead = read;
+    public void setIsReadByProfilesId(Set<Long> isReadByProfilesId) {
+        this.isReadByProfilesId = isReadByProfilesId;
     }
 
     @Override
@@ -81,7 +87,8 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         return "{" +
                 "\"id\":\"" + id + '\"' +
                 ",\"text\":\"" + text + '\"' +
-                ",\"author\":\"" + author.getEmail() + '\"' +
+                ",\"author type\":\"" + creatorProfile.getClass() + '\"' +
+                ",\"author id\":\"" + creatorProfile.getId() + '\"' +
                 ",\"createDate\":\"" + date + "\"" +
                 '}';
     }
@@ -91,16 +98,16 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChatMessage that = (ChatMessage) o;
-        return isRead == that.isRead &&
+        return isReadByProfilesId == that.isReadByProfilesId && //todo как использовать isReadByProfilesId?
                 Objects.equals(id, that.id) &&
                 Objects.equals(text, that.text) &&
-                Objects.equals(author, that.author) &&
+                Objects.equals(creatorProfile, that.creatorProfile) &&
                 Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, author, date, isRead);
+        return Objects.hash(id, text, creatorProfile, date, isReadByProfilesId); //todo как использовать isReadByProfilesId?
     }
 
     @Override

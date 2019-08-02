@@ -50,7 +50,7 @@ $(function () {
     var seekerAuthority = $('#seekerAuthority').val();
 
     if (seekerAuthority) {
-        user_id = $('#profileId').val();
+        user_id = $('#seekerProfileId').val();
         seeker_tags = getSeekerTags(user_id);
     }
 
@@ -222,7 +222,7 @@ function printVacancies(data) {
     $('.favoriteVacancies').each(function (key, value) {
         favoriteVacancies.push($(this).val())
     });
-    var profileId = $('#profileId').val();
+    var seekerProfileId = $('#seekerProfileId').val();
     $.each(data, function (key, value) {
         var favVac = '';
         var vacancyTags = '';
@@ -231,11 +231,11 @@ function printVacancies(data) {
         if (seekerAuthority) {
             $.each(favoriteVacancies, function (i, item) {
                 if (item === value.id.toString()) {
-                    favVac = '<span class="stars" id="stars-' + value.id + '"><i id="outFavorite' + value.id + '" class="fas fa-star" onclick="outFavorite(' + value.id + ',' + profileId + ');event.stopPropagation();" title="убрать из избранных"></i></span>';
+                    favVac = '<span class="stars" id="stars-' + value.id + '"><i id="outFavorite' + value.id + '" class="fas fa-star" onclick="outFavorite(' + value.id + ',' + seekerProfileId + ');event.stopPropagation();" title="убрать из избранных"></i></span>';
                 }
             });
             if (favVac === '') {
-                favVac = '<span class="stars" id="stars-' + value.id + '"><i id="inFavorite' + value.id + '" class="far fa-star" onclick="inFavorite(' + value.id + ',' + profileId + ');event.stopPropagation();" title="в избранное"></i></span>';
+                favVac = '<span class="stars" id="stars-' + value.id + '"><i id="inFavorite' + value.id + '" class="far fa-star" onclick="inFavorite(' + value.id + ',' + seekerProfileId + ');event.stopPropagation();" title="в избранное"></i></span>';
             }
         }
         if (value.salaryMin) {
@@ -257,7 +257,7 @@ function printVacancies(data) {
             ' data-target="#vacancyModal" onclick="showVacancy(\'' + value.id + '\')">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="vacancyTags">' + vacancyTags + '</div>' +
-            '<div class="companyData"><span>Компания: ' + value.employerProfile.companyName + '</span><br><span>Город: ' + value.city + '</span></div>' +
+            '<div class="companyData"><span>Компания: ' + value.creatorProfile.companyName + '</span><br><span>Город: ' + value.city + '</span></div>' +
             '<div class="vacancyDescription"><span>' + value.shortDescription + '</span></div>' +
             minSalary +
             '<div class="pull-right">' +
@@ -281,17 +281,17 @@ function printVacancies(data) {
     });
 }
 
-function inFavorite(vacancyId, profileId) {
+function inFavorite(vacancyId, seekerProfileId) {
     $.ajax({
         type: 'post',
-        url: "/api/seekerprofiles/inFavoriteVacancy?vacancyId=" + vacancyId + "&profileId=" + profileId,
+        url: "/api/seekerprofiles/inFavoriteVacancy?vacancyId=" + vacancyId + "&seekerProfileId=" + seekerProfileId,
         contentType: 'application/json; charset=utf-8',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
         success: function () {
             $('#inFavorite' + vacancyId).remove();
-            $('#stars-' + vacancyId).append('<i id="outFavorite' + vacancyId + '" class="fas fa-star" onclick="outFavorite(' + vacancyId + ',' + profileId + ');event.stopPropagation();" title="убрать из избранных"></i>');
+            $('#stars-' + vacancyId).append('<i id="outFavorite' + vacancyId + '" class="fas fa-star" onclick="outFavorite(' + vacancyId + ',' + seekerProfileId + ');event.stopPropagation();" title="убрать из избранных"></i>');
 
         },
         error: function (error) {
@@ -301,17 +301,17 @@ function inFavorite(vacancyId, profileId) {
     })
 }
 
-function outFavorite(vacancyId, profileId) {
+function outFavorite(vacancyId, seekerProfileId) {
     $.ajax({
         type: 'post',
-        url: "/api/seekerprofiles/outFavoriteVacancy?vacancyId=" + vacancyId + "&profileId=" + profileId,
+        url: "/api/seekerprofiles/outFavoriteVacancy?vacancyId=" + vacancyId + "&seekerProfileId=" + seekerProfileId,
         contentType: 'application/json; charset=utf-8',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
         success: function () {
             $('#outFavorite' + vacancyId).remove();
-            $('#stars-' + vacancyId).append('<i id="inFavorite' + vacancyId + '" class="far fa-star" onclick="inFavorite(' + vacancyId + ',' + profileId + ');event.stopPropagation();" title="в избранное"></i>');
+            $('#stars-' + vacancyId).append('<i id="inFavorite' + vacancyId + '" class="far fa-star" onclick="inFavorite(' + vacancyId + ',' + seekerProfileId + ');event.stopPropagation();" title="в избранное"></i>');
         },
         error: function (error) {
             console.log(error);

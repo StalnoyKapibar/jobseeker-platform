@@ -9,9 +9,9 @@ import org.hibernate.query.Query;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.*;
 
 @SuppressWarnings("unchecked")
 @Repository("vacancyDAO")
@@ -34,7 +34,7 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
             "on result_vac.city_id=sort_dist.sort_id where result_vac.state='ACCESS' order by result_vac.count desc, sort_dist.distance";
 
     //language=SQL
-    private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.employerProfile.id = :param";
+    private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.creatorProfile.id = :param";
 
     public Set<Vacancy> getAllByTags(Set<Tag> tags, int limit) {
         Set<Vacancy> vacancies = new HashSet<>();
