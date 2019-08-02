@@ -43,7 +43,10 @@ public abstract class Profile implements Serializable {
     }
 
     //@JsonIgnore //todo указывать или нет?
-    public abstract String GetNameForUi();
+    public abstract String getNameForUi();
+
+    //@JsonIgnore //todo указывать или нет?
+    public abstract String getTypeForUi();
 
     @Override
     public String toString() {

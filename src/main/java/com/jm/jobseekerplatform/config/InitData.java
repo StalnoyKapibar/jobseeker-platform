@@ -480,10 +480,12 @@ public class InitData {
 
         Random rnd = new Random();
 
+        List<Profile> profileList = profileService.getAll();
+
         for (Long i = 1L; i < 6L; i++) {
             List<ChatMessage> messages = new ArrayList<>();
             for (int k = 0; k < 5; k++) {
-                ChatMessage chatMessage = new ChatMessage(faker.gameOfThrones().quote(), profileService.getById(1L), new Date());
+                ChatMessage chatMessage = new ChatMessage(faker.gameOfThrones().quote(), profileList.get(rnd.nextInt(profileList.size())), new Date());
                 chatMessageService.add(chatMessage);
                 messages.add(chatMessage);
             }
@@ -498,7 +500,7 @@ public class InitData {
         }
     }
 
-    private Profile getRandomProfileExceptWithId(Long exceptId) {
+    private Profile getRandomProfileExceptWithId(Long exceptProfileId) {
         boolean ready = false;
 
         int amountOfProfiles = profileService.getAll().size();
@@ -506,7 +508,7 @@ public class InitData {
 
         while (!ready) {
             randomId = rnd.nextInt(amountOfProfiles) + 1;
-            if (randomId != exceptId) {
+            if (randomId != exceptProfileId) {
                 ready = true;
             }
         }

@@ -1,16 +1,20 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicVacancyService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,20 +23,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class AdminController {
 
     @Autowired
     private EmployerUserService employerUserService;
-
     @Autowired
     private SeekerUserService seekerUserService;
-
     @Autowired
     private VacancyService vacancyService;
-
     @Autowired
     private TagService tagService;
 
@@ -57,7 +60,12 @@ public class AdminController {
     }
 
     @RequestMapping("/admin/chats/my")
-    public String adminPageChatsMy() {
+    public String adminPageChatsMy(Authentication authentication, Model model) {
+
+        User user = (User)(authentication.getPrincipal());
+
+        model.addAttribute("profileId", user.getProfile().getId());
+
         return "admin/admin_chats_my";
     }
 

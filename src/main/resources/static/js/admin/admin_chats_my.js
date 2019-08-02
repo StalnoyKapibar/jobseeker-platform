@@ -1,3 +1,5 @@
+const currentProfileId = parseInt(document.getElementById("profileId").getAttribute('value'));
+
 $(document).ready(function () {
     const table = $('#chatTable').DataTable({
         scrollY: '50vh',
@@ -6,7 +8,7 @@ $(document).ready(function () {
         searching: false,
         info: false,
 
-        "sAjaxSource": "/api/chats/all",
+        "sAjaxSource": "/api/chats/my/" + currentProfileId, //todo (Nick Dolgopolov) ChatMessageRestController.getAllLastMessages()
         "sAjaxDataProp": "",
         "order": [[1, "desc"]],
         "aoColumns": [

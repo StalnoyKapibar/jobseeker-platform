@@ -18,11 +18,11 @@ public class ChatInfoDTO {
 
     private String creatorType;
 
-    private long participantProfileId;
+    private long topicCreatorProfileId;
 
-    private String participantName;
+    private String topicCreatorName;
 
-    private String participantType;
+    private String topicCreatorType;
 
     private long topicId;
 
@@ -47,15 +47,15 @@ public class ChatInfoDTO {
         chatInfoDTO.id = chatWithTopic.getId();
 
         chatInfoDTO.creatorProfileId = chatWithTopic.getCreator().getId();
-        chatInfoDTO.creatorName = chatWithTopic.getCreator().GetNameForUi();
-        chatInfoDTO.creatorType = chatWithTopic.getCreator().getClass().getName();
+        chatInfoDTO.creatorName = chatWithTopic.getCreator().getNameForUi();
+        chatInfoDTO.creatorType = chatWithTopic.getCreator().getTypeForUi();
 
-        chatInfoDTO.participantProfileId = chatWithTopic.getTopic().getCreatorProfile().getId();
-        chatInfoDTO.participantName = chatWithTopic.getTopic().getCreatorProfile().GetNameForUi();
-        chatInfoDTO.participantType = chatWithTopic.getTopic().getCreatorProfile().getClass().getName();
+        chatInfoDTO.topicCreatorProfileId = chatWithTopic.getTopic().getCreatorProfile().getId();
+        chatInfoDTO.topicCreatorName = chatWithTopic.getTopic().getCreatorProfile().getNameForUi();
+        chatInfoDTO.topicCreatorType = chatWithTopic.getTopic().getCreatorProfile().getTypeForUi();
 
         chatInfoDTO.topicId = chatWithTopic.getTopic().getId();
-        chatInfoDTO.topicType = chatWithTopic.getTopic().getClass().getName();
+        chatInfoDTO.topicType = chatWithTopic.getTopic().getTypeForUi();
 
         return chatInfoDTO;
     }
@@ -92,28 +92,28 @@ public class ChatInfoDTO {
         this.creatorType = creatorType;
     }
 
-    public long getParticipantProfileId() {
-        return participantProfileId;
+    public long getTopicCreatorProfileId() {
+        return topicCreatorProfileId;
     }
 
-    public void setParticipantProfileId(long participantProfileId) {
-        this.participantProfileId = participantProfileId;
+    public void setTopicCreatorProfileId(long topicCreatorProfileId) {
+        this.topicCreatorProfileId = topicCreatorProfileId;
     }
 
-    public String getParticipantName() {
-        return participantName;
+    public String getTopicCreatorName() {
+        return topicCreatorName;
     }
 
-    public void setParticipantName(String participantName) {
-        this.participantName = participantName;
+    public void setTopicCreatorName(String topicCreatorName) {
+        this.topicCreatorName = topicCreatorName;
     }
 
-    public String getParticipantType() {
-        return participantType;
+    public String getTopicCreatorType() {
+        return topicCreatorType;
     }
 
-    public void setParticipantType(String participantType) {
-        this.participantType = participantType;
+    public void setTopicCreatorType(String topicCreatorType) {
+        this.topicCreatorType = topicCreatorType;
     }
 
     public long getTopicId() {

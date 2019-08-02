@@ -9,4 +9,7 @@ public interface CreatedByProfile<T extends Profile> {
     Long getId();
 
     T getCreatorProfile();
+
+    //@JsonIgnore //todo указывать или нет?
+    public abstract String getTypeForUi();
 }

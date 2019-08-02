@@ -37,8 +37,13 @@ public class EmployerProfile extends Profile implements Serializable {
     }
 
     @Override
-    public String GetNameForUi() {
+    public String getNameForUi() {
         return companyName;
+    }
+
+    @Override
+    public String getTypeForUi() {
+        return "Работодатель";
     }
 
     public EmployerProfile(String companyName, String website, String description, byte[] logo) {

@@ -45,8 +45,13 @@ public class SeekerProfile extends Profile implements Serializable {
     }
 
     @Override
-    public String GetNameForUi() {
+    public String getNameForUi() {
         return surname + " " + name + " " + patronymic;
+    }
+
+    @Override
+    public String getTypeForUi() {
+        return "Соискатель";
     }
 
     public SeekerProfile(String name, String patronymic, String surname, String description, byte[] photo, Set<Tag> tags,

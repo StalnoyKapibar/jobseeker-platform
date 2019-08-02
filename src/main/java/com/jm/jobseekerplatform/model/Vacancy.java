@@ -170,4 +170,9 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
                 ", expiryBlock=" + expiryBlock +
                 '}';
     }
+
+    @Override
+    public String getTypeForUi() {
+        return "Вакансия";
+    }
 }
