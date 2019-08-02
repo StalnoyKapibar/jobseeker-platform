@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.model.createdByProfile;
 
-import com.jm.jobseekerplatform.model.profiles.Profile;
+        import com.jm.jobseekerplatform.model.profiles.Profile;
 
 /**
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
@@ -10,6 +10,5 @@ public interface CreatedByProfile<T extends Profile> {
 
     T getCreatorProfile();
 
-    //@JsonIgnore //todo указывать или нет?
-    public abstract String getTypeForUi();
+    String getTypeForUi();
 }

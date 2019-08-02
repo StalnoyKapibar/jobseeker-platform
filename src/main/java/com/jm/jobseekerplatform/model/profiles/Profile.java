@@ -1,6 +1,5 @@
 package com.jm.jobseekerplatform.model.profiles;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jm.jobseekerplatform.model.State;
 
 import javax.persistence.*;
@@ -42,10 +41,8 @@ public abstract class Profile implements Serializable {
         this.state = state;
     }
 
-    //@JsonIgnore //todo указывать или нет?
     public abstract String getNameForUi();
 
-    //@JsonIgnore //todo указывать или нет?
     public abstract String getTypeForUi();
 
     @Override
