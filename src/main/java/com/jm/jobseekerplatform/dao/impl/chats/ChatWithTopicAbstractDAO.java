@@ -58,7 +58,6 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
      *
      * @param participantProfileId id профиля автора сообщений
      */
-
     public List<T> getAllChatsByParticipantProfileId(Long participantProfileId) {
 
         List<T> chats = entityManager.createQuery("SELECT DISTINCT c FROM " + clazz.getName() + " c JOIN c.chatMessages m WHERE m.creatorProfile.id = :participantProfileId").
@@ -76,9 +75,8 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
      */
 
     public List<T> getAllChatsByChatCreatorProfileId(Long chatCreatorProfileId) {
-
-        List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE c.creatorProfile.id = :chatCreatorProfileId").
-                setParameter("chatCreatorProfileId", chatCreatorProfileId)
+        List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE c.creatorProfile.id = :chatCreatorProfileId")
+                .setParameter("chatCreatorProfileId", chatCreatorProfileId)
                 .getResultList();
 
         return chats;
@@ -91,11 +89,10 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
      *
      * @param topicCreatorProfileId id профиля создателя чата
      */
-
     public List<T> getAllChatsByTopicCreatorProfileId(Long topicCreatorProfileId) {
 
-        List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE c.topic.creatorProfile.id = :topicCreatorProfileId").
-                setParameter("topicCreatorProfileId", topicCreatorProfileId)
+        List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE c.topic.creatorProfile.id = :topicCreatorProfileId")
+                .setParameter("topicCreatorProfileId", topicCreatorProfileId)
                 .getResultList();
 
         return chats;
