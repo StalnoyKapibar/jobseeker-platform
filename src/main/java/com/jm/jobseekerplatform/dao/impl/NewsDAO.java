@@ -25,9 +25,9 @@ public class NewsDAO extends AbstractDAO<News> {
     public Page<News> getBySubscription(Set<Subscription> subscriptions, Pageable pageable) {
         Set<News> newsSet = new HashSet<>();
         for (Subscription s : subscriptions) {
-            Query query = entityManager.createQuery("SELECT distinct n FROM News n JOIN n.author na JOIN n.tags nt where na =?1 and nt in ?2", News.class);
-            query.setParameter(1, s.getEmployerProfile())
-                    .setParameter(2, s.getTags());
+            Query query = entityManager.createQuery("SELECT distinct n FROM News n JOIN n.author na JOIN n.tags nt where na = :newsAuthor and nt in :tags", News.class);
+            query.setParameter("newsAuthor", s.getEmployerProfile())
+                    .setParameter("tags", s.getTags());
 
             List<News> newsList = query.getResultList();
             newsSet.addAll(newsList);
