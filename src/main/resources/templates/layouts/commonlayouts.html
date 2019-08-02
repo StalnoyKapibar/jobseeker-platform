@@ -3,14 +3,32 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <th:block th:replace="fragments/commonfragments :: head"></th:block>
+    <link rel="stylesheet" href="/css/loader.css">
 </head>
 <body>
 <th:block th:replace="fragments/commonfragments :: nav"></th:block>
 <div class="container-fluid">
+    <!-- modalLoader -->
+    <div class="modal" id="modalLoader">
+        <div class="loader">
+            <div class="face face1">
+                <div class="circle"></div>
+            </div>
+            <div class="face face2">
+                <div class="circle"></div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <th:block th:replace="fragments/commonfragments :: sidebar"></th:block>
         <div class="main-block chromeFix" layout:fragment="content"></div>
     </div>
 </div>
 </body>
+<script>
+    var loader = $('#modalLoader').show(true);
+    window.addEventListener("load", function () {
+        loader.remove();
+    }, false);
+</script>
 </html>
