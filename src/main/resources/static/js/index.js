@@ -257,7 +257,7 @@ function printVacancies(data) {
             ' data-target="#vacancyModal" onclick="showVacancy(\'' + value.id + '\')">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="vacancyTags">' + vacancyTags + '</div>' +
-            '<div class="companyData"><span>Компания: ' + value.employerProfile.companyName + '</span><br><span>Город: ' + value.city + '</span></div>' +
+            '<div class="companyData"><span>Компания: ' + value.creatorProfile.companyName + '</span><br><span>Город: ' + value.city + '</span></div>' +
             '<div class="vacancyDescription"><span>' + value.shortDescription + '</span></div>' +
             minSalary +
             '<div class="pull-right">' +

@@ -25,4 +25,8 @@ public abstract class ChatWithTopicAbstractService<T extends ChatWithTopic> exte
     public List<T> getAllByChatCreatorProfileId(Long chatCreatorProfileId) {
         return chatWithTopicDAO.getAllChatsByChatCreatorProfileId(chatCreatorProfileId);
     }
+
+    public List<T> getAllChatsByTopicCreatorProfileId(Long topicCreatorProfileId) {
+        return chatWithTopicDAO.getAllChatsByTopicCreatorProfileId(topicCreatorProfileId);
+    }
 }
