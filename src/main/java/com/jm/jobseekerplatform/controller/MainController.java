@@ -174,7 +174,7 @@ public class MainController {
             Profile profile = userService.getById(id).getProfile();
             if (profile instanceof SeekerProfile) {
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
-                hasResponded = ((SeekerProfile) profile).getMeetings()
+                hasResponded = vacancy.getMeetings()
                         .stream().filter(meeting -> meeting.getSeekerProfile().getId().equals(id)).findFirst().isPresent();
                 model.addAttribute("isContain", isContain);
                 model.addAttribute("hasResponded", hasResponded);

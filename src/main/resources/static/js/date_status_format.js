@@ -3,12 +3,16 @@ function getMonth(month) {
         "января", "февраля", "марта", "апреля", "мая", "июня", "июля",
         "августа", "сентября", "октября", "ноября", "декабря"
     ];
-    return months[parseInt(month)];
+    return months[parseInt(month-1)];
 }
 
 function formatDates(list) {
     for (let i = 0; i < list.length; i++) {
         let date = $(list[i]).text();
+        if(date==="N/A"){
+            $(list[i]).text("не назначено");
+            continue;
+        }
         let year = date.substring(0, 4);
         let month = date.substring(5, 7);
         let day = date.substring(8, 10);
