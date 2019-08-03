@@ -1,8 +1,8 @@
 <ehcache>
-    <cache name="com.jm.jobseekerplatform.model.Vacancy"
-           timeToIdleSeconds="10"
-            maxElementsInMemory="1000" />
-    <cache name="com.jm.jobseekerplatform.model.City"
-           timeToIdleSeconds="10"
-            maxElementsInMemory="2" />
+    <cache name="vacancy"
+           timeToLiveSeconds="60"
+           maxElementsInMemory="1000" />
+    <cache name="cit"
+           timeToLiveSeconds="60"
+           maxElementsInMemory="100" />
 </ehcache>

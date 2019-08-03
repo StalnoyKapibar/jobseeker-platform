@@ -4,13 +4,16 @@ import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.dto.VacancyPageDTO;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
+
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.annotations.QueryHints;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Array;
+import javax.persistence.EntityManagerFactory;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.*;
@@ -21,7 +24,7 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
 
     //language=SQL
     private final static String query_for_find_vacancies_sorted_by_city =
-            "select v from Vacancy v join v.city c join CityDistance cd on c=cd.to where cd.from.name=:city order by cd.distance";
+            "select v from Vacancy v join v.city c join CityDistance cd on c=cd.to where cd.from.name=:city and v.state='ACCESS' order by cd.distance";
 
     //language=SQL
     private final static String query_for_find_vacancies_by_tags_and_sorted_by_city =
@@ -69,51 +72,54 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         return deletedCount;
     }
 
+    @Autowired
+    EntityManagerFactory entityManagerFactory;
+
     public Page<Vacancy> getVacanciesSortByCity(String city, int limit, int page) {
-        if (page != 0) {
-            --page;
-        }
-        Query query1 = (Query) entityManager.createQuery(query_for_find_vacancies_sorted_by_city, Vacancy.class);
+        page = (page==0) ? page : --page;
+
+        Query query = (Query) entityManager.createQuery(query_for_find_vacancies_sorted_by_city, Vacancy.class);
 
         long totalElements = (Long)entityManager.createQuery("select count(v) from Vacancy v where v.state='ACCESS'")
                 .setHint("org.hibernate.cacheable", true).getSingleResult();
 
         int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
-        query1.setFirstResult(page * limit).setMaxResults(limit);
-        List<Vacancy> vacancies = query1.setParameter("city", city).setHint(QueryHints.FETCHGRAPH, entityManager.getEntityGraph("vacancy-all-nodes")).getResultList();
+        List<Vacancy> vacancies = query.setFirstResult(page * limit).setMaxResults(limit).setParameter("city", city)
+                .setHint(QueryHints.FETCHGRAPH, entityManager.getEntityGraph("vacancy-all-nodes")).getResultList();
+
         return new VacancyPageDTO(vacancies, totalPages);
     }
 
     public Page<Vacancy> getVacanciesByTagsAndSortByCity(String city, Set<Tag> tags, int limit, int page) {
-        if (page != 0) {
-            --page;
-        }
+        page = (page==0) ? page : --page;
 
         Query query = (Query) entityManager.createQuery(query_for_find_vacancies_by_tags_and_sorted_by_city)
                 .setParameter("tags", tags).setParameter("city", city);
 
-        //int totalElements = query.getResultList().size();
-        int totalPages = (int) (Math.ceil((double) 30 / (double) limit));
-        List vacancies = query.setFirstResult(page * limit).setMaxResults(limit).getResultList();
+        long totalElements = (long) entityManager
+                .createQuery("select count(distinct v) from Vacancy v join v.tags t where v.state='ACCESS' and t in (:tags)")
+                .setParameter("tags", tags).getSingleResult();
 
+        int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
+
+        List ids = query.setFirstResult(page * limit).setMaxResults(limit).getResultList();
         List<Long> vacancyIds = new ArrayList<>();
-        for (Object vacancy : vacancies) {
+        for (Object vacancy : ids) {
             vacancyIds.add((Long) ((Object[]) vacancy)[0]);
         }
 
         List<Vacancy> vacancyList = entityManager.createQuery("select v from Vacancy v where v.id in (:ids)").setParameter("ids", vacancyIds)
                 .setHint(QueryHints.FETCHGRAPH, entityManager.getEntityGraph("vacancy-all-nodes")).getResultList();
 
-        List<Vacancy> vacancies1 = new ArrayList<>();
+        List<Vacancy> vacancies = new ArrayList<>();
         for (Long id : vacancyIds) {
             for(Vacancy v : vacancyList) {
                 if(v.getId().equals(id)) {
-                    vacancies1.add(v);
+                    vacancies.add(v);
                 }
             }
         }
-
-        return new VacancyPageDTO(vacancies1, totalPages);
+        return new VacancyPageDTO(vacancies, totalPages);
     }
 }
 
