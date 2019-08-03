@@ -12,12 +12,12 @@ public class AdminProfile extends Profile {
     }
 
     @Override
-    public String getNameForUi() {
+    public String getFullName() {
         return "Admin";
     }
 
     @Override
-    public String getTypeForUi() {
+    public String getTypeName() {
         return "Администратор";
     }
 }

@@ -41,9 +41,9 @@ public abstract class Profile implements Serializable {
         this.state = state;
     }
 
-    public abstract String getNameForUi();
+    public abstract String getFullName();
 
-    public abstract String getTypeForUi();
+    public abstract String getTypeName();
 
     @Override
     public String toString() {

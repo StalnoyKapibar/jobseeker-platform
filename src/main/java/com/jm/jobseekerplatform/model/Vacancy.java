@@ -172,7 +172,7 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     }
 
     @Override
-    public String getTypeForUi() {
+    public String getTypeName() {
         return "Вакансия";
     }
 }
