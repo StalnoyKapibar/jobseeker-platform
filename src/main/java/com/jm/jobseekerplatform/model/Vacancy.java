@@ -58,6 +58,9 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     @Column(name = "expiry_block")
     private Date expiryBlock;
 
+    @Column(name="tracked")
+    private Boolean tracked;
+
     public Vacancy() {
     }
 
@@ -163,7 +166,9 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
         this.state = state;
     }
 
+    public Boolean getTracked() { return tracked; }
 
+    public void setTracked(boolean tracked) { this.tracked = tracked; }
 
     public String getShortDescription() {
         return shortDescription;

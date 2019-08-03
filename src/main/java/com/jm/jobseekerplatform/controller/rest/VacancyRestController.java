@@ -107,4 +107,15 @@ public class VacancyRestController {
         }
         return vacancyService.findVacanciesByPoint(city, point, limit, page);
     }
+
+    @PostMapping("/tracked")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public Set<Vacancy> makeVacancyTracked(@RequestParam(value = "vacancyId") long vacancyId) {
+        Vacancy vacancy = vacancyService.getById(vacancyId);
+        vacancy.setTracked(true);
+        vacancyService.update(vacancy);
+        Set<Vacancy> trackedVacancies = vacancyService.getTrackedByEmploerId(vacancy.getEmployerProfile().getId());
+        return trackedVacancies;
+    }
 }

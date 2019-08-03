@@ -14,9 +14,7 @@
     <script type="text/javascript" src="/js/map.js"></script>
     <link href="/css/star-rating.min.css" th:href="@{/css/star-rating.min.css}" rel="stylesheet"/>
 </head>
-
 <body>
-
 <div layout:fragment="content">
     <div id="eProfileDiv" class="container-fluid">
         <div class="row">
@@ -33,32 +31,27 @@
                         <li><a onclick="blockEmployerProfile(14)">На 14 дней</a></li>
                         <li><a onclick="blockEmployerProfile(0)">Бессрочно</a></li>
                     </ul>
-
                 </div>
                 <h1 id="company_name"><span id="EPcompanyName" th:text="${employerProfile.companyName}"></span></h1>
                 <div sec:authorize="hasRole('ROLE_EMPLOYER')">
-
                     <p><a href="#" class="text-primary"
                           data-toggle="modal"
                           data-target="#update_company_name_modal"
-                          id = "update_name_modal_btn"
+                          id="update_name_modal_btn"
                           th:onclick="'show_update_company_name_modal('+${employerProfile.id}+')'">edit</a></p>
                 </div>
-
-                <h2 id = "company_website"><a th:href="@{'http://' + ${employerProfile.website}}" th:text="${employerProfile.website}"></a></h2>
+                <h2 id="company_website"><a th:href="@{'http://' + ${employerProfile.website}}"
+                                            th:text="${employerProfile.website}"></a></h2>
                 <div sec:authorize="hasRole('ROLE_EMPLOYER')">
                     <p><a href="#" class="text-primary"
                           data-toggle="modal"
                           data-target="#update_company_website_modal"
-                          id = "update_link_modal_btn"
+                          id="update_link_modal_btn"
                           th:onclick="'show_update_link_modal('+${employerProfile.id}+')'">edit</a></p>
                 </div>
-
-
             </div>
             <div class="col-sm-3" align="left">
-                <div id = "profile_img">
-
+                <div id="profile_img">
                     <img th:src="@{'data:image/png;base64,' + ${logoimg}}" class="img-rounded"
                          alt="Logo of company">
                 </div>
@@ -69,28 +62,27 @@
                                 <input type="file" class="custom-file-input" name="image" id="customFile">
                                 <label class="custom-file-label" for="customFile">Choose file</label>
                             </div>
-
-                            <button type="submit" id="btnSubmit" class="btn btn-outline-primary" th:onclick="'add_emploer_img('+${employerProfile.id}+')'" style="width: 100%">submit</button>
+                            <button type="submit" id="btnSubmit" class="btn btn-outline-primary"
+                                    th:onclick="'add_emploer_img('+${employerProfile.id}+')'" style="width: 100%">submit
+                            </button>
                         </form>
                     </div>
-
                 </div>
             </div>
             <div class="row">
-
                 <div class="col-sm-5">
                     <span>О нас:</span><br/>
-                    <div class="well" id = "company_description" style="width: 100%">
+                    <div class="well" id="company_description" style="width: 100%">
                         <span th:text="${employerProfile.description}"></span>
                     </div>
                     <div sec:authorize="hasRole('ROLE_EMPLOYER')">
                         <p><a href="#" class="text-primary"
                               data-toggle="modal"
                               data-target="#update_description_modal"
-                              th:onclick="'show_update_description_modal('+${employerProfile.id}+')'">edit description</a></p>
+                              th:onclick="'show_update_description_modal('+${employerProfile.id}+')'">edit
+                            description</a></p>
                     </div>
                 </div>
-
                 <div class="col-sm-4">
                     <span>Наши вакансии:</span>
                     <div class="list-group">
@@ -107,7 +99,6 @@
                     </div>
                 </div>
             </div>
-
             <div sec:authorize="!hasRole('ROLE_EMPLOYER')">
                 <div class="row">
                     <div class="col-sm-3">
@@ -159,11 +150,9 @@
                 </div>
             </div>
         </div>
-
-
-
         <!-- Модальное окно изменения о нас -->
-        <div class="modal fade" id="update_description_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="update_description_modal" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -173,30 +162,29 @@
                         </button>
                     </div>
                     <div class="modal-body">
-
                         <div class="form-group">
                             <label for="update_name_company_input">Username:</label>
                             <textarea class="form-control" rows="5" id="update_description_textarea"></textarea>
-                            <input type="hidden" id="profile_id_for_update_description" >
+                            <input type="hidden" id="profile_id_for_update_description">
                         </div>
-
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id = "update_description_modal_close_btn">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                id="update_description_modal_close_btn">Close
+                        </button>
                         <button type="button" class="btn btn-primary"
                                 onclick="update_description(document.getElementById('profile_id_for_update_description').value,
-                                                    document.getElementById('update_description_textarea').value)" >Save changes</button>
+                                                    document.getElementById('update_description_textarea').value)">Save
+                            changes
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-
-
-
-
         <!-- Модальное окно изменения вебсайта -->
-        <div class="modal fade" id="update_company_website_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="update_company_website_modal" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -209,26 +197,27 @@
 
                         <div class="form-group">
                             <label for="update_name_company_input">Username:</label>
-                            <input type="text" class="form-control" id="update_company_website_input" placeholder="Enter company website">
-                            <input type="hidden" id="profile_id_for_update_website" >
+                            <input type="text" class="form-control" id="update_company_website_input"
+                                   placeholder="Enter company website">
+                            <input type="hidden" id="profile_id_for_update_website">
                         </div>
-
-
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id = "update_website_modal_close_btn">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                id="update_website_modal_close_btn">Close
+                        </button>
                         <button type="button" class="btn btn-primary"
                                 onclick="update_website(document.getElementById('profile_id_for_update_website').value,
-                                                    document.getElementById('update_company_website_input').value)" >Save changes</button>
+                                                    document.getElementById('update_company_website_input').value)">
+                            Save changes
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-
-
-
         <!-- Модальное окно изменения имени компании -->
-        <div class="modal fade" id="update_company_name_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="update_company_name_modal" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -238,19 +227,17 @@
                         </button>
                     </div>
                     <div class="modal-body">
-
-
                         <div class="form-group">
                             <label for="update_name_company_input">Username:</label>
-                            <input type="text" class="form-control" id="update_name_company_input" placeholder="Enter company name">
-                            <input type="hidden"  id="profile_id_for_update_company_name">
+                            <input type="text" class="form-control" id="update_name_company_input"
+                                   placeholder="Enter company name">
+                            <input type="hidden" id="profile_id_for_update_company_name">
                         </div>
-
-
-
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="update_modal_close_btn">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                id="update_modal_close_btn">Close
+                        </button>
                         <button type="button"
                                 class="btn btn-primary"
                                 onclick="update_company_name(document.getElementById('profile_id_for_update_company_name').value,
@@ -261,10 +248,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
         <!--allReviewsModal-->
         <div class="modal fade" id="allReviewsModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -284,7 +267,6 @@
                 </div>
             </div>
         </div>
-
         <!-- reviewsModal -->
         <div class="modal fade" id="reviewsModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -308,7 +290,6 @@
                 </div>
             </div>
         </div>
-
         <!-- vacancyModal -->
         <div id="vacancyModal" class="modal fade" role="dialog">
             <div class="modal-dialog">
@@ -362,6 +343,5 @@
             </div>
         </div>
     </div>
-
 </body>
 </html>

@@ -14,9 +14,7 @@ function showVacancy(id) {
             $("#VMShortDescription").text(data.shortDescription);
             $("#VMDescription").html(data.description);
             $("#VMId").text(data.id);
-
             var str = "Зарплата: ";
-
             if (data.salaryMin != null) {
                 str = str + "от " + data.salaryMin + " рублей ";
             }
@@ -34,7 +32,6 @@ function showVacancy(id) {
                 $('#VMRemote').hide();
             }
             $('#map_collapse').attr("class", "collapsed collapse");
-
             var lat = data.coordinates.latitudeY;
             var lng = data.coordinates.longitudeX;
             showVacancyOnMap(lat, lng);
@@ -46,11 +43,8 @@ function showVacancy(id) {
 
 $(document).ready(function () {
     $(".item").first().addClass("active");
-
     $(".fixed-rating").rating({displayOnly: true});
-
     $("#reviews").rating();
-
     $(".postReview").click(function () {
         var review = {};
         review["seekerProfiles_id"] = $("#review_evaluation").data("seeker-profile-id");
@@ -102,8 +96,6 @@ $(document).ready(function () {
         var fileName = $(this).val().split("\\").pop();
         $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
-
-
 });
 
 function blockVacancy(period) {
@@ -144,7 +136,6 @@ function blockEmployerProfile(period) {
             alert(data);
         }
     });
-
 }
 
 function show_update_company_name_modal(id) {
@@ -161,7 +152,6 @@ function show_update_company_name_modal(id) {
             console.log(message);
         }
     });
-
 }
 
 function update_company_name(id, company_name) {
@@ -185,23 +175,16 @@ function update_company_name(id, company_name) {
             alert(error.toString());
         }
     })
-
 }
 
 
 function add_emploer_img(id) {
-
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
-
-
-
     var form = $('#fileUploadForm')[0];
     var data = new FormData(form);
     data.append("id", id);
-
     $("#btnSubmit").prop("disabled", true);
-
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
@@ -233,7 +216,6 @@ function add_emploer_img(id) {
 
         }
     });
-
 }
 
 function show_update_link_modal(id) {
@@ -252,7 +234,6 @@ function show_update_link_modal(id) {
 }
 
 function update_website(id, website) {
-
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
     $.ajax({
@@ -265,7 +246,6 @@ function update_website(id, website) {
             request.setRequestHeader(header, token);
         },
         success: function (profile) {
-
             $('#company_website').html('<a href = http://'+profile.website+'>'+profile.website+'</a>');
             $('#update_website_modal_close_btn').click();
         },
@@ -275,8 +255,6 @@ function update_website(id, website) {
         }
     })
 }
-
-
 
 function show_update_description_modal(id) {
     $.ajax({
@@ -291,11 +269,9 @@ function show_update_description_modal(id) {
             console.log(message);
         }
     });
-
 }
 
 function update_description(id, descr) {
-
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
     $.ajax({
@@ -308,7 +284,6 @@ function update_description(id, descr) {
             request.setRequestHeader(header, token);
         },
         success: function (profile) {
-
             $('#company_description').html('<span >'+profile.description+'</span>');
             $('#update_description_modal_close_btn').click();
         },
@@ -317,6 +292,5 @@ function update_description(id, descr) {
             alert(error.toString());
         }
     })
-
 }
 

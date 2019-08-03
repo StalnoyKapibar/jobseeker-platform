@@ -107,6 +107,7 @@ public class InitData {
         initChat();
 
         initNews();
+        testVacancies();
     }
 
     private void initNews() {
@@ -333,6 +334,58 @@ public class InitData {
             vacancy.setState(State.ACCESS);
             vacancyService.add(vacancy);
         }
+    }
+
+    public void testVacancies(){
+        String shortDescr = "Ищем талантливого разработчика, умеющего все и немного больше";
+        String description = "Обязанности:\n" +
+                "\n" +
+                "Разработка новых модулей системы\n" +
+                "Перевод существующих модулей на микросервисную архитектуру\n" +
+                "Требования:\n" +
+                "Высшее образование\n" +
+                "Опыт работы с мультипоточностью (multithreading)\n" +
+                "Владение основными паттернами проектирования\n" +
+                "Знание и понимание RESTful-протоколов\n" +
+                "Умение быстро разбираться в чужом коде\n" +
+                "Английский язык (на уровне intermediate)\n" +
+                "Опыт работы в проектах с Docker, Kubernetes;\n" +
+                "Условия:\n" +
+                "Белая заработная плата, официальное трудоустройство\n" +
+                "Гибкий график работы\n" +
+                "Лояльное отношение к сотрудникам\n" +
+                "Дружный коллектив\n" +
+                "Дополнительная информация:\n" +
+                "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!";
+
+        Vacancy vacancy;
+        Point point;
+        City city;
+        List<City> cities = cityService.getAll();
+
+        for (int i = 0; i < 30; i++) {
+            city = cities.get(rnd.nextInt(cities.size() ));
+            point = new Point(city.getCenterPoint().getLatitudeY(), city.getCenterPoint().getLongitudeX());
+            pointService.add(point);
+            EmployerProfile profile = employerProfileService.getById(3L);
+
+                vacancy = new Vacancy(
+                        profile,
+                        faker.job().title(),
+                        city,
+                        Math.random() < 0.5,
+                        shortDescr,
+                        description,
+                        Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), //salaryMin
+                        Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), //salaryMax
+                        randomTags(0L),
+                        point);
+                vacancy.setState(State.ACCESS);
+                vacancyService.add(vacancy);
+
+        }
+
+
     }
 
     private void initAdminProfile() {

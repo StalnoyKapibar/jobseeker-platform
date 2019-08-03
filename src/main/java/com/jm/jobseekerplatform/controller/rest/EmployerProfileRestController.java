@@ -26,18 +26,21 @@ public class EmployerProfileRestController {
 
     @RequestMapping("/")
     public List<EmployerProfile> getAllEmployerProfiles() {
+
         List<EmployerProfile> employerprofiles = employerProfileService.getAll();
         return employerprofiles;
     }
 
     @RequestMapping("/{employerProfileId:\\d+}")
     public EmployerProfile getEmployerProfileById(@PathVariable Long employerProfileId) {
+
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
         return employerProfile;
     }
 
     @RequestMapping(value = "/block/{vacancyId:\\d+}", method = RequestMethod.POST)
     public void blockEmployerProfile(@PathVariable("vacancyId") Long id, @RequestBody int periodInDays) {
+
         EmployerProfile employerProfile = employerProfileService.getById(id);
         if (periodInDays == 0) {
             employerProfileService.blockPermanently(employerProfile);
@@ -53,6 +56,7 @@ public class EmployerProfileRestController {
                                        @RequestParam(value = "companyname", required = false) String companyName,
                                        @RequestParam(value = "website", required = false) String website,
                                        @RequestParam(value = "description", required = false) String description) {
+
         EmployerProfile profile = employerProfileService.getById(id);
         if (companyName != null) {
             profile.setCompanyName(companyName);
@@ -70,6 +74,7 @@ public class EmployerProfileRestController {
     @RequestMapping(value = "/update_image", method = RequestMethod.POST)
     public String updateImage(@RequestParam(value = "id") long id,
                               @RequestParam(value = "image") MultipartFile img) throws IOException {
+
         EmployerProfile profile = employerProfileService.getById(id);
         if (img != null) {
             profile.setLogo(imageService.resizePhotoSeeker(ImageIO.read(new ByteArrayInputStream(img.getBytes()))));

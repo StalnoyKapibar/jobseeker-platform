@@ -52,6 +52,10 @@ public class VacancyService extends AbstractService<Vacancy> {
         return vacancyDaoI.findAllByTags(tags, pageable);
     }
 
+    public Set<Vacancy> getTrackedByEmploerId(Long id){
+        return dao.getAllTracked(id);
+    }
+
     public Set<Vacancy> getByTags(Set<Tag> tags, int limit) {
         return dao.getAllByTags(tags, limit);
     }

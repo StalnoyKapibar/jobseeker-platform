@@ -36,6 +36,16 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     //language=SQL
     private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.employerProfile.id = :param";
 
+    public Set<Vacancy> getAllTracked(Long id){
+        Set <Vacancy> vacancies = new HashSet<>();
+        vacancies.addAll(entityManager.createQuery("select v from Vacancy v join v.employerProfile.id empl where empl = :id", Vacancy.class)
+                .setParameter("id", id)
+//                .setParameter("tracked", true)
+        .getResultList());
+
+        return vacancies;
+    }
+
     public Set<Vacancy> getAllByTags(Set<Tag> tags, int limit) {
         Set<Vacancy> vacancies = new HashSet<>();
         vacancies.addAll(entityManager

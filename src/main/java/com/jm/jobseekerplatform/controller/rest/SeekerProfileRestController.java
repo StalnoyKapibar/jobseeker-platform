@@ -46,6 +46,7 @@ public class SeekerProfileRestController {
 
     @RequestMapping("/{seekerProfileId}")
     public SeekerProfile getSeekerProfileById(@PathVariable Long seekerProfileId) {
+
         return seekerProfileService.getById(seekerProfileId);
     }
 
@@ -79,6 +80,7 @@ public class SeekerProfileRestController {
                                      @RequestParam(value = "surname", required = false) String surname,
                                      @RequestParam(value = "tags", required = false) List<String> tags,
                                      @RequestParam(value = "description", required = false) String description) {
+
         SeekerProfile profile = seekerProfileService.getById(id);
         if (name != null && patronymic != null && surname != null) {
             profile.setName(name);
@@ -98,6 +100,7 @@ public class SeekerProfileRestController {
     @RequestMapping(value = "/update_image", method = RequestMethod.POST)
     public String updateImage(@RequestParam(value = "id") long id,
                               @RequestParam(value = "image", required = false) MultipartFile img) throws IOException {
+
         SeekerProfile profile = seekerProfileService.getById(id);
         if (img != null) {
             profile.setPhoto(imageService.resizePhotoSeeker(ImageIO.read(new ByteArrayInputStream(img.getBytes()))));
