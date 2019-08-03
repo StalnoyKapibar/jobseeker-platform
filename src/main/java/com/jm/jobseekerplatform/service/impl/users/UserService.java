@@ -123,9 +123,9 @@ public class UserService extends AbstractService<User> {
 
         if (!existsToken) {
             String token = UUID.randomUUID().toString();
-            PasswordResetToken passwordResetToken =
+            PasswordResetToken passwordResetToken1 =
                     new PasswordResetToken(token, recoveryUser, passwordResetTokenService.calculateExpiryDate());
-            passwordResetTokenService.add(passwordResetToken);
+            passwordResetTokenService.add(passwordResetToken1);
             mailService.sendRecoveryPassEmail(email, token);
             return true;
         } else {
