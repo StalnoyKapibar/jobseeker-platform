@@ -20,19 +20,19 @@
                 <th:block th:each="subscription : ${seekerProfileSubscriptions}">
                     <li class="list-group-item list-group-item-action">
                         <div class="headLine">
-                            <span th:text="${subscription.companyName}"></span>
+                            <span th:text="${subscription.getEmployerProfile().companyName}"></span>
                         </div>
                         <div class="companyData">
-                            <a style="text-decoration: none" th:href="@{subscription.website}"
-                               th:text="${subscription.website}"></a>
+                            <a style="text-decoration: none" th:href="@{subscription.getEmployerProfile().website}"
+                               th:text="${subscription.getEmployerProfile().website}"></a>
                         </div>
                         <div class="pull-right-subscriptions">
                             <span class="btn btn-info btnOnVacancyPage"
-                                  th:onclick="'deleteSubscription(' + ${subscription.id} + ',' +${seekerProfileId} + ')'">Отписаться
+                                  th:onclick="'deleteSubscription(' + ${subscription.getEmployerProfile().id} + ',' +${seekerProfileId} + ')'">Отписаться
                                 <i class="fas fa-trash-alt"></i>
                             </span>
                             <span class="btn btn-info btnOnVacancyPage"
-                                  th:onclick="'window.location.href = \'' + @{/employer/{id}(id=${subscription.id})} + '\''">
+                                  th:onclick="'window.location.href = \'' + @{/employer/{id}(id=${subscription.getEmployerProfile().id})} + '\''">
                                 Профиль компании
                             </span>
                         </div>
