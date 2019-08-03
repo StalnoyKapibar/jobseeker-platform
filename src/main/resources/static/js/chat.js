@@ -96,7 +96,6 @@ function addMessageToMessageArea(message) {
 
 function sendMessage(event) {
     scrollMessageArea();
-    //messageArea.animate({scrollTop: $container[0].scrollHeight}, "slow"); //todo (Nick Dolgopolov)
 
     const messageContent = messageInput.value.trim();
 
@@ -162,6 +161,8 @@ function updateMessageReadStatusOnServer(message, readerProfileId) {
 }
 
 function scrollMessageArea() {
-    $container = $('.message-area');
-    $container[0].scrollTop = $container[0].scrollHeight;
+    // $container = $('.message-area');
+    // $container[0].scrollTop = $container[0].scrollHeight;
+
+    $('.message-area').animate({scrollTop: $container[0].scrollHeight}, "slow");
 }

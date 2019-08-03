@@ -7,7 +7,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) //todo (Nick Dolgopolov) проверить @Entity, @Inheritance, @MappedSuperclass
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class CreatedByEmployerProfileBase extends CreatedByProfileBase<EmployerProfile> {
     public CreatedByEmployerProfileBase() {
     }

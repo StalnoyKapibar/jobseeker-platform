@@ -8,7 +8,7 @@ import com.jm.jobseekerplatform.model.profiles.Profile;
 import javax.persistence.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) //todo (Nick Dolgopolov) проверить @Entity, @Inheritance, @MappedSuperclass
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class CreatedByProfileBase<T extends Profile> implements CreatedByProfile<T> {
 
     @Id

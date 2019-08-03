@@ -31,8 +31,8 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
      * <p>
      * В проекте существуют разные реализации для демонстрации разных подходов.
      *
-     * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdTopicType}
-     * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdChatType}
+     * @see com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdTopicType
+     * @see com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdChatType
      */
     public T getChatByTopicIdCreatorProfileId(Long topicId, Long creatorProfileId) {
 
@@ -60,7 +60,7 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
      */
     public List<T> getAllChatsByParticipantProfileId(Long participantProfileId) {
 
-        List<T> chats = entityManager.createQuery("SELECT DISTINCT c FROM " + clazz.getName() + " c JOIN c.chatMessages m WHERE m.creatorProfile.id = :participantProfileId").
+        List<T> chats = entityManager.createQuery("SELECT DISTINCT c FROM " + clazz.getName() + " c JOIN c.chatMessages m WHERE m.creatorProfile.id = :participantProfileId", clazz).
                 setParameter("participantProfileId", participantProfileId)
                 .getResultList();
 
@@ -73,9 +73,8 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
      *
      * @param chatCreatorProfileId id профиля создателя чата
      */
-
     public List<T> getAllChatsByChatCreatorProfileId(Long chatCreatorProfileId) {
-        List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE c.creatorProfile.id = :chatCreatorProfileId")
+        List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE c.creatorProfile.id = :chatCreatorProfileId", clazz)
                 .setParameter("chatCreatorProfileId", chatCreatorProfileId)
                 .getResultList();
 
@@ -91,10 +90,15 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
      */
     public List<T> getAllChatsByTopicCreatorProfileId(Long topicCreatorProfileId) {
 
-        List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE c.topic.creatorProfile.id = :topicCreatorProfileId")
+        List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE c.topic.creatorProfile.id = :topicCreatorProfileId", clazz)
                 .setParameter("topicCreatorProfileId", topicCreatorProfileId)
                 .getResultList();
 
         return chats;
+    }
+
+    public Long getCountOfUnreadChatsByProfileId(Long profileId){ //todo (Nick Dolgopolov)
+        //entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c JOIN c.chatMessages m JOIN m.isReadByProfilesId WHERE ")
+        return 0L;
     }
 }
