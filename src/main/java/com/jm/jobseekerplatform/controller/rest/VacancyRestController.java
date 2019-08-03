@@ -6,13 +6,10 @@ import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.User;
-import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
-import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -28,13 +25,7 @@ public class VacancyRestController {
     @Autowired
     private VacancyService vacancyService;
 
-    @Autowired
-    private EmployerProfileService employerProfileService;
-
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
-
-    @Autowired
-    private TagService tagService;
 
     @RequestMapping("/")
     public List<Vacancy> getAll() {
