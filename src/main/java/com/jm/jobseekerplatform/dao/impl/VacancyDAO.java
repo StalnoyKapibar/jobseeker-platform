@@ -5,15 +5,11 @@ import com.jm.jobseekerplatform.dto.VacancyPageDTO;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.annotations.QueryHints;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManagerFactory;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.*;
@@ -29,6 +25,10 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     //language=SQL
     private final static String query_for_find_vacancies_by_tags_and_sorted_by_city =
             "select v.id, max(cd.distance) as m from Vacancy v join v.tags t  join v.city c join CityDistance as cd on c=cd.to where cd.from.name=:city and v.state='ACCESS' and t in (:tags) group by (v.id) order by count (v.id) desc, m asc";
+
+    //language=SQL
+    private final static String query_for_find_vacancies_by_tags =
+            "select v.id, count(v.id) as c from Vacancy v join v.tags t where v.state='ACCESS' and t in (:tags) group by (v.id) order by c desc";
 
     //language=SQL
     private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.employerProfile.id = :param";
@@ -72,9 +72,6 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         return deletedCount;
     }
 
-    @Autowired
-    EntityManagerFactory entityManagerFactory;
-
     public Page<Vacancy> getVacanciesSortByCity(String city, int limit, int page) {
         page = (page==0) ? page : --page;
 
@@ -95,7 +92,16 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
 
         Query query = (Query) entityManager.createQuery(query_for_find_vacancies_by_tags_and_sorted_by_city)
                 .setParameter("tags", tags).setParameter("city", city);
+        return getVacancies(query, tags, limit, page);
+    }
 
+    public Page<Vacancy> getVacanciesByTag(Set<Tag> tags, int limit, int page) {
+        Query query = (Query) entityManager.createQuery(query_for_find_vacancies_by_tags)
+                .setParameter("tags", tags);
+        return getVacancies(query, tags, limit, page);
+    }
+
+    private Page<Vacancy> getVacancies(Query query, Set<Tag> tags, int limit, int page) {
         long totalElements = (long) entityManager
                 .createQuery("select count(distinct v) from Vacancy v join v.tags t where v.state='ACCESS' and t in (:tags)")
                 .setParameter("tags", tags).getSingleResult();
@@ -120,6 +126,18 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
             }
         }
         return new VacancyPageDTO(vacancies, totalPages);
+    }
+
+    @Override
+    public Vacancy getById(Long id) {
+        return entityManager.createQuery("select v from Vacancy v where v.id=:id", Vacancy.class).setParameter("id", id)
+                .setHint(QueryHints.FETCHGRAPH, entityManager.getEntityGraph("vacancy-all-nodes")).getSingleResult();
+    }
+
+    @Override
+    public List<Vacancy> getAll() {
+        return entityManager.createQuery("select v from Vacancy v", Vacancy.class)
+                .setHint(QueryHints.FETCHGRAPH, entityManager.getEntityGraph("vacancy-all-nodes")).getResultList();
     }
 }
 

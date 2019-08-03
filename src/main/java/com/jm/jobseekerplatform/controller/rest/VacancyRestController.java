@@ -19,10 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/vacancies")
@@ -41,14 +38,12 @@ public class VacancyRestController {
 
     @RequestMapping("/")
     public List<Vacancy> getAll() {
-        List<Vacancy> vacancies = vacancyService.getAll();
-        return vacancies;
+        return vacancyService.getAll();
     }
 
     @RequestMapping("/{vacancyId:\\d+}")
     public Vacancy getVacancyById(@PathVariable Long vacancyId) {
-        Vacancy vacancy = vacancyService.getById(vacancyId);
-        return vacancy;
+       return vacancyService.getById(vacancyId);
     }
 
     @RequestMapping(value = "/{vacancyId:\\d+}", method = RequestMethod.PUT)
@@ -87,13 +82,12 @@ public class VacancyRestController {
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<Set<Vacancy>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
+    ResponseEntity<List<Vacancy>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
         if (searchParam.isEmpty()) {
-            return new ResponseEntity<>(new HashSet<>(), HttpStatus.OK);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
-        List<Vacancy> list = vacancyService.findAllByTags(searchParam, PageRequest.of(pageCount, 10,
-                new Sort(Sort.Direction.ASC, "id"))).getContent();
-        return new ResponseEntity<>(new HashSet<>(list), HttpStatus.OK);
+        List<Vacancy> list = vacancyService.findAllByTags(searchParam, PageRequest.of(pageCount, 10)).getContent();
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @RequestMapping("/city/page/{page}")

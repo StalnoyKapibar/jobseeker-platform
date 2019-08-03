@@ -13,9 +13,11 @@ import java.util.Set;
 
 @Repository
 public interface VacancyDaoI extends JpaRepository<Vacancy,Long> {
-    Page<Vacancy> findAll(Pageable pageable);
 
     @EntityGraph(value = "vacancy-all-nodes" , type= EntityGraph.EntityGraphType.FETCH)
-    @Query(value = "SELECT distinct v FROM Vacancy v JOIN v.tags t WHERE t IN ?1")
-    Page<Vacancy> findAllByTags(Set<Tag> tags, Pageable pageable);
+    Page<Vacancy> findAll(Pageable pageable);
+
+//    @EntityGraph(value = "vacancy-all-nodes" , type= EntityGraph.EntityGraphType.FETCH)
+//    @Query(value = "SELECT distinct v FROM Vacancy v JOIN v.tags t WHERE t IN ?1")
+//    Page<Vacancy> findAllByTags(Set<Tag> tags, Pageable pageable);
 }

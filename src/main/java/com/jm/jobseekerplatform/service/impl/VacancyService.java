@@ -50,7 +50,7 @@ public class VacancyService extends AbstractService<Vacancy> {
     }
 
     public Page<Vacancy> findAllByTags(Set<Tag> tags, Pageable pageable) {
-        return vacancyDaoI.findAllByTags(tags, pageable);
+        return dao.getVacanciesByTag(tags, pageable.getPageSize(), pageable.getPageNumber());
     }
 
     public Set<Vacancy> getByTags(Set<Tag> tags, int limit) {
