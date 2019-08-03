@@ -8,8 +8,7 @@ import org.springframework.context.annotation.PropertySource;
         "classpath:config/datasource.properties",
         "classpath:config/jpa.properties",
         "classpath:config/mail.properties",
-        "classpath:config/cache.properties",
-        "classpath:config/logging.properties"
+        "classpath:config/cache.properties"
 })
 public class AppConfig {
 }

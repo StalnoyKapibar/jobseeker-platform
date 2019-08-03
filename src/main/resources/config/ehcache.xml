@@ -2,7 +2,7 @@
     <cache name="vacancy"
            timeToLiveSeconds="60"
            maxElementsInMemory="1000" />
-    <cache name="cit"
+    <cache name="city"
            timeToLiveSeconds="60"
            maxElementsInMemory="100" />
 </ehcache>
