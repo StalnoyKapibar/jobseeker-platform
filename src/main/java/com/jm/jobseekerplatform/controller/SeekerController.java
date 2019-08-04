@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.controller;
 
-import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;

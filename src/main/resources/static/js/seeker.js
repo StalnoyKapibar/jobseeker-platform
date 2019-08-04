@@ -1,5 +1,8 @@
+<<<<<<<<< Temporary merge branch 1
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
+=========
+>>>>>>>>> Temporary merge branch 2
 
 function showPortfolio(id) {
     $.ajax({
@@ -62,17 +65,17 @@ function inFavorite(vacancyId, seekerProfileId) {
     })
 }
 
-function outFavorite(vacancyId, seekerProfileId) {
+function outFavorite(vacancyId, profileId) {
     $.ajax({
         type: 'post',
-        url: "/api/seekerprofiles/outFavoriteVacancy?vacancyId=" + vacancyId + "&seekerProfileId=" + seekerProfileId,
+        url: "/api/seekerprofiles/outFavoriteVacancy?vacancyId=" + vacancyId + "&profileId=" + profileId,
         contentType: 'application/json; charset=utf-8',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
         success: function () {
             $('#outFavorite').remove();
-            $('#btnFavorite').append('<button id="inFavorite" class="btn btn-primary" onclick="inFavorite(' + vacancyId + ',' + seekerProfileId + ')">В избранное' +
+            $('#buttons').append('<button id="inFavorite" class="btn btn-primary" onclick="inFavorite(' + vacancyId + ',' + profileId + ')">В избранное' +
                 '</button>');
         },
         error: function (error) {
@@ -105,8 +108,8 @@ function updateName(id, name, patronymic, surname) {
         type: 'post',
         url: "/api/seekerprofiles/update?" +
             "id=" + id +
-            "&name=" + name +
-            "&patronymic=" + patronymic +
+            "&name=" + name+
+            "&patronymic=" + patronymic+
             "&surname=" + surname,
         contentType: 'application/json; charset=utf-8',
         beforeSend: function (request) {
@@ -154,7 +157,7 @@ function updateProject(id, name, link, description) {
             request.setRequestHeader(header, token);
         },
         success: function (project) {
-            document.getElementById("project_td_" + project.id).innerText = project.projectName;
+            document.getElementById("project_td_"+project.id).innerText=project.projectName;
             $('#update_project_close_btn').click();
         },
         error: function (error) {
@@ -452,13 +455,20 @@ function delete_project(profile_id, portfolio_id) {
 }
 
 $(document).ready(function () {
-    $(".custom-file-input").on("change", function () {
+
+    $(".custom-file-input").on("change", function() {
         var fileName = $(this).val().split("\\").pop();
         $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
 });
-function toSubscribe(vacancyId, seekerProfileId) {
 
+
+
+
+
+var token = $("meta[name='_csrf']").attr("content");
+var header = $("meta[name='_csrf_header']").attr("content");
+function toSubscribe(vacancyId, seekerProfileId) {
     $.ajax({
         type: 'post',
         url: "/api/seekerprofiles/toSubscribe?vacancyId=" + vacancyId + "&seekerProfileId=" + seekerProfileId,
@@ -479,7 +489,6 @@ function toSubscribe(vacancyId, seekerProfileId) {
 }
 
 function unSubscribe(vacancyId, seekerProfileId) {
-
     $.ajax({
         type: 'post',
         url: "/api/seekerprofiles/unSubscribe?vacancyId=" + vacancyId + "&seekerProfileId=" + seekerProfileId,

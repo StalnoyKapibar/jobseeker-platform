@@ -46,7 +46,6 @@ public class SeekerProfileRestController {
 
     @RequestMapping("/{seekerProfileId}")
     public SeekerProfile getSeekerProfileById(@PathVariable Long seekerProfileId) {
-
         return seekerProfileService.getById(seekerProfileId);
     }
 
@@ -108,6 +107,8 @@ public class SeekerProfileRestController {
         }
         return Base64.getEncoder().encodeToString(profile.getPhoto());
     }
+
+
 
     @RequestMapping(value = "/unSubscribe", method = RequestMethod.POST)
     public ResponseEntity unSubscribeCompany(@RequestParam("vacancyId") Long vacancyId,
