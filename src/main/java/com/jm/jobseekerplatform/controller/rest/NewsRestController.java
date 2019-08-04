@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.News;
-import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
@@ -65,13 +65,13 @@ public class NewsRestController {
     @ResponseBody
     public ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
                                                                   @RequestParam("newsPageCount") int newsPageCount) {
-        Set<EmployerProfile> employerProfiles = seekerProfileService.getById(seekerProfileId).getSubscriptions();
-        if (employerProfiles.size() == 0) {
+
+        Set<Subscription> subscriptions = seekerProfileService.getById(seekerProfileId).getSubscriptions();
+        if (subscriptions.size() == 0) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
         Sort sort = new Sort(Sort.Direction.DESC, "date");
-        List<News> news = newsService.getAllBySeekerProfileId(employerProfiles,
-                PageRequest.of(newsPageCount, 10, sort)).getContent();
+        List<News> news = newsService.getAllBySubscription(subscriptions, PageRequest.of(newsPageCount, 10, sort)).getContent();
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
 
