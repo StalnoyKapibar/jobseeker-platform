@@ -294,3 +294,33 @@ function update_description(id, descr) {
     })
 }
 
+function untrackVacancy(id) {
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $.ajax({
+        type: 'post',
+        url: "/api/vacancies/tracked?vacancyId=" + id +
+            "&tracked=" + false,
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        success: function (vacancies) {
+            $('#vacancyList').empty();
+            for(var i = 0; i<vacancies.length; i++){
+
+                $('#vacancyList').html('<tr class="table-light" id="projects_tr">' +
+                    '<th scope="row" style="width: 60%" data-toggle="modal" data-target="#vacancyModal" onclick="showVacancy('+vacancies[i].id+')"' +
+                    '>'+vacancies[i].headline+'</th>'+
+                    '<div sec:authorize="hasRole(\'ROLE_EMPLOYER\')">'+
+                    '<td><a  class="text-danger" onclick="untrackVacancy('+vacancies[i].id+')">untracked</a></td>' +
+                    '</div>' +
+                    '</tr>');
+            }
+        },
+        error: function (error) {
+            console.log(error);
+            alert(error.toString());
+        }
+    })
+}

@@ -85,12 +85,28 @@
                 </div>
                 <div class="col-sm-4">
                     <span>Наши вакансии:</span>
-                    <div class="list-group">
-                        <a th:each="vacancy, index: ${vacancies}" class="list-group-item"
-                           th:text="${vacancy.headline}"
-                           data-toggle="modal" data-target="#vacancyModal"
-                           th:onclick="'showVacancy('+${vacancy.id}+')'"></a>
-                    </div>
+
+                    <table class="table table-hover" id='table_projects'>
+                        <tbody th:each="vacancy, index: ${trackedvacancies}" id="vacancyList">
+                        <tr class="table-light" id="projects_tr">
+                            <th scope="row" style="width: 60%" data-toggle="modal" data-target="#vacancyModal" th:onclick="'showVacancy('+${vacancy.id}+')'"
+                                th:text="${vacancy.headline}"
+                            ></th>
+                            <div sec:authorize="hasRole('ROLE_EMPLOYER')">
+                                <td><a href="javascript:void(0)" class="text-danger" th:onclick="'untrackVacancy('+${vacancy.id}+')'">untracked</a></td>
+                            </div>
+                        </tr>
+                        </tbody>
+                    </table>
+
+<!--                    <div class="list-group" id = "vacancyList">-->
+<!--                        <a th:each="vacancy, index: ${trackedvacancies}" class="list-group-item"-->
+<!--                           th:text="${vacancy.headline}"-->
+<!--                           data-toggle="modal" data-target="#vacancyModal"-->
+<!--                           th:onclick="'showVacancy('+${vacancy.id}+')'">-->
+<!--                            <a href="#" class="text-danger" th:onclick="'untrackVacancy('+${vacancy.id}+')'">untracked</a>-->
+<!--                        </a>-->
+<!--                    </div>-->
                     <div sec:authorize="hasRole('ROLE_EMPLOYER')">
                         <button type="button"
                                 class="btn btn-outline-primary">

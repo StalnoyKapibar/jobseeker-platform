@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.Base64;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,8 +52,8 @@ public class EmployerController {
         boolean isOwner = false;
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
         model.addAttribute("employerProfile", employerProfile);
-        Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
-        model.addAttribute("vacancies", vacancies);
+        List<Vacancy> trackedvacancies = vacancyService.getTrackedByEmploerId(employerProfile.getId());
+        model.addAttribute("trackedvacancies", trackedvacancies);
         if(employerProfile.getLogo()!=null){
             model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
         }

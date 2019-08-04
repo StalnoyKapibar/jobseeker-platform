@@ -110,12 +110,24 @@ public class VacancyRestController {
 
     @PostMapping("/tracked")
     @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    public Set<Vacancy> makeVacancyTracked(@RequestParam(value = "vacancyId") long vacancyId) {
+    public List <Vacancy> makeVacancyTracked(@RequestParam(value = "vacancyId") long vacancyId,
+                                             @RequestParam(value = "tracked") boolean tracked) {
+
         Vacancy vacancy = vacancyService.getById(vacancyId);
-        vacancy.setTracked(true);
+        long emploerid = vacancyService.getById(vacancyId).getEmployerProfile().getId();
+        if(tracked){
+            int vacancyListSize = 10;
+            if(vacancyService.getTrackedByEmploerId(emploerid).size() <= vacancyListSize){
+                vacancy = vacancyService.getById(vacancyId);
+                vacancy.setTracked(tracked);
+                vacancyService.update(vacancy);
+                return vacancyService.getAll();
+            }
+            throw new IllegalArgumentException("there are more than "+vacancyListSize+" vacancies in your vacancy list");
+        }
+        vacancy.setTracked(tracked);
         vacancyService.update(vacancy);
-        Set<Vacancy> trackedVacancies = vacancyService.getTrackedByEmploerId(vacancy.getEmployerProfile().getId());
-        return trackedVacancies;
+        return vacancyService.getTrackedByEmploerId(emploerid);
     }
+
 }

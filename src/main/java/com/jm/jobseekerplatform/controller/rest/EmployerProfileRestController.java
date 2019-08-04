@@ -1,7 +1,9 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.service.impl.ImageService;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,9 @@ public class EmployerProfileRestController {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private VacancyService vacancyService;
 
     @RequestMapping("/")
     public List<EmployerProfile> getAllEmployerProfiles() {
@@ -55,7 +60,9 @@ public class EmployerProfileRestController {
     public EmployerProfile editProfile(@RequestParam(value = "id") long id,
                                        @RequestParam(value = "companyname", required = false) String companyName,
                                        @RequestParam(value = "website", required = false) String website,
-                                       @RequestParam(value = "description", required = false) String description) {
+                                       @RequestParam(value = "description", required = false) String description,
+                                       @RequestParam(value = "vacancyid", required = false) long vacancyid,
+                                       @RequestParam(value = "tracked", required = false) boolean tracked) {
 
         EmployerProfile profile = employerProfileService.getById(id);
         if (companyName != null) {
