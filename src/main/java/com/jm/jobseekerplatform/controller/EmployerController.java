@@ -54,7 +54,7 @@ public class EmployerController {
         model.addAttribute("employerProfile", employerProfile);
         List<Vacancy> trackedvacancies = vacancyService.getTrackedByEmploerId(employerProfile.getId());
         model.addAttribute("trackedvacancies", trackedvacancies);
-        if(employerProfile.getLogo()!=null){
+        if (employerProfile.getLogo() != null) {
             model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
         }
         if (authentication != null && authentication.isAuthenticated()) {

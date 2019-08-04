@@ -52,7 +52,7 @@ public class VacancyService extends AbstractService<Vacancy> {
         return vacancyDaoI.findAllByTags(tags, pageable);
     }
 
-    public List<Vacancy> getTrackedByEmploerId(Long id){
+    public List<Vacancy> getTrackedByEmploerId(Long id) {
         return dao.getAllTracked(id);
     }
 

@@ -306,17 +306,17 @@ function untrackVacancy(id) {
             request.setRequestHeader(header, token);
         },
         success: function (vacancies) {
-            $('#vacancyList').empty();
+            var vacanciesHtml = "";
             for(var i = 0; i<vacancies.length; i++){
-
-                $('#vacancyList').html('<tr class="table-light" id="projects_tr">' +
+                vacanciesHtml +='<tr class="table-light">' +
                     '<th scope="row" style="width: 60%" data-toggle="modal" data-target="#vacancyModal" onclick="showVacancy('+vacancies[i].id+')"' +
                     '>'+vacancies[i].headline+'</th>'+
                     '<div sec:authorize="hasRole(\'ROLE_EMPLOYER\')">'+
-                    '<td><a  class="text-danger" onclick="untrackVacancy('+vacancies[i].id+')">untracked</a></td>' +
+                    '<td><a href="javascript:void(0)" class="text-danger" onclick="untrackVacancy('+vacancies[i].id+')">untracked</a></td>' +
                     '</div>' +
-                    '</tr>');
+                    '</tr>';
             }
+            $('#tablevacancy').html(vacanciesHtml);
         },
         error: function (error) {
             console.log(error);

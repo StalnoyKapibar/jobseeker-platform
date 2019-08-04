@@ -89,7 +89,7 @@ public class VacancyRestController {
         if (searchParam.isEmpty()) {
             return new ResponseEntity<>(new HashSet<>(), HttpStatus.OK);
         }
-        List<Vacancy> list = vacancyService.findAllByTags(searchParam,PageRequest.of(pageCount, 10,
+        List<Vacancy> list = vacancyService.findAllByTags(searchParam, PageRequest.of(pageCount, 10,
                 new Sort(Sort.Direction.ASC, "id"))).getContent();
         return new ResponseEntity<>(new HashSet<>(list), HttpStatus.OK);
     }
@@ -101,7 +101,7 @@ public class VacancyRestController {
             return vacancyService.findVacanciesByPoint(city, point, limit, page);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                Set<Tag> tags = ((SeekerProfile)((User)authentication.getPrincipal()).getProfile()).getTags();
+                Set<Tag> tags = ((SeekerProfile) ((User) authentication.getPrincipal()).getProfile()).getTags();
                 return vacancyService.findVacanciesByTagsAndByPoint(city, point, tags, limit, page);
             }
         }
@@ -110,20 +110,19 @@ public class VacancyRestController {
 
     @PostMapping("/tracked")
     @ResponseBody
-    public List <Vacancy> makeVacancyTracked(@RequestParam(value = "vacancyId") long vacancyId,
-                                             @RequestParam(value = "tracked") boolean tracked) {
-
+    public List<Vacancy> makeVacancyTracked(@RequestParam(value = "vacancyId") long vacancyId,
+                                            @RequestParam(value = "tracked") boolean tracked) {
         Vacancy vacancy = vacancyService.getById(vacancyId);
         long emploerid = vacancyService.getById(vacancyId).getEmployerProfile().getId();
-        if(tracked){
+        if (tracked) {
             int vacancyListSize = 10;
-            if(vacancyService.getTrackedByEmploerId(emploerid).size() <= vacancyListSize){
+            if (vacancyService.getTrackedByEmploerId(emploerid).size() < vacancyListSize) {
                 vacancy = vacancyService.getById(vacancyId);
                 vacancy.setTracked(tracked);
                 vacancyService.update(vacancy);
                 return vacancyService.getAll();
             }
-            throw new IllegalArgumentException("there are more than "+vacancyListSize+" vacancies in your vacancy list");
+            throw new IllegalArgumentException("there are more than " + vacancyListSize + " vacancies in your vacancy list");
         }
         vacancy.setTracked(tracked);
         vacancyService.update(vacancy);

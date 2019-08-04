@@ -86,9 +86,10 @@
                 <div class="col-sm-4">
                     <span>Наши вакансии:</span>
 
-                    <table class="table table-hover" id='table_projects'>
-                        <tbody th:each="vacancy, index: ${trackedvacancies}" id="vacancyList">
-                        <tr class="table-light" id="projects_tr">
+                    <table class="table table-hover" id='tablevacancy'>
+                        <tbody th:each="vacancy: ${trackedvacancies}">
+                        <div id = "vacancyList">
+                        <tr class="table-light">
                             <th scope="row" style="width: 60%" data-toggle="modal" data-target="#vacancyModal" th:onclick="'showVacancy('+${vacancy.id}+')'"
                                 th:text="${vacancy.headline}"
                             ></th>
@@ -96,6 +97,7 @@
                                 <td><a href="javascript:void(0)" class="text-danger" th:onclick="'untrackVacancy('+${vacancy.id}+')'">untracked</a></td>
                             </div>
                         </tr>
+                        </div>
                         </tbody>
                     </table>
 
