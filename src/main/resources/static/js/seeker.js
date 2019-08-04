@@ -1,8 +1,7 @@
-<<<<<<<<< Temporary merge branch 1
+
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
-=========
->>>>>>>>> Temporary merge branch 2
+
 
 function showPortfolio(id) {
     $.ajax({
@@ -462,12 +461,6 @@ $(document).ready(function () {
     });
 });
 
-
-
-
-
-var token = $("meta[name='_csrf']").attr("content");
-var header = $("meta[name='_csrf_header']").attr("content");
 function toSubscribe(vacancyId, seekerProfileId) {
     $.ajax({
         type: 'post',
