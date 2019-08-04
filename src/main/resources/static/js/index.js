@@ -247,25 +247,24 @@ function printVacancies(data) {
             if (seekerAuthority) {
                 var bool = check_seeker_tags(item);
                 if(bool==true){
-                    vacancyTags += '<span class="badge badge-pill badge-success btnClick">' + item.name + '<i class="fas fa-tag"></i></span>';
+                    vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark"><h7>' + item.name + '</h7><i class="fas fa-tag"></i></span>';
                 } else {
-                    vacancyTags += '<span class="badge badge-pill badge-success btnClick">' + item.name + '</span>';
+                    vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark"><h7>' + item.name + '</h7></span>';
                 }
             } else {
-                vacancyTags += '<span class="badge badge-pill badge-success btnClick">' + item.name + '</span>';
+                vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark"><h7>' + item.name + '</h7></span>';
             }
         });
         $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
             ' data-target="#vacancyModal" onclick="showVacancy(\'' + value.id + '\')">' +
-            '<div class="headLine"><span>' + value.headline + '</span></div>' +
+            '<div class="headLine"><span>' + value.headline + '</span>'+'   '+favVac+'</div>' +
             '<div class="vacancyTags">' + vacancyTags + '</div>' +
             '<div class="companyData"><span>Компания: ' + value.employerProfile.companyName + '</span><br><span>Город: ' + value.city + '</span></div>' +
             '<div class="vacancyDescription"><span>' + value.shortDescription + '</span></div>' +
             minSalary +
             '<div class="pull-right">' +
-            '<span class="btn btn-outline-info btn-sm btnOnVacancyPage"' +
-            'onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span>' +
-            favVac + '</div>' +
+            '<span class="btn btn-outline-success btn-sm btnOnVacancyPage"' +
+            'onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span>'+'</div>' +
             '</li>');
 
         function check_seeker_tags(tag) {

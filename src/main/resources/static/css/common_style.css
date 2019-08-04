@@ -1,15 +1,18 @@
 body {
-    background-color: #F5F5F5;
+    /*background-color: #F5F5F5;*/
+    background-color: #222;
 }
 
 /*Navbar style*/
 .navbar {
-    background-color: #7295b1;
+    /*background-color: #7295b1;*/
+    background-color: #00bc8c;
 }
 
 .navbar a {
     color: white;
     text-decoration: none;
+    margin-left: 30px;
 }
 
 .navbar li {
@@ -38,8 +41,8 @@ li {
 /*Sidebar style*/
 .sidebar {
     width: 15%;
-    background-color: #dae3ea;
-
+    /*background-color: #dae3ea;*/
+    background-color: #303030;
     height: 100%;
     position: fixed;
     z-index: 1;
@@ -47,6 +50,7 @@ li {
     left: 0;
     overflow-x: hidden;
     padding-top: 20px;
+    margin-top: 25px;
 }
 
 .sidebar ul {
@@ -59,12 +63,14 @@ li {
 
 .sidebar a {
     text-decoration: none;
-    color: #7295b1;
+    /*color: #7295b1;*/
+    color: white;
     display: block;
 }
 
 .sidebar li :hover {
-    color: #4177A3;
+    /*color: #4177A3;*/
+    color: #F39C12;
 }
 
 /*Content style*/
@@ -81,6 +87,9 @@ li {
     background-color: white;
 }
 
+.search_area {
+    margin-top: 25px;
+}
 #search_advice_wrapper {
     display: none;
     width: 58%;
@@ -93,12 +102,13 @@ li {
 
 #search_advice_wrapper .advice_variant {
     cursor: pointer;
-    padding: 5px;
+    padding: 10px;
     text-align: left;
+    background-color: #222;
 }
 
 #search_advice_wrapper .advice_variant:hover {
-    background-color: lightgray;
+    background-color: #F39C12;
 }
 
 
@@ -127,7 +137,8 @@ li {
     bottom: 5%;
     font-size: 20px;
     font-weight: bold;
-    color: #7295b1;
+    color: #3498DB;
+    /*color: #7295b1;*/
 }
 
 .vacancyTags {
@@ -137,8 +148,11 @@ li {
 }
 
 .btnClick {
-    background-color: teal;
+    /*background-color: teal;*/
+    background-color: #F39C12;
     cursor: pointer;
+    margin: 3px;
+
 }
 
 .btnClick:hover {
@@ -249,5 +263,22 @@ li {
 
 .newsAction i {
     margin-right: 5px;
+}
+
+.well {
+    background-color: #222;
+}
+
+.empCard {
+    position: relative;
+    margin-left: 40px;
+    margin-top: 40px;
+}
+
+.img-rounded {
+    margin: 10px;
+    border-radius: 8px;
+    width: 60%;
+    display: block;
 }
 

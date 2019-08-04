@@ -22,7 +22,7 @@
                                 <input class="form-control mr-sm-2 form-search" id="search_box" type="search"
                                        name="query" placeholder="Поиск вакансий по тегам..."
                                        aria-label="Search" value="" autocomplete="off" style="width: 60%">
-                                <button type="button" onclick="searchResults()" class="btn btn-primary my-2 my-sm-0">
+                                <button type="button" onclick="searchResults()" class="btn btn-warning my-2 my-sm-0">
                                     Поиск
                                 </button>
                             </form>
@@ -70,8 +70,8 @@
             <div id="vacancyModal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                     <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
+                    <div class="modal-content card border-light">
+                        <div class="modal-header card-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h2 class="modal-title" th:text="Вакансия"></h2>
                         </div>
