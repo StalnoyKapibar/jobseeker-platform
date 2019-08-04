@@ -1,3 +1,6 @@
+var token = $("meta[name='_csrf']").attr("content");
+var header = $("meta[name='_csrf_header']").attr("content");
+
 function showPortfolio(id) {
     $.ajax({
         url: "/api/portfolios/" + id,
@@ -504,23 +507,37 @@ $(document).ready(function () {
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
 function toSubscribe(vacancyId, seekerProfileId) {
-    $.ajax({
-        type: 'post',
-        url: "/api/seekerprofiles/toSubscribe?vacancyId=" + vacancyId + "&seekerProfileId=" + seekerProfileId,
-        contentType: 'application/json; charset=utf-8',
-        beforeSend: function (request) {
-            request.setRequestHeader(header, token);
-        },
-        success: function () {
-            $('#toSubscribe').remove();
-            $('#btnSubscribe').append('<button type="button" id="unSubscribe" class="btn btn-outline-primary"' +
-                ' onclick="unSubscribe(' + vacancyId + ',' + seekerProfileId + ')">Отписаться<i class="fas fa-envelope"></i></button>');
-        },
-        error: function (error) {
-            console.log(error);
-            alert(error.toString());
-        }
-    })
+    var div = document.getElementById("selectedTags");
+    var nodelist = div.getElementsByTagName("label").length;
+    if (nodelist < 1) {
+        alert('Выберите как минимум 1 тег!');
+    } else {
+        var tags = $("#selectedTags").find("span").map(function () {
+            return this.innerText;
+        }).get();
+
+        $.ajax({
+            type: 'post',
+            url: "/api/seekerprofiles/toSubscribe?vacancyId=" + vacancyId + "&seekerProfileId=" + seekerProfileId + "&tags=" + tags,
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (request) {
+                request.setRequestHeader(header, token);
+            },
+            success: function () {
+                $('#toSubscribe').remove();
+                $('#btnSubscribe').append('<button type="button" id="unSubscribe" class="btn btn-outline-primary"' +
+                    ' onclick="unSubscribe(' + vacancyId + ',' + seekerProfileId + ')">Отписаться<i class="fas fa-envelope"></i></button>');
+                var x = document.getElementById("myDIV");
+                x.style.display = "none";
+                document.getElementById("tagsWell").innerHTML = "";
+                document.getElementById("selectedTags").innerHTML = "";
+            },
+            error: function (error) {
+                console.log(error);
+                alert(error.toString());
+            }
+        })
+    }
 }
 
 function unSubscribe(vacancyId, seekerProfileId) {
@@ -534,7 +551,7 @@ function unSubscribe(vacancyId, seekerProfileId) {
         success: function () {
             $('#unSubscribe').remove();
             $('#btnSubscribe').append('<button type="button" id="toSubscribe" class="btn btn-outline-primary"' +
-                ' onclick="toSubscribe(' + vacancyId + ',' + seekerProfileId + ')">Подписаться<i class="fas fa-envelope"></i></button>');
+                ' onclick="myFunction()">Подписаться<i class="fas fa-envelope"></i></button>');
         },
         error: function (error) {
             console.log(error);

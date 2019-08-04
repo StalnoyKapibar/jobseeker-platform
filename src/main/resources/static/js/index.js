@@ -335,18 +335,16 @@ function getSeekerTags(user_id) {
 
 
 function getCurrentLocation(callback) {
-    if(navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var lat = position.coords.latitude;
-            var lng = position.coords.longitude;
-            point = {'latitudeY': lat, 'longitudeX': lng};
-            getCityByCoords(lat, lng);
-            callback(point);
-        });
-    }
-    else {
-        throw new Error("Your browser does not support geolocation.");
-    }
+    navigator.geolocation.getCurrentPosition(function (position) {
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
+        point = {'latitudeY': lat, 'longitudeX': lng};
+        getCityByCoords(lat, lng);
+        callback(point);
+    }, function () {
+        point = {'latitudeY': 0, 'longitudeX': 0};
+        getAllVacanciesByPoint(point);
+    });
 }
 
 function getCityByCoords(lat, lng) {
