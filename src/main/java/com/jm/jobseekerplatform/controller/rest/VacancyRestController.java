@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.dto.VacancyPageDTO;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -98,7 +100,13 @@ public class VacancyRestController {
     public Page<Vacancy> getPageOfVacancies(@RequestBody Point point, @RequestParam("city") String city, @PathVariable("page") int page, Authentication authentication) {
         int limit = 10;
         if (authentication == null || !authentication.isAuthenticated()) {
-            return vacancyService.findVacanciesByPoint(city, point, limit, page);
+            if (city.equals("undefined")) {
+                List<Vacancy> all = vacancyService.getAll();
+                Collections.shuffle(all);
+                return new VacancyPageDTO(all.subList(0, limit), page);
+            } else {
+                return vacancyService.findVacanciesByPoint(city, point, limit, page);
+            }
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 Set<Tag> tags = ((SeekerProfile) ((User) authentication.getPrincipal()).getProfile()).getTags();
