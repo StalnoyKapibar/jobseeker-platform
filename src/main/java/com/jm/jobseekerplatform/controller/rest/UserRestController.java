@@ -53,9 +53,9 @@ public class UserRestController {
     public void inviteFriend(@PathVariable String user, @PathVariable String friend) {
         mailService.sendFriendInvitaionEmail(user, friend);
     }
-    //востановление пароля
+    //запрос на востановление пароля
     @RequestMapping(method = RequestMethod.GET, value = "/recovery/{email}")
-    public ResponseEntity<Boolean> recoveryPassRequset(@PathVariable String email) {
+    public ResponseEntity<Boolean> recoveryPassRequest(@PathVariable String email) {
         return ResponseEntity.ok(userService.recoveryPassRequest(email));
     }
     //востановление пароля

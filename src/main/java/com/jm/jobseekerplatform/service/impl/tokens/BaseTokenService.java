@@ -12,7 +12,7 @@ public abstract class BaseTokenService<T extends BaseToken> extends AbstractServ
     protected final BaseTokenDAO<T> baseTokenDAO;
 
     public BaseTokenService(BaseTokenDAO<T> baseTokenDAO) {
-        this.baseTokenDAO =  baseTokenDAO;
+        this.baseTokenDAO = baseTokenDAO;
     }
 
     public Date calculateExpiryDate() {
@@ -29,7 +29,8 @@ public abstract class BaseTokenService<T extends BaseToken> extends AbstractServ
     public T findTokenByUserId(Long userId) {
         return baseTokenDAO.findTokenByUserId(userId);
     }
-    public boolean existsTokenByUserId(Long userID){
+
+    public boolean existsTokenByUserId(Long userID) {
         return baseTokenDAO.existsTokenByUserId(userID);
     }
 

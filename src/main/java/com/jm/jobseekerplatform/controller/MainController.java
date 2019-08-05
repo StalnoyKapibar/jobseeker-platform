@@ -1,16 +1,15 @@
 package com.jm.jobseekerplatform.controller;
 
-import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.UserRole;
+import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
-import com.jm.jobseekerplatform.model.tokens.PasswordResetToken;
 import com.jm.jobseekerplatform.model.tokens.VerificationToken;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
-import com.jm.jobseekerplatform.service.impl.*;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
-import com.jm.jobseekerplatform.service.impl.tokens.PasswordResetTokenService;
 import com.jm.jobseekerplatform.service.impl.tokens.VerificationTokenService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.persistence.NoResultException;
 import javax.annotation.security.RolesAllowed;
+import javax.persistence.NoResultException;
 import java.util.Base64;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,9 +36,6 @@ public class MainController {
 
     @Autowired
     private VacancyService vacancyService;
-
-    @Autowired
-    private PasswordResetTokenService passwordResetTokenService;
 
     @Autowired
     private VerificationTokenService verificationTokenService;
@@ -106,19 +101,19 @@ public class MainController {
 
     @RequestMapping(value = "/confirm_reg/{token}", method = RequestMethod.GET)
     public String confirmRegistration(@PathVariable String token, Model model) {
-        try {
-            VerificationToken verificationToken = verificationTokenService.findByToken(token);
+
+        VerificationToken verificationToken = verificationTokenService.findByToken(token);
+        if (verificationToken != null) {
             boolean complete = verificationTokenService.tokenIsNonExpired(verificationToken);
             model.addAttribute("complete", complete);
             if (complete) {
                 verificationTokenService.completeRegistration(verificationToken);
             }
-        } catch (NoResultException e) {
-            e.printStackTrace();
+        } else {
             model.addAttribute("complete", false);
-        } finally {
-            return "confirm_reg";
         }
+        return "confirm_reg";
+
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
@@ -207,10 +202,5 @@ public class MainController {
             model.addAttribute("exists", false);
         }
         return "password_reset";
-    }
-
-    @RequestMapping(value = "/ex", method = RequestMethod.GET)
-    public String exPage() {
-        return "ex";
     }
 }
