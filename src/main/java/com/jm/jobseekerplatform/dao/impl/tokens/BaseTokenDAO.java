@@ -15,10 +15,6 @@ public class BaseTokenDAO<T extends BaseToken> extends AbstractDAO<T> {
     }
 
     public boolean existsTokenByUserId(Long userId) {
-//        return (boolean) entityManager
-//                .createQuery("SELECT CASE WHEN EXISTS(SELECT t FROM " + clazz.getName() + " t WHERE t.user.id = :id) THEN true ELSE false END from " + clazz.getName())
-//                .setParameter("id", userId)
-//                .getSingleResult();
         return !entityManager
                 .createQuery("SELECT t FROM " + clazz.getName() + " t WHERE t.user.id = :id", clazz)
                 .setParameter("id", userId)
