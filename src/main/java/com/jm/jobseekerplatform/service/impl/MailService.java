@@ -61,7 +61,7 @@ public class MailService {
 
     // приглашение друга
     public void sendFriendInvitaionEmail(String address, String friendAddres) {
-        String subject = address + "Приглашает вас попробовать нашу платформу";
+        String subject = address + " Приглашает вас попробовать нашу платформу";
         String href = "http://localhost:" + port + "/registration?email=" + friendAddres;
         final Context ctx = new Context();
         ctx.setVariable("inviter", address);
@@ -78,6 +78,7 @@ public class MailService {
         ctx.setVariable("your_login", address);
         ctx.setVariable("password", password);
         ctx.setVariable("href", href);
+        ctx.setVariable("subscriptionDate", new Date());
         sendEmail(address, subject, templateEngine.process("/emails/notificationEmail.html", ctx));
     }
 
@@ -88,6 +89,7 @@ public class MailService {
         final Context ctx = new Context();
         ctx.setVariable("your_login", address);
         ctx.setVariable("href", href);
+        ctx.setVariable("subscriptionDate", new Date());
         sendEmail(address, subject, templateEngine.process("/emails/recoveryPassEmail.html", ctx));
     }
 }
