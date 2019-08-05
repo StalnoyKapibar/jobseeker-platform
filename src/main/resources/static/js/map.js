@@ -11,6 +11,7 @@ function initMap() {
 }
 
 function initV_Map() {
+if (typeof lat == "undefined"){lat=55.722030; lng=37.633685;}
     v_map = new google.maps.Map(document.getElementById('v_map'), {
         center: {lat: lat, lng: lng},
         zoom: 12

@@ -83,11 +83,12 @@ public class VacancyRestController {
         }
     }
 
-    @RequestMapping(value = "/update", method= RequestMethod.POST)
-    public boolean updateVacancy(@RequestBody Vacancy vacancy, Authentication authentication){
-        vacancyService.updateVacancy(vacancy);
-//        vacancyService.update(oldVacancy);
-        return true;
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public boolean updateVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
+        if (vacancyService.validateVacancy(vacancy) & vacancyService.getById(vacancy.getId()).getEmployerProfile().getId() == (((EmployerUser) authentication.getPrincipal()).getProfile().getId())) {
+            return vacancyService.updateVacancy(vacancy);
+        }
+        return false;
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
@@ -96,7 +97,7 @@ public class VacancyRestController {
         if (searchParam.isEmpty()) {
             return new ResponseEntity<>(new HashSet<>(), HttpStatus.OK);
         }
-        List<Vacancy> list = vacancyService.findAllByTags(searchParam,PageRequest.of(pageCount, 10,
+        List<Vacancy> list = vacancyService.findAllByTags(searchParam, PageRequest.of(pageCount, 10,
                 new Sort(Sort.Direction.ASC, "id"))).getContent();
         return new ResponseEntity<>(new HashSet<>(list), HttpStatus.OK);
     }
@@ -108,7 +109,7 @@ public class VacancyRestController {
             return vacancyService.findVacanciesByPoint(city, point, limit, page);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                Set<Tag> tags = ((SeekerProfile)((User)authentication.getPrincipal()).getProfile()).getTags();
+                Set<Tag> tags = ((SeekerProfile) ((User) authentication.getPrincipal()).getProfile()).getTags();
                 return vacancyService.findVacanciesByTagsAndByPoint(city, point, tags, limit, page);
             }
         }

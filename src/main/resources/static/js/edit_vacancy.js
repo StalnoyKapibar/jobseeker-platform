@@ -17,29 +17,9 @@ $(document).ready(function () {
     lat = parseFloat($("#lat").val());
     lng = parseFloat($("#long").val());
     let address = getAddressByCoords(lat, lng);
- //   alert(address);
 
     $("#v_address").val(address);
 
-// то, что касается проверки заголовка вакансии
-    // проверяем то, что загрузилось
-    /*  if ($("#v_headline").text().search(/^[A-Za-z0-9А-Яа-я ()\-]{3,100}$/)) {
-          $('#v_headline').removeClass('is-invalid');
-          $('#v_headline').addClass('is-valid');
-          headline_check = true;
-      }
-  // вешаем проверку на событие
-      $("#v_headline").keydown(function () {
-          if ($("#v_headline").text().search(/^[A-Za-z0-9А-Яа-я ()\-]{3,100}$/)) {
-              $('#v_headline').removeClass('is-invalid');
-              $('#v_headline').addClass('is-valid');
-              headline_check = true;
-          } else {
-              $('#v_headline').removeClass('is-valid');
-              $('#v_headline').addClass('is-invalid');
-              headline_check = false;
-          }
-      });*/
     bootstrapValidate('#v_headline', 'regex:^[A-Za-z0-9А-Яа-я ()\\-]{3,100}$:Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов',
         function (isValid) {
             if (isValid) {
@@ -50,25 +30,6 @@ $(document).ready(function () {
             }
         }
     );
-// то, что касается проверки адреса вакансии
-// проверяем то, что загрузилось
-    /*  if ($("#v_address").text().length>=10) {
-          $('#v_address').removeClass('is-invalid');
-          $('#v_address').addClass('is-valid');
-          address_check = true;
-      }
-    // вешаем проверку на событие
-      $("#v_address").keydown(function () {
-          if ($("#v_address").text().length>=10) {
-              $('#v_address').removeClass('is-invalid');
-              $('#v_address').addClass('is-valid');
-              address_check = true;
-          } else {
-              $('#v_address').removeClass('is-valid');
-              $('#v_address').addClass('is-invalid');
-              address_check = false;
-          }
-      });*/
     bootstrapValidate('#v_address', 'required:', function (isValid) {
         if (isValid) {
             $('#v_address').removeClass('is-invalid');
@@ -78,19 +39,6 @@ $(document).ready(function () {
             address_check = false;
         }
     });
-
-    /* if ($("#v_remote option:selected")){
-         alert("sdfsdfsdf");
-     }
-    $("#v_remote").onchange(function(){
-     if ($("#v_remote option:selected")){
-         $('#v_remote').removeClass('is-invalid');
-         $('#v_remote').addClass('is-valid');
-     } else {
-         $('#v_remote').removeClass('is-valid');
-         $('#v_remote').addClass('is-invalid');
-     }
-    });*/
 
     bootstrapValidate('#v_remote', 'required:', function (isValid) {
         if (isValid) {
