@@ -5,22 +5,30 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "vacancies")
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "vacancy")
+@NamedEntityGraph(name = "vacancy-all-nodes", attributeNodes = {
+        @NamedAttributeNode("employerProfile"),
+        @NamedAttributeNode("city"),
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("coordinates")
+})
 public class Vacancy implements Serializable, CreatedByEmployerProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "employer_profile_id")
     private EmployerProfile employerProfile;
 
@@ -28,6 +36,7 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     private String headline;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @Embedded
     private City city;
 
     @Column(name = "remote", nullable = false)
@@ -45,10 +54,10 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     @Column(name = "salarymax")
     private Integer salaryMax;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Tag> tags;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     private Point coordinates;
 
     @Column(name = "state", nullable = false)

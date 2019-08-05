@@ -321,8 +321,7 @@ public class InitData {
         List<City> cities = cityService.getAll();
         for (int i = 0; i < 30; i++) {
             city = cities.get(rnd.nextInt(cities.size() ));
-            point = new Point(city.getCenterPoint().getLatitudeY(), city.getCenterPoint().getLongitudeX());
-            pointService.add(point);
+            point = city.getPoint();
 
             vacancy = new Vacancy(
                     getRandomEmployerProfile(),
@@ -516,11 +515,11 @@ public class InitData {
     }
 
     private void initCities() {
-        cityDistanceService.initCityDistances(new City(new Point(55.752030F, 37.633685F), "Москва"));
-        cityDistanceService.initCityDistances(new City(new Point(59.943122F, 30.276844F), "Санкт-Петербург"));
-        cityDistanceService.initCityDistances(new City(new Point(57.650630F, 39.860908F), "Ярославль"));
-        cityDistanceService.initCityDistances(new City(new Point(55.825853F, 49.117538F), "Казань"));
-        cityDistanceService.initCityDistances(new City(new Point(56.825312F, 60.608923F), "Екатеринбург"));
-        cityDistanceService.initCityDistances(new City(new Point(56.299846F, 43.904104F), "Нижний Новгород"));
+        cityService.initCity("Москва", new Point(55.752030F, 37.633685F));
+        cityService.initCity("Санкт-Петербург", new Point(59.943122F, 30.276844F));
+        cityService.initCity("Ярославль", new Point(57.650630F, 39.860908F));
+        cityService.initCity("Казань", new Point(55.825853F, 49.117538F));
+        cityService.initCity("Екатеринбург", new Point(56.825312F, 60.608923F));
+        cityService.initCity("Нижний Новгород", new Point(56.299846F, 43.904104F));
     }
 }
