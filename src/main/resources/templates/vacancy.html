@@ -6,6 +6,13 @@
       lang="en">
 
 <head>
+    <style>
+        #myDIV {
+            width: 100%;
+            padding: 50px 0;
+            margin-top: 20px;
+        }
+    </style>
     <title>Вакансия</title>
     <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <script type="text/javascript" src="/js/seeker.js"></script>
@@ -71,25 +78,69 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-5 col-sm-offset-5">
+            <div class="col-sm-8 col-sm-offset-8">
                 <div sec:authorize="hasRole('ROLE_SEEKER')" id="buttons" style="padding: 15px;">
                     <button type="button" class="btn btn-success"
-                            onclick="alert('кнопка не работает')" style="width: 150px;">Откликнуться
+                            onclick="alert('кнопка не работает')">Откликнуться
                         <i class="fas fa-envelope"></i>
                     </button>
-                    <button th:if="${isContain}" id="outFavorite" class="btn btn-primary"
-                            th:onclick="'outFavorite(' + ${vacancyFromServer.id} + ',' + ${profileId} + ')'">
-                        Убрать из
-                        избранное
-                    </button>
-                    <button th:unless="${isContain}" id="inFavorite" class="btn btn-primary"
-                            th:onclick="'inFavorite(' + ${vacancyFromServer.id} + ',' + ${profileId} + ')'">
-                        В избранное
-                    </button>
+                    <span id="btnFavorite">
+                        <button th:if="${isContain}" id="outFavorite" class="btn btn-primary"
+                                th:onclick="'outFavorite(' + ${vacancyFromServer.id} + ',' + ${seekerProfileId} + ')'">
+                            Убрать из
+                            избранное
+                        </button>
+                        <button th:unless="${isContain}" id="inFavorite" class="btn btn-primary"
+                                th:onclick="'inFavorite(' + ${vacancyFromServer.id} + ',' + ${seekerProfileId} + ')'">
+                            В избранное
+                        </button>
+                    </span>
+                    <span id="btnSubscribe">
+                        <button th:if="${isSubscribe}" type="button" id="unSubscribe" class="btn btn-outline-primary"
+                                th:onclick="'unSubscribe(' + ${vacancyFromServer.id} + ',' + ${seekerProfileId} + ')'">
+                            Отписаться
+                            <i class="fas fa-envelope"></i>
+                        </button>
+
+                        <button th:unless="${isSubscribe}" type="button" id="toSubscribe"
+                                class="btn btn-outline-primary" onclick="myFunction()">
+                            Подписаться
+                            <i class="fas fa-envelope"></i>
+                        </button>
+                    </span>
+                    <div id="myDIV" style="display: none">
+                        <div class="input-group mb-4">
+                            <div>
+                                Выберите теги, на которые хотите подписаться
+                                <div class="search_area">
+                                    <form class="form-inline" style="margin-bottom: 5px;">
+                                        <input class="form-control mr-sm-2 form-search" id="search_box" type="search"
+                                               name="query" placeholder="Поиск тегов..."
+                                               aria-label="Search" value="" autocomplete="off" style="width: 60%">
+                                    </form>
+                                    <input type="hidden" id="searchBoxId" value="">
+                                    <div id="search_advice_wrapper"></div>
+                                </div>
+                                <div id="searchButtons" style="margin-bottom: 10px"></div>
+                            </div>
+
+                        </div>
+                        <div id="tagsWell">
+                        </div>
+                        <hr>
+                        <div id="selectedTags" style="display: none">
+                        </div>
+                        <button type="button" class="btn btn-primary"
+                                th:onclick="'toSubscribe(' + ${vacancyFromServer.id} + ',' + ${seekerProfileId} + ')'">
+                            Подтвердить
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="row" style="height: 150px"></div>
     </div>
+
 
     <script type="text/javascript" src="/js/map.js"></script>
 
