@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,6 +21,9 @@ public class MailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private TemplateEngine templateEngine;
@@ -43,6 +47,7 @@ public class MailService {
             e.printStackTrace();
         }
     }
+
     //подтверждение регистрации
     public void sendVerificationEmail(String address, String token) {
         String subject = "Подтвердите свой E-mail адрес и закончите регистрацию";
@@ -53,9 +58,10 @@ public class MailService {
         ctx.setVariable("subscriptionDate", new Date());
         sendEmail(address, subject, templateEngine.process("/emails/regemail.html", ctx));
     }
+
     // приглашение друга
     public void sendFriendInvitaionEmail(String address, String friendAddres) {
-        String subject = address + "Приглашает вас попробовать нашу платформу";
+        String subject = address + " Приглашает вас попробовать нашу платформу";
         String href = "http://localhost:" + port + "/registration?email=" + friendAddres;
         final Context ctx = new Context();
         ctx.setVariable("inviter", address);
@@ -72,7 +78,18 @@ public class MailService {
         ctx.setVariable("your_login", address);
         ctx.setVariable("password", password);
         ctx.setVariable("href", href);
+        ctx.setVariable("subscriptionDate", new Date());
         sendEmail(address, subject, templateEngine.process("/emails/notificationEmail.html", ctx));
     }
 
+    // востановление пароля
+    public void sendRecoveryPassEmail(String address, String token) {
+        String subject = "Вы сделали запрос на востановление пароля";
+        String href = "http://localhost:" + port + "/password_reset/" + token;
+        final Context ctx = new Context();
+        ctx.setVariable("your_login", address);
+        ctx.setVariable("href", href);
+        ctx.setVariable("subscriptionDate", new Date());
+        sendEmail(address, subject, templateEngine.process("/emails/recoveryPassEmail.html", ctx));
+    }
 }

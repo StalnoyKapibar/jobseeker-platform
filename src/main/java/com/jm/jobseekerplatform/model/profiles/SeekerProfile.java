@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.model.profiles;
 
 import com.jm.jobseekerplatform.model.Portfolio;
+import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 import org.hibernate.annotations.Type;
@@ -37,11 +38,14 @@ public class SeekerProfile extends Profile implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Vacancy> favoriteVacancy;
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Subscription> subscriptions;
+
     public SeekerProfile() {
     }
 
     public SeekerProfile(String name, String patronymic, String surname, String description, byte[] photo, Set<Tag> tags,
-                         Set<Portfolio> portfolios, Set<Vacancy> favoriteVacancy) {
+                         Set<Portfolio> portfolios, Set<Vacancy> favoriteVacancy, Set<Subscription> subscriptions) {
         this.name = name;
         this.patronymic = patronymic;
         this.surname = surname;
@@ -50,7 +54,9 @@ public class SeekerProfile extends Profile implements Serializable {
         this.tags = tags;
         this.portfolios = portfolios;
         this.favoriteVacancy = favoriteVacancy;
+        this.subscriptions = subscriptions;
     }
+
 
     public Set<Vacancy> getFavoriteVacancy() {
         return favoriteVacancy;
@@ -114,5 +120,13 @@ public class SeekerProfile extends Profile implements Serializable {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public Set<Subscription> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(Set<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <title>SeekerProfile</title>
+    <script type="text/javascript" src="/js/seeker_news.js"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8"><h1>Новости</h1></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <div class="container-fluid" id="seekerNewsLine">
+
+                </div>
+            </div>
+        </div>
+        <div class="row" style="height: 200px">
+            <div class="col-sm-8">
+                <div class="flagToScroll">
+                    <input type="hidden" id="scrollSeekerNewsPageCount" th:value="'0'">
+                    <input type="hidden" id="seekerProfileId" th:value="${seekerProfileId}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

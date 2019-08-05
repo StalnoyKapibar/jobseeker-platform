@@ -39,7 +39,7 @@ function showVacancy(id) {
             var lat = data.coordinates.latitudeY;
             var lng = data.coordinates.longitudeX;
             showVacancyOnMap(lat, lng);
-            var address = getAddressByCoords(lat,lng);
+            var address = getAddressByCoords(lat, lng);
             $("#VMAddress").text(address);
         }
     });
@@ -77,7 +77,7 @@ $(document).ready(function () {
         });
     });
 
-    $("#reviewsModal").on('show.bs.modal', function(){
+    $("#reviewsModal").on('show.bs.modal', function () {
         var review = {};
         review["seekerProfiles_id"] = $("#review_evaluation").data("seeker-profile-id");
         review["employerProfiles_id"] = $("#review_evaluation").data("employer-profile-id");
@@ -90,7 +90,7 @@ $(document).ready(function () {
             beforeSend: function (request) {
                 return request.setRequestHeader('X-CSRF-Token', $("input[name=_csrf]").val());
             },
-            success: function (data){
+            success: function (data) {
                 $("#reviewsText").val(data.reviews);
                 $("#review_evaluation").rating('update', data.evaluation);
                 $(".postReview").html('Редактировать');
@@ -113,8 +113,8 @@ function blockVacancy(period) {
         beforeSend: function (request) {
             return request.setRequestHeader(header, token);
         },
-        success: function (data){
-           alert(data);
+        success: function (data) {
+            alert(data);
         }
     });
 }
@@ -133,7 +133,7 @@ function blockEmployerProfile(period) {
         beforeSend: function (request) {
             return request.setRequestHeader(header, token);
         },
-        success: function (data){
+        success: function (data) {
             alert(data);
         }
     });

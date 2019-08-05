@@ -24,51 +24,37 @@ public class CityService extends AbstractService<City> {
     @Autowired
     private CityDistanceService cityDistanceService;
 
-    public String checkCityOrGetNearest(String currentCity, Point currentPoint) {
-        List<City> cityList = getAll();
-        String city = null;
-        for (City c : cityList) {
-            if (c.getName().equals(currentCity)) {
-                city = c.getName();
-            }
-        }
-
+    public City checkCityOrGetNearest(String currentCity, Point currentPoint) {
+        City city = cityDAO.findCityByName(currentCity);
         if (city!=null) {
             return city;
         } else {
             Map<Float, City> sortedCity = new TreeMap<>();
+            List<City> cityList = cityDAO.getAll();
             for (City c : cityList) {
-                float distance = pointService.getDistance(currentPoint, c.getCenterPoint());
+                float distance = pointService.getDistance(currentPoint, c.getPoint());
                 sortedCity.put(distance, c);
             }
-            List<City> sortListCities = new ArrayList<>();
-
-            for(Map.Entry<Float,City> entry : sortedCity.entrySet()) {
-                City value = entry.getValue();
-                sortListCities.add(value);
-            }
-            return sortListCities.get(0).getName();
+            return ((TreeMap<Float, City>) sortedCity).firstEntry().getValue();
         }
     }
 
     public City checkCityOrAdd(String currentCity, Point currentPoint) {
-        List<City> cityList = getAll();
-        City city = null;
-        for (City c : cityList) {
-            if (c.getName().equals(currentCity)) {
-                city = c;
-            }
-        }
-
+        City city = cityDAO.findCityByName(currentCity);
         if (city!=null) {
             return city;
         } else {
-            City newCity = new City(new Point(currentPoint.getLatitudeY(), currentPoint.getLongitudeX()), currentCity);
-            cityDistanceService.initCityDistances(newCity);
-            return newCity;
+            return initCity(currentCity, currentPoint);
         }
     }
+
+    public City initCity(String cityName, Point point) {
+        City city = new City(cityName, point);
+        cityDAO.add(city);
+        return cityDistanceService.initCityDistances(city);
+    }
+
     public City getCityByName(String cityName){
-        return cityDAO.getCityByName(cityName);
+        return cityDAO.findCityByName(cityName);
     }
 }

@@ -5,29 +5,38 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "vacancies")
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "vacancy")
+@NamedEntityGraph(name = "vacancy-all-nodes", attributeNodes = {
+        @NamedAttributeNode("employerProfile"),
+        @NamedAttributeNode("city"),
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("coordinates")
+})
 public class Vacancy implements Serializable, CreatedByEmployerProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "employer_profile_id")
     private EmployerProfile employerProfile;
 
     @Column(name = "headline", nullable = false)
     private String headline;
 
-    @OneToOne (fetch = FetchType.LAZY,cascade = CascadeType.MERGE)//LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @Embedded
     private City city;
 
     @Column(name = "remote", nullable = false)
@@ -45,10 +54,10 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     @Column(name = "salarymax")
     private Integer salaryMax;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Tag> tags;
 
-    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @OneToOne(fetch = FetchType.LAZY)
     private Point coordinates;
 
     @Column(name = "state", nullable = false)
@@ -191,20 +200,20 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
 
     @Override
     public String toString() {
-        return "Vacancy{" + "\n" +
+        return "Vacancy{" +
                 "id=" + id +
-                "," +"\n" + "employerProfile=" + employerProfile +
-                "," +"\n" + " headline='" + headline +
-                "," +"\n" + " city=" + city.getName() +
-                "," +"\n" + " remote=" + remote +
-                "," +"\n" + " shortDescription='" + shortDescription +
-                "," +"\n" + " description='" + description +
-                "," +"\n" + " salaryMin=" + salaryMin +
-                "," +"\n" + " salaryMax=" + salaryMax +
-                "," +"\n" + " tags=" + tags +
-                "," +"\n" + " coordinates=" + coordinates +
-                "," +"\n" + " state=" + state +
-                "," +"\n" + " expiryBlock=" + expiryBlock +
+                ", employerProfile=" + employerProfile +
+                ", headline='" + headline + '\'' +
+                ", city=" + city.getName() +
+                ", remote=" + remote +
+                ", shortDescription='" + shortDescription + '\'' +
+                ", description='" + description + '\'' +
+                ", salaryMin=" + salaryMin +
+                ", salaryMax=" + salaryMax +
+                ", tags=" + tags +
+                ", coordinates=" + coordinates +
+                ", state=" + state +
+                ", expiryBlock=" + expiryBlock +
                 '}';
     }
 }

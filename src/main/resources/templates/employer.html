@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <div sec:authorize="!hasRole('ROLE_EMPLOYER')">
+        <div sec:authorize="hasAnyRole('ROLE_SEEKER','ROLE_ADMIN')">
             <div class="row">
                 <div class="col-sm-3">
                 </div>

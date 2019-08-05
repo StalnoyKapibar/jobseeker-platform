@@ -83,6 +83,9 @@ public class InitData {
     @Autowired
     private CityDistanceService cityDistanceService;
 
+    @Autowired
+    private NewsService newsService;
+
     private Faker faker = new Faker(new Locale("ru"));
 
     private Random rnd = new Random();
@@ -102,6 +105,49 @@ public class InitData {
 
         initReviews();
         initChat();
+
+        initNews();
+    }
+
+    private void initNews() {
+        for (int i = 0; i < 60; i++) {
+            News news = new News(faker.witcher().witcher(), faker.lorem().characters(), null, LocalDateTime.now());
+            newsService.add(news);
+        }
+
+        List<News> newsList = newsService.getAll();
+        for (int i = 0; i < newsList.size(); i++) {
+            if (i < 10) {
+                newsList.get(i).setAuthor(employerProfileService.getById(2L));
+                newsList.get(i).setTags(randomTags(1L));
+                newsService.update(newsList.get(i));
+            }
+            if (i >= 10 && i < 20) {
+                newsList.get(i).setAuthor(employerProfileService.getById(3L));
+                newsList.get(i).setTags(randomTags(2L));
+                newsService.update(newsList.get(i));
+            }
+            if (i >= 20 && i < 30) {
+                newsList.get(i).setAuthor(employerProfileService.getById(4L));
+                newsList.get(i).setTags(randomTags(3L));
+                newsService.update(newsList.get(i));
+            }
+            if (i >= 30 && i < 40) {
+                newsList.get(i).setAuthor(employerProfileService.getById(5L));
+                newsList.get(i).setTags(randomTags(4L));
+                newsService.update(newsList.get(i));
+            }
+            if (i >= 40 && i < 50) {
+                newsList.get(i).setAuthor(employerProfileService.getById(6L));
+                newsList.get(i).setTags(randomTags(5L));
+                newsService.update(newsList.get(i));
+            }
+            if (i >= 50 && i < 60) {
+                newsList.get(i).setAuthor(employerProfileService.getById(7L));
+                newsList.get(i).setTags(randomTags(6L));
+                newsService.update(newsList.get(i));
+            }
+        }
     }
 
     public void initReviews() {
@@ -275,8 +321,7 @@ public class InitData {
         List<City> cities = cityService.getAll();
         for (int i = 0; i < 30; i++) {
             city = cities.get(rnd.nextInt(cities.size() ));
-            point = new Point(city.getCenterPoint().getLatitudeY(), city.getCenterPoint().getLongitudeX());
-            pointService.add(point);
+            point = city.getPoint();
 
             vacancy = new Vacancy(
                     getRandomEmployerProfile(),
@@ -402,17 +447,17 @@ public class InitData {
 
         Set<Vacancy> vacancies = new HashSet<>(vacancyService.getAll());
 
-        seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L), portfolios, vacancies));
+        seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L), portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
         portfolios.add(portfolioService.getById(3L));
         portfolios.add(portfolioService.getById(4L));
-        seekerProfileService.add(new SeekerProfile("Иван", "Игоревич", "Петров", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios,vacancies));
+        seekerProfileService.add(new SeekerProfile("Иван", "Игоревич", "Петров", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
         portfolios.add(portfolioService.getById(5L));
         portfolios.add(portfolioService.getById(6L));
-        seekerProfileService.add(new SeekerProfile("Семен", "Александрович", "Иванов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L), portfolios,vacancies));
+        seekerProfileService.add(new SeekerProfile("Семен", "Александрович", "Иванов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L), portfolios, vacancies, new HashSet<>()));
     }
 
     private Set<Tag> randomTags(Long position) {
@@ -446,13 +491,13 @@ public class InitData {
         }
     }
 
-    private Profile getRandomProfileExceptWithId(Long exceptId){
+    private Profile getRandomProfileExceptWithId(Long exceptId) {
         boolean ready = false;
 
         int amountOfProfiles = profileService.getAll().size();
         int randomId = -1;
 
-        while (!ready){
+        while (!ready) {
             randomId = rnd.nextInt(amountOfProfiles);
             if (randomId != exceptId) {
                 ready = true;
@@ -470,11 +515,11 @@ public class InitData {
     }
 
     private void initCities() {
-        cityDistanceService.initCityDistances(new City(new Point(55.752030F, 37.633685F), "Москва"));
-        cityDistanceService.initCityDistances(new City(new Point(59.943122F, 30.276844F), "Санкт-Петербург"));
-        cityDistanceService.initCityDistances(new City(new Point(57.650630F, 39.860908F), "Ярославль"));
-        cityDistanceService.initCityDistances(new City(new Point(55.825853F, 49.117538F), "Казань"));
-        cityDistanceService.initCityDistances(new City(new Point(56.825312F, 60.608923F), "Екатеринбург"));
-        cityDistanceService.initCityDistances(new City(new Point(56.299846F, 43.904104F), "Нижний Новгород"));
+        cityService.initCity("Москва", new Point(55.752030F, 37.633685F));
+        cityService.initCity("Санкт-Петербург", new Point(59.943122F, 30.276844F));
+        cityService.initCity("Ярославль", new Point(57.650630F, 39.860908F));
+        cityService.initCity("Казань", new Point(55.825853F, 49.117538F));
+        cityService.initCity("Екатеринбург", new Point(56.825312F, 60.608923F));
+        cityService.initCity("Нижний Новгород", new Point(56.299846F, 43.904104F));
     }
 }
