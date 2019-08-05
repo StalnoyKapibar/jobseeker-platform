@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.service.impl.MailService;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ public class UserRestController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MailService mailService;
 
     @GetMapping
     public List<User> getAllUsers() {
@@ -47,7 +51,16 @@ public class UserRestController {
     // отправка приглашения
     @RequestMapping(method = RequestMethod.GET, value = "/inviteFriend/{user}/{friend}")
     public void inviteFriend(@PathVariable String user, @PathVariable String friend) {
-        userService.inviteFriend(user, friend);
+        mailService.sendFriendInvitaionEmail(user, friend);
     }
-
+    //запрос на востановление пароля
+    @RequestMapping(method = RequestMethod.GET, value = "/recovery/{email}")
+    public ResponseEntity<Boolean> recoveryPassRequest(@PathVariable String email) {
+        return ResponseEntity.ok(userService.recoveryPassRequest(email));
+    }
+    //востановление пароля
+    @RequestMapping(method = RequestMethod.GET, value = "/password_reset/{token}/{password}")
+    public void newPassword(@PathVariable String token, @PathVariable char[] password) {
+        userService.passwordReset(token,password);
+    }
 }

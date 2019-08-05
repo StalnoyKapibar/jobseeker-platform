@@ -4,11 +4,13 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import com.jm.jobseekerplatform.model.tokens.VerificationToken;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.tokens.VerificationTokenService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.NoResultException;
 import javax.annotation.security.RolesAllowed;
+import javax.persistence.NoResultException;
 import java.util.Base64;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -109,19 +112,19 @@ public class MainController {
 
     @RequestMapping(value = "/confirm_reg/{token}", method = RequestMethod.GET)
     public String confirmRegistration(@PathVariable String token, Model model) {
-        try {
-            VerificationToken verificationToken = verificationTokenService.findByToken(token);
+
+        VerificationToken verificationToken = verificationTokenService.findByToken(token);
+        if (verificationToken != null) {
             boolean complete = verificationTokenService.tokenIsNonExpired(verificationToken);
             model.addAttribute("complete", complete);
             if (complete) {
                 verificationTokenService.completeRegistration(verificationToken);
             }
-        } catch (NoResultException e) {
-            e.printStackTrace();
+        } else {
             model.addAttribute("complete", false);
-        } finally {
-            return "confirm_reg";
         }
+        return "confirm_reg";
+
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
@@ -202,5 +205,24 @@ public class MainController {
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getEmployerProfile().getLogo()));
 
         return "vacancy";
+    }
+
+    @RequestMapping(value = "/recovery", method = RequestMethod.GET)
+    public String recoveryPassPage() {
+        return "recovery";
+    }
+
+    @RequestMapping(value = "/password_reset/{token}", method = RequestMethod.GET)
+    public String newPassPage(@PathVariable String token, Model model) {
+
+        User resetPassUser = userService.findUserByTokenValue(token);
+        if (resetPassUser != null) {
+            model.addAttribute("email", resetPassUser.getEmail());
+            model.addAttribute("token", token);
+            model.addAttribute("exists", true);
+        } else {
+            model.addAttribute("exists", false);
+        }
+        return "password_reset";
     }
 }
