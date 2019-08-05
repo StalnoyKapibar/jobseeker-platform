@@ -137,7 +137,10 @@
                             Подтвердить
                         </button>
                     </div>
-
+                    <div id="chat_alert" class="alert alert-success mt-3 d-none" role="alert">
+                        Вы отправили заявку на интрервью. Для того, чтобы обсудить
+                        детали , перейдите в приватный <a id="chat_ref" href="/chat/">чат</a> с работодателем.
+                    </div>
                 </div>
                 <div th:if="${isOwner}" id="table" style="padding: 15px;">
                     <table class="table table-striped">

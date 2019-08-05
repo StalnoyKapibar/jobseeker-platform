@@ -13,7 +13,7 @@ function sendRespond(vacancyId, seekerId) {
             $('#respond').addClass("btn btn-warning disabled");
             $('#respond').attr("disabled","disabled");
             $('#respond').text("В ожидании");
-
+            createChat(vacancyId,seekerId);
         },
         error: function (error) {
             console.log(error);
@@ -75,4 +75,24 @@ function updateMeeting(id) {
             alert(error.toString());
         }
     });
+}
+
+
+function createChat(vacancyId, seekerId) {
+    $.ajax({
+        type: 'post',
+        url: "/api/chats?vacancyId=" + vacancyId + "&seekerId=" + seekerId,
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        success: function (data) {
+            $("#chat_alert").removeClass("d-none");
+            $("#chat_ref").attr("href","/chat/" + data);
+        },
+        error: function (error) {
+            console.log(error);
+            alert(error.toString());
+        }
+    })
 }
