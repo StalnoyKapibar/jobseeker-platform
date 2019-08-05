@@ -6,23 +6,17 @@ import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.User;
-import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
-import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/vacancies")
@@ -31,24 +25,16 @@ public class VacancyRestController {
     @Autowired
     private VacancyService vacancyService;
 
-    @Autowired
-    private EmployerProfileService employerProfileService;
-
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
-
-    @Autowired
-    private TagService tagService;
 
     @RequestMapping("/")
     public List<Vacancy> getAll() {
-        List<Vacancy> vacancies = vacancyService.getAll();
-        return vacancies;
+        return vacancyService.getAll();
     }
 
     @RequestMapping("/{vacancyId:\\d+}")
     public Vacancy getVacancyById(@PathVariable Long vacancyId) {
-        Vacancy vacancy = vacancyService.getById(vacancyId);
-        return vacancy;
+       return vacancyService.getById(vacancyId);
     }
 
     @RequestMapping(value = "/{vacancyId:\\d+}", method = RequestMethod.PUT)
@@ -87,13 +73,12 @@ public class VacancyRestController {
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<Set<Vacancy>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
+    ResponseEntity<List<Vacancy>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
         if (searchParam.isEmpty()) {
-            return new ResponseEntity<>(new HashSet<>(), HttpStatus.OK);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
-        List<Vacancy> list = vacancyService.findAllByTags(searchParam, PageRequest.of(pageCount, 10,
-                new Sort(Sort.Direction.ASC, "id"))).getContent();
-        return new ResponseEntity<>(new HashSet<>(list), HttpStatus.OK);
+        List<Vacancy> list = vacancyService.findAllByTags(searchParam, PageRequest.of(pageCount, 10)).getContent();
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @RequestMapping("/city/page/{page}")
