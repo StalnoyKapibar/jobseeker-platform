@@ -37,7 +37,7 @@ function printSeekerNews() {
                         '<span><button id="readMoreButton_' + item.id + '" value="' + item.description + '" onclick="getFullDescription(' + item.id + ')" class="btn btn-link">... Читать полностью' +
                         '</button></span>';
                 } else description = item.description;
-                cardHTML += '<div class="card newsCard" id="newsCard_' + item.id + '" style="margin-top: 10px">' +
+                cardHTML += '<div class="card newsCard empCard" id="newsCard_' + item.id + '" style="margin-top: 10px">' +
                     '<div class="card-body">' +
                     '<h4 class="card-title seekerNewsHeadLine">' + item.headline + '</h4>' +
                     '<p class="card-text newsDescription" id="description_' + item.id + '"><span id="newsDescription_' + item.id + '">' + description + '</span></p>' +

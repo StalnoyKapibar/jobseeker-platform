@@ -6,9 +6,9 @@ function showVacancy(id) {
         success: function (data) {
             var tags = "";
             $.each(data.tags, function (key, value) {
-                tags += value.name + " "
+                tags += '<span class="badge badge-pill badge-success btnClick text-dark">' + value.name + '</span>'
             });
-            $("#VMTags").text(tags);
+            $("#VMTags").html(tags);
             $("#VMHeadline").text(data.headline);
             $("#VMCity").text(data.city);
             $("#VMDescription").text(data.description);
@@ -247,19 +247,19 @@ function printVacancies(data) {
             if (seekerAuthority) {
                 var bool = check_seeker_tags(item);
                 if(bool==true){
-                    vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark"><h7>' + item.name + '</h7><i class="fas fa-tag"></i></span>';
+                    vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7><i class="fas fa-tag"></i></span>';
                 } else {
-                    vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark"><h7>' + item.name + '</h7></span>';
+                    vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
                 }
             } else {
-                vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark"><h7>' + item.name + '</h7></span>';
+                vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
             }
         });
         $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
             ' data-target="#vacancyModal" onclick="showVacancy(\'' + value.id + '\')">' +
             '<div class="headLine"><span>' + value.headline + '</span>'+'   '+favVac+'</div>' +
             '<div class="vacancyTags">' + vacancyTags + '</div>' +
-            '<div class="companyData"><span>Компания: ' + value.employerProfile.companyName + '</span><br><span>Город: ' + value.city + '</span></div>' +
+            '<div class="companyData"><span>Компания: ' + value.employerProfile + '</span><br><span>Город: ' + value.city + '</span></div>' +
             '<div class="vacancyDescription"><span>' + value.shortDescription + '</span></div>' +
             minSalary +
             '<div class="pull-right">' +
