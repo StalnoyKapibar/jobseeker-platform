@@ -111,4 +111,26 @@ public class VacancyRestController {
         }
         return vacancyService.findVacanciesByPoint(city, point, limit, page);
     }
+
+    @PostMapping("/tracked")
+    @ResponseBody
+    public List<Vacancy> makeVacancyTracked(@RequestParam(value = "vacancyId") long vacancyId,
+                                            @RequestParam(value = "tracked") boolean tracked) {
+        Vacancy vacancy = vacancyService.getById(vacancyId);
+        long emploerid = vacancyService.getById(vacancyId).getEmployerProfile().getId();
+        if (tracked) {
+            int vacancyListSize = 10;
+            if (vacancyService.getTrackedByEmploerId(emploerid).size() < vacancyListSize) {
+                vacancy = vacancyService.getById(vacancyId);
+                vacancy.setTracked(tracked);
+                vacancyService.update(vacancy);
+                return vacancyService.getAll();
+            }
+            throw new IllegalArgumentException("there are more than " + vacancyListSize + " vacancies in your vacancy list");
+        }
+        vacancy.setTracked(tracked);
+        vacancyService.update(vacancy);
+        return vacancyService.getTrackedByEmploerId(emploerid);
+    }
+
 }

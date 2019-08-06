@@ -2,19 +2,37 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.Subscription;
+import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.service.impl.ImageService;
+import com.jm.jobseekerplatform.service.impl.SubscriptionService;
+import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.SubscriptionService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
+import java.util.HashSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,10 +51,13 @@ public class SeekerProfileRestController {
     private VacancyService vacancyService;
 
     @Autowired
-    private SubscriptionService subscriptionService;
+    private TagService tagService;
 
     @Autowired
-    private TagService tagService;
+    private ImageService imageService;
+
+    @Autowired
+    private SubscriptionService subscriptionService;
 
     @RequestMapping("/")
     public List<SeekerProfile> getAllSeekerProfiles() {
@@ -69,6 +90,43 @@ public class SeekerProfileRestController {
         seekerProfileService.update(seekerProfile);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @PostMapping("/update")
+    @ResponseBody
+    public SeekerProfile editProfile(@RequestParam(value = "id") long id,
+                                     @RequestParam(value = "name", required = false) String name,
+                                     @RequestParam(value = "patronymic", required = false) String patronymic,
+                                     @RequestParam(value = "surname", required = false) String surname,
+                                     @RequestParam(value = "tags", required = false) List<String> tags,
+                                     @RequestParam(value = "description", required = false) String description) {
+        SeekerProfile profile = seekerProfileService.getById(id);
+        if (name != null && patronymic != null && surname != null) {
+            profile.setName(name);
+            profile.setPatronymic(patronymic);
+            profile.setSurname(surname);
+        }
+        if (tags != null) {
+            profile.setTags(seekerProfileService.getNewTags(tags));
+        }
+        if (description != null) {
+            profile.setDescription(description);
+        }
+        seekerProfileService.update(profile);
+        return profile;
+    }
+
+    @RequestMapping(value = "/update_image", method = RequestMethod.POST)
+    public String updateImage(@RequestParam(value = "id") long id,
+                              @RequestParam(value = "image", required = false) MultipartFile img) throws IOException {
+        SeekerProfile profile = seekerProfileService.getById(id);
+        if (img != null) {
+            profile.setPhoto(imageService.resizePhotoSeeker(ImageIO.read(new ByteArrayInputStream(img.getBytes()))));
+            seekerProfileService.update(profile);
+        }
+        return Base64.getEncoder().encodeToString(profile.getPhoto());
+    }
+
+
 
     @RequestMapping(value = "/unSubscribe", method = RequestMethod.POST)
     public ResponseEntity unSubscribeCompany(@RequestParam("vacancyId") Long vacancyId,

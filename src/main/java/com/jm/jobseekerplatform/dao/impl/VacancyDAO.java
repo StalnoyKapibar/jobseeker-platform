@@ -31,6 +31,17 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     //language=SQL
     private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.creatorProfile.id = :param";
 
+    public List<Vacancy> getAllTracked(Long id) {
+        List<Vacancy> vacancies = new ArrayList<>();
+        Query query = entityManager.unwrap(Session.class)
+                .createSQLQuery("SELECT * FROM (SELECT * FROM vacancies where tracked = :tracked)as subselect where employer_profile_id = :id")
+                .addEntity(Vacancy.class)
+                .setParameter("id", id)
+                .setParameter("tracked", true);
+        vacancies.addAll(query.getResultList());
+        return vacancies;
+    }
+
     public Set<Vacancy> getAllByTags(Set<Tag> tags, int limit) {
         Set<Vacancy> vacancies = new HashSet<>();
         vacancies.addAll(entityManager
@@ -43,13 +54,11 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
 
     public Set<Vacancy> getAllByEmployerProfileId(Long id, int limit) {
         Set<Vacancy> vacancies = new HashSet<>();
-
         vacancies.addAll(entityManager
                 .createQuery(SQL_getAllByEmployerProfileId, Vacancy.class)
                 .setParameter("param", id)
                 .setMaxResults(limit)
                 .getResultList());
-
         return vacancies;
     }
 

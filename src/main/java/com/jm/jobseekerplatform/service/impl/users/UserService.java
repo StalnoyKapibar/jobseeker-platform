@@ -2,6 +2,10 @@ package com.jm.jobseekerplatform.service.impl.users;
 
 import com.jm.jobseekerplatform.dao.impl.users.UserDAO;
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.profiles.AdminProfile;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.tokens.PasswordResetToken;
 import com.jm.jobseekerplatform.model.tokens.VerificationToken;
 import com.jm.jobseekerplatform.model.users.AdminUser;
@@ -9,7 +13,9 @@ import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
+import com.jm.jobseekerplatform.service.impl.ImageService;
 import com.jm.jobseekerplatform.service.impl.MailService;
+import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import com.jm.jobseekerplatform.service.impl.tokens.PasswordResetTokenService;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.tokens.VerificationTokenService;
@@ -50,6 +56,12 @@ public class UserService extends AbstractService<User> {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private ProfileService profileService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
     private UserRole roleEmployer = new UserRole("ROLE_EMPLOYER");
@@ -100,13 +112,17 @@ public class UserService extends AbstractService<User> {
         User userNew = null;
 
         if (userRole.equals(roleSeeker)) {
-            userNew = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            SeekerProfile seekerProfile = (SeekerProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(seekerProfile);
+            userNew = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, seekerProfile);
         } else if (userRole.equals(roleEmployer)) {
-            userNew = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            EmployerProfile employerProfile = (EmployerProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(employerProfile);
+            userNew = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, employerProfile);
         }
 
         add(userNew);
-
+        //так нужно сделать
         User registeredUser = findByEmail(userEmail);
 
         String token = UUID.randomUUID().toString();
@@ -147,11 +163,17 @@ public class UserService extends AbstractService<User> {
         UserRole userRole = userRoleService.findByAuthority(user.getAuthority().getAuthority());
         User newUser = null;
         if (userRole.equals(roleSeeker)) {
-            newUser = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            SeekerProfile seekerProfile = (SeekerProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(seekerProfile);
+            newUser = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, seekerProfile);
         } else if (userRole.equals(roleEmployer)) {
-            newUser = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            EmployerProfile employerProfile = (EmployerProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(employerProfile);
+            newUser = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, employerProfile);
         } else if (userRole.equals(roleAdmin)) {
-            newUser = new AdminUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            AdminProfile adminProfile = (AdminProfile) getDefaultProfile(userRole.getAuthority());
+            profileService.add(adminProfile);
+            newUser = new AdminUser(userEmail, userPass, LocalDateTime.now(), userRole, adminProfile);
         }
 
         newUser.setConfirm(true);
@@ -190,5 +212,19 @@ public class UserService extends AbstractService<User> {
         }
 
         return isCorrect;
+    }
+
+    public void inviteFriend(String user, String friend) {
+        mailService.sendFriendInvitaionEmail(user, friend);
+    }
+
+    private Profile getDefaultProfile(String typeProfile) {
+        typeProfile = typeProfile.toLowerCase();
+        if (typeProfile.contains("employer")) {
+            return new EmployerProfile();
+        } else if (typeProfile.contains("admin")) {
+            return new AdminProfile();
+        }
+        return new SeekerProfile();
     }
 }
