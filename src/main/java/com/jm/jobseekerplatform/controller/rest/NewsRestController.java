@@ -43,9 +43,9 @@ public class NewsRestController {
                                   @RequestParam("tags") Set<String> tags) {
         news.setAuthor(employerProfileService.getById(employerProfileId));
         Set<Tag> tagSet = new HashSet<>();
-        for (String s : tags) {
-            tagSet.add(tagService.findByName(s));
-        }
+        tags.forEach(
+                tag->tagSet.add(tagService.findByName(tag))
+        );
         news.setTags(tagSet);
         newsService.add(news);
         return new ResponseEntity(HttpStatus.OK);
