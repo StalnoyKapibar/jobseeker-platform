@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.dao;
 
 import org.springframework.stereotype.Repository;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
@@ -8,9 +9,9 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 @Repository("abstractDAO")
-public abstract class AbstractDAO<T extends Serializable> {
+public abstract class AbstractDAO<T extends Serializable>  {
 
-    private Class<T> clazz;
+    protected Class<T> clazz;
 
     @PersistenceContext
     protected EntityManager entityManager;

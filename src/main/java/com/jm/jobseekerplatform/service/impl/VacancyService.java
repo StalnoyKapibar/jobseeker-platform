@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.dao.impl.VacancyDAO;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class VacancyService extends AbstractService<Vacancy> {
     }
 
     public Page<Vacancy> findAllByTags(Set<Tag> tags, Pageable pageable) {
-        return vacancyDaoI.findAllByTags(tags, pageable);
+        return dao.getVacanciesByTag(tags, pageable.getPageSize(), pageable.getPageNumber());
     }
 
     public Set<Vacancy> getByTags(Set<Tag> tags, int limit) {
@@ -125,12 +126,28 @@ public class VacancyService extends AbstractService<Vacancy> {
     }
 
     public Page<Vacancy> findVacanciesByPoint(String currentCity, Point point, int limit, int page) {
-        String city = cityService.checkCityOrGetNearest(currentCity, point);
+        String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
         return dao.getVacanciesSortByCity(city, limit, page);
     }
 
     public Page<Vacancy> findVacanciesByTagsAndByPoint(String currentCity, Point point, Set<Tag> tags, int limit, int page) {
-        String city = cityService.checkCityOrGetNearest(currentCity, point);
+        String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
         return dao.getVacanciesByTagsAndSortByCity(city, tags, limit, page);
+    }
+    public boolean updateVacancy(Vacancy vacancy){
+        Vacancy oldVacancy= getById(vacancy.getId());
+        oldVacancy.setHeadline(vacancy.getHeadline());
+        oldVacancy.setDescription(vacancy.getDescription());
+        oldVacancy.setSalaryMax(vacancy.getSalaryMax());
+        oldVacancy.setSalaryMin(vacancy.getSalaryMin());
+        oldVacancy.setCity(cityService.checkCityOrAdd(vacancy.getCity().getName(),vacancy.getCoordinates()));
+        Point point= vacancy.getCoordinates();
+        pointService.add(point);
+        oldVacancy.setCoordinates(point);
+        oldVacancy.setRemote(vacancy.getRemote());
+        oldVacancy.setShortDescription(vacancy.getShortDescription());
+        oldVacancy.setTags(tagService.matchTagsByName(vacancy.getTags()));
+        System.out.println(vacancy);
+        return true;
     }
 }

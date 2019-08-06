@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
 </head>
+
 <body>
+
 <th:block th:fragment="head">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -18,6 +20,7 @@
     <script src="https://kit.fontawesome.com/c5edb0b5a3.js"></script>
     <link href="/css/dashboard.css" rel="stylesheet">
 </th:block>
+
 <th:block th:fragment="nav">
     <nav class="navbar navbar-dark fixed-top bg-dark navbar-expand-md shadow p-0">
         <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">JobSeeker</a>
@@ -32,6 +35,7 @@
         </ul>
     </nav>
 </th:block>
+
 <th:block th:fragment="sidebar">
     <nav class="col-md-2 d-none d-md-block bg-light sidebar">
         <div class="sidebar-sticky">
@@ -67,9 +71,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'chat' ? 'active' : ''}" href="/admin/chats">
+                    <a class="nav-link" th:classappend="${side == 'chatsMy' ? 'active' : ''}" href="/admin/chats/my">
                         <span data-feather="message-circle"></span>
-                        Чат
+                        Мои чаты
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${side == 'chatsAll' ? 'active' : ''}" href="/admin/chats/all">
+                        <span data-feather="message-circle"></span>
+                        Все чаты
                     </a>
                 </li>
                 <li class="nav-item">
@@ -82,6 +92,7 @@
         </div>
     </nav>
 </th:block>
+
 <th:block th:fragment="scripts">
     <!--<script>window.jQuery || document.write('<script validator="/docs/4.3.1/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>-->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
@@ -90,5 +101,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
 </th:block>
+
 </body>
 </html>

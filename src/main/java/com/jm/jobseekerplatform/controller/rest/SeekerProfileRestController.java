@@ -130,7 +130,7 @@ public class SeekerProfileRestController {
                                              @RequestParam("seekerProfileId") Long seekerProfileId) {
 
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        EmployerProfile employerProfile = vacancyService.getById(vacancyId).getEmployerProfile();
+        EmployerProfile employerProfile = vacancyService.getById(vacancyId).getCreatorProfile();
         Subscription subscription = subscriptionService.findBySeekerAndEmployer(seekerProfile, employerProfile);
         subscriptionService.deleteSubscription(subscription);
         return new ResponseEntity(HttpStatus.OK);
@@ -142,11 +142,8 @@ public class SeekerProfileRestController {
                                              @RequestParam("tags") Set<String> tags) {
 
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        EmployerProfile employerProfile = vacancyService.getById(vacancyId).getEmployerProfile();
-        Set<Tag> tagSet = new HashSet<>();
-        for (String s : tags) {
-            tagSet.add(tagService.findByName(s));
-        }
+        EmployerProfile employerProfile = vacancyService.getById(vacancyId).getCreatorProfile();
+        Set<Tag> tagSet = tagService.getTagsByStringNames(tags);
         Subscription subscription = new Subscription(employerProfile, seekerProfile, tagSet);
         seekerProfile.getSubscriptions().add(subscription);
         seekerProfileService.update(seekerProfile);

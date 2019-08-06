@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
-import java.util.List;
-
 @Service("tagService")
 @Transactional
 public class TagService extends AbstractService<Tag> {
@@ -70,6 +68,10 @@ public class TagService extends AbstractService<Tag> {
         List<Tag> findedTags = dao.getTagsByNames(tagsName);
 
         return findedTags;
+    }
+
+    public Set<Tag> getTagsByStringNames(Set<String> inputTagsName){
+        return new HashSet<>(dao.getTagsByNames(inputTagsName));
     }
 
     public List<Tag> getVerified() {
