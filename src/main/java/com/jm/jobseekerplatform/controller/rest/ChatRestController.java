@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.dto.MessageReadDataDTO;
 import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -54,19 +56,51 @@ public class ChatRestController {
         return new ResponseEntity(chatsInfo, HttpStatus.OK);
     }
 
-    @GetMapping("my/{profileId:\\d+}")
+    @GetMapping("getAllChatsByProfileId/{profileId:\\d+}")
     public HttpEntity getAllChatsByProfileId(@PathVariable("profileId") Long profileId) {
 
         Set<ChatWithTopicVacancy> chats = new HashSet<>();
 
-        chats.addAll(chatWithTopicVacancyService.getAllByChatCreatorProfileId(profileId)); //todo (Nick Dolgopolov) сделать один запрос
-        chats.addAll(chatWithTopicVacancyService.getAllByParticipantProfileId(profileId));
-        chats.addAll(chatWithTopicVacancyService.getAllChatsByTopicCreatorProfileId(profileId));
+//        chats.addAll(chatWithTopicVacancyService.getAllByChatCreatorProfileId(profileId)); //todo (Nick Dolgopolov) сделать один запрос
+//        chats.addAll(chatWithTopicVacancyService.getAllByParticipantProfileId(profileId));
+//        chats.addAll(chatWithTopicVacancyService.getAllChatsByTopicCreatorProfileId(profileId));
+
+        chats.addAll(chatWithTopicVacancyService.getAllChatsByProfileId(profileId));
 
         List<ChatInfoDTO> chatsInfo = getChatInfoDTOs(chats);
 
         //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov)
         return new ResponseEntity(chatsInfo, HttpStatus.OK);
+    }
+
+    @GetMapping("getAllUnreadChatsByProfileId/{profileId:\\d+}")
+    public HttpEntity getAllUnreadChatsByProfileId(@PathVariable("profileId") Long profileId) {
+
+        Set<ChatWithTopicVacancy> chats = new HashSet<>(); //todo (Nick Dolgopolov)
+
+        chats.addAll(chatWithTopicVacancyService.getAllUnreadChatsByProfileId(profileId));
+
+        return new ResponseEntity(chats, HttpStatus.OK);
+    }
+
+    @GetMapping("getAllUnreadChatsByAuthProfileId")
+    public HttpEntity getAllUnreadChatsByAuthProfileId( Authentication authentication) {
+
+        User user = (User) authentication.getPrincipal();
+
+        return getAllUnreadChatsByProfileId(user.getProfile().getId());
+    }
+
+    @GetMapping("getCountOfChatsByAuthProfileId")
+    public HttpEntity getCountOfChatsByAuthProfileId( Authentication authentication) {
+
+        User user = (User) authentication.getPrincipal();
+
+        Set<ChatWithTopicVacancy> chats = new HashSet<>(); //todo (Nick Dolgopolov)
+
+        chats.addAll(chatWithTopicVacancyService.getAllUnreadChatsByProfileId(user.getProfile().getId()));
+
+        return new ResponseEntity(chats.size(), HttpStatus.OK);
     }
 
     private List<ChatInfoDTO> getChatInfoDTOs(Collection<ChatWithTopicVacancy> chats) {

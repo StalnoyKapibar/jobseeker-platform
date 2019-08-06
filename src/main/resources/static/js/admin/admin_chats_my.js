@@ -8,7 +8,7 @@ $(document).ready(function () {
         searching: false,
         info: false,
 
-        "sAjaxSource": "/api/chats/my/" + currentProfileId,
+        "sAjaxSource": "/api/chats/getAllChatsByProfileId/" + currentProfileId,
         "sAjaxDataProp": "",
         "order": [[1, "desc"]],
         "aoColumns": [
@@ -42,8 +42,11 @@ $(document).ready(function () {
             {
                 "mData": "null",
                 "mRender": function (data, type, full) {
-                    return "<p>" + full.lastMessage.text + "<\p>"
-                        + "<p>" + full.lastMessage.date + "<\p>";
+                    const text = full.lastMessage === null ? "no messages" : full.lastMessage.text;
+                    const date = full.lastMessage === null ? "" : full.lastMessage.date;
+
+                    return "<p>" + text + "<\p>"
+                        + "<p>" + date + "<\p>";
                 }
             }
         ]

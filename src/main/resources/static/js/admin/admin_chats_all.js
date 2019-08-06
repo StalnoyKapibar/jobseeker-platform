@@ -40,8 +40,11 @@ $(document).ready(function () {
             {
                 "mData": "null",
                 "mRender": function (data, type, full) {
-                    return "<p>" + full.lastMessage.text + "<\p>"
-                        + "<p>" + full.lastMessage.date + "<\p>";
+                    const text = full.lastMessage === null ? "no messages" : full.lastMessage.text;
+                    const date = full.lastMessage === null ? "" : full.lastMessage.date;
+
+                    return "<p>" + text + "<\p>"
+                        + "<p>" + date + "<\p>";
                 }
             }
         ]
@@ -58,10 +61,10 @@ function count_not_read_messages(url) {
         type: "GET",
         async: false,
         success: function (data) {
-            if (data !== 0) {
-                var str = "   " + data;
-                document.getElementById("count_not_read_messages").textContent = str;
-            }
+            let str = "";
+            data > 0 ? str = data : str = "";
+
+            document.getElementById("count_not_read_messages").textContent = str
         }
     })
 }

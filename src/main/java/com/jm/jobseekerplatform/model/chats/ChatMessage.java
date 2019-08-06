@@ -41,6 +41,10 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         this.creatorProfile = creatorProfile;
         this.date = date;
         this.isReadByProfilesId = new HashSet<>();
+
+        /* Добавляем id профиля автора сообщения в список id профилей, которые прочитали это сообщение
+        Это необходимо для корректной работы запроса на получение списка непрочитанных чатов для конкретного профиля */
+        isReadByProfilesId.add(creatorProfile.getId());
     }
 
     public Long getId() {
@@ -97,7 +101,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChatMessage that = (ChatMessage) o;
-        return  Objects.equals(isReadByProfilesId, that.isReadByProfilesId) && //todo (Nick Dolgopolov) как использовать isReadByProfilesId?
+        return Objects.equals(isReadByProfilesId, that.isReadByProfilesId) && //todo (Nick Dolgopolov) как использовать isReadByProfilesId?
                 Objects.equals(id, that.id) &&
                 Objects.equals(text, that.text) &&
                 Objects.equals(creatorProfile, that.creatorProfile) &&

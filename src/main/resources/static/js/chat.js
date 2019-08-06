@@ -163,6 +163,5 @@ function updateMessageReadStatusOnServer(message, readerProfileId) {
 function scrollMessageArea() {
     // $container = $('.message-area');
     // $container[0].scrollTop = $container[0].scrollHeight;
-
-    $('.message-area').animate({scrollTop: $container[0].scrollHeight}, "slow");
+    //$(".message-area").scrollTop = messages.scrollHeight;
 }

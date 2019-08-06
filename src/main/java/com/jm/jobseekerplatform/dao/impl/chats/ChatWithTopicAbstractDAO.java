@@ -58,7 +58,7 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
      *
      * @param participantProfileId id профиля автора сообщений
      */
-    public List<T> getAllChatsByParticipantProfileId(Long participantProfileId) {
+    public List<T> getAllChatsByParticipantProfileId(Long participantProfileId) { //todo (Nick Dolgopolov) методы дублировать в ChatWithTopicDAO и ChatDAO. Этот метод будет выдавать только чаты, которым от параметризован.
 
         List<T> chats = entityManager.createQuery("SELECT DISTINCT c FROM " + clazz.getName() + " c JOIN c.chatMessages m WHERE m.creatorProfile.id = :participantProfileId", clazz).
                 setParameter("participantProfileId", participantProfileId)
@@ -73,7 +73,7 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
      *
      * @param chatCreatorProfileId id профиля создателя чата
      */
-    public List<T> getAllChatsByChatCreatorProfileId(Long chatCreatorProfileId) {
+    public List<T> getAllChatsByChatCreatorProfileId(Long chatCreatorProfileId) { //todo (Nick Dolgopolov) методы дублировать в ChatWithTopicDAO и ChatDAO. Этот метод будет выдавать только чаты, которым от параметризован.
         List<T> chats = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c WHERE c.creatorProfile.id = :chatCreatorProfileId", clazz)
                 .setParameter("chatCreatorProfileId", chatCreatorProfileId)
                 .getResultList();
@@ -97,8 +97,42 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
         return chats;
     }
 
-    public Long getCountOfUnreadChatsByProfileId(Long profileId){ //todo (Nick Dolgopolov)
-        //entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c JOIN c.chatMessages m JOIN m.isReadByProfilesId WHERE ")
-        return 0L;
+    /**
+     * Возвращает список чатов в которых указанный профиль является:
+     * - создателем чата,
+     * - создателем темы чата,
+     * - участником чата.
+     * <p>
+     * Участник чата - это профиль, который написал в чат хотя бы одно сообщение
+     *
+     * @param profileId id профиля
+     */
+
+    public List<T> getAllChatsByProfileId(Long profileId) { //todo (Nick Dolgopolov) методы дублировать в ChatWithTopicDAO и ChatDAO. Этот метод будет выдавать только чаты, которым от параметризован.
+        List<T> chats = entityManager.createQuery("SELECT DISTINCT c FROM " + clazz.getName() + " c " +
+                "LEFT JOIN c.chatMessages m " +
+                "WHERE c.creatorProfile.id = :profileId " +
+                "OR c.topic.creatorProfile.id = :profileId " +
+                "OR m.creatorProfile.id = :profileId", clazz)
+                .setParameter("profileId", profileId)
+                .getResultList();
+
+        return chats;
+    }
+
+
+    public List<T> getAllUnreadChatsByProfileId(Long profileId) { //todo (Nick Dolgopolov) метод дублировать в ChatWithTopicDAO и ChatDAO. Этот метод будет выдавать только чаты, которым от параметризован.
+
+        List<T> listOfUnreadChats = entityManager.createQuery("SELECT DISTINCT c FROM " + clazz.getName() + " c " +
+                "JOIN c.chatMessages m " +
+                "JOIN c.chatMessages mm " +
+                "WHERE :profileId NOT MEMBER OF m.isReadByProfilesId " +
+                "AND (c.creatorProfile.id = :profileId " +
+                "OR c.topic.creatorProfile.id = :profileId " +
+                "OR mm.creatorProfile.id = :profileId)", clazz)
+                .setParameter("profileId", profileId)
+                .getResultList();
+
+        return listOfUnreadChats;
     }
 }

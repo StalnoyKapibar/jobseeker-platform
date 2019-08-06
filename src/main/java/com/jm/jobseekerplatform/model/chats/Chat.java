@@ -23,8 +23,8 @@ public class Chat implements Serializable {
 
     @ManyToOne
     @JsonProperty("creatorProfile")
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
-    @JsonIdentityReference(alwaysAsId=true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Profile creatorProfile;
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -33,12 +33,12 @@ public class Chat implements Serializable {
     private List<ChatMessage> chatMessages;
 
 
-    public Chat(){ }
-
-    public Chat(Profile creatorProfile){
-        this.creatorProfile = creatorProfile;
+    public Chat() {
     }
 
+    public Chat(Profile creatorProfile) {
+        this.creatorProfile = creatorProfile;
+    }
 
     public Long getId() {
         return id;
@@ -48,11 +48,11 @@ public class Chat implements Serializable {
         return creatorProfile;
     }
 
-    public void setChatMessages(List<ChatMessage> chatMessages) {
-        this.chatMessages = chatMessages;
-    }
-
     public List<ChatMessage> getChatMessages() {
         return chatMessages;
+    }
+
+    public void setChatMessages(List<ChatMessage> chatMessages) {
+        this.chatMessages = chatMessages;
     }
 }
