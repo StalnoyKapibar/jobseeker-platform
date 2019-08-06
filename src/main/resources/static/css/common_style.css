@@ -6,7 +6,7 @@
     --text-color: #222;
     --sidebar-text-color: #222;
     --form-border-color: #F39C12;
-    --card-bg-color: #fff;
+    --card-bg-color: #F3F4F6;
     --card-header-bg-color: #ccc;
 }
 
@@ -350,5 +350,10 @@ li {
 
 .main-block {
     height: 100%;
+}
+
+.input-group-prepend .input-group-text{
+    background-color: #F39C12;
+    color: #222;
 }
 

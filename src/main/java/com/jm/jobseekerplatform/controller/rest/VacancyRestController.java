@@ -16,7 +16,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/vacancies")
@@ -71,6 +74,14 @@ public class VacancyRestController {
         }
     }
 
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public boolean updateVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
+        if (vacancyService.validateVacancy(vacancy) & vacancyService.getById(vacancy.getId()).getCreatorProfile().getId() == (((EmployerUser) authentication.getPrincipal()).getProfile().getId())) {
+            return vacancyService.updateVacancy(vacancy);
+        }
+        return false;
+    }
+
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public @ResponseBody
     ResponseEntity<List<Vacancy>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
@@ -81,7 +92,7 @@ public class VacancyRestController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @RequestMapping("/city/page/{page}")
+    @RequestMapping(value = "/city/page/{page}", method = RequestMethod.POST)
     public Page<Vacancy> getPageOfVacancies(@RequestBody Point point, @RequestParam("city") String city, @PathVariable("page") int page, Authentication authentication) {
         int limit = 10;
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -94,7 +105,7 @@ public class VacancyRestController {
             }
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                Set<Tag> tags = ((SeekerProfile) ((User) authentication.getPrincipal()).getProfile()).getTags();
+                Set<Tag> tags = ((SeekerProfile)((User)authentication.getPrincipal()).getProfile()).getTags();
                 return vacancyService.findVacanciesByTagsAndByPoint(city, point, tags, limit, page);
             }
         }

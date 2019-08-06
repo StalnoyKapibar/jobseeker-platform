@@ -51,7 +51,7 @@ public class City implements Serializable {
     }
 
     public void setpoint(Point centerPoint) {
-        this.point = point;
+        this.point = centerPoint;
     }
 
     @JsonValue

@@ -259,7 +259,7 @@ function printVacancies(data) {
             ' data-target="#vacancyModal" onclick="showVacancy(\'' + value.id + '\')">' +
             '<div class="headLine"><span>' + value.headline + '</span>'+'   '+favVac+'</div>' +
             '<div class="vacancyTags">' + vacancyTags + '</div>' +
-            '<div class="companyData"><span>Компания: ' + value.employerProfile + '</span><br><span>Город: ' + value.city + '</span></div>' +
+            '<div class="companyData"><span>Компания: ' + value.creatorProfile + '</span><br><span>Город: ' + value.city + '</span></div>' +
             '<div class="vacancyDescription"><span>' + value.shortDescription + '</span></div>' +
             minSalary +
             '<div class="pull-right">' +
@@ -349,20 +349,20 @@ function getCurrentLocation(callback) {
 }
 
 function getCityByCoords(lat, lng) {
-        $.ajax({
-            url: "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=" + $("meta[name='apiKey']").attr("content"),
-            type: "GET",
-            async: false,
-            success: function (data) {
-                for (var i = 0; i < data.results[0].address_components.length; i++) {
-                    for (var b = 0; b < data.results[0].address_components[i].types.length; b++) {
-                        if (data.results[0].address_components[i].types[b] == "locality") { //postal_town
-                            city = data.results[0].address_components[i].long_name;
-                            break;
-                        }
+    $.ajax({
+        url: "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=" + $("meta[name='apiKey']").attr("content"),
+        type: "GET",
+        async: false,
+        success: function (data) {
+            for (var i = 0; i < data.results[0].address_components.length; i++) {
+                for (var b = 0; b < data.results[0].address_components[i].types.length; b++) {
+                    if (data.results[0].address_components[i].types[b] == "locality") { //postal_town
+                        city = data.results[0].address_components[i].long_name;
+                        break;
                     }
                 }
-            }})
+            }
+        }})
 }
 
 function getAllVacanciesByPoint(point) {
@@ -382,14 +382,14 @@ function getAllVacanciesByPoint(point) {
 function getSortedVac(point) {
     $.ajax ({
         url: "api/vacancies/city/page/" + page + "?city=" + city,
-        type: "PUT",
+        type: "POST",
         async: false,
         data: JSON.stringify(point),
         beforeSend: function (xhr) {
             xhr.setRequestHeader(header, token);
             xhr.setRequestHeader("Accept", "application/json");
             xhr.setRequestHeader("Content-Type", "application/json");
-            },
+        },
         success: function (vacancies) {
             total_pages = vacancies.totalPages;
             printVacancies(vacancies.content);
@@ -398,10 +398,6 @@ function getSortedVac(point) {
         }
     })
 }
-
-
-
-
 
 
 

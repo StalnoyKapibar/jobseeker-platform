@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class Profile implements Serializable {
+public abstract class Profile implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,5 +39,16 @@ public class Profile implements Serializable {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public abstract String getFullName();
+
+    public abstract String getTypeName();
+
+    @Override
+    public String toString() {
+        return "Profile{" +
+                "id=" + id +
+                '}';
     }
 }

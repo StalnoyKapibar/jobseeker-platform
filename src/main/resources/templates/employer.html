@@ -24,19 +24,6 @@
         <div class="row">
             <div class="row">
                 <div class="col-sm-6">
-                    <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
-                        <span id="EPId" th:text="${employerProfile.id}" hidden></span>
-                        <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown">
-                            Блокировать<span
-                                class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                            <li><a onclick="blockEmployerProfile(1)">На сутки</a></li>
-                            <li><a onclick="blockEmployerProfile(3)">На 3 дня</a></li>
-                            <li><a onclick="blockEmployerProfile(7)">На 7 дней</a></li>
-                            <li><a onclick="blockEmployerProfile(14)">На 14 дней</a></li>
-                            <li><a onclick="blockEmployerProfile(0)">Бессрочно</a></li>
-                        </ul>
-                    </div>
                 </div>
             </div>
             <div class="col-lg-5 empCard" id="empVacancies">
@@ -46,10 +33,8 @@
                         <div class="list-group">
                             <li th:each="vacancy, index: ${vacancies}" class="card border-success" style="margin-bottom: 20px"
                                 data-toggle="modal" data-target="#vacancyModal" th:onclick="'showVacancy('+${vacancy.id}+')'">
-
                                 <div class="card-header"><span th:text="${vacancy.headline}"></span></div>
                                 <div class="card-body"><span th:text="${vacancy.shortDescription}"></span></div>
-
                             </li>
                         </div>
                     </div>
@@ -72,19 +57,32 @@
 
                     <div class="card-body">
                         <p class="card-text"><span th:text="${employerProfile.description}"></span></p>
+                        <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <span id="EPId" th:text="${employerProfile.id}" hidden></span>
+                            <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown">
+                                Блокировать<span
+                                    class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a onclick="blockEmployerProfile(1)">На сутки</a></li>
+                                <li><a onclick="blockEmployerProfile(3)">На 3 дня</a></li>
+                                <li><a onclick="blockEmployerProfile(7)">На 7 дней</a></li>
+                                <li><a onclick="blockEmployerProfile(14)">На 14 дней</a></li>
+                                <li><a onclick="blockEmployerProfile(0)">Бессрочно</a></li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="card-footer text-muted">
                         <a th:href="@{'http://' + ${employerProfile.website}}" th:text="${employerProfile.website}"></a>
                     </div>
                 </div>
-                <div sec:authorize="!hasRole('ROLE_EMPLOYER')">
-                <div class="card">
-                    <div class="card-header">
-                        <h5><span>Отзывы о компании: </span>
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
+                <div sec:authorize="hasAnyRole('ROLE_SEEKER','ROLE_ADMIN')">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><span>Отзывы о компании: </span>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
                                 <div th:if="${reviewStatus == false}">
                                     <p>Еще нет отзывов</p>
                                 </div>
@@ -125,9 +123,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>
@@ -149,7 +147,7 @@
                     <span id="VMRemote"> (Удаленная работа)</span>
                     <a data-toggle="collapse" data-target="#map_collapse" style="color: #3498DB; white-space: pre" >Показать на карте   <span class="far fa-map"></span></a><br/>
                     <div id="map_collapse" class="collapsed collapse">
-                    <div id="map" style="height: 300px"></div>
+                        <div id="map" style="height: 300px"></div>
                     </div><br/>
                     <h6>Адрес:</h6>
                     <h6><span id="VMAddress"></span></h6><br/>

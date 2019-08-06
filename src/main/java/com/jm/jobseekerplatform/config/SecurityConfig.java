@@ -71,13 +71,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // делаем не валидной текущую сессию
                 .invalidateHttpSession(true);
 
-        http.authorizeRequests()
+        http
                 // делаем страницу регистрации недоступной для авторизированных пользователей
-                .antMatchers("/registration")
-                .anonymous()
-                .antMatchers("/**")
-                .permitAll();
-
+                .authorizeRequests()
+                .antMatchers("/registration").anonymous()
+                // домашняя страница, стили, js и список вакансий доступен всем и всегда
+                .antMatchers("/", "/api/tags/search", "/api/vacancies/search", "/api/vacancies/city/page/*", "/api/vacancies/{vacancyId:\\d+}", "/css/*", "/js/*", "/vacancy/**").permitAll()
+                // всё, что касается админа только для админа и емплоера
+                .antMatchers("/admin/**").access("hasAnyRole('ADMIN','EMPLOYER')").anyRequest().authenticated();
     }
 
 }

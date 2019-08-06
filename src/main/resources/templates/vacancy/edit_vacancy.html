@@ -4,7 +4,7 @@
       layout:decorate="~{layouts/commonlayouts}"
       lang="en">
 <head>
-    <title>Новая вакансия</title>
+    <title>Редактирование вакансии</title>
     <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <style>
         .label {
@@ -17,12 +17,14 @@
             border-style: solid;
             border-color: #5CB85C;
         }
-        .col-md-7.inputGroupContainer{
+
+        .col-md-7.inputGroupContainer {
             flex: none;
             max-width: none;
             padding-left: 10%;
         }
-        #techLabel{
+
+        #techLabel {
             flex: none;
             max-width: none;
             padding-left: 10%;
@@ -34,24 +36,27 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
 
     <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
-    <script type="text/javascript" src="/js/new_vacancy.js"></script>
+    <script type="text/javascript" src="/js/edit_vacancy.js"></script>
     <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey})}"
             async defer></script>
     <script type="text/javascript" src="/js/map.js"></script>
 </head>
-<body style="background-color: var(--bg-color)">
+<body>
+
 <div layout:fragment="content">
     <div class="container-fluid" id="vacancy_container">
         <div class="row">
             <div class="col-sm-2">
             </div>
             <div class="col-sm-8">
+                <h2 id="EPcompanyName" th:text="${employer.companyName}"></h2>
                 <form class="well form-horizontal" id="vacancy_form">
                     <fieldset>
                         <legend align="center">
-                            <h2><b>Создание новой вакансии</b></h2>
+                            <h2><b>Редактирование вакансии</b></h2>
                         </legend>
                         <br>
+                        <input id="vacancyid" hidden th:value="${vacancy.id}">
 
                         <div class="form-group row">
                             <div class="col-sm-1"></div>
@@ -63,7 +68,7 @@
                                     </div>
                                     <input name="v_headline" id="v_headline"
                                            placeholder="Введите название должности (обязательно)"
-                                           class="form-control is-invalid" type="text">
+                                           class="form-control is-valid" type="text" th:value="${vacancy.headline}">
                                 </div>
                             </div>
                         </div>
@@ -72,6 +77,8 @@
                             <label class="col-md-2 control-label">Адрес</label>
                             <div class="col-md-8 inputGroupContainer">
                                 <div class="input-group">
+                                    <input id="long" hidden th:value="${vacancy.coordinates.longitudeX}">
+                                    <input id="lat" hidden th:value="${vacancy.coordinates.latitudeY}">
                                     <div class="input-group-prepend">
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary" type="button" data-toggle="modal"
@@ -82,7 +89,19 @@
                                     </div>
                                     <input name="v_address" id="v_address"
                                            placeholder="Введите полный адрес вручную или выберите на карте (обязательно)"
-                                           class="form-control is-invalid" type="text">
+                                           class="form-control is-valid" type="text">
+                                </div>
+                              <!--  <script>
+                                    $(document).ready(function () {
+                                        //lat = $("#lat").val();
+                                        //lng = $("#long").val();
+                                        $("a#mapStarter").onclick(showVacancyOnMap(lat, lng));
+                                    });
+                                </script>
+                                <a data-toggle="collapse" data-target="#map_collapse" id="mapStarter"> Показать на
+                                    карте</a>-->
+                                <div id="map_collapse" class="collapsed collapse">
+                                    <div id="map" style="height: 300px"></div>
                                 </div>
                             </div>
                         </div>
@@ -94,10 +113,11 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-home"></i></span>
                                     </div>
-                                    <select name="v_remote" id="v_remote" placeholder="Нужно выбрать место" class="form-control selectpicker is-invalid">
+                                    <select name="v_remote" id="v_remote" placeholder="Нужно выбрать место"
+                                            class="form-control selectpicker is-valid" th:field="${vacancy.remote}">
                                         <option value="">Выберите роль</option>
-                                        <option value="false">В офисе работодателя</option>
-                                        <option value="true">Удаленная работа</option>
+                                        <option th:value="false">В офисе работодателя</option>
+                                        <option th:value="true" th:selected="${vacancy.remote}">Удаленная работа</option>
                                     </select>
                                 </div>
                             </div>
@@ -111,7 +131,7 @@
                                         <span class="input-group-text"><i class="fas fa-ruble-sign"></i></span>
                                     </div>
                                     <input name="v_salaryMin" id="v_salaryMin" placeholder="Можно не указывать"
-                                           class="form-control" type="text">
+                                           class="form-control" type="text" th:value="${vacancy.salaryMin}">
                                 </div>
                             </div>
                         </div>
@@ -124,7 +144,7 @@
                                         <span class="input-group-text"><i class="fas fa-ruble-sign"></i></span>
                                     </div>
                                     <input name="v_salaryMax" id="v_salaryMax" placeholder="Можно не указывать"
-                                           class="form-control" type="text">
+                                           class="form-control" type="text" th:value="${vacancy.salaryMax}">
                                 </div>
                             </div>
                         </div>
@@ -140,6 +160,13 @@
                                                 style=";height: 24px;width: 21px;padding-right: 3px;padding-left: 3px;padding-top: 2px;padding-bottom: 2px;margin-bottom: 2px;">
                                             <i class="fas fa-plus-square"></i>
                                         </button>
+                                        <th:block th:each="tag : ${vacancy.tags}">
+                                            <span class='label label-success' th:value="${tag.name}"
+                                                  th:attr="id='v_tagLabel_'+${tag.id}" th:data-name="${tag.name}"
+                                                  th:text="${tag.name}"
+                                                  th:onclick="'deleteTag('+${tag.id}+ ',this.getAttribute(\'data-name\'))'"></span>
+                                        </th:block>
+                                        <!--           <span class='label label-success' value='" + value.name + "' id='tagLabel_" + value.id + "' onclick='addTag(" + value.id + ",\"" + value.name + "\")'>-->
                                     </div>
                                 </div>
                             </div>
@@ -154,33 +181,40 @@
                                 <div class="input-group">
                                     <textarea name="v_shortDescription" id="v_shortDescription"
                                               placeholder="До 255 символов обязательно к заполнению"
-                                              class="form-control is-invalid" rows="3" maxlength="255"></textarea>
+                                              class="form-control is-valid" rows="3" maxlength="255"
+                                              th:text="${vacancy.shortDescription}"></textarea>
                                     <div class="invalid-feedback">
                                         опишите вакансию
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group row">
                             <div class="col-sm-1"></div>
                             <label class="col-md-11 control-label">Подробное описание вакансии</label>
                             <div class="col-sm-1"></div>
                             <div class="col-md-10 inputGroupContainer">
-                                <form method="post">
-                                    <textarea id="v_description" name="editordata"></textarea>
-                                </form>
+                                <!-- <form method="post">-->
+                                <textarea id="v_description" name="editordata"
+                                          th:text="${vacancy.description}"></textarea>
+                                <!--  </form>-->
                                 <div class="input-group">
-                                    <div class="invalid-feedback-description" style="width: 100%; margin-top: .25rem; font-size: 80%; color: #dc3545">
+                                    <div class="invalid-feedback-description"
+                                         style="width: 100%; margin-top: .25rem; font-size: 80%; color: #dc3545">
                                         сделайте полное описание, не менее 100 символов
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+
                         <!-- Button -->
                         <div class="form-group" align="center">
                             <label class="col-md-2 control-label"></label>
                             <div class="col-md-10" style="display: flex; justify-content: center;"><br>
-                                <button type="button" class="btn btn-warning"
+                                <button type="button" class="btn btn-warning" data-toggle="modal"
+                                        data-target="#vacancyModal"
                                         onclick="validateAndPreview()" style="width: 150px;"> Создать
                                     <i class="fas fa-paper-plane "></i>
                                 </button>
@@ -195,7 +229,7 @@
 
     <!-- vacancyModal -->
     <div id="vacancyModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">

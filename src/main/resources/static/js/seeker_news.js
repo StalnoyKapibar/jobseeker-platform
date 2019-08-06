@@ -42,7 +42,7 @@ function printSeekerNews() {
                     '<h4 class="card-title seekerNewsHeadLine">' + item.headline + '</h4>' +
                     '<p class="card-text newsDescription" id="description_' + item.id + '"><span id="newsDescription_' + item.id + '">' + description + '</span></p>' +
                     '<p class="card-text seekerNewsDate">' + 'от: ' + day + '.' + month + '.' + date.getFullYear() + '</p>' +
-                    '<a href="/employer/' + item.author.id + '" class="card-link">' + item.author.companyName + '</a>' +
+                    '<a href="/employer/' + item.author.id + '" class="card-link">' + item.author + '</a>' +
                     '</div>' +
                     // Див с классом "newsAction" сделан для примера работы функционала карточки новости
                     '<div class="card-footer newsAction">' +
