@@ -88,10 +88,7 @@ public class SeekerProfileRestController {
 
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         EmployerProfile employerProfile = vacancyService.getById(vacancyId).getEmployerProfile();
-        Set<Tag> tagSet = new HashSet<>();
-        for (String s : tags) {
-            tagSet.add(tagService.findByName(s));
-        }
+        Set<Tag> tagSet = tagService.getTagsByStringNames(tags);
         Subscription subscription = new Subscription(employerProfile, seekerProfile, tagSet);
         seekerProfile.getSubscriptions().add(subscription);
         seekerProfileService.update(seekerProfile);
