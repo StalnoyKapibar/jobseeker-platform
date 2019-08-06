@@ -9,7 +9,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 @Repository("abstractDAO")
-public abstract class AbstractDAO<T extends Serializable> {
+public abstract class AbstractDAO<T extends Serializable>  {
 
     protected Class<T> clazz;
 

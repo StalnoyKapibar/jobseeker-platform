@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.model;
 
 import com.jm.jobseekerplatform.model.createdByProfile.CreatedByEmployerProfileBase;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,12 +11,21 @@ import java.util.Set;
 
 @Entity
 @Table(name = "vacancies")
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "vacancy")
+@NamedEntityGraph(name = "vacancy-all-nodes", attributeNodes = {
+        @NamedAttributeNode("creatorProfile"),
+        @NamedAttributeNode("city"),
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("coordinates")
+})
 public class Vacancy extends CreatedByEmployerProfileBase implements Serializable {
 
     @Column(name = "headline", nullable = false)
     private String headline;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @Embedded
     private City city;
 
     @Column(name = "remote", nullable = false)
@@ -33,10 +43,10 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     @Column(name = "salarymax")
     private Integer salaryMax;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Tag> tags;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     private Point coordinates;
 
     @Column(name = "state", nullable = false)
@@ -186,7 +196,7 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     }
 
     @Override
-    public String getTypeForUi() {
+    public String getTypeName() {
         return "Вакансия";
     }
 }

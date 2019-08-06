@@ -10,5 +10,5 @@ public interface CreatedByProfile<T extends Profile> {
 
     T getCreatorProfile();
 
-    String getTypeForUi();
+    String getTypeName();
 }

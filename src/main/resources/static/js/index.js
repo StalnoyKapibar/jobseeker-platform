@@ -44,6 +44,7 @@ var total_pages;
 var block = false;
 var point;
 var city;
+var blockScroll = false;
 
 $(function () {
     var user_id = null;
@@ -125,6 +126,7 @@ function deleteButton(id) {
 }
 
 function searchResults() {
+    blockScroll = true;
     $('#allVacancies').remove();
     $('#searchList').remove();
     $('#searchResult').append('<ul id="searchList" class="list-group"></ul>');
@@ -370,7 +372,9 @@ function getAllVacanciesByPoint(point) {
         if ($(document).height() - $(window).height() === $(window).scrollTop()) {
             block = true;
             if (page <= total_pages) {
-                getSortedVac(point);
+                if (blockScroll==false) {
+                    getSortedVac(point);
+                }
             }
         }
     });

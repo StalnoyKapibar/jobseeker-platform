@@ -301,24 +301,24 @@ public class InitData {
 
     public void initVacancies() {
         String shortDescr = "Ищем талантливого разработчика, умеющего все и немного больше";
-        String description = "Обязанности:\n" +
-                "\n" +
-                "Разработка новых модулей системы\n" +
-                "Перевод существующих модулей на микросервисную архитектуру\n" +
-                "Требования:\n" +
-                "Высшее образование\n" +
-                "Опыт работы с мультипоточностью (multithreading)\n" +
-                "Владение основными паттернами проектирования\n" +
-                "Знание и понимание RESTful-протоколов\n" +
-                "Умение быстро разбираться в чужом коде\n" +
-                "Английский язык (на уровне intermediate)\n" +
-                "Опыт работы в проектах с Docker, Kubernetes;\n" +
-                "Условия:\n" +
-                "Белая заработная плата, официальное трудоустройство\n" +
-                "Гибкий график работы\n" +
-                "Лояльное отношение к сотрудникам\n" +
-                "Дружный коллектив\n" +
-                "Дополнительная информация:\n" +
+        String description = "Обязанности:<br>" +
+                "<br>" +
+                "Разработка новых модулей системы<br>" +
+                "Перевод существующих модулей на микросервисную архитектуру<br>" +
+                "Требования:<br>" +
+                "Высшее образование<br>" +
+                "Опыт работы с мультипоточностью (multithreading)<br>" +
+                "Владение основными паттернами проектирования<br>" +
+                "Знание и понимание RESTful-протоколов<br>" +
+                "Умение быстро разбираться в чужом коде<br>" +
+                "Английский язык (на уровне intermediate)<br>" +
+                "Опыт работы в проектах с Docker, Kubernetes;<br>" +
+                "Условия:<br>" +
+                "Белая заработная плата, официальное трудоустройство<br>" +
+                "Гибкий график работы<br>" +
+                "Лояльное отношение к сотрудникам<br>" +
+                "Дружный коллектив<br>" +
+                "Дополнительная информация:<br>" +
                 "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!";
 
         Vacancy vacancy;
@@ -327,8 +327,7 @@ public class InitData {
         List<City> cities = cityService.getAll();
         for (int i = 0; i < 30; i++) {
             city = cities.get(rnd.nextInt(cities.size() ));
-            point = new Point(city.getCenterPoint().getLatitudeY(), city.getCenterPoint().getLongitudeX());
-            pointService.add(point);
+            point = city.getPoint();
 
             vacancy = new Vacancy(
                     getRandomEmployerProfile(),
@@ -392,7 +391,7 @@ public class InitData {
         employerProfile.setState(State.ACCESS);
         employerProfileService.add(employerProfile);
 
-        for (Long i = 0L; i <= 3L; i++) {
+        for (long i = 0L; i <= 3L; i++) {
             image = getBufferedImage();
             employerProfile = new EmployerProfile(faker.company().name(), faker.company().url(), faker.company().bs(), imageService.resizeLogoEmployer(image));
             employerProfile.setState(State.ACCESS);
@@ -482,7 +481,7 @@ public class InitData {
 
         List<Profile> profileList = profileService.getAll();
 
-        for (Long i = 1L; i < 6L; i++) {
+        for (long i = 1L; i < 6L; i++) {
             List<ChatMessage> messages = new ArrayList<>();
             for (int k = 0; k < 5; k++) {
                 ChatMessage chatMessage = new ChatMessage(faker.gameOfThrones().quote(), profileList.get(rnd.nextInt(profileList.size())), new Date());
@@ -513,9 +512,7 @@ public class InitData {
             }
         }
 
-        Profile randomProfile = profileService.getById((long) randomId);
-
-        return randomProfile;
+        return profileService.getById((long) randomId);
     }
 
     private EmployerProfile getRandomEmployerProfile() {
@@ -524,11 +521,11 @@ public class InitData {
     }
 
     private void initCities() {
-        cityDistanceService.initCityDistances(new City(new Point(55.752030F, 37.633685F), "Москва"));
-        cityDistanceService.initCityDistances(new City(new Point(59.943122F, 30.276844F), "Санкт-Петербург"));
-        cityDistanceService.initCityDistances(new City(new Point(57.650630F, 39.860908F), "Ярославль"));
-        cityDistanceService.initCityDistances(new City(new Point(55.825853F, 49.117538F), "Казань"));
-        cityDistanceService.initCityDistances(new City(new Point(56.825312F, 60.608923F), "Екатеринбург"));
-        cityDistanceService.initCityDistances(new City(new Point(56.299846F, 43.904104F), "Нижний Новгород"));
+        cityService.initCity("Москва", new Point(55.752030F, 37.633685F));
+        cityService.initCity("Санкт-Петербург", new Point(59.943122F, 30.276844F));
+        cityService.initCity("Ярославль", new Point(57.650630F, 39.860908F));
+        cityService.initCity("Казань", new Point(55.825853F, 49.117538F));
+        cityService.initCity("Екатеринбург", new Point(56.825312F, 60.608923F));
+        cityService.initCity("Нижний Новгород", new Point(56.299846F, 43.904104F));
     }
 }

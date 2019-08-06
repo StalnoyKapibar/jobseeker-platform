@@ -8,14 +8,14 @@ import com.jm.jobseekerplatform.model.profiles.Profile;
 import javax.persistence.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) //todo (Nick Dolgopolov) проверить @Entity, @Inheritance, @MappedSuperclass
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class CreatedByProfileBase<T extends Profile> implements CreatedByProfile<T> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, targetEntity = Profile.class)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, targetEntity = Profile.class)
     private T creatorProfile;
 
     public CreatedByProfileBase() {

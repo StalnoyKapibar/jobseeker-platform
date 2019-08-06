@@ -51,12 +51,12 @@ public class SeekerProfile extends Profile implements Serializable {
     }
 
     @Override
-    public String getNameForUi() {
+    public String getFullName() {
         return surname + " " + name + " " + patronymic;
     }
 
     @Override
-    public String getTypeForUi() {
+    public String getTypeName() {
         return "Соискатель";
     }
 

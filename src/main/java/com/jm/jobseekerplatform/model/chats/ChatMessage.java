@@ -41,7 +41,6 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         this.creatorProfile = creatorProfile;
         this.date = date;
         this.isReadByProfilesId = new HashSet<>();
-        //isReadByProfilesId.add(creatorProfile.getId()); //todo (Nick Dolgopolov) добавлять?
     }
 
     public Long getId() {
@@ -98,7 +97,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChatMessage that = (ChatMessage) o;
-        return isReadByProfilesId == that.isReadByProfilesId && //todo как использовать isReadByProfilesId?
+        return  Objects.equals(isReadByProfilesId, that.isReadByProfilesId) && //todo (Nick Dolgopolov) как использовать isReadByProfilesId?
                 Objects.equals(id, that.id) &&
                 Objects.equals(text, that.text) &&
                 Objects.equals(creatorProfile, that.creatorProfile) &&
@@ -107,7 +106,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, creatorProfile, date, isReadByProfilesId); //todo как использовать isReadByProfilesId?
+        return Objects.hash(id, text, creatorProfile, date, isReadByProfilesId); //todo (Nick Dolgopolov) как использовать isReadByProfilesId?
     }
 
     @Override

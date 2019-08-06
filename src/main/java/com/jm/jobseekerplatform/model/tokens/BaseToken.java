@@ -1,4 +1,4 @@
-package com.jm.jobseekerplatform.model;
+package com.jm.jobseekerplatform.model.tokens;
 
 import com.jm.jobseekerplatform.model.users.User;
 
@@ -7,11 +7,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "verification_tokens")
-public class VerificationToken implements Serializable {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class BaseToken implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "token", nullable = false, unique = true)
@@ -23,10 +23,10 @@ public class VerificationToken implements Serializable {
     @Column(name = "expiry_date", nullable = false)
     private Date expiryDate;
 
-    public VerificationToken() {
+    public BaseToken() {
     }
 
-    public VerificationToken(String token, User user, Date expiryDate) {
+    public BaseToken(String token, User user, Date expiryDate) {
         this.token = token;
         this.user = user;
         this.expiryDate = expiryDate;

@@ -52,11 +52,11 @@ public class ChatRestController {
     @Autowired
     ChatWithTopicVacancyService chatWithTopicVacancyService;
 
-    @GetMapping("/last") //todo (Nick Dolgopolov)
-    public HttpEntity getAllLastMessages(@PathVariable("chatId") Long id) { //todo Warning:(36, 57) Cannot resolve path variable 'chatId' in request mapping
+    @GetMapping("/last")
+    public HttpEntity getAllLastMessages() { //todo (Nick Dolgopolov)
         List<MessageWithDateDTO> lastMessages = chatMessageService.getAllLastMessages();
         Collections.sort(lastMessages);
-        return new ResponseEntity(lastMessages, HttpStatus.OK); //todo Warning:(39, 16) Unchecked call to 'ResponseEntity(T, HttpStatus)' as a member of raw type 'org.springframework.http.ResponseEntity'
+        return new ResponseEntity(lastMessages, HttpStatus.OK);
     }
 
     @GetMapping("all")
@@ -123,13 +123,13 @@ public class ChatRestController {
         for (int i = chatMessageList.size() - 1; i >= 0; i--) {
             ChatMessage chatMessage = chatMessageList.get(i);
             if (chatMessage.getId() <= messageReadDataDTO.getLastReadMessageId() && //todo (Nick Dolgopolov) по id или надо по дате?
-                    chatMessage.getCreatorProfile().getId() != messageReadDataDTO.getReaderProfileId() &&
+                    !chatMessage.getCreatorProfile().getId().equals(messageReadDataDTO.getReaderProfileId()) &&
                     !chatMessage.getIsReadByProfilesId().contains(messageReadDataDTO.getReaderProfileId())) {
                 chatMessage.getIsReadByProfilesId().add(messageReadDataDTO.getReaderProfileId());
 
                 chatMessageService.update(chatMessage);
             }
-        }
+        } //todo (Nick Dolgopolov) запросом + фильтр
 
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -139,7 +139,7 @@ public class ChatRestController {
 
         ChatMessage chatMessage = chatMessageService.getById(messageReadDataDTO.getLastReadMessageId());
 
-        if (chatMessage.getCreatorProfile().getId() != messageReadDataDTO.getReaderProfileId() &&
+        if (!chatMessage.getCreatorProfile().getId().equals(messageReadDataDTO.getReaderProfileId()) &&
                 !chatMessage.getIsReadByProfilesId().contains(messageReadDataDTO.getReaderProfileId())) {
 
             chatMessage.getIsReadByProfilesId().add(messageReadDataDTO.getReaderProfileId());
