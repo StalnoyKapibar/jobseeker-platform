@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <div sec:authorize="!hasRole('ROLE_EMPLOYER')">
+        <div sec:authorize="hasAnyRole('ROLE_SEEKER','ROLE_ADMIN')">
             <div class="row">
                 <div class="col-sm-3">
                 </div>
@@ -158,7 +158,7 @@
 
     <!-- vacancyModal -->
     <div id="vacancyModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog  modal-lg">
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
@@ -170,7 +170,7 @@
                     <h3><span id="VMHeadline"></span><br/></h3>
                     <span id="VMCity"></span>
                     <span id="VMRemote"> (Удаленная работа)</span><br/>
-                    <span id="VMAddress"></span>
+                    <span id="VMAddress"></span><br>
                     <a data-toggle="collapse" data-target="#map_collapse"> Показать на карте</a>
                     <div id="map_collapse" class="collapsed collapse">
                         <div id="map" style="height: 300px"></div>
@@ -202,6 +202,7 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                     </div>
                     <div sec:authorize="!hasRole('ROLE_ADMIN')">
+                        <a class="btn btn-secondary" id="VMedit_butt" href="#">Редактировать вакансию</a>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                     </div>
                 </div>
