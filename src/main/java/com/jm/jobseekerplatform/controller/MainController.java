@@ -12,8 +12,6 @@ import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.SubscriptionService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
-import com.jm.jobseekerplatform.service.impl.SubscriptionService;
-import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.tokens.VerificationTokenService;
@@ -50,12 +48,11 @@ public class MainController {
 
     @Autowired
     private SeekerUserService seekerUserService;
+    @Autowired
+    private EmployerUserService employerUserService;
 
     @Autowired
     private SeekerProfileService seekerProfileService;
-
-    @Autowired
-    private EmployerUserService employerUserService;
 
     @Autowired
     private SubscriptionService subscriptionService;
@@ -95,7 +92,7 @@ public class MainController {
 
             if (authentication.getAuthorities().contains(roleEmployer)) {
                 Long id = ((User) authentication.getPrincipal()).getId();
-                EmployerProfile profile = employerUserService.getById(id).getProfile();
+                EmployerProfile profile = employerProfileService.getById(id);//employerUserService.getById(id).getProfile();
                 model.addAttribute("employerProfileId", profile.getId());
             }
         }
@@ -153,7 +150,6 @@ public class MainController {
     }
 
 
-
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/new_vacancy", method = RequestMethod.GET)
     public String new_vacancyPage(Model model) {
@@ -166,10 +162,10 @@ public class MainController {
     public String edit_vacancyPage(@PathVariable("vacancyId") Long vacancyId, Authentication authentication, Model model) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         EmployerProfile employerProfile = employerProfileService.getById(userId);
-        model.addAttribute("employer",employerProfile);
-        String employerName= ((User) authentication.getPrincipal()).getUsername();
+        model.addAttribute("employer", employerProfile);
+        String employerName = ((User) authentication.getPrincipal()).getUsername();
 
-        if (vacancyService.getById(vacancyId).getEmployerProfile().getId()==employerProfile.getId()) {
+        if (vacancyService.getById(vacancyId).getCreatorProfile().getId() == employerProfile.getId()) {
             model.addAttribute("vacancy", vacancyService.getById(vacancyId));
         }
 
@@ -194,7 +190,7 @@ public class MainController {
             Long id = ((User) authentication.getPrincipal()).getId();
             Profile profile = userService.getById(id).getProfile();
             if (profile instanceof SeekerProfile) {
-                Subscription subscription= subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, vacancy.getCreatorProfile());
+                Subscription subscription = subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, vacancy.getCreatorProfile());
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
                 isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(subscription);
                 model.addAttribute("isContain", isContain);
