@@ -1,8 +1,10 @@
 package com.jm.jobseekerplatform.model.chats;
 
-import com.jm.jobseekerplatform.model.CreatedByProfile;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
-import com.jm.jobseekerplatform.model.users.User;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -12,14 +14,16 @@ import javax.persistence.MappedSuperclass;
  */
 
 @MappedSuperclass
-public class ChatWithTopic<T extends CreatedByProfile<? extends Profile>> extends Chat {
+public class ChatWithTopic<T extends CreatedByProfile> extends Chat {
 
     @ManyToOne
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private T topic;
 
 
-    public ChatWithTopic(Profile creator, T about) {
-        super(creator);
+    public ChatWithTopic(Profile creatorProfile, T about) {
+        super(creatorProfile);
         this.topic = about;
     }
 

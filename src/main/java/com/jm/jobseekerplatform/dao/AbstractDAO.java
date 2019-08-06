@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.dao;
 
 import org.springframework.stereotype.Repository;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;

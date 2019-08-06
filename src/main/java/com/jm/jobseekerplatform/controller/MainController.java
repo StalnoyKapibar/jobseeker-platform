@@ -12,6 +12,8 @@ import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.SubscriptionService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
+import com.jm.jobseekerplatform.service.impl.SubscriptionService;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.tokens.VerificationTokenService;
@@ -150,27 +152,7 @@ public class MainController {
         return "index";
     }
 
-    @RequestMapping("/chat/{chatId}")
-    public String getChatById(@PathVariable("chatId") String chatId, Authentication authentication, Model model) {
 
-        User user = (User) authentication.getPrincipal();
-
-        model.addAttribute("userId", user.getId());
-        model.addAttribute("chatId", chatId);
-
-        return "chat";
-    }
-
-    @RequestMapping("/chat/vacancy/{vacancyId:\\d+}/creator/{creatorId:\\d+}") //todo (Nick Dolgopolov)
-    public String getChatByCreatorAndVacancy(@PathVariable("vacancyId") String chatId, @PathVariable("creatorId") String creatorId, Authentication authentication, Model model) {
-
-//        chat
-//
-//        model.addAttribute("userId", user.getId());
-//        model.addAttribute("chatId", chatId);
-
-        return "chat";
-    }
 
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/new_vacancy", method = RequestMethod.GET)
@@ -212,7 +194,7 @@ public class MainController {
             Long id = ((User) authentication.getPrincipal()).getId();
             Profile profile = userService.getById(id).getProfile();
             if (profile instanceof SeekerProfile) {
-                Subscription subscription= subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, vacancy.getEmployerProfile());
+                Subscription subscription= subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, vacancy.getCreatorProfile());
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
                 isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(subscription);
                 model.addAttribute("isContain", isContain);
@@ -222,8 +204,8 @@ public class MainController {
         }
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("vacancyFromServer", vacancy);
-        model.addAttribute("EmployerProfileFromServer", vacancy.getEmployerProfile());
-        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getEmployerProfile().getLogo()));
+        model.addAttribute("EmployerProfileFromServer", vacancy.getCreatorProfile());
+        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getCreatorProfile().getLogo()));
 
         return "/vacancy/vacancy";
     }

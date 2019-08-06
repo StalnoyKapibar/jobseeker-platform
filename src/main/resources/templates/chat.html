@@ -14,12 +14,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 </head>
-<body>
-<div class="main-block chromeFix" layout:fragment="content">
 
-            <div id="chat-container" class="panel-body">
+<body>
+
+<th:block layout:fragment="content">
+
+            <div id="chat-container" class="panel-body" style="margin-top: 150px; height: 500px">
                 <div id="chatId" th:value="${chatId}"></div>
-                <div id="userId" th:value="${userId}"></div>
+                <div id="profileId" th:value="${profileId}"></div>
 
                 <div class="message-area">
                     <ul id="messageArea" class="media-list">
@@ -36,9 +38,7 @@
             </div>
 
             <script th:src="@{/js/chat.js}"></script>
-        </div>
-    </div>
-    <script th:src="@{/js/chat.js}"></script>
-</div>
+</th:block>
+
 </body>
 </html>
