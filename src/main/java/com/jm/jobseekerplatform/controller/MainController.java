@@ -186,19 +186,10 @@ public class MainController {
         EmployerProfile employerProfile = employerProfileService.getById(userId);
         model.addAttribute("employer",employerProfile);
         String employerName= ((User) authentication.getPrincipal()).getUsername();
-      /*  Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(userId);*/
 
         if (vacancyService.getById(vacancyId).getEmployerProfile().getId()==employerProfile.getId()) {
             model.addAttribute("vacancy", vacancyService.getById(vacancyId));
         }
-        /*    long qu = vacancies.stream()
-                .filter(vacancy -> {
-                    return vacancy.getId() == vacancyId;
-                }).count();
-        if (qu == 1) {
-            Vacancy vacancy = vacancyService.getById(vacancyId);
-            model.addAttribute("vacancy", vacancy);
-        }*/
 
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "/vacancy/edit_vacancy";

@@ -135,8 +135,6 @@ public class VacancyService extends AbstractService<Vacancy> {
         return dao.getVacanciesByTagsAndSortByCity(city, tags, limit, page);
     }
     public boolean updateVacancy(Vacancy vacancy){
-   //     vacancy.setState(State.ACCESS);
-
         Vacancy oldVacancy= getById(vacancy.getId());
         oldVacancy.setHeadline(vacancy.getHeadline());
         oldVacancy.setDescription(vacancy.getDescription());
