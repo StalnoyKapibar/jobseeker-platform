@@ -2,6 +2,10 @@ package com.jm.jobseekerplatform.service.impl.users;
 
 import com.jm.jobseekerplatform.dao.impl.users.UserDAO;
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.profiles.AdminProfile;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.tokens.PasswordResetToken;
 import com.jm.jobseekerplatform.model.tokens.VerificationToken;
 import com.jm.jobseekerplatform.model.users.AdminUser;
@@ -9,7 +13,9 @@ import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
+import com.jm.jobseekerplatform.service.impl.ImageService;
 import com.jm.jobseekerplatform.service.impl.MailService;
+import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import com.jm.jobseekerplatform.service.impl.tokens.PasswordResetTokenService;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.tokens.VerificationTokenService;
@@ -214,13 +220,11 @@ public class UserService extends AbstractService<User> {
 
     private Profile getDefaultProfile(String typeProfile) {
         typeProfile = typeProfile.toLowerCase();
-        if (typeProfile.contains("seeker")) {
-            return new SeekerProfile();
-        } else if (typeProfile.contains("employer")) {
+        if (typeProfile.contains("employer")) {
             return new EmployerProfile();
         } else if (typeProfile.contains("admin")) {
             return new AdminProfile();
         }
-        return new Profile();
+        return new SeekerProfile();
     }
 }
