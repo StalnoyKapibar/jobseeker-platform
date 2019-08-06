@@ -4,14 +4,11 @@ import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.dto.VacancyPageDTO;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
-
 import org.hibernate.annotations.QueryHints;
 import org.hibernate.query.Query;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
@@ -31,7 +28,7 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
             "select v.id, count(v.id) as c from Vacancy v join v.tags t where v.state='ACCESS' and t in (:tags) group by (v.id) order by c desc";
 
     //language=SQL
-    private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.employerProfile.id = :param";
+    private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.creatorProfile.id = :param";
 
     public Set<Vacancy> getAllByTags(Set<Tag> tags, int limit) {
         Set<Vacancy> vacancies = new HashSet<>();

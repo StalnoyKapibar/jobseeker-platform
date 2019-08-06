@@ -8,6 +8,9 @@ import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 import com.jm.jobseekerplatform.model.profiles.*;
 import com.jm.jobseekerplatform.model.users.*;
 import com.jm.jobseekerplatform.service.impl.*;
+import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicVacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
@@ -73,6 +76,9 @@ public class InitData {
 
     @Autowired
     private ChatService chatService;
+
+    @Autowired
+    private ChatWithTopicVacancyService chatWithTopicVacancyService;
 
     @Autowired
     private PointService pointService;
@@ -385,7 +391,7 @@ public class InitData {
         employerProfile.setState(State.ACCESS);
         employerProfileService.add(employerProfile);
 
-        for (Long i = 0L; i <= 3L; i++) {
+        for (long i = 0L; i <= 3L; i++) {
             image = getBufferedImage();
             employerProfile = new EmployerProfile(faker.company().name(), faker.company().url(), faker.company().bs(), imageService.resizeLogoEmployer(image));
             employerProfile.setState(State.ACCESS);
@@ -473,16 +479,18 @@ public class InitData {
 
         Random rnd = new Random();
 
-        for (Long i = 1L; i < 6L; i++) {
+        List<Profile> profileList = profileService.getAll();
+
+        for (long i = 1L; i < 6L; i++) {
             List<ChatMessage> messages = new ArrayList<>();
             for (int k = 0; k < 5; k++) {
-                ChatMessage chatMessage = new ChatMessage(faker.gameOfThrones().quote(), userService.findByEmail("admin@mail.ru"), new Date(), false);
+                ChatMessage chatMessage = new ChatMessage(faker.gameOfThrones().quote(), profileList.get(rnd.nextInt(profileList.size())), new Date());
                 chatMessageService.add(chatMessage);
                 messages.add(chatMessage);
             }
 
             Vacancy randomVacancy = vacancyService.getById(rnd.nextInt(30) + 1L);
-            Profile chatCreator = getRandomProfileExceptWithId(randomVacancy.getEmployerProfile().getId());
+            Profile chatCreator = getRandomProfileExceptWithId(randomVacancy.getCreatorProfile().getId());
 
             Chat chat = new ChatWithTopicVacancy(chatCreator, randomVacancy);
             chat.setChatMessages(messages);
@@ -491,22 +499,20 @@ public class InitData {
         }
     }
 
-    private Profile getRandomProfileExceptWithId(Long exceptId) {
+    private Profile getRandomProfileExceptWithId(Long exceptProfileId) {
         boolean ready = false;
 
         int amountOfProfiles = profileService.getAll().size();
         int randomId = -1;
 
         while (!ready) {
-            randomId = rnd.nextInt(amountOfProfiles);
-            if (randomId != exceptId) {
+            randomId = rnd.nextInt(amountOfProfiles) + 1;
+            if (randomId != exceptProfileId) {
                 ready = true;
             }
         }
 
-        Profile randomProfile = profileService.getById((long) randomId);
-
-        return randomProfile;
+        return profileService.getById((long) randomId);
     }
 
     private EmployerProfile getRandomEmployerProfile() {

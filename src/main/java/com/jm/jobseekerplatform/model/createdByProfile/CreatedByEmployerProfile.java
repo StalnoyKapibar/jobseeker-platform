@@ -1,6 +1,6 @@
-package com.jm.jobseekerplatform.model;
+package com.jm.jobseekerplatform.model.createdByProfile;
 
-import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+        import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 
 /**
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)

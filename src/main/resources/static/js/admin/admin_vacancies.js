@@ -1,21 +1,25 @@
 
 $(document).ready (function () {
-    var table = $('#vacancyTable').DataTable({
+    const table = $('#vacancyTable').DataTable({
         "sAjaxSource": "/api/vacancies/",
         "sAjaxDataProp": "",
         "order": [[0, "asc"]],
         "aoColumns": [
-            {"mData": "id"},
+            {"mData": "id",
+                "mRender": function(data, type, full) {
+                    return data}},
             {"mData": "headline"},
             {"mData": "city"},
             {"mData": "salaryMin"},
             {"mData": "salaryMax"},
             {"mData": "state"},
             {
-                bSortable: false,
-                data: null,
-                className: "center",
-                defaultContent: '<a href="#">Написать</a>'
+                "bSortable": false,
+                "data": null,
+                "className": "center",
+                "defaultContent": 'none',
+                "mRender": function(data, type, full) {
+                    return '<a href="/chat/vacancy/' + full.id + '">Написать</a>'}
             },
             {
                 bSortable: false,
@@ -32,24 +36,24 @@ $(document).ready (function () {
             }
         ],
         "initComplete": function () {
-            this.api().columns([5]).every( function () {
+            this.api().columns([5]).every(function () {
                 var column = this;
                 var select = $('<select><option value=""></option></select>')
-                    .appendTo( $(column.footer()).empty() )
-                    .on( 'change', function () {
+                    .appendTo($(column.footer()).empty())
+                    .on('change', function () {
                         var val = $.fn.dataTable.util.escapeRegex(
                             $(this).val()
                         );
 
                         column
-                            .search( val ? '^'+val+'$' : '', true, false )
+                            .search(val ? '^' + val + '$' : '', true, false)
                             .draw();
-                    } );
+                    });
 
-                column.data().unique().sort().each( function ( d, j ) {
-                    select.append( '<option value="'+d+'">'+d+'</option>' )
-                } );
-            } );
+                column.data().unique().sort().each(function (d, j) {
+                    select.append('<option value="' + d + '">' + d + '</option>')
+                });
+            });
         }
     });
 
