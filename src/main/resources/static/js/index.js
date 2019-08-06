@@ -44,6 +44,7 @@ var total_pages;
 var block = false;
 var point;
 var city;
+var blockScroll = false;
 
 $(function () {
     var user_id = null;
@@ -125,6 +126,7 @@ function deleteButton(id) {
 }
 
 function searchResults() {
+    blockScroll = true;
     $('#allVacancies').remove();
     $('#searchList').remove();
     $('#searchResult').append('<ul id="searchList" class="list-group"></ul>');
@@ -257,7 +259,7 @@ function printVacancies(data) {
             ' data-target="#vacancyModal" onclick="showVacancy(\'' + value.id + '\')">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="vacancyTags">' + vacancyTags + '</div>' +
-            '<div class="companyData"><span>Компания: ' + value.employerProfile.companyName + '</span><br><span>Город: ' + value.city + '</span></div>' +
+            '<div class="companyData"><span>Компания: ' + value.creatorProfile.companyName + '</span><br><span>Город: ' + value.city + '</span></div>' +
             '<div class="vacancyDescription"><span>' + value.shortDescription + '</span></div>' +
             minSalary +
             '<div class="pull-right">' +
@@ -370,7 +372,9 @@ function getAllVacanciesByPoint(point) {
         if ($(document).height() - $(window).height() === $(window).scrollTop()) {
             block = true;
             if (page <= total_pages) {
-                getSortedVac(point);
+                if (blockScroll==false) {
+                    getSortedVac(point);
+                }
             }
         }
     });

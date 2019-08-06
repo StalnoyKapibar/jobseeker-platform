@@ -1,6 +1,6 @@
-package com.jm.jobseekerplatform.service.impl;
+package com.jm.jobseekerplatform.service.impl.chats;
 
-import com.jm.jobseekerplatform.dao.impl.ChatMessageDAO;
+import com.jm.jobseekerplatform.dao.impl.chats.ChatMessageDAO;
 import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.service.AbstractService;
@@ -21,11 +21,11 @@ public class ChatMessageService extends AbstractService<ChatMessage> {
         return chatMessageDAO.getNotReadMessages();
     }
 
-    public List<MessageWithDateDTO> getAllLastMessages() {
-        List<MessageWithDateDTO> list =  chatMessageDAO.getAllLastMessages();
-        for (int i=0; i<list.size(); i++) {
-            Long authorId = chatMessageDAO.getById(list.get(i).getId()).getAuthor().getId();
-            list.get(i).setAuthor(authorId);
+    public List<MessageWithDateDTO> getAllLastMessages() { //todo (Nick Dolgopolov)
+        List<MessageWithDateDTO> list = chatMessageDAO.getAllLastMessages();
+        for (int i = 0; i < list.size(); i++) {
+            Long creatorProfileId = chatMessageDAO.getById(list.get(i).getId()).getCreatorProfile().getId();
+            list.get(i).setCreatorProfileId(creatorProfileId);
         }
         return list;
     }

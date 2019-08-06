@@ -1,4 +1,4 @@
-package com.jm.jobseekerplatform.dao.impl;
+package com.jm.jobseekerplatform.dao.impl.chats;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
@@ -21,7 +21,7 @@ public class ChatMessageDAO extends AbstractDAO<ChatMessage> {
     }
 
     public List<MessageWithDateDTO> getAllLastMessages() {
-        return null; //todo (Nick Dolgopolov)
+        return null; //todo (Nick Dolgopolov) оптимизация
 //        List<MessageWithDateDTO> list = new ArrayList();
 //        List query = entityManager.unwrap(Session.class).createSQLQuery("select c.text as lastMessage, c.date, c.isread as isRead, chatId, vacancyHeadline, c.id from chatmessages as c inner join (select vc.vacancy_id as chatId, (select vacancies.headline from vacancies where vacancies.id=vc.vacancy_id) as vacancyHeadline, max(vc.chat_messages_id) as id from vacancies_chat_messages as vc group by vc.vacancy_id) as a on c.id=a.id")
 //                .addScalar("lastMessage", new StringType())
