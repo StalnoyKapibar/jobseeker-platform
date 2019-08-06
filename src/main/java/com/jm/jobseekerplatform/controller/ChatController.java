@@ -3,6 +3,7 @@ package com.jm.jobseekerplatform.controller;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
+import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
@@ -27,10 +28,17 @@ public class ChatController {
     @RequestMapping("/chat/{chatId}")
     public String getChatById(@PathVariable("chatId") String chatId, Authentication authentication, Model model) {
 
+        ChatWithTopic chat = chatWithTopicService.getById(Long.valueOf(chatId));
+
+        if(chat.getClass() == ChatWithTopicVacancy.class){
+            model.addAttribute("topicName", "вакансия");
+            model.addAttribute("topic", chat.getTopic());
+        }
         User user = (User) authentication.getPrincipal();
 
         model.addAttribute("profileId", user.getProfile().getId());
         model.addAttribute("chatId", chatId);
+
 
         return "chat";
     }

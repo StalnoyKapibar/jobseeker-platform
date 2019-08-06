@@ -54,7 +54,7 @@ public class EmployerProfile extends Profile implements Serializable {
         this.logo = logo;
     }
 
-    @JsonValue
+//    @JsonValue
     public String getCompanyName() {
         return companyName;
     }

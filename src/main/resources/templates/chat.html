@@ -6,39 +6,49 @@
 <head>
     <meta name="description" content="Чат">
     <title>Chat</title>
-    <link rel="stylesheet" th:href="@{/css/chat.css}"/>
-
-    <!-- https://cdnjs.com/libraries/sockjs-client -->
+    <link rel="stylesheet" th:href="@{/css/new_chat.css}"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
-    <!-- https://cdnjs.com/libraries/stomp.js/ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-
+    <script th:src="@{/js/new_chat.js}"></script>
 </head>
-
 <body>
-
 <th:block layout:fragment="content">
-
-            <div id="chat-container" class="panel-body" style="margin-top: 150px; height: 500px">
-                <div id="chatId" th:value="${chatId}"></div>
-                <div id="profileId" th:value="${profileId}"></div>
-
-                <div class="message-area">
-                    <ul id="messageArea" class="media-list">
-                    </ul>
-                </div>
-
-                <form id="messageForm" name="messageForm">
-                    <div class="input-message input-group">
-                        <input class="form-control" type="text" id="message" autocomplete="off"
-                               placeholder="Type a message..."/>
-                        <button class="input-group-addon" type="submit">Send</button>
+    <div class="container-fluid" style="margin-left: 15%;margin-right: 15%; margin-top: 5%;">
+        <h3 class=" text-center">Тема чата: <span th:text="${topicName + ' ' + topic.headline}"></span></h3>
+        <div class="data_block" id="chatId" th:text="${chatId}"></div>
+        <div class="data_block" id="userId" th:text="${profileId}"></div>
+        <div class="messaging">
+            <div class="inbox_msg">
+                <div class="mesgs">
+                    <div class="msg_history">
+                        <!--<div class="incoming_msg">-->
+                            <!--<div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>-->
+                            <!--<div class="received_msg">-->
+                                <!--<div class="received_withd_msg">-->
+                                    <!--<p>Test which is a new approach to have all-->
+                                        <!--solutions</p>-->
+                                    <!--<span class="time_date"> 11:01 AM    |    June 9</span></div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="outgoing_msg">-->
+                            <!--<div class="sent_msg">-->
+                                <!--<p>Test which is a new approach to have all-->
+                                    <!--solutions</p>-->
+                                <!--<span class="time_date"> 11:01 AM    |    June 9</span> </div>-->
+                        <!--</div>-->
                     </div>
-                </form>
+                    <div class="type_msg">
+                        <div class="input_msg_write">
+                            <input type="text" class="write_msg pl-3 mb-2" placeholder="Type a message" />
+                            <button onclick="sendMessage()" class="msg_send_btn mr-1" type="button">
+                                <img style="filter: invert(1);" src="https://png.pngtree.com/svg/20170329/25907eee9d.png">
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <script th:src="@{/js/chat.js}"></script>
+        </div>
+    </div>
 </th:block>
-
 </body>
 </html>
