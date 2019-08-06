@@ -6,14 +6,14 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 
+import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
 
 /**
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
  */
 
-@MappedSuperclass
+@Entity //todo (Nick Dolgopolov) тут надо inheritance?
 public class ChatWithTopic<T extends CreatedByProfile> extends Chat {
 
     @ManyToOne
