@@ -5,8 +5,14 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
-import com.jm.jobseekerplatform.model.profiles.*;
-import com.jm.jobseekerplatform.model.users.*;
+import com.jm.jobseekerplatform.model.profiles.AdminProfile;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import com.jm.jobseekerplatform.model.users.AdminUser;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
 import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
@@ -86,6 +92,9 @@ public class InitData {
     @Autowired
     private NewsService newsService;
 
+    @Autowired
+    private ReviewVoteService reviewVoteService;
+
     private Faker faker = new Faker(new Locale("ru"));
 
     private Random rnd = new Random();
@@ -105,7 +114,6 @@ public class InitData {
 
         initReviews();
         initChat();
-
         initNews();
     }
 
@@ -183,26 +191,26 @@ public class InitData {
 
         Set<EmployerReviews> reviewsOne = new HashSet<>();
         reviewsOne.add(reviewOne);
-        reviewsOne.add(reviewTwo);
+        reviewsOne.add(reviewThree);
 
         Set<EmployerReviews> reviewsTwo = new HashSet<>();
-        reviewsTwo.add(reviewThree);
-        reviewsTwo.add(reviewFour);
+        reviewsTwo.add(reviewOne);
+        reviewsTwo.add(reviewFive);
 
         Set<EmployerReviews> reviewsThree = new HashSet<>();
-        reviewsThree.add(reviewFive);
-        reviewsThree.add(reviewSix);
+        reviewsThree.add(reviewTwo);
+        reviewsThree.add(reviewFour);
 
         Set<EmployerReviews> reviewsFour = new HashSet<>();
-        reviewsFour.add(reviewOne);
-        reviewsFour.add(reviewFour);
+        reviewsFour.add(reviewTwo);
+        reviewsFour.add(reviewSix);
 
         Set<EmployerReviews> reviewsFive = new HashSet<>();
-        reviewsFive.add(reviewThree);
+        reviewsFive.add(reviewOne);
         reviewsFive.add(reviewSix);
 
         Set<EmployerReviews> reviewsSix = new HashSet<>();
-        reviewsSix.add(reviewTwo);
+        reviewsSix.add(reviewThree);
         reviewsSix.add(reviewFive);
 
         EmployerProfile employerProfileOne = employerProfileService.getById(2L);
@@ -314,7 +322,7 @@ public class InitData {
         City city;
         List<City> cities = cityService.getAll();
         for (int i = 0; i < 30; i++) {
-            city = cities.get(rnd.nextInt(cities.size() ));
+            city = cities.get(rnd.nextInt(cities.size()));
             point = new Point(city.getCenterPoint().getLatitudeY(), city.getCenterPoint().getLongitudeX());
             pointService.add(point);
 
