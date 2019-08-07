@@ -7,6 +7,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Base64;
 import java.util.Set;
 
 @Entity
@@ -106,6 +107,10 @@ public class SeekerProfile extends Profile implements Serializable {
 
     public byte[] getPhoto() {
         return photo;
+    }
+
+    public String getEncoderPhoto() {
+        return Base64.getEncoder().encodeToString(this.getPhoto());
     }
 
     public void setPhoto(byte[] photo) {
