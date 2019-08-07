@@ -124,12 +124,12 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
     public List<T> getAllUnreadChatsByProfileId(Long profileId) { //todo (Nick Dolgopolov) метод дублировать в ChatWithTopicDAO и ChatDAO. Этот метод будет выдавать только чаты, которым от параметризован.
 
         List<T> listOfUnreadChats = entityManager.createQuery("SELECT DISTINCT c FROM " + clazz.getName() + " c " +
-                "JOIN c.chatMessages m " +
-                "JOIN c.chatMessages mm " +
-                "WHERE :profileId NOT MEMBER OF m.isReadByProfilesId " +
+                "JOIN c.chatMessages m1 " +
+                "JOIN c.chatMessages m2 " +
+                "WHERE :profileId NOT MEMBER OF m1.isReadByProfilesId " +
                 "AND (c.creatorProfile.id = :profileId " +
                 "OR c.topic.creatorProfile.id = :profileId " +
-                "OR mm.creatorProfile.id = :profileId)", clazz)
+                "OR m2.creatorProfile.id = :profileId)", clazz)
                 .setParameter("profileId", profileId)
                 .getResultList();
 
