@@ -94,4 +94,16 @@ public class EmployerController {
         model.addAttribute("employerProfileId", employerProfileId);
         return "employer_all_news";
     }
+
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @RequestMapping("/employer/update/{employerProfileId}")
+    public String getEmployerProfileUpdatePage(@PathVariable Long employerProfileId, Model model) {
+        EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
+        model.addAttribute("employerProfile", employerProfile);
+        Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
+        model.addAttribute("vacancies", vacancies);
+        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
+        return "update_employer_profile";
+    }
+
 }

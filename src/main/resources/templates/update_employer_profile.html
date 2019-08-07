@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <meta name="apiKey" th:content="${googleMapsApiKey}"/>
+    <title>Update profile</title>
+    <script type="text/javascript" src="/js/employer.js"></script>
+    <script type="text/javascript" src="/js/star-rating.min.js"></script>
+    <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey})}"
+            async defer></script>
+    <script type="text/javascript" src="/js/map.js"></script>
+    <link href="/css/star-rating.min.css" th:href="@{/css/star-rating.min.css}" rel="stylesheet"/>
+</head>
+
+<body style="background-color: var(--bg-color)">
+<div layout:fragment="content">
+    <div id="eProfileDiv" class="container-fluid">
+        <div th:each="vac : ${vacancies}">
+            <input type="hidden" class="employerVacancies" th:value="${vac}">
+        </div>
+        <div class="row">
+            <div class="col-lg-5 empCard" id="empVacancies">
+                <div class="card mb-3">
+                    <h3 class="card-header">Наши вакансии:</h3>
+                    <div class="card-body">
+                        <div class="list-group">
+                                <li class="card border-success" style="margin: 5px" th:each="vacancy: ${vacancies}"
+                                    data-toggle="modal" data-target="#vacancyModal" th:onclick="'showVacancy('+${vacancy.id}+')'">
+                                    <div class="input-group">
+                                    <div class="card-header" style="width: 80%"><span th:text="${vacancy.headline}"></span></div>
+                                    <button class="input-group-btn btn btn-primary go inline" style="width: 10%;">✎</button>
+                                    <button class="input-group-btn btn btn-danger go inline" style="width: 10%;">✕</button>
+                                    </div>
+                                </li>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 empCard">
+                <div class="card mb-3">
+                    <h3 class="card-header">
+                        <input type="text" class="form-control" id="companyname" placeholder="Название компании" th:value="${employerProfile.companyName}">
+                    </h3>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6" style="position: relative">
+                                <img th:src="@{'data:image/png;base64,' + ${logoimg}}" class="img-rounded" alt="Logo of company">
+                            </div>
+                            <div class="col-lg-6" style="position: relative">
+                                <input name="reviews-fix" type="number" class="rating fixed-rating rating-loading" readonly="true" data-size="xs" data-rtl="false"
+                                       th:value="${employerProfile.getAverageRating()}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <p class="card-text">
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" th:text="${employerProfile.description}"></textarea>
+                        </p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <input type="text" class="form-control" id="companywebsite" placeholder="Название компании" th:value="${employerProfile.website}">
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <!-- vacancyModal -->
+    <div id="vacancyModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><span id="VMHeadline"></span><br/></h3>
+                </div>
+                <div class="modal-body">
+                    <h6>Теги:</h6>
+                    <h6><span id="VMTags"></span></h6>
+                    <h6>Город:</h6>
+                    <h6><span id="VMCity"></span></h6>
+                    <span id="VMRemote"> (Удаленная работа)</span>
+                    <a data-toggle="collapse" data-target="#map_collapse" style="color: #3498DB; white-space: pre" >Показать на карте   <span class="far fa-map"></span></a><br/>
+                    <div id="map_collapse" class="collapsed collapse">
+                        <div id="map" style="height: 300px"></div>
+                    </div><br/>
+                    <h6>Адрес:</h6>
+                    <h6><span id="VMAddress"></span></h6><br/>
+                    <h6 style="white-space: pre; color: red">Зарплата:  <span id="VMSalary"></span></h6><br/>
+                    <span>Подробное описание:</span><br/>
+                    <div class="well well-sm">
+                        <span id="VMDescription"></span>
+                    </div>
+                    <span id="VMId" hidden></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+</div>
+
+</body>
+</html>
