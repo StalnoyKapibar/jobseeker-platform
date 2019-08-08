@@ -33,6 +33,9 @@ public class EmployerProfile extends Profile implements Serializable {
     @Column(name = "expiry_block")
     private Date expiryBlock;
 
+    @Column(name = "publication_position")
+    private int publicationPosition;
+
     public EmployerProfile() {
     }
 
@@ -83,6 +86,10 @@ public class EmployerProfile extends Profile implements Serializable {
 
     public void setReviews(Set<EmployerReviews> reviews) {
         this.reviews = reviews;
+    }
+
+    public int getPublicationPosition(){
+        return publicationPosition;
     }
 
     public void addNewReview(EmployerReviews employerReview) {

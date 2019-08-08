@@ -24,8 +24,11 @@ $( document ).ready(function() {
         connectWith: "#trckVacancies, #allVacancies",
         update: function() {
             var vacancies = [];
+            var position = 1;
             $('#trckVacancies span').each(function () {
-                vacancies.push($(this).data('id'));
+                vacancies.push({'position':position,
+                                'id':(this).data('id')});
+                position++;
             });
             var saveSort = {'vacancies':vacancies};
             sessionStorage.setItem('vacancies', JSON.stringify(saveSort));
@@ -44,7 +47,7 @@ function update(id) {
     var site = document.getElementById("companywebsite").value;
     var description = document.getElementById("description").value;
     var vacansies = JSON.parse(sessionStorage.getItem('vacancies'));
-    alert(companyName);
+    alert(vacansies);
 
 }
 
