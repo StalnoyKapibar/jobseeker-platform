@@ -90,6 +90,11 @@
         </div>
     </div>
 </div>
+<footer layout:fragment="footer" sec:authorize="hasRole('ROLE_SEEKER')" class="navbar navbar-expand-sm navbar-dark fixed-bottom"
+        style="background-color: var(--card-header-bg-color); overflow-x: scroll">
+    <h6 style="white-space: pre; color: var(--text-color); font-size: small">Ранее просмотренные вакансии:</h6>
+    <ul class="navbar-nav mr-auto" id="seeker_footer"></ul>
+</footer>
 </body>
 </html>
 

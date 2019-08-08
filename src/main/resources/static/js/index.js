@@ -45,6 +45,7 @@ var block = false;
 var point;
 var city;
 var blockScroll = false;
+var viewed_vacancies;
 
 $(function () {
     var user_id = null;
@@ -53,6 +54,7 @@ $(function () {
     if (seekerAuthority) {
         user_id = $('#seekerProfileId').val();
         seeker_tags = getSeekerTags(user_id);
+        viewed_vacancies = getViewedVacancies(user_id);
     }
 
     getCurrentLocation(function () {
@@ -395,6 +397,21 @@ function getSortedVac(point) {
             printVacancies(vacancies.content);
             block = false;
             page++;
+        }
+    })
+}
+
+function getViewedVacancies(user_id) {
+    $.ajax({
+        url: "/api/seeker_vacancy_record/" + user_id,
+        type: "GET",
+        async: false,
+        success: function (vacancies) {
+            $.each(vacancies.reverse(), function (key, value) {
+                $("#seeker_footer").append(
+                    '<li class="btn btn-outline-light" data-toggle="modal" data-target="#vacancyModal" onclick="showVacancy('
+                    + value.id + ')" style="white-space: pre; color: #777777; font-size: small">' + value.headline + '</li>');
+            })
         }
     })
 }
