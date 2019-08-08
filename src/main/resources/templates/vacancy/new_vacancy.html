@@ -27,6 +27,25 @@
             max-width: none;
             padding-left: 10%;
         }
+
+        /*Эти стили нужны для корректной работы формы автозаполнения*/
+
+        .pac-container {
+            background-color: #FFF;
+            z-index: 2001;
+            position: fixed;
+            display: inline-block;
+            float: left;
+        }
+
+        .modal {
+            z-index: 2000;
+        }
+
+        .modal-backdrop {
+            z-index: 1000;
+        }
+
     </style>
     <!--<script type="text/javascript"-->
     <!--src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>-->
@@ -35,8 +54,9 @@
 
     <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
     <script type="text/javascript" src="/js/new_vacancy.js"></script>
-    <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey})}"
-            async defer></script>
+    <script th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleMapsApiKey} + '&libraries=places'}" async defer></script>
+
+
     <script type="text/javascript" src="/js/map.js"></script>
 </head>
 <body>
@@ -83,7 +103,7 @@
                                     </div>
                                     <input name="v_address" id="v_address"
                                            placeholder="Введите полный адрес вручную или выберите на карте (обязательно)"
-                                           class="form-control is-invalid" type="text">
+                                           class="form-control is-invalid" type="text" readonly>
                                 </div>
                             </div>
                         </div>
@@ -272,11 +292,14 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <div id="v_map" style="height: 600px"></div>
+                    <input name="v_address_modal" id="v_address_modal"
+                           placeholder="Введите полный адрес вручную или выберите на карте"
+                           class="form-control is-invalid" type="text">
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                </div>
+                <div id="v_map" style="height: 600px"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
             </div>
         </div>
     </div>
