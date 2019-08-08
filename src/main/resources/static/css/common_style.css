@@ -357,3 +357,69 @@ li {
     color: #222;
 }
 
+.reviewVotes {
+    position: absolute;
+    bottom: 0;
+    right: 5%;
+}
+
+.reviewVotes  span {
+    margin-right: 10px;
+    font-size: 0.8em;
+    color: #999999;
+    cursor: pointer;
+}
+
+.reviewVotes span:hover {
+    color: black;
+}
+
+.reviewVotes i {
+    margin-right: 5px;
+}
+
+.voted {
+    color: black !important;
+}
+
+.employerTab {
+    /* height: 300px;*/
+    /* border-right: 1px solid #dae3ea;
+     border-left: 1px solid #dae3ea;
+     border-bottom: 1px solid #dae3ea;
+     border-bottom-left-radius: 5px;
+     border-bottom-right-radius: 5px;*/
+}
+
+.textReview {
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 0.8em;
+    line-height: 1.6em;
+}
+
+.readMoreReviewButton {
+    font-size: 0.8em;
+    line-height: 1.6em;
+}
+
+.reviewDate {
+    color: #999999;
+    font-size: 0.9em;
+}
+
+.seekerReviewName {
+    position: absolute;
+    bottom: -5px;
+}
+
+.editCardReview {
+    position: absolute;
+    right: 5%;
+    top: -5%;
+    color: #999999;
+    cursor: pointer;
+}
+
+.editCardReview:hover {
+    color: #777777;
+}
