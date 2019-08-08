@@ -20,6 +20,7 @@ $(document).ready(function () {
 
     $("#v_address").val(address);
 
+
     bootstrapValidate('#v_headline', 'regex:^[A-Za-z0-9А-Яа-я ()\\-]{3,100}$:Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов',
         function (isValid) {
             if (isValid) {
@@ -34,9 +35,20 @@ $(document).ready(function () {
         if (isValid) {
             $('#v_address').removeClass('is-invalid');
             $('#v_address').addClass('is-valid');
+
             address_check = true;
         } else {
             address_check = false;
+        }
+    });
+
+    bootstrapValidate('#v_address_modal', 'required:', function (isValid) {
+        if (isValid) {
+            $('#v_address_modal').removeClass('is-invalid');
+            $('#v_address_modal').addClass('is-valid');
+        } else {
+            $('#v_address_modal').removeClass('is-valid');
+            $('#v_address_modal').addClass('is-invalid');
         }
     });
 
