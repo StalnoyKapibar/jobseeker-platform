@@ -18,11 +18,7 @@
 <body style="background-color: var(--bg-color)">
 <div layout:fragment="content">
     <div id="eProfileDiv" class="container-fluid">
-        <div th:each="vac : ${vacancies}">
-            <input type="hidden" class="employerVacancies" th:value="${vac}">
-        </div>
         <div class="row">
-
             <div class="col-lg-11 empCard">
                 <div class="card mb-3">
                     <h3 class="card-header">
@@ -34,6 +30,17 @@
                             <div class="col-lg-6" style="position: relative">
                                 <img th:src="@{'data:image/png;base64,' + ${logoimg}}" class="img-rounded"
                                      alt="Logo of company">
+                                <div class="row">
+                                <form method="POST" enctype="multipart/form-data" id="fileUploadForm" class="col-lg-6" >
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="image" id="customFile">
+                                        <label class="custom-file-label" for="customFile">Choose file</label>
+                                    </div>
+
+                                </form>
+                                <button type="submit" id="btnSubmit" class="btn btn-outline-primary"
+                                        th:onclick="'add_emploer_img('+${employerProfile.id}+')'" style="margin-left: 5px;">Submit</button>
+                                </div>
                             </div>
                             <div class="col-lg-6" style="position: relative">
                                 <input name="reviews-fix" type="number" class="rating fixed-rating rating-loading"
@@ -42,8 +49,8 @@
                                 <div class="card-body">
 
                                     <p class="card-text">
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                                      th:text="${employerProfile.description}"></textarea>
+                            <textarea class="form-control" id="description" rows="3"
+                                      th:text="${employerProfile.description}" style="height: 320px"></textarea>
                                     </p>
                                 </div>
                             </div>
@@ -63,8 +70,7 @@
                 <div class="card mb-3">
                     <h5 class="card-header">Опубликованные вакансии:</h5>
                     <div class="card-body">
-                        <div class="list-group" id="trckVacancies">
-                            <div style="height: 10px"></div>
+                        <div class="list-group" id="trckVacancies" style="height: 200px; overflow: auto;">
 
                         </div>
                     </div>
@@ -81,13 +87,13 @@
                                 </div>
                                 </div>
                         <div class="card-body">
-                            <div class="list-group" id="allVacancies">
-                                <li class="card border-success" style="margin: 5px" th:each="vacancy: ${vacancies}"
+                            <div class="list-group" id="allVacancies" style="height: 200px; overflow: auto;">
+                                <li class="card border-success vac" style="margin: 5px" th:each="vacancy: ${vacancies}"
                                     data-toggle="modal" data-target="#vacancyModal"
                                     th:onclick="'showVacancy('+${vacancy.id}+')'">
                                     <div class="input-group">
                                         <div class="card-header" style="width: 80%"><span
-                                                th:text="${vacancy.headline}"></span></div>
+                                                th:text="${vacancy.headline}" th:data-id="${vacancy.id}"></span></div>
                                         <button class="input-group-btn btn btn-primary go inline" style="width: 10%;">
                                             ✎
                                         </button>
@@ -101,7 +107,7 @@
                 </div>
             </div>
         <div class="container-fluid">
-            <button type="button" class="btn btn-primary btn-lg">Сохранить изменения</button>
+            <button type="button" class="btn btn-primary btn-lg" th:onclick="'update('+${employerProfile.id}+')'">Сохранить изменения</button>
         </div>
 
             <!-- vacancyModal -->
