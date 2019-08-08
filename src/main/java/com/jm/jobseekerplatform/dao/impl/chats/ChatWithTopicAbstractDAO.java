@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.dao.impl.chats;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
+import com.jm.jobseekerplatform.dto.ChatInfoDTO;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import org.springframework.stereotype.Repository;
 
@@ -134,5 +135,58 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
                 .getResultList();
 
         return listOfUnreadChats;
+    }
+
+    public long getCountOfUnreadChatsByProfileId(Long profileId) { //todo (Nick Dolgopolov) метод дублировать в ChatWithTopicDAO и ChatDAO. Этот метод будет выдавать только чаты, которым от параметризован.
+
+        List<Long> countOfUnreadChats = entityManager.createQuery("SELECT COUNT (DISTINCT c) FROM " + clazz.getName() + " c " +
+                "JOIN c.chatMessages m1 " +
+                "JOIN c.chatMessages m2 " +
+                "WHERE :profileId NOT MEMBER OF m1.isReadByProfilesId " +
+                "AND (c.creatorProfile.id = :profileId " +
+                "OR c.topic.creatorProfile.id = :profileId " +
+                "OR m2.creatorProfile.id = :profileId)", Long.class)
+                .setParameter("profileId", profileId)
+                .getResultList();
+
+        switch (countOfUnreadChats.size()) {
+            case (0):
+                return 0;
+            case (1):
+                return countOfUnreadChats.get(0);
+            default:
+                throw new RuntimeException("something goes wrong");
+        }
+
+//        countOfUnreadChats.stream().findFirst().orElse(0L);
+//
+//        int size = countOfUnreadChats.size();
+//        if (size == 0){
+//            return 0;
+//        } else if (size == 1){
+//            return countOfUnreadChats.get(0);
+//        }
+//        else {
+//            throw new RuntimeException("something goes wrong");
+//        }
+    }
+
+    public List<ChatInfoDTO> getAllChatsWithCountOfUnreadMessagesByProfileId(Long profileId) { //todo (Nick Dolgopolov) метод дублировать в ChatWithTopicDAO и ChatDAO. Этот метод будет выдавать только чаты, которым от параметризован.
+
+        //todo ДЕЛАЮ ЭТО
+        //todo ПОПРОБОВАТЬ ДВОЙНОЙ СЕЛЕКТ
+
+        List<ChatInfoDTO> countOfUnreadChats = entityManager.createQuery("SELECT c, COUNT (DISTINCT m1), m1 FROM " + clazz.getName() + " c "
+                + "JOIN c.chatMessages m1 "
+                + "JOIN c.chatMessages m2 "
+                + "WHERE :profileId NOT MEMBER OF m1.isReadByProfilesId "
+                + "AND (c.creatorProfile.id = :profileId "
+                + "OR c.topic.creatorProfile.id = :profileId "
+                + "OR m2.creatorProfile.id = :profileId) "
+                + "GROUP BY c.id ORDER BY m1.id ")
+                .setParameter("profileId", profileId)
+                .getResultList();
+
+        return countOfUnreadChats;
     }
 }

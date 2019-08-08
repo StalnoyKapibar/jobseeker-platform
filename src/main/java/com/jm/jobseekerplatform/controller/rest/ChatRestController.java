@@ -61,10 +61,6 @@ public class ChatRestController {
 
         Set<ChatWithTopicVacancy> chats = new HashSet<>();
 
-//        chats.addAll(chatWithTopicVacancyService.getAllByChatCreatorProfileId(profileId)); //todo (Nick Dolgopolov) сделать один запрос
-//        chats.addAll(chatWithTopicVacancyService.getAllByParticipantProfileId(profileId));
-//        chats.addAll(chatWithTopicVacancyService.getAllChatsByTopicCreatorProfileId(profileId));
-
         chats.addAll(chatWithTopicVacancyService.getAllChatsByProfileId(profileId));
 
         List<ChatInfoDTO> chatsInfo = getChatInfoDTOs(chats);
@@ -84,7 +80,7 @@ public class ChatRestController {
     }
 
     @GetMapping("getAllUnreadChatsByAuthProfileId")
-    public HttpEntity getAllUnreadChatsByAuthProfileId( Authentication authentication) {
+    public HttpEntity getAllUnreadChatsByAuthProfileId(Authentication authentication) {
 
         User user = (User) authentication.getPrincipal();
 
@@ -92,22 +88,20 @@ public class ChatRestController {
     }
 
     @GetMapping("getCountOfChatsByAuthProfileId")
-    public HttpEntity getCountOfChatsByAuthProfileId( Authentication authentication) {
+    public HttpEntity getCountOfChatsByAuthProfileId(Authentication authentication) {
 
         User user = (User) authentication.getPrincipal();
 
-        Set<ChatWithTopicVacancy> chats = new HashSet<>(); //todo (Nick Dolgopolov)
+        long countOfUnreadChatsByProfileId = chatWithTopicVacancyService.getCountOfUnreadChatsByProfileId(user.getProfile().getId());
 
-        chats.addAll(chatWithTopicVacancyService.getAllUnreadChatsByProfileId(user.getProfile().getId()));
-
-        return new ResponseEntity(chats.size(), HttpStatus.OK);
+        return new ResponseEntity(countOfUnreadChatsByProfileId, HttpStatus.OK);
     }
 
     private List<ChatInfoDTO> getChatInfoDTOs(Collection<ChatWithTopicVacancy> chats) {
         List<ChatInfoDTO> chatsInfo = new ArrayList<>();
 
         for (ChatWithTopicVacancy chat : chats) {
-            ChatInfoDTO chatInfoDTO = ChatInfoDTO.fromChatWithTopic(chat);
+            ChatInfoDTO chatInfoDTO = ChatInfoDTO.fromChatWithTopic(chat, 0);
             chatInfoDTO.setLastMessage(chatService.getLastMessage(chat.getId()));
             chatsInfo.add(chatInfoDTO);
         }

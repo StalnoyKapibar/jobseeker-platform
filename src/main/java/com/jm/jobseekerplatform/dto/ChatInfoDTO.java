@@ -32,19 +32,23 @@ public class ChatInfoDTO {
 
     private ChatMessage lastMessage;
 
-    public static ChatInfoDTO fromChatWithTopic(ChatWithTopicVacancy chatWithTopic) {
+    private long countOfUnreadMessages;
+
+    public static ChatInfoDTO fromChatWithTopic(ChatWithTopicVacancy chatWithTopic, long countOfUnreadMessages) {
         ChatInfoDTO chatInfoDTO = new ChatInfoDTO();
 
-        chatInfoDTO = fromChatWithTopicCommon(chatInfoDTO, chatWithTopic);
+        chatInfoDTO = fromChatWithTopicCommon(chatInfoDTO, chatWithTopic, countOfUnreadMessages);
 
         chatInfoDTO.topicTitle = chatWithTopic.getTopic().getHeadline();
 
         return chatInfoDTO;
     }
 
-    private static ChatInfoDTO fromChatWithTopicCommon(ChatInfoDTO chatInfoDTO, ChatWithTopic chatWithTopic) {
+    private static ChatInfoDTO fromChatWithTopicCommon(ChatInfoDTO chatInfoDTO, ChatWithTopic chatWithTopic, long countOfUnreadMessages) {
 
         chatInfoDTO.id = chatWithTopic.getId();
+
+        chatInfoDTO.countOfUnreadMessages = countOfUnreadMessages;
 
         chatInfoDTO.creatorProfileId = chatWithTopic.getCreator().getId();
         chatInfoDTO.creatorName = chatWithTopic.getCreator().getFullName();

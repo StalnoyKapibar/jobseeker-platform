@@ -34,6 +34,10 @@ public abstract class ChatWithTopicAbstractService<T extends ChatWithTopic> exte
         return chatWithTopicDAO.getAllUnreadChatsByProfileId(profileId);
     }
 
+    public long getCountOfUnreadChatsByProfileId(Long profileId) {
+        return chatWithTopicDAO.getCountOfUnreadChatsByProfileId(profileId);
+    }
+
     public List<T> getAllChatsByProfileId(Long profileId) {
         return chatWithTopicDAO.getAllChatsByProfileId(profileId);
     }
