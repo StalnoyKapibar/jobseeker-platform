@@ -17,12 +17,14 @@
             border-style: solid;
             border-color: #5CB85C;
         }
-        .col-md-7.inputGroupContainer{
+
+        .col-md-7.inputGroupContainer {
             flex: none;
             max-width: none;
             padding-left: 10%;
         }
-        #techLabel{
+
+        #techLabel {
             flex: none;
             max-width: none;
             padding-left: 10%;
@@ -51,12 +53,10 @@
     <!--src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>-->
     <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.css" rel="stylesheet">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
-
     <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
     <script type="text/javascript" src="/js/new_vacancy.js"></script>
-    <script th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleMapsApiKey} + '&libraries=places'}" async defer></script>
-
-
+    <script th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleMapsApiKey} + '&libraries=places'}"
+            async defer></script>
     <script type="text/javascript" src="/js/map.js"></script>
 </head>
 <body>
@@ -102,7 +102,7 @@
                                         </span>
                                     </div>
                                     <input name="v_address" id="v_address"
-                                           placeholder="Введите полный адрес вручную или выберите на карте (обязательно)"
+                                           placeholder="<----- Введите адрес или выберите на карте"
                                            class="form-control is-invalid" type="text" readonly>
                                 </div>
                             </div>
@@ -115,7 +115,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-home"></i></span>
                                     </div>
-                                    <select name="v_remote" id="v_remote" placeholder="Нужно выбрать место" class="form-control selectpicker is-invalid">
+                                    <select name="v_remote" id="v_remote" placeholder="Нужно выбрать место"
+                                            class="form-control selectpicker is-invalid">
                                         <option value="">Выберите роль</option>
                                         <option value="false">В офисе работодателя</option>
                                         <option value="true">Удаленная работа</option>
@@ -191,7 +192,8 @@
                                     <textarea id="v_description" name="editordata"></textarea>
                                 </form>
                                 <div class="input-group">
-                                    <div class="invalid-feedback-description" style="width: 100%; margin-top: .25rem; font-size: 80%; color: #dc3545">
+                                    <div class="invalid-feedback-description"
+                                         style="width: 100%; margin-top: .25rem; font-size: 80%; color: #dc3545">
                                         сделайте полное описание, не менее 100 символов
                                     </div>
                                 </div>
