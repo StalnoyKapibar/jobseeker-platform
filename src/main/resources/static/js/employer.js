@@ -7,12 +7,11 @@ function showVacancy(id) {
         success: function (data) {
             var tags = "";
             $.each(data.tags, function (key, value) {
-                tags += value.name + " "
+                tags += '<span class="badge badge-pill badge-success btnClick text-dark">' + value.name + '</span>'
             });
-            $("#VMTags").text(tags);
+            $("#VMTags").html(tags);
             $("#VMHeadline").text(data.headline);
             $("#VMCity").text(data.city);
-            $("#VMShortDescription").text(data.shortDescription);
             $("#VMDescription").html(data.description);
             $("#VMId").text(data.id);
 
@@ -48,7 +47,9 @@ function showVacancy(id) {
 $(document).ready(function () {
     $(".item").first().addClass("active");
 
-    $(".fixed-rating").rating({displayOnly: true});
+    $(".fixed-rating").rating(
+         {displayOnly: true}
+        );
 
     $("#reviews").rating();
 

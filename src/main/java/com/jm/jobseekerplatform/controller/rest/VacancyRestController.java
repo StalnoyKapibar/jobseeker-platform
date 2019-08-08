@@ -40,6 +40,7 @@ public class VacancyRestController {
        return vacancyService.getById(vacancyId);
     }
 
+    @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/{vacancyId:\\d+}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public void updateVacancyState(@PathVariable("vacancyId") Long vacancyId, @RequestBody String state) {
@@ -50,6 +51,7 @@ public class VacancyRestController {
         vacancyService.update(vacancy);
     }
 
+    @RolesAllowed({"ROLE_ADMIN"})
     @RequestMapping(value = "/block/{vacancyId}", method = RequestMethod.POST)
     public void blockVacancy(@PathVariable("vacancyId") Long vacancyId, @RequestBody int periodInDays) {
         Vacancy vacancy = vacancyService.getById(vacancyId);
@@ -61,7 +63,7 @@ public class VacancyRestController {
         }
     }
 
-    @RolesAllowed({"ROLE_EMPLOYER"})
+    @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public boolean addVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
         if (vacancyService.validateVacancy(vacancy)) {
@@ -74,6 +76,7 @@ public class VacancyRestController {
         }
     }
 
+    @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public boolean updateVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
         if (vacancyService.validateVacancy(vacancy) & vacancyService.getById(vacancy.getId()).getCreatorProfile().getId() == (((EmployerUser) authentication.getPrincipal()).getProfile().getId())) {
@@ -92,7 +95,7 @@ public class VacancyRestController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @RequestMapping("/city/page/{page}")
+    @RequestMapping(value = "/city/page/{page}", method = RequestMethod.POST)
     public Page<Vacancy> getPageOfVacancies(@RequestBody Point point, @RequestParam("city") String city, @PathVariable("page") int page, Authentication authentication) {
         int limit = 10;
         if (authentication == null || !authentication.isAuthenticated()) {
