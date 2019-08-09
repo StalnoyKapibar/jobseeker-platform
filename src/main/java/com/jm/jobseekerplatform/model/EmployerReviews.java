@@ -30,7 +30,7 @@ public class EmployerReviews implements Serializable, Comparable<EmployerReviews
     @Column(name = "review_dislike")
     private int dislike;
 
-    @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "seekerProfile")
     private SeekerProfile seekerProfile;
 
