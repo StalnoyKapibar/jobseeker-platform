@@ -8,9 +8,12 @@
     --form-border-color: #F39C12;
     --card-bg-color: #F3F4F6;
     --card-header-bg-color: #ccc;
+    --review-voted-color: #222;
+    --review-voted-hoover: #222;
+    --review-voted-count-color: #999999
 }
 
-:root[theme='dark']{
+:root[theme='dark'] {
     --bg-color: #222;
     --navbar-bg-color: #00bc8c;
     --sidebar-bg-color: #303030;
@@ -20,6 +23,9 @@
     --form-border-color: #222;
     --card-bg-color: #303030;
     --card-header-bg-color: #444;
+    --review-voted-color: #F39C12;
+    --review-voted-hoover: #F39C12;
+    --review-voted-count-color: silver
 }
 
 body {
@@ -125,6 +131,7 @@ li {
 .container-fluid .search_area {
     margin-top: 25px;
 }
+
 .container-fluid #search_advice_wrapper {
     display: none;
     width: 58%;
@@ -323,6 +330,10 @@ li {
     background-color: var(--card-header-bg-color);
 }
 
+.container-fluid .reviewCard .card-body {
+    background-color: var(--card-bg-color);
+}
+
 .container-fluid .img-rounded {
     margin: 10px;
     border-radius: 8px;
@@ -352,7 +363,7 @@ li {
     height: 100%;
 }
 
-.input-group-prepend .input-group-text{
+.input-group-prepend .input-group-text {
     background-color: #F39C12;
     color: #222;
 }
@@ -363,15 +374,15 @@ li {
     right: 5%;
 }
 
-.reviewVotes  span {
+.reviewVotes span {
     margin-right: 10px;
     font-size: 0.8em;
-    color: #999999;
+    color: var(--review-voted-count-color);
     cursor: pointer;
 }
 
-.reviewVotes span:hover {
-    color: black;
+.reviewVotes span > i:hover {
+    color: var(--review-voted-hoover);
 }
 
 .reviewVotes i {
@@ -379,16 +390,7 @@ li {
 }
 
 .voted {
-    color: black !important;
-}
-
-.employerTab {
-    /* height: 300px;*/
-    /* border-right: 1px solid #dae3ea;
-     border-left: 1px solid #dae3ea;
-     border-bottom: 1px solid #dae3ea;
-     border-bottom-left-radius: 5px;
-     border-bottom-right-radius: 5px;*/
+    color: var(--review-voted-color) !important;
 }
 
 .textReview {
