@@ -1,11 +1,14 @@
 package com.jm.jobseekerplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "points")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Point implements Serializable {
 
     @Id
