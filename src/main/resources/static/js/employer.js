@@ -1,5 +1,5 @@
 function showVacancy(id) {
-    $("a#VMedit_butt").attr("href","/edit_vacancy/"+id)
+    $("a#VMedit_butt").attr("href", "/edit_vacancy/" + id)
     $.ajax({
         url: "/api/vacancies/" + id,
         type: "GET",
@@ -130,7 +130,25 @@ $(document).ready(function () {
     });
 
     getReviewVotes(seekerProfileId, employerProfileId);
+    reviewEditBasedOnVotes();
 });
+
+function reviewEditBasedOnVotes() {
+    var x = document.getElementsByClassName("editCardReview");
+    for (i = 0; i < x.length; i++) {
+        let blockId = x[i].id;
+        blockId = blockId.substring(blockId.indexOf('_')+1);
+        let likes= parseInt(document.getElementById('reviewLikeCount_'+blockId).innerHTML);
+        let dislikes=parseInt(document.getElementById('reviewDislikeCount_'+blockId).innerHTML);
+        let sum=likes+dislikes;
+        if (sum>=5){
+            x[i].style.display = "none";
+        }
+        else {
+            x[i].style.display = "block"
+        }
+    }
+}
 
 function getReviewVotes(seekerProfileId, employerProfileId) {
     $.ajax({
@@ -384,6 +402,7 @@ function removeLike(reviewId, seekerProfileId) {
         success: function (data) {
             $('#reviewLike_' + reviewId).removeClass('voted');
             $('#reviewLikeCount_' + reviewId).text(data.like);
+            reviewEditBasedOnVotes();
         },
         error: function (error) {
             console.log(error);
@@ -405,6 +424,7 @@ function updateLike(reviewId, seekerProfileId) {
             $('#reviewLike_' + reviewId).addClass('voted');
             $('#reviewLikeCount_' + reviewId).text(data.like);
             $('#reviewDislikeCount_' + reviewId).text(data.dislike);
+            reviewEditBasedOnVotes();
         },
         error: function (error) {
             console.log(error);
@@ -418,8 +438,8 @@ function addLike(reviewId, seekerProfileId, employerProfileId) {
         'reviewId': reviewId,
         'seekerProfileId': seekerProfileId,
         'employerProfileId': employerProfileId,
-        'isLike':true,
-        'isDislike':false
+        'isLike': true,
+        'isDislike': false
     };
     $.ajax({
         type: 'post',
@@ -432,6 +452,7 @@ function addLike(reviewId, seekerProfileId, employerProfileId) {
         success: function (data) {
             $('#reviewLike_' + reviewId).addClass('voted');
             $('#reviewLikeCount_' + reviewId).text(data.like);
+            reviewEditBasedOnVotes();
         },
         error: function (error) {
             console.log(error);
@@ -498,8 +519,8 @@ function addDislike(reviewId, seekerProfileId, employerProfileId) {
         'reviewId': reviewId,
         'seekerProfileId': seekerProfileId,
         'employerProfileId': employerProfileId,
-        'isLike':false,
-        'isDislike':true
+        'isLike': false,
+        'isDislike': true
     };
     $.ajax({
         type: 'post',
