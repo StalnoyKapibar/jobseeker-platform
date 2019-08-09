@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.dao.impl.chats;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
-import com.jm.jobseekerplatform.dto.ChatInfoDTO;
+import com.jm.jobseekerplatform.dto.ChatInfoDetailWithTopicDTO;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import org.springframework.stereotype.Repository;
 
@@ -158,7 +158,7 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
                 throw new RuntimeException("something goes wrong");
         }
 
-//        countOfUnreadChats.stream().findFirst().orElse(0L);
+//        countOfUnreadChats.stream().findFirst().orElse(0L); //примеры обработки getResultList вместо GetSingleResult (NoResultException)
 //
 //        int size = countOfUnreadChats.size();
 //        if (size == 0){
@@ -171,22 +171,28 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
 //        }
     }
 
-    public List<ChatInfoDTO> getAllChatsWithCountOfUnreadMessagesByProfileId(Long profileId) { //todo (Nick Dolgopolov) метод дублировать в ChatWithTopicDAO и ChatDAO. Этот метод будет выдавать только чаты, которым от параметризован.
+    public List<ChatInfoDetailWithTopicDTO> getAllChatsInfoDTOByProfileId(Long profileId) { //todo (Nick Dolgopolov) метод дублировать в ChatWithTopicDAO и ChatDAO. Этот метод будет выдавать только чаты, которым от параметризован.
 
         //todo ДЕЛАЮ ЭТО
         //todo ПОПРОБОВАТЬ ДВОЙНОЙ СЕЛЕКТ
 
-        List<ChatInfoDTO> countOfUnreadChats = entityManager.createQuery("SELECT c, COUNT (DISTINCT m1), m1 FROM " + clazz.getName() + " c "
-                + "JOIN c.chatMessages m1 "
-                + "JOIN c.chatMessages m2 "
-                + "WHERE :profileId NOT MEMBER OF m1.isReadByProfilesId "
-                + "AND (c.creatorProfile.id = :profileId "
-                + "OR c.topic.creatorProfile.id = :profileId "
-                + "OR m2.creatorProfile.id = :profileId) "
-                + "GROUP BY c.id ORDER BY m1.id ")
-                .setParameter("profileId", profileId)
-                .getResultList();
+        List<ChatInfoDetailWithTopicDTO> listOfChatInfoDetailWithTopicDTO =
+                entityManager.createQuery("SELECT new com.jm.jobseekerplatform.dto.ChatInfoDetailWithTopicDTO(" +
+                        "c, COUNT (DISTINCT m1), MAX(m1) " +
+                        ") " +
+                        "FROM " + clazz.getName() + " c " +
+                        "JOIN c.chatMessages m1 " +
+                        "GROUP BY c.id", ChatInfoDetailWithTopicDTO.class)
+                        .getResultList();
 
-        return countOfUnreadChats;
+//        Более строгий запрос. Выбор последнего сообщения по дате, а не по id
+//        entityManager.createQuery("SELECT c, COUNT (DISTINCT m1), m2 FROM " + clazz.getName() + " c " +
+//                "JOIN c.chatMessages m1 " +
+//                "JOIN c.chatMessages m2 " +
+//                "WHERE m2.date = (SELECT max(m3.date) FROM " + clazz.getName() + " c1 " +  " JOIN c1.chatMessages m3 WHERE c1.id = c.id)  " +
+//                "GROUP BY c.id ")
+//                .getResultList()
+
+        return listOfChatInfoDetailWithTopicDTO;
     }
 }

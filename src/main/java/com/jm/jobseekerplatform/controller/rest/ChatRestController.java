@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.dto.ChatInfoDTO;
+import com.jm.jobseekerplatform.dto.ChatInfoDetailWithTopicDTO;
+import com.jm.jobseekerplatform.dto.ChatInfoWithTopicDTO;
 import com.jm.jobseekerplatform.dto.MessageReadDataDTO;
 import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
@@ -50,20 +51,26 @@ public class ChatRestController {
     public HttpEntity getAllChats() {
         List<ChatWithTopicVacancy> chats = chatWithTopicVacancyService.getAll();
 
-        List<ChatInfoDTO> chatsInfo = getChatInfoDTOs(chats);
+        List<ChatInfoWithTopicDTO> chatsInfo = getChatInfoDTOs(chats);
 
         //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov)
         return new ResponseEntity(chatsInfo, HttpStatus.OK);
     }
 
+    private List<ChatInfoWithTopicDTO> getChatInfoDTOs(Collection<ChatWithTopicVacancy> chats) {
+        List<ChatInfoWithTopicDTO> chatsInfo = new ArrayList<>();
+
+        for (ChatWithTopicVacancy chat : chats) {
+            ChatInfoWithTopicDTO chatInfoWithTopicDTO = new ChatInfoWithTopicDTO(chat);
+            chatsInfo.add(chatInfoWithTopicDTO);
+        }
+        return chatsInfo;
+    }
+
     @GetMapping("getAllChatsByProfileId/{profileId:\\d+}")
     public HttpEntity getAllChatsByProfileId(@PathVariable("profileId") Long profileId) {
 
-        Set<ChatWithTopicVacancy> chats = new HashSet<>();
-
-        chats.addAll(chatWithTopicVacancyService.getAllChatsByProfileId(profileId));
-
-        List<ChatInfoDTO> chatsInfo = getChatInfoDTOs(chats);
+        List<ChatInfoDetailWithTopicDTO> chatsInfo = chatWithTopicVacancyService.getAllChatsInfoDTOByProfileId(profileId);
 
         //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov)
         return new ResponseEntity(chatsInfo, HttpStatus.OK);
@@ -72,9 +79,8 @@ public class ChatRestController {
     @GetMapping("getAllUnreadChatsByProfileId/{profileId:\\d+}")
     public HttpEntity getAllUnreadChatsByProfileId(@PathVariable("profileId") Long profileId) {
 
-        Set<ChatWithTopicVacancy> chats = new HashSet<>(); //todo (Nick Dolgopolov)
-
-        chats.addAll(chatWithTopicVacancyService.getAllUnreadChatsByProfileId(profileId));
+        //todo (Nick Dolgopolov)
+        Set<ChatWithTopicVacancy> chats = new HashSet<>(chatWithTopicVacancyService.getAllUnreadChatsByProfileId(profileId));
 
         return new ResponseEntity(chats, HttpStatus.OK);
     }
@@ -95,17 +101,6 @@ public class ChatRestController {
         long countOfUnreadChatsByProfileId = chatWithTopicVacancyService.getCountOfUnreadChatsByProfileId(user.getProfile().getId());
 
         return new ResponseEntity(countOfUnreadChatsByProfileId, HttpStatus.OK);
-    }
-
-    private List<ChatInfoDTO> getChatInfoDTOs(Collection<ChatWithTopicVacancy> chats) {
-        List<ChatInfoDTO> chatsInfo = new ArrayList<>();
-
-        for (ChatWithTopicVacancy chat : chats) {
-            ChatInfoDTO chatInfoDTO = ChatInfoDTO.fromChatWithTopic(chat, 0);
-            chatInfoDTO.setLastMessage(chatService.getLastMessage(chat.getId()));
-            chatsInfo.add(chatInfoDTO);
-        }
-        return chatsInfo;
     }
 
 
@@ -149,18 +144,4 @@ public class ChatRestController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
-
-//    @GetMapping("count_not_read_messages/admin") //todo (Nick Dolgopolov)
-//    public HttpEntity getCountNotReadMessagesForAdmin() {
-//        int count = chatMessageService.getNotReadMessages().size();
-//        return new ResponseEntity(count, HttpStatus.OK);
-//    }
-//
-//    @GetMapping("count_not_read_messages/{chatId}") //todo (Nick Dolgopolov)
-//    public HttpEntity getCountNotReadMessagesForUser(@PathVariable("chatId") Long chatId) {
-//        List<ChatMessage> list = new ArrayList<>(chatService.getById(chatId).getChatMessages());
-//        Long count = list.stream().filter(a -> a.getAuthor().getAuthority().equals(userRoleService.findByAuthority("ROLE_ADMIN"))).filter(a -> a.isRead() == false).count(); //todo (Nick Dolgopolov) переделать на запрос к БД
-//
-//        return new ResponseEntity(count, HttpStatus.OK);
-//    }
 }
