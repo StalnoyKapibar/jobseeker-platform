@@ -36,4 +36,6 @@ public class EmployerProfileRestController {
             employerProfileService.blockTemporary(employerProfile, periodInDays);
         }
     }
+
+
 }

@@ -1,23 +1,5 @@
-// $(function () {
-//     $('#allVacancies').sortable();
-//
-//     // $(" #trckVacancies, #allVacancies").sortable({
-//     //     connectWith: "#trckVacancies, #allVacancies",
-//     //     update: function() {
-//     //         var sort = [];
-//     //         $('#trckVacancies').each(function () {
-//     //             sort.push($(this).text());
-//     //         });
-//     //         var saveSort = {'sort':sort};
-//     //         sessionStorage.setItem('sort', JSON.stringify(saveSort));
-//     //     }
-//     // });
-// });
-//
-
-
-
-
+var token = $("meta[name='_csrf']").attr("content");
+var header = $("meta[name='_csrf_header']").attr("content");
 
 $( document ).ready(function() {
     $("#trckVacancies, #allVacancies").sortable({
@@ -45,22 +27,37 @@ function update(id) {
     var description = document.getElementById("description").value;
     var vacansies = JSON.parse(sessionStorage.getItem('vacancies'));
 
+    $.ajax({
+        type: 'post',
+        url: "/api/employerprofiles/update?" +
+            "id=" + id +
+            "companyname"+companyName+
+            "site"+site+
+            "description"+description+
+            "vacansies"+vacansies,
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        success: function (profile) {
+            $('#company_name').text(profile.companyName);
+            $('#update_modal_close_btn').click();
+        },
+        error: function (error) {
+            console.log(error);
+            alert(error.toString());
+        }
+    })
 
 }
 
+
+
 function add_emploer_img(id) {
-
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
-
-
-
     var form = $('#fileUploadForm')[0];
     var data = new FormData(form);
     data.append("id", id);
-
     $("#btnSubmit").prop("disabled", true);
-
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
