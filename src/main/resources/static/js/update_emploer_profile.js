@@ -24,11 +24,8 @@ $( document ).ready(function() {
         connectWith: "#trckVacancies, #allVacancies",
         update: function() {
             var vacancies = [];
-            var position = 1;
-            $('#trckVacancies span').each(function () {
-                vacancies.push({'position':position,
-                                'id':(this).data('id')});
-                position++;
+            $('#trckVacancies li').each(function () {
+                    vacancies.push({'position':$(this).index()+1, 'id':$(this).find('span').data('id')});
             });
             var saveSort = {'vacancies':vacancies};
             sessionStorage.setItem('vacancies', JSON.stringify(saveSort));
@@ -47,7 +44,10 @@ function update(id) {
     var site = document.getElementById("companywebsite").value;
     var description = document.getElementById("description").value;
     var vacansies = JSON.parse(sessionStorage.getItem('vacancies'));
-    alert(vacansies);
 
 }
 
+function update_img() {
+
+
+}

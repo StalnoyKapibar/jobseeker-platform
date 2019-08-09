@@ -34,7 +34,7 @@ public class EmployerProfile extends Profile implements Serializable {
     private Date expiryBlock;
 
     @Column(name = "publication_position")
-    private int publicationPosition;
+    private Integer publicationPosition;
 
     public EmployerProfile() {
     }
@@ -88,7 +88,7 @@ public class EmployerProfile extends Profile implements Serializable {
         this.reviews = reviews;
     }
 
-    public int getPublicationPosition(){
+    public Integer getPublicationPosition(){
         return publicationPosition;
     }
 

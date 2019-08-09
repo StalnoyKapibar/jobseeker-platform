@@ -88,9 +88,7 @@
                                 </div>
                         <div class="card-body">
                             <div class="list-group" id="allVacancies" style="height: 200px; overflow: auto;">
-                                <li class="card border-success vac" style="margin: 5px" th:each="vacancy: ${vacancies}"
-                                    data-toggle="modal" data-target="#vacancyModal"
-                                    th:onclick="'showVacancy('+${vacancy.id}+')'">
+                                <li class="card border-success vac" style="margin: 5px" th:each="vacancy: ${vacancies}">
                                     <div class="input-group">
                                         <div class="card-header" style="width: 80%"><span
                                                 th:text="${vacancy.headline}" th:data-id="${vacancy.id}"></span></div>
@@ -109,6 +107,8 @@
         <div class="container-fluid">
             <button type="button" class="btn btn-primary btn-lg" th:onclick="'update('+${employerProfile.id}+')'">Сохранить изменения</button>
         </div>
+
+
 
             <!-- vacancyModal -->
             <div id="vacancyModal" class="modal fade" role="dialog">
