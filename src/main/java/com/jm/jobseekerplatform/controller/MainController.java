@@ -12,6 +12,7 @@ import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.SubscriptionService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.tokens.VerificationTokenService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
@@ -47,16 +48,17 @@ public class MainController {
 
     @Autowired
     private SeekerUserService seekerUserService;
+    @Autowired
+    private EmployerUserService employerUserService;
 
     @Autowired
     private SeekerProfileService seekerProfileService;
 
     @Autowired
-    private EmployerUserService employerUserService;
-
-    @Autowired
     private SubscriptionService subscriptionService;
 
+    @Autowired
+    private EmployerProfileService employerProfileService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
     private UserRole roleEmployer = new UserRole("ROLE_EMPLOYER");
@@ -90,7 +92,7 @@ public class MainController {
 
             if (authentication.getAuthorities().contains(roleEmployer)) {
                 Long id = ((User) authentication.getPrincipal()).getId();
-                EmployerProfile profile = employerUserService.getById(id).getProfile();
+                EmployerProfile profile = employerProfileService.getById(id);//employerUserService.getById(id).getProfile();
                 model.addAttribute("employerProfileId", profile.getId());
             }
         }
@@ -148,12 +150,27 @@ public class MainController {
     }
 
 
-
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/new_vacancy", method = RequestMethod.GET)
     public String new_vacancyPage(Model model) {
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-        return "new_vacancy";
+        return "/vacancy/new_vacancy";
+    }
+
+    @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
+    @RequestMapping(value = "/edit_vacancy/{vacancyId}", method = RequestMethod.GET)
+    public String edit_vacancyPage(@PathVariable("vacancyId") Long vacancyId, Authentication authentication, Model model) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        EmployerProfile employerProfile = employerProfileService.getById(userId);
+        model.addAttribute("employer", employerProfile);
+        String employerName = ((User) authentication.getPrincipal()).getUsername();
+
+        if (vacancyService.getById(vacancyId).getCreatorProfile().getId() == employerProfile.getId()) {
+            model.addAttribute("vacancy", vacancyService.getById(vacancyId));
+        }
+
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+        return "/vacancy/edit_vacancy";
     }
 
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
@@ -173,7 +190,7 @@ public class MainController {
             Long id = ((User) authentication.getPrincipal()).getId();
             Profile profile = userService.getById(id).getProfile();
             if (profile instanceof SeekerProfile) {
-                Subscription subscription= subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, vacancy.getCreatorProfile());
+                Subscription subscription = subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, vacancy.getCreatorProfile());
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
                 isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(subscription);
                 model.addAttribute("isContain", isContain);
@@ -186,7 +203,7 @@ public class MainController {
         model.addAttribute("EmployerProfileFromServer", vacancy.getCreatorProfile());
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getCreatorProfile().getLogo()));
 
-        return "vacancy";
+        return "/vacancy/vacancy";
     }
 
     @RequestMapping(value = "/recovery", method = RequestMethod.GET)

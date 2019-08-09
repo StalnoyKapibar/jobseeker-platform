@@ -40,16 +40,16 @@
     <script type="text/javascript" src="/js/map.js"></script>
 </head>
 <body>
-
 <div layout:fragment="content">
     <div class="container-fluid" id="vacancy_container">
         <div class="row">
             <div class="col-sm-2">
             </div>
             <div class="col-sm-8">
-                <form class="well form-horizontal" id="vacancy_form">
+                <form class="well form-horizontal card empCard" id="vacancy_form" style="margin-top: 40px">
+                    <div class="card-body">
                     <fieldset>
-                        <legend align="center">
+                        <legend align="center" class="card-header">
                             <h2><b>Создание новой вакансии</b></h2>
                         </legend>
                         <br>
@@ -76,7 +76,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary" type="button" data-toggle="modal"
-                                                    data-target="#mapModal"
+                                                    data-target="#mapModal" style="background-color: #F39C12; color: #222"
                                                     onclick="initV_Map()"><i class="fas fa-map"></i>
                                             </button>
                                         </span>
@@ -166,7 +166,7 @@
                             <div class="col-sm-1"></div>
                             <label class="col-md-11 control-label">Подробное описание вакансии</label>
                             <div class="col-sm-1"></div>
-                            <div class="col-md-10 inputGroupContainer">
+                            <div class="col-md-10 inputGroupContainer" style="background-color: #222">
                                 <form method="post">
                                     <textarea id="v_description" name="editordata"></textarea>
                                 </form>
@@ -187,8 +187,8 @@
                                 </button>
                             </div>
                         </div>
-
                     </fieldset>
+                    </div>
                 </form>
             </div>
         </div>

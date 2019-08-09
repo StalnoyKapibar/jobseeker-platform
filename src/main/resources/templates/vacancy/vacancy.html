@@ -17,11 +17,9 @@
     <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <script type="text/javascript" src="/js/seeker.js"></script>
 </head>
-
 <body>
-
 <div layout:fragment="content">
-    <div class="container-fluid" id="vacancy_container" style="margin-left: 15%; margin-right: 15%">
+    <div class="container-fluid" id="vacancy_container" style="margin-left: 15%; margin-right: 15%; margin-top: 40px">
         <div class="row">
             <div class="col-sm-8">
                 <h1 th:utext="'<b>'+${vacancyFromServer.getHeadline()}+'</b>'"></h1>

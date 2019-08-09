@@ -9,42 +9,41 @@
 </head>
 <body>
 <div id="sProfileDiv"  layout:fragment="content">
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-8">
     <div class="container-fluid" style="margin-left: 15%;margin-right: 15%">
-        <div class="row">
-            <div class="col-sm-1">
-            </div>
-            <div class="col-sm-3">
-                <h1><span th:text="${seekerProfile.name}"></span></h1>
-                <h3><span th:each="tag : ${seekerProfile.tags}" th:text="${tag.name} + ' '"></span></h3>
-                <span>Мои проекты:</span><br/>
-                <div class="list-group">
-                    <a th:each="portfolio, index: ${seekerProfile.portfolios}" class="list-group-item"
-                       th:text="${portfolio.projectName}" data-toggle="modal" data-target="#portfolioModal"
-                       th:onclick="'showPortfolio('+${portfolio.id}+')'"></a>
+        <div class="card mb-3 empCard" style="margin-top: 40px">
+            <div class="card-header"><h4>Профиль</h4></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <h6>Имя:<span th:text="${seekerProfile.name}"></span></h6><br/>
+                        <h6>Теги:</h6>
+                        <h6><span th:each="tag : ${seekerProfile.tags}" th:text="${tag.name} + ' '" class="badge badge-pill badge-success btnClick text-dark"></span></h6>
+                    </div>
+                    <div class="col-sm-5" align="right">
+                        <img th:src="@{'data:image/png;base64,' + ${photoimg}}" class="img-rounded" alt="Photo">
+                    </div>
                 </div>
-            </div>
-            <div class="col-sm-3" align="right">
-                <img th:src="@{'data:image/png;base64,' + ${photoimg}}" class="img-rounded" alt="Photo">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-1">
-            </div>
-            <div class="col-sm-6">
-                <span>Обо мне:</span><br/>
-                <div class="well well-sm">
-                    <span th:text="${seekerProfile.description}"></span>
+                <div class="row">
+                    <div class="col-sm-11">
+                        <span>Мои проекты:</span><br/>
+                        <div class="list-group">
+                            <a th:each="portfolio, index: ${seekerProfile.portfolios}" class="list-group-item"
+                           th:text="${portfolio.projectName}" data-toggle="modal" data-target="#portfolioModal"
+                           th:onclick="'showPortfolio('+${portfolio.id}+')'"></a>
+                        </div><br/>
+                        <span>Обо мне:</span><br/>
+                        <div class="well well-sm" style="background-color: var(--card-bg-color)">
+                            <span th:text="${seekerProfile.description}"></span>
+                        </div><br>
+                        <!-- кнопка приглашения -->
+                        <button type="button" th:onclick="'showInviteModal('+${seekerProfile.id}+')'" class="btn btn-warning">
+                        <i class="fas fa-user-plus"></i>InviteFriend</button>
+                        <button class="btn btn-success" th:onclick="'window.location.href = \'' + @{/seeker/vacancies/{id}(id=${seekerProfile.id})} + '\''">Избранное</button>
+                    </div>
                 </div>
-                <br>
-                <!-- кнопка приглашения -->
-                <button type="button" th:onclick="'showInviteModal('+${seekerProfile.id}+')'"
-                        class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i>
-                    InviteFriend
-                </button>
-
-                    <button class="btn btn-secondary" th:onclick="'window.location.href = \'' + @{/seeker/vacancies/{id}(id=${seekerProfile.id})} + '\''">Избранное</button>
-
             </div>
         </div>
     </div>
@@ -68,6 +67,8 @@
                 </div>
             </div>
 
+        </div>
+    </div>
         </div>
     </div>
     <!-- модальное окно приглашения -->

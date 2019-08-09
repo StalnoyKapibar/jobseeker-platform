@@ -1,15 +1,42 @@
+:root {
+    --bg-color: #fff;
+    --navbar-bg-color: #00bc8c;
+    --sidebar-bg-color: #F3F4F6;
+    --card-color: #fff;
+    --text-color: #222;
+    --sidebar-text-color: #222;
+    --form-border-color: #F39C12;
+    --card-bg-color: #F3F4F6;
+    --card-header-bg-color: #ccc;
+}
+
+:root[theme='dark']{
+    --bg-color: #222;
+    --navbar-bg-color: #00bc8c;
+    --sidebar-bg-color: #303030;
+    --card-color: #303030;
+    --text-color: white;
+    --sidebar-text-color: #fff;
+    --form-border-color: #222;
+    --card-bg-color: #303030;
+    --card-header-bg-color: #444;
+}
+
 body {
-    background-color: #F5F5F5;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    height: calc(100%);
 }
 
 /*Navbar style*/
 .navbar {
-    background-color: #7295b1;
+    background-color: var(--navbar-bg-color);
 }
 
 .navbar a {
     color: white;
     text-decoration: none;
+    margin-left: 30px;
 }
 
 .navbar li {
@@ -38,8 +65,7 @@ li {
 /*Sidebar style*/
 .sidebar {
     width: 15%;
-    background-color: #dae3ea;
-
+    background-color: var(--sidebar-bg-color);
     height: 100%;
     position: fixed;
     z-index: 1;
@@ -47,6 +73,7 @@ li {
     left: 0;
     overflow-x: hidden;
     padding-top: 20px;
+    margin-top: 20px;
 }
 
 .sidebar ul {
@@ -59,12 +86,14 @@ li {
 
 .sidebar a {
     text-decoration: none;
-    color: #7295b1;
+    /*color: #7295b1;*/
+    color: var(--sidebar-text-color);
     display: block;
 }
 
 .sidebar li :hover {
-    color: #4177A3;
+    /*color: #4177A3;*/
+    color: #F39C12;
 }
 
 /*Content style*/
@@ -77,11 +106,26 @@ li {
     right: -15%;
 }
 
-.well {
+.container-fluid .modal-body {
+    background-color: var(--card-bg-color);
+}
+
+.container-fluid .modal-header {
+    background-color: var(--card-header-bg-color);
+}
+
+.container-fluid .modal-footer {
+    background-color: var(--card-header-bg-color);
+}
+
+.container-fluid .well {
     background-color: white;
 }
 
-#search_advice_wrapper {
+.container-fluid .search_area {
+    margin-top: 25px;
+}
+.container-fluid #search_advice_wrapper {
     display: none;
     width: 58%;
     background-color: white;
@@ -91,132 +135,138 @@ li {
     z-index: 100;
 }
 
-#search_advice_wrapper .advice_variant {
+.container-fluid #search_advice_wrapper .advice_variant {
     cursor: pointer;
-    padding: 5px;
+    padding: 10px;
     text-align: left;
+    background-color: var(--bg-color);
 }
 
-#search_advice_wrapper .advice_variant:hover {
-    background-color: lightgray;
+.container-fluid #search_advice_wrapper .advice_variant:hover {
+    background-color: #F39C12;
 }
 
 
 /*Vacancies list style*/
 
-.pull-right {
+.container-fluid .pull-right {
     position: absolute;
     left: 75%;
     bottom: 5%;
     cursor: pointer;
 }
 
-.pull-right-subscriptions {
+.container-fluid .pull-right-subscriptions {
     position: absolute;
     left: 55%;
     top: 25%;
     cursor: pointer;
 }
 
-.btnOnVacancyPage {
+.container-fluid .btnOnVacancyPage {
     border-radius: 20px;
 }
 
-.salary {
+.container-fluid .salary {
     position: absolute;
     bottom: 5%;
     font-size: 20px;
     font-weight: bold;
-    color: #7295b1;
+    color: #3498DB;
+    /*color: #7295b1;*/
 }
 
-.vacancyTags {
+.container-fluid .vacancyTags {
     position: absolute;
     top: 5%;
     left: 75%;
 }
 
-.btnClick {
-    background-color: teal;
+.container-fluid .btnClick {
+    /*background-color: teal;*/
+    background-color: #F39C12;
     cursor: pointer;
+    margin: 3px;
+
 }
 
-.btnClick:hover {
+.container-fluid .btnClick:hover {
     background-color: lightseagreen;
 }
 
-.headLine {
+.container-fluid .headLine {
     font-size: 25px;
     font-weight: bold;
     padding-right: 30%;
 }
 
-.companyData {
+.container-fluid .companyData {
     font-size: 14px;
     color: #777777;
 }
 
-.vacancyDescription {
+.container-fluid .vacancyDescription {
     padding: 0 30% 3% 0;
 }
 
-.fa-star {
+.container-fluid .fa-star {
     color: teal;
 }
 
-.list-group-item {
+.container-fluid .list-group-item {
     padding-top: 0;
+    background-color: var(--card-color);
 }
 
-.clearfix:hover {
+.container-fluid .clearfix:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 1;
 }
 
 /*Seeker news style*/
 
-.btnNews {
+.container-fluid .btnNews {
     position: absolute;
     left: 75%;
     bottom: 25%;
     top: 30%;
 }
 
-#buttons button {
+.container-fluid #buttons button {
     width: 200px;
     margin-top: 5px;
 }
 
-#btnSubscribe i {
+.container-fluid #btnSubscribe i {
     margin-left: 2%;
 }
 
-.seekerNewsDate {
+.container-fluid .seekerNewsDate {
     position: absolute;
     top: 10px;
     left: 80%;
     color: #777777;
 }
 
-.seekerNewsHeadLine {
+.container-fluid .seekerNewsHeadLine {
     font-size: 25px;
     font-weight: 700;
     padding-right: 30%;
 }
 
-.newsDescription {
+.container-fluid .newsDescription {
     font-size: 0.9em;
     margin-bottom: 20px;
     line-height: 1.6em;
 }
 
-.newsDescription .btn {
+.container-fluid .newsDescription .btn {
     text-decoration: none;
     font-size: 0.9em;
     line-height: 1.6em;
 }
 
-.newsCard {
+.container-fluid .newsCard {
     font-family: 'Open Sans', Arial, sans-serif;
     overflow: hidden;
     text-align: left;
@@ -224,7 +274,7 @@ li {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
 }
 
-.newsAction {
+.container-fluid .newsAction {
     padding: 0 25px;
     color: #999999;
     font-size: 0.8em;
@@ -233,21 +283,77 @@ li {
     cursor: pointer;
 }
 
-.comments_viewing {
+.container-fluid .comments_viewing {
     color: #333333;
 }
 
-.dislike i {
+.container-fluid .dislike i {
     color: crimson;
 }
 
-.newsAction div {
+.container-fluid .newsAction div {
     display: inline-block;
     margin-right: 15px;
     font-size: 1.2em;
 }
 
-.newsAction i {
+.container-fluid .newsAction i {
     margin-right: 5px;
+}
+
+.container-fluid .well {
+    background-color: var(--bg-color);
+}
+
+.container-fluid .empCard {
+    position: relative;
+    margin-left: 40px;
+    margin-top: 40px;
+}
+
+.container-fluid .empCard .card-body {
+    background-color: var(--card-bg-color);
+}
+
+.container-fluid .empCard .card-header {
+    background-color: var(--card-header-bg-color);
+}
+
+.container-fluid .empCard .card-footer {
+    background-color: var(--card-header-bg-color);
+}
+
+.container-fluid .img-rounded {
+    margin: 10px;
+    border-radius: 8px;
+    width: 60%;
+    display: block;
+}
+
+.container-fluid .form-signin {
+    margin-top: 40px;
+}
+
+.container-fluid .btn-signin {
+    background-color: #F39C12;
+}
+
+.container-fluid .form-control {
+    border-color: var(--form-border-color);
+}
+
+.container-fluid {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    height: 100%;
+}
+
+.main-block {
+    height: 100%;
+}
+
+.input-group-prepend .input-group-text{
+    background-color: #F39C12;
+    color: #222;
 }
 

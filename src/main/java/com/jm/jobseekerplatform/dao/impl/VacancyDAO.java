@@ -8,6 +8,7 @@ import org.hibernate.annotations.QueryHints;
 import org.hibernate.query.Query;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -135,6 +136,10 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     public List<Vacancy> getAll() {
         return entityManager.createQuery("select v from Vacancy v", Vacancy.class)
                 .setHint(QueryHints.FETCHGRAPH, entityManager.getEntityGraph("vacancy-all-nodes")).getResultList();
+    }
+
+    public void updateVacancy(Vacancy vacancy){
+
     }
 }
 

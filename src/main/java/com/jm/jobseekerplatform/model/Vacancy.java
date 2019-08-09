@@ -12,7 +12,7 @@ import java.util.Set;
 @Entity
 @Table(name = "vacancies")
 @Cacheable
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "vacancy")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "vacancy")
 @NamedEntityGraph(name = "vacancy-all-nodes", attributeNodes = {
         @NamedAttributeNode("creatorProfile"),
         @NamedAttributeNode("city"),

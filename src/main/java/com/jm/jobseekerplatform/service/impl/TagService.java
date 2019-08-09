@@ -70,6 +70,10 @@ public class TagService extends AbstractService<Tag> {
         return findedTags;
     }
 
+    public Set<Tag> getTagsByStringNames(Set<String> inputTagsName){
+        return new HashSet<>(dao.getTagsByNames(inputTagsName));
+    }
+
     public List<Tag> getVerified() {
         boolean verified = true;
         return dao.getVerified(verified);

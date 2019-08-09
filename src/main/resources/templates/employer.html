@@ -16,96 +16,163 @@
 </head>
 
 <body>
-
 <div layout:fragment="content">
     <div id="eProfileDiv" class="container-fluid">
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
-                    <span id="EPId" th:text="${employerProfile.id}" hidden></span>
-                    <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown">
-                        Блокировать<span
-                            class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        <li><a onclick="blockEmployerProfile(1)">На сутки</a></li>
-                        <li><a onclick="blockEmployerProfile(3)">На 3 дня</a></li>
-                        <li><a onclick="blockEmployerProfile(7)">На 7 дней</a></li>
-                        <li><a onclick="blockEmployerProfile(14)">На 14 дней</a></li>
-                        <li><a onclick="blockEmployerProfile(0)">Бессрочно</a></li>
-                    </ul>
-                </div>
-                <h1><span id="EPcompanyName" th:text="${employerProfile.companyName}"></span></h1>
-                <h2><a th:href="@{'http://' + ${employerProfile.website}}" th:text="${employerProfile.website}"></a></h2>
-            </div>
-            <div class="col-sm-3" align="center">
-                <img th:src="@{'data:image/png;base64,' + ${logoimg}}" class="img-rounded"
-                     alt="Logo of company">
-            </div>
+        <div th:each="vac : ${vacancies}">
+            <input type="hidden" class="employerVacancies" th:value="${vac}">
         </div>
         <div class="row">
-            <div class="col-sm-5">
-                <span>О нас:</span><br/>
-                <div class="well well-sm">
-                    <span th:text="${employerProfile.description}"></span>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <span>Наши вакансии:</span>
-                <div class="list-group">
-                    <a th:each="vacancy, index: ${vacancies}" class="list-group-item"
-                       th:text="${vacancy.headline}"
-                       data-toggle="modal" data-target="#vacancyModal"
-                       th:onclick="'showVacancy('+${vacancy.id}+')'"></a>
-                </div>
-            </div>
-        </div>
-
-        <div sec:authorize="hasAnyRole('ROLE_SEEKER','ROLE_ADMIN')">
             <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-6">
                 </div>
-                <div class="col-sm-3">
-                    <h5><span>Отзывы о компании: </span>
-                        <input name="reviews-fix" type="number" class="rating fixed-rating"
-                               readonly="true" data-size="xs" data-rtl="false"
-                               th:value="${employerProfile.getAverageRating()}">
-                    </h5>
-                    <div th:if="${reviewStatus == false}">
-                        <p>Еще нет отзывов</p>
+            </div>
+            <div class="col-lg-5 empCard" id="empVacancies">
+                <div class="card mb-3">
+                    <h3 class="card-header">Наши вакансии:</h3>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <li th:each="vacancy, index: ${vacancies}" class="card border-success" style="margin-bottom: 20px"
+                                data-toggle="modal" data-target="#vacancyModal" th:onclick="'showVacancy('+${vacancy.id}+')'">
+                                <div class="card-header"><span th:text="${vacancy.headline}"></span></div>
+                                <div class="card-body"><span th:text="${vacancy.shortDescription}"></span></div>
+                            </li>
+                        </div>
                     </div>
-                    <div th:if="${maxReviewsEvaluation != null}" class="panel panel-default">
-                        <a th:href="@{'/seeker/' + ${maxReviewsEvaluation.seekerProfile.id}}"
-                           th:text="${maxReviewsEvaluation.seekerProfile.name}"></a> <span
-                            th:text="${#dates.format(maxReviewsEvaluation.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
-                        <input name="reviews-fix" type="number" class="rating fixed-rating"
-                               readonly="true" data-size="xs" data-rtl="false"
-                               th:value="${maxReviewsEvaluation.evaluation}">
-                        <p th:text="${maxReviewsEvaluation.reviews}"></p>
-                    </div>
-                    <div th:if="${minReviewsEvaluation != null}" class="panel panel-default">
-                        <a th:href="@{'/seeker/' + ${minReviewsEvaluation.seekerProfile.id}}"
-                           th:text="${minReviewsEvaluation.seekerProfile.name}"></a> <span
-                            th:text="${#dates.format(minReviewsEvaluation.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
-                        <input name="reviews-fix" type="number" class="rating fixed-rating"
-                               readonly="true" data-size="xs" data-rtl="false"
-                               th:value="${minReviewsEvaluation.evaluation}">
-                        <p th:text="${minReviewsEvaluation.reviews}"></p>
-                    </div>
-                    <div class="container-fluid">
+                </div>
+            </div>
+            <div class="col-lg-5 empCard">
+                <div class="card mb-3">
+                    <h3 class="card-header"><span id="EPcompanyName" th:text="${employerProfile.companyName}"></span></h3>
+                    <div class="card-body">
                         <div class="row">
-                            <div class="col-sm-6">
-                                <button type="button" class="btn btn-primary btn-sm btn-block"
-                                        data-toggle="modal"
-                                        data-target="#reviewsModal">Оставить отзыв
-                                </button>
+                            <div class="col-lg-6" style="position: relative">
+                                <img th:src="@{'data:image/png;base64,' + ${logoimg}}" class="img-rounded" alt="Logo of company">
                             </div>
-                            <div class="col-sm-6" th:if="${employerProfile.getReviews().size() > 2}">
-                                <button type="button" class="btn btn-primary btn-sm btn-block"
-                                        data-toggle="modal"
-                                        data-target="#allReviewsModal">Все отзывы
-                                </button>
+                            <div class="col-lg-6" style="position: relative">
+                                <input name="reviews-fix" type="number" class="rating fixed-rating rating-loading" readonly="true" data-size="xs" data-rtl="false"
+                                       th:value="${employerProfile.getAverageRating()}">
                             </div>
                         </div>
+                    </div>
+
+                    <div class="card-body">
+                        <p class="card-text"><span th:text="${employerProfile.description}"></span></p>
+                        <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <span id="EPId" th:text="${employerProfile.id}" hidden></span>
+                            <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown">
+                                Блокировать<span
+                                    class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a onclick="blockEmployerProfile(1)">На сутки</a></li>
+                                <li><a onclick="blockEmployerProfile(3)">На 3 дня</a></li>
+                                <li><a onclick="blockEmployerProfile(7)">На 7 дней</a></li>
+                                <li><a onclick="blockEmployerProfile(14)">На 14 дней</a></li>
+                                <li><a onclick="blockEmployerProfile(0)">Бессрочно</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <a th:href="@{'http://' + ${employerProfile.website}}" th:text="${employerProfile.website}"></a>
+                    </div>
+                </div>
+                <div sec:authorize="hasAnyRole('ROLE_SEEKER','ROLE_ADMIN')">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><span>Отзывы о компании: </span>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div th:if="${reviewStatus == false}">
+                                    <p>Еще нет отзывов</p>
+                                </div>
+
+                                <div th:if="${maxReviewsEvaluation != null}" class="panel panel-default">
+                                    <a th:href="@{'/seeker/' + ${maxReviewsEvaluation.seekerProfile.id}}"
+                                       th:text="${maxReviewsEvaluation.seekerProfile.name}"></a> <span
+                                        th:text="${#dates.format(maxReviewsEvaluation.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
+                                    <input name="reviews-fix" type="number" class="rating fixed-rating"
+                                           readonly="true" data-size="xs" data-rtl="false"
+                                           th:value="${maxReviewsEvaluation.evaluation}">
+                                    <p th:text="${maxReviewsEvaluation.reviews}"></p>
+                                </div>
+
+                                <div th:if="${minReviewsEvaluation != null}" class="panel panel-default">
+                                    <a th:href="@{'/seeker/' + ${minReviewsEvaluation.seekerProfile.id}}"
+                                       th:text="${minReviewsEvaluation.seekerProfile.name}"></a> <span
+                                        th:text="${#dates.format(minReviewsEvaluation.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
+                                    <input name="reviews-fix" type="number" class="rating fixed-rating"
+                                           readonly="true" data-size="xs" data-rtl="false"
+                                           th:value="${minReviewsEvaluation.evaluation}">
+                                    <p th:text="${minReviewsEvaluation.reviews}"></p>
+                                </div>
+
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <button type="button" class="btn btn-success btn-sm btn-block"
+                                                    data-toggle="modal"
+                                                    data-target="#reviewsModal">Оставить отзыв
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-6" th:if="${employerProfile.getReviews().size() > 2}">
+                                            <button type="button" class="btn btn-success btn-sm btn-block"
+                                                    data-toggle="modal"
+                                                    data-target="#allReviewsModal">Все отзывы
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- vacancyModal -->
+    <div id="vacancyModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><span id="VMHeadline"></span><br/></h3>
+                </div>
+                <div class="modal-body">
+                    <h6>Теги:</h6>
+                    <h6><span id="VMTags"></span></h6>
+                    <h6>Город:</h6>
+                    <h6><span id="VMCity"></span></h6>
+                    <span id="VMRemote"> (Удаленная работа)</span>
+                    <a data-toggle="collapse" data-target="#map_collapse" style="color: #3498DB; white-space: pre" >Показать на карте   <span class="far fa-map"></span></a><br/>
+                    <div id="map_collapse" class="collapsed collapse">
+                        <div id="map" style="height: 300px"></div>
+                    </div><br/>
+                    <h6>Адрес:</h6>
+                    <h6><span id="VMAddress"></span></h6><br/>
+                    <h6 style="white-space: pre; color: red">Зарплата:  <span id="VMSalary"></span></h6><br/>
+                    <span>Подробное описание:</span><br/>
+                    <div class="well well-sm">
+                        <span id="VMDescription"></span>
+                    </div>
+                    <span id="VMId" hidden></span>
+                </div>
+                <div class="modal-footer">
+                    <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown">
+                            Блокировать<span class="caret"></span></button>
+                        <ul class="dropdown-menu dropdown-menu-right" style="right: 84px;">
+                            <li><a onclick="blockVacancy(1)">На сутки</a></li>
+                            <li><a onclick="blockVacancy(3)">На 3 дня</a></li>
+                            <li><a onclick="blockVacancy(7)">На 7 дней</a></li>
+                            <li><a onclick="blockVacancy(14)">На 14 дней</a></li>
+                            <li><a onclick="blockVacancy(0)">Бессрочно</a></li>
+                        </ul>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    </div>
+                    <div sec:authorize="!hasRole('ROLE_ADMIN')">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                     </div>
                 </div>
             </div>
@@ -151,59 +218,6 @@
                     <input name="_csrf" type="hidden" th:value="${_csrf.token}"/>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
                     <button type="button" class="btn btn-primary postReview">Добавить отзыв</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- vacancyModal -->
-    <div id="vacancyModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title" th:text="'Вакансия в компании ' + ${employerProfile.companyName}"></h2>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <h3><span id="VMTags"></span><br></h3>
-                    <h3><span id="VMHeadline"></span><br/></h3>
-                    <span id="VMCity"></span>
-                    <span id="VMRemote"> (Удаленная работа)</span><br/>
-                    <span id="VMAddress"></span>
-                    <a data-toggle="collapse" data-target="#map_collapse"> Показать на карте</a>
-                    <div id="map_collapse" class="collapsed collapse">
-                        <div id="map" style="height: 300px"></div>
-                    </div>
-                    <br/>
-                    <span id="VMSalary"></span><br/>
-                    <span>Краткое описание:</span><br/>
-                    <div class="well well-sm">
-                        <span id="VMShortDescription"></span>
-                    </div>
-                    <span>Подробное описание:</span><br/>
-                    <div class="well well-sm">
-                        <span id="VMDescription"></span>
-                    </div>
-                    <span id="VMId" hidden></span>
-                </div>
-                <div class="modal-footer">
-                    <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
-                        <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown">
-                            Блокировать<span
-                                class="caret"></span></button>
-                        <ul class="dropdown-menu dropdown-menu-right" style="right: 84px;">
-                            <li><a onclick="blockVacancy(1)">На сутки</a></li>
-                            <li><a onclick="blockVacancy(3)">На 3 дня</a></li>
-                            <li><a onclick="blockVacancy(7)">На 7 дней</a></li>
-                            <li><a onclick="blockVacancy(14)">На 14 дней</a></li>
-                            <li><a onclick="blockVacancy(0)">Бессрочно</a></li>
-                        </ul>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    </div>
-                    <div sec:authorize="!hasRole('ROLE_ADMIN')">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    </div>
                 </div>
             </div>
         </div>
