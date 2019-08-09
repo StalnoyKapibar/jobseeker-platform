@@ -45,6 +45,7 @@ function update(id) {
     var description = document.getElementById("description").value;
     var vacansies = JSON.parse(sessionStorage.getItem('vacancies'));
 
+
 }
 
 function add_emploer_img(id) {
