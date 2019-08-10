@@ -485,6 +485,7 @@ function removeDislike(reviewId, seekerProfileId) {
         success: function (data) {
             $('#reviewDislike_' + reviewId).removeClass('voted');
             $('#reviewDislikeCount_' + reviewId).text(data.dislike);
+            reviewEditBasedOnVotes();
         },
         error: function (error) {
             console.log(error);
@@ -506,6 +507,7 @@ function updateDislike(reviewId, seekerProfileId) {
             $('#reviewDislike_' + reviewId).addClass('voted');
             $('#reviewLikeCount_' + reviewId).text(data.like);
             $('#reviewDislikeCount_' + reviewId).text(data.dislike);
+            reviewEditBasedOnVotes();
         },
         error: function (error) {
             console.log(error);
@@ -533,6 +535,7 @@ function addDislike(reviewId, seekerProfileId, employerProfileId) {
         success: function (data) {
             $('#reviewDislike_' + reviewId).addClass('voted');
             $('#reviewDislikeCount_' + reviewId).text(data.dislike);
+            reviewEditBasedOnVotes();
         },
         error: function (error) {
             console.log(error);
