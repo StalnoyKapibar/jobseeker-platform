@@ -54,6 +54,9 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     @Column(name = "salarymax")
     private Integer salaryMax;
 
+    @Column(name = "publication_position")
+    private Integer publicationPosition;
+
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Tag> tags;
 
@@ -167,6 +170,10 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     public State getState() {
         return state;
     }
+
+    public Integer getPublicationPosition(){return publicationPosition;}
+
+    public void setPublicationPosition(Integer publicationPosition){this.publicationPosition = publicationPosition;}
 
     public void setState(State state) {
         this.state = state;

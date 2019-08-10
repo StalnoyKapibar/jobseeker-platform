@@ -9,8 +9,10 @@ $( document ).ready(function() {
             $('#trckVacancies li').each(function () {
                     vacancies.push({'position':$(this).index()+1, 'id':$(this).find('span').data('id')});
             });
-            var saveSort = {'vacancies':vacancies};
-            sessionStorage.setItem('vacancies', JSON.stringify(saveSort));
+            // var saveSort = {vacancies};
+            // sessionStorage.setItem('vacancies', JSON.stringify(vacancies));
+            sessionStorage.setItem('vacancies', JSON.stringify(vacancies));
+
         }
     });
 
@@ -26,15 +28,41 @@ function update(id) {
     var site = document.getElementById("companywebsite").value;
     var description = document.getElementById("description").value;
     var vacansies = JSON.parse(sessionStorage.getItem('vacancies'));
+    var vac = {'publicationPosition': 2,
+        'id': 4};
+
+    var obj = {
+        'profile':
+            {'id':id,
+            'companyname':companyName,
+            'site':site,
+            'description':description,
+            },
+        'vacancies': vacansies};
+
+
+    // var profile = {
+    //     'id': id,
+    //     'companyName': companyName,
+    //     'website': site,
+    //     'description': description,
+    //
+    //
+    // }
+
 
     $.ajax({
         type: 'post',
-        url: "/api/employerprofiles/update?" +
-            "id=" + id +
-            "companyname"+companyName+
-            "site"+site+
-            "description"+description+
-            "vacansies"+vacansies,
+        // url: "/api/employerprofiles/update?" +
+        //     "id=" + id +
+        //     "companyname="+companyName+
+        //     "site="+site+
+        //     "description="+description+
+        //     "vacs="+JSON.stringify(vac),
+        url: "/api/employerprofiles/update",
+        data: JSON.stringify(obj)
+        ,
+        dataType: "json",
         contentType: 'application/json; charset=utf-8',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
