@@ -3,6 +3,9 @@ var header = $("meta[name='_csrf_header']").attr("content");
 
 $(document).ready(function () {
     printSeekerNews();
+
+    let seekerNewsLine = window.document.getElementById("seekerNewsLine");
+    seekerNewsLine.onmouseover = seekerNewsLine.onmouseout = handler;
 });
 
 $(window).scroll(function () {
@@ -10,6 +13,21 @@ $(window).scroll(function () {
         printSeekerNews();
     }
 });
+
+function handler(event) {
+    if (event.type === 'mouseover') {
+        // если наводим на карту с новостью или на сердце, то вызываем метод счёта просмотров
+        if (event.target.className === "card-body" || event.target.className === "far fa-heart") {
+            viewCount(event.target.parentNode.id.substring(9));
+        }
+
+        // если наводим на комментарий, то вызываем метод счёта просмотров
+        if (event.target.className === "far fa-comments") {
+            viewCount(event.target.parentNode.id.substring(13));
+        }
+    }
+}
+
 
 function printSeekerNews() {
     var seekerProfileId = $('#seekerProfileId').val();
@@ -50,7 +68,7 @@ function printSeekerNews() {
                     '</div>' +
                     // Див с классом "newsAction" сделан для примера работы функционала карточки новости
                     '<div class="card-footer newsAction">' +
-                    '<div class="views" id="views_' + item.id + '" onclick="viewCount(' + item.id + ')"><i class="far fa-eye"></i><span></span>' + numberOfViews + '</div>' +
+                    '<div class="views" id="views_' + item.id + '"><i class="far fa-eye"></i><span></span>' + numberOfViews + '</div>' +
                     '<div class="like" id="like_' + item.id + '"><span id="newsLike_' + item.id + '" onclick="like(' + item.id + ')"><i class="far fa-heart"></i>623</span></div>' +
                     '<div class="comments" id="comments_' + item.id + '"><span id="viewComments_' + item.id + '" onclick="printComments(' + item.id + ')"><i class="far fa-comments"></i>23</span></div>' +
                     '</div>' +
@@ -88,29 +106,34 @@ function getShortDescription(newsId) {
 
 function viewCount(id) {
     let views = window.document.getElementById("views_" + id);
-    $.ajax({
-        type: 'post',
-        url: "/api/news/updateNews?newsId=" + id + "&viewed=" + true,
-        contentType: 'application/json; charset=utf-8',
-        beforeSend: function (request) {
-            request.setRequestHeader(header, token);
-        },
-        success: function (amount) {
-            views.textContent = "";
-            let eye = document.createElement("i");
-            eye.className = "far fa-eye";
-            let numberOfViews = document.createElement("span");
 
-            views.appendChild(eye);
-            numberOfViews.textContent = amount;
-            views.appendChild(numberOfViews);
-        },
-        error: function (error) {
-            console.log(error);
-            alert(error.toString());
-        }
-    });
+    if (views.getAttribute("view") === null) {
+        views.setAttribute("view", "viewed");
+        $.ajax({
+            type: 'post',
+            url: "/api/news/updateNews?newsId=" + id + "&viewed=" + true,
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (request) {
+                request.setRequestHeader(header, token);
+            },
+            success: function (amount) {
+                views.textContent = "";
+                let eye = document.createElement("i");
+                eye.className = "far fa-eye";
+                let numberOfViews = document.createElement("span");
+
+                views.appendChild(eye);
+                numberOfViews.textContent = amount;
+                views.appendChild(numberOfViews);
+            },
+            error: function (error) {
+                console.log(error);
+                alert(error.toString());
+            }
+        });
+    }
 }
+
 
 function like(id) {
     $('#newsLike_' + id).remove();
