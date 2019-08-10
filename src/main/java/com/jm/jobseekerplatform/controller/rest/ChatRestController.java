@@ -118,7 +118,7 @@ public class ChatRestController {
 
         for (int i = chatMessageList.size() - 1; i >= 0; i--) {
             ChatMessage chatMessage = chatMessageList.get(i);
-            if (chatMessage.getId() <= messageReadDataDTO.getLastReadMessageId() && //todo (Nick Dolgopolov) по id или надо по дате?
+            if (/*chatMessage.getId() <= messageReadDataDTO.getLastReadMessageId() &&*/ //todo (Nick Dolgopolov) по id или надо по дате?
                     !chatMessage.getCreatorProfile().getId().equals(messageReadDataDTO.getReaderProfileId()) &&
                     !chatMessage.getIsReadByProfilesId().contains(messageReadDataDTO.getReaderProfileId())) {
                 chatMessage.getIsReadByProfilesId().add(messageReadDataDTO.getReaderProfileId());

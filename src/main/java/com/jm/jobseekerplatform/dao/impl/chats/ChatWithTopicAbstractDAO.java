@@ -178,11 +178,16 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
 
         List<ChatInfoDetailWithTopicDTO> listOfChatInfoDetailWithTopicDTO =
                 entityManager.createQuery("SELECT new com.jm.jobseekerplatform.dto.ChatInfoDetailWithTopicDTO(" +
-                        "c, COUNT (DISTINCT m1), MAX(m1) " +
+                        "c, sum (case when (:profileId NOT MEMBER OF m2.isReadByProfilesId ) then 1 else 0 end), MAX(m2) " +
                         ") " +
                         "FROM " + clazz.getName() + " c " +
-                        "JOIN c.chatMessages m1 " +
+//                        "LEFT JOIN c.chatMessages m1 " +
+                        "JOIN c.chatMessages m2 " +
+                        "WHERE (c.creatorProfile.id = :profileId " +
+                        "OR c.topic.creatorProfile.id = :profileId " +
+                        "OR m2.creatorProfile.id = :profileId) " +
                         "GROUP BY c.id", ChatInfoDetailWithTopicDTO.class)
+                        .setParameter("profileId", profileId)
                         .getResultList();
 
 //        Более строгий запрос. Выбор последнего сообщения по дате, а не по id

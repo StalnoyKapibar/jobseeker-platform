@@ -6,9 +6,10 @@ import com.jm.jobseekerplatform.model.chats.ChatMessage;
 public class ChatInfoDetailDTO extends ChatInfoDTO {
 
     private ChatMessage lastMessage;
+
     private long countOfUnreadMessages;
 
-    public ChatInfoDetailDTO(Chat chat, long countOfUnreadMessages, ChatMessage lastMessage) {
+    public ChatInfoDetailDTO(Chat chat, Long countOfUnreadMessages, ChatMessage lastMessage) {
         super(chat);
 
         this.countOfUnreadMessages = countOfUnreadMessages;
@@ -21,5 +22,13 @@ public class ChatInfoDetailDTO extends ChatInfoDTO {
 
     public void setLastMessage(ChatMessage lastMessage) {
         this.lastMessage = lastMessage;
+    }
+
+    public long getCountOfUnreadMessages() {
+        return countOfUnreadMessages;
+    }
+
+    public void setCountOfUnreadMessages(long countOfUnreadMessages) {
+        this.countOfUnreadMessages = countOfUnreadMessages;
     }
 }

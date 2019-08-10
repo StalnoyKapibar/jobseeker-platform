@@ -21,7 +21,7 @@ public class ChatInfoDetailWithTopicDTO extends ChatInfoDetailDTO {
 
     private String topicTitle;
 
-    public ChatInfoDetailWithTopicDTO(ChatWithTopicVacancy chatWithTopic, long countOfUnreadMessages, ChatMessage lastMessage) {
+    public ChatInfoDetailWithTopicDTO(ChatWithTopicVacancy chatWithTopic, Long countOfUnreadMessages, ChatMessage lastMessage) {
         super(chatWithTopic, countOfUnreadMessages, lastMessage);
         this.topicTitle = chatWithTopic.getTopic().getHeadline();
         InitCommon(chatWithTopic);

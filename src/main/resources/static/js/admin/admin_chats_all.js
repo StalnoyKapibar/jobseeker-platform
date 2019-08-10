@@ -40,3 +40,11 @@ $(document).ready(function () {
         ]
     });
 });
+
+/* globals Chart:false, feather:false */
+
+$(document).ready (function () {
+    'use strict';
+
+    feather.replace()
+});
