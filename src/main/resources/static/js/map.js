@@ -11,14 +11,27 @@ function initMap() {
 }
 
 function initV_Map() {
-if (typeof lat == "undefined"){lat=55.722030; lng=37.633685;}
+
+    $("#v_address_modal").val(document.getElementById('v_address').value);
+    if(!address_check){
+        $('#v_address_modal').removeClass('is-valid');
+        $('#v_address_modal').addClass('is-invalid');
+    }
+    else {
+        $('#v_address_modal').removeClass('is-invalid');
+        $('#v_address_modal').addClass('is-valid');
+    }
+    if (typeof lat == "undefined") {
+        lat = 55.722030;
+        lng = 37.633685;
+    }
     v_map = new google.maps.Map(document.getElementById('v_map'), {
         center: {lat: lat, lng: lng},
         zoom: 12
     });
 
-    v_marker= new google.maps.Marker({
-        position: {lat,lng},
+    v_marker = new google.maps.Marker({
+        position: {lat, lng},
         map: v_map,
         draggable: true
     });
@@ -29,13 +42,70 @@ if (typeof lat == "undefined"){lat=55.722030; lng=37.633685;}
             map: v_map,
             draggable: true
         });
+        lat=event.latLng.lat();
+        lng=event.latLng.lng();
         $("#v_address").val(getAddressByCoords(event.latLng.lat(), event.latLng.lng()));
+        $("#v_address_modal").val(getAddressByCoords(event.latLng.lat(), event.latLng.lng()));
         google.maps.event.addListener(v_marker, 'dragend', function (a) {
             $("#v_address").val(getAddressByCoords(a.latLng.lat(), a.latLng.lng()));
+            $("#v_address_modal").val(getAddressByCoords(a.latLng.lat(), a.latLng.lng()));
         });
         $("#v_address").removeClass("is-invalid");
+        $("#v_address_modal").removeClass("is-invalid");
         $("#v_address").addClass("is-valid");
+        $("#v_address_modal").addClass("is-valid");
         address_check = true;
+    });
+
+    var input = document.getElementById('v_address_modal');
+
+    var autocomplete = new google.maps.places.Autocomplete(input);
+
+    input.addEventListener("change", function () {
+        input.value = "";
+        $('#v_address_modal').removeClass('is-valid');
+        $('#v_address_modal').addClass('is-invalid');
+    });
+
+    autocomplete.addListener('place_changed', function () {
+        var place = autocomplete.getPlace();
+        document.getElementById('v_address').value = place.formatted_address;
+        $('#v_address_modal').removeClass('is-invalid');
+        $('#v_address_modal').addClass('is-valid');
+    });
+
+    autocomplete.bindTo('bounds', v_map);
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker = new google.maps.Marker({
+        map: v_map,
+        anchorPoint: new google.maps.Point(0, -29)
+    });
+
+    autocomplete.addListener('place_changed', function () {
+        infowindow.close();
+        marker.setVisible(false);
+        var place = autocomplete.getPlace();
+        if (!place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+        }
+
+        // If the place has a geometry, then present it on a map.
+        if (place.geometry.viewport) {
+            v_map.fitBounds(place.geometry.viewport);
+        } else {
+            v_map.setCenter(place.geometry.location);
+            v_map.setZoom(17);  // Why 17? Because it looks good.
+        }
+        v_marker.setVisible(false);
+        marker.setPosition(place.geometry.location);
+        lat=marker.getPosition().lat();
+        lng=marker.getPosition().lng();
+        marker.setVisible(true);
     });
 }
 
