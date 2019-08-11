@@ -368,13 +368,13 @@ li {
     color: #222;
 }
 
-.reviewVotes {
+.reviewVotes , .reviewVotesForEmployer{
     position: absolute;
     bottom: 0;
     right: 5%;
 }
 
-.reviewVotes span {
+.reviewVotes span , .reviewVotesForEmployer span {
     margin-right: 10px;
     font-size: 0.8em;
     color: var(--review-voted-count-color);
@@ -385,7 +385,7 @@ li {
     color: var(--review-voted-hoover);
 }
 
-.reviewVotes i {
+.reviewVotes i , .reviewVotesForEmployer i {
     margin-right: 5px;
 }
 
@@ -421,6 +421,19 @@ li {
     color: #999999;
     cursor: pointer;
 }
+
+.employerComplaint{
+    font-size: 1.3em;
+    position: absolute;
+    right: 2%;
+    top: -13%;
+    color: var(--review-voted-color);
+    cursor: pointer;
+}
+
+/*.employerComplaint:hover{
+
+}*/
 
 .editCardReview:hover {
     color: #777777;

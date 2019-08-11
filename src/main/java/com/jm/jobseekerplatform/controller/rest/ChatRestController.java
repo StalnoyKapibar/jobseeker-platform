@@ -41,7 +41,7 @@ public class ChatRestController {
     public HttpEntity getAllLastMessages() { //todo (Nick Dolgopolov)
         List<MessageWithDateDTO> lastMessages = chatMessageService.getAllLastMessages();
         Collections.sort(lastMessages);
-        return new ResponseEntity(lastMessages, HttpStatus.OK);
+        return new ResponseEntity<>(lastMessages, HttpStatus.OK);
     }
 
     @GetMapping("all")
@@ -51,7 +51,7 @@ public class ChatRestController {
         List<ChatInfoDTO> chatsInfo = getChatInfoDTOs(chats);
 
         //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov)
-        return new ResponseEntity(chatsInfo, HttpStatus.OK);
+        return new ResponseEntity<>(chatsInfo, HttpStatus.OK);
     }
 
     @GetMapping("my/{profileId:\\d+}")
@@ -66,7 +66,7 @@ public class ChatRestController {
         List<ChatInfoDTO> chatsInfo = getChatInfoDTOs(chats);
 
         //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov)
-        return new ResponseEntity(chatsInfo, HttpStatus.OK);
+        return new ResponseEntity<>(chatsInfo, HttpStatus.OK);
     }
 
     private List<ChatInfoDTO> getChatInfoDTOs(Collection<ChatWithTopicVacancy> chats) {

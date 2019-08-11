@@ -93,4 +93,11 @@ public class EmployerController {
         model.addAttribute("employerProfileId", employerProfileId);
         return "employer_all_news";
     }
+
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @RequestMapping("/employer/chats/{employerProfileId}")
+    public String EmployerPageChatsMy(@PathVariable Long employerProfileId, Authentication authentication, Model model) {
+        model.addAttribute("employerProfileId", employerProfileId);
+        return "employer_chats_my";
+    }
 }

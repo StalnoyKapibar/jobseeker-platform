@@ -83,11 +83,11 @@ public class AdminController {
         }
 
         if (sizeParam != null && !sizeParam.isEmpty()) {
-            size = Integer.parseInt(request.getParameter("size"));
+            size = Integer.parseInt(sizeParam);
         }
 
         if (pageParam != null && !pageParam.isEmpty()) {
-            page = Integer.parseInt(request.getParameter("page")) - 1;
+            page = Integer.parseInt(pageParam) - 1;
         }
 
         Page<EmployerUser> employerUsers = employerUserService.findAll(PageRequest.of(page, size, lastVisitSort));
