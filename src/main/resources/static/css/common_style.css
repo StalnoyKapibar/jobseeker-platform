@@ -86,13 +86,11 @@ li {
 
 .sidebar a {
     text-decoration: none;
-    /*color: #7295b1;*/
     color: var(--sidebar-text-color);
     display: block;
 }
 
 .sidebar li :hover {
-    /*color: #4177A3;*/
     color: #F39C12;
 }
 
@@ -173,7 +171,6 @@ li {
     font-size: 20px;
     font-weight: bold;
     color: #3498DB;
-    /*color: #7295b1;*/
 }
 
 .container-fluid .vacancyTags {
@@ -183,7 +180,6 @@ li {
 }
 
 .container-fluid .btnClick {
-    /*background-color: teal;*/
     background-color: #F39C12;
     cursor: pointer;
     margin: 3px;

@@ -48,6 +48,8 @@
                                 <ul id="searchList" class="list-group"></ul>
                             </div>
                         </div>
+                        <div sec:authorize="hasRole('ROLE_SEEKER')" id="viewedVac" class="container" style="padding-right: 0px; padding-left: 0px">
+                        </div>
                     </div>
                 </div>
                 <div class="row" style="height: 200px">
@@ -64,6 +66,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Modal -->
             <div id="vacancyModal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
@@ -90,6 +93,7 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>
 
