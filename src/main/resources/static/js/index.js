@@ -188,9 +188,6 @@ function searchResults() {
 }
 
 $(window).scroll(function () {
-    console.log($(document).height());
-    console.log($(window).height());
-    console.log($(window).scrollTop());
     if ($(document).height() - $(window).height() === $(window).scrollTop()) {
         if (block = true) {
             if (page < total_pages) {
@@ -449,16 +446,16 @@ function getViewedVacancies(user_id) {
 
 function salaryFormat(salarymin, salarymax) {
     var salary = '';
-    if (salarymin.localeCompare('0')!=0 && salarymax.localeCompare('0')!=0) {
+    if (salarymin != 0 && salarymax != 0) {
         return salary = '<span style="white-space: pre">от:  ' + salarymin + ' &#8381   до:  ' + salarymax +' &#8381</span>';
     }
-    else if (salarymin.localeCompare('0')==0 && salarymax.localeCompare('0')!=0) {
+    else if (salarymin == 0 && salarymax != 0) {
         return salary = '<span style="white-space: pre">до:  ' + salarymax +' &#8381</span>';
     }
-    else if (salarymin.localeCompare('0')!=0 && salarymax.localeCompare('0')==0) {
+    else if (salarymin != 0 && salarymax == 0) {
         return salary = '<span style="white-space: pre">от:  ' + salarymin + ' &#8381</span>';
     }
-    else if (salarymin.localeCompare('0')==0 && salarymax.localeCompare('0')==0) {
+    else if (salarymin == 0 && salarymax == 0) {
         return salary = '<span style="white-space: pre">Зарплата не указана</span>';
     }
 }
