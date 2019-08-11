@@ -45,16 +45,14 @@ var block = false;
 var point;
 var city;
 var blockScroll = false;
-var viewed_vacancies;
+var user_id = null;
 
 $(function () {
-    var user_id = null;
     var seekerAuthority = $('#seekerAuthority').val();
 
     if (seekerAuthority) {
         user_id = $('#seekerProfileId').val();
         seeker_tags = getSeekerTags(user_id);
-        viewed_vacancies = getViewedVacancies(user_id);
     }
 
     getCurrentLocation(function () {
@@ -129,6 +127,7 @@ function deleteButton(id) {
 
 function searchResults() {
     blockScroll = true;
+    $("#empCardVac").remove();
     $('#allVacancies').remove();
     $('#searchList').remove();
     $('#searchResult').append('<ul id="searchList" class="list-group"></ul>');
@@ -157,7 +156,7 @@ function searchResults() {
             },
             data: JSON.stringify(param),
             success: function (data) {
-                if (data.length === 0) {
+                if (data.content.length === 0) {
                     if (searchBox.length === 0 && param.length > 0) {
                         $('#searchHeader').text('По запросу "' + param[0].name + '" ничего не найдено');
                     } else {
@@ -169,7 +168,13 @@ function searchResults() {
                     } else {
                         $('#searchHeader').text('Вакансии по тегам :');
                     }
-                    printVacancies(data);
+                    printVacancies(data.content);
+                    total_pages = data.totalPages;
+                    if (total_pages == 1) {
+                        if (user_id != null) {
+                            getViewedVacancies(user_id);
+                        }
+                    }
                     pageCount++;
                     $('#scrollPageCount').val(pageCount);
                 }
@@ -183,7 +188,24 @@ function searchResults() {
 }
 
 $(window).scroll(function () {
+    console.log($(document).height());
+    console.log($(window).height());
+    console.log($(window).scrollTop());
     if ($(document).height() - $(window).height() === $(window).scrollTop()) {
+        if (block = true) {
+            if (page < total_pages) {
+                if (blockScroll==false) {
+                    getSortedVac(point);
+                }
+            } else if (page == total_pages) {
+                if (blockScroll==false) {
+                    getSortedVac(point);
+                    if (user_id != null) {
+                        getViewedVacancies(user_id);
+                    }
+                }
+            }
+        }
         if ($('#search_box').val() === '' && $('#isAVShow').val() === '0') {
             return;
         } else {
@@ -197,29 +219,39 @@ $(window).scroll(function () {
                 };
                 param.push(tag);
             });
-
             var pageCount = $('#scrollPageCount').val();
-            $.ajax({
-                type: 'post',
-                url: "api/vacancies/search?pageCount=" + pageCount,
-                contentType: 'application/json; charset=utf-8',
-                beforeSend: function (request) {
-                    request.setRequestHeader(header, token);
-                },
-                data: JSON.stringify(param),
-                success: function (data) {
-                    printVacancies(data);
-                    pageCount++;
-                    $('#scrollPageCount').val(pageCount);
-                },
-                error: function (error) {
-                    console.log(error);
-                    alert(error.toString());
+            if (pageCount < total_pages-1){
+                searchVac(pageCount, param)
+            } else if (pageCount == total_pages-1) {
+                searchVac(pageCount, param);
+                if (user_id != null) {
+                    getViewedVacancies(user_id);
                 }
-            })
+            }
         }
     }
 });
+
+function searchVac(pageCount, param) {
+    $.ajax({
+        type: 'post',
+        url: "api/vacancies/search?pageCount=" + pageCount,
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        data: JSON.stringify(param),
+        success: function (data) {
+            printVacancies(data.content);
+            pageCount++;
+            $('#scrollPageCount').val(pageCount);
+        },
+        error: function (error) {
+            console.log(error);
+            alert(error.toString());
+        }
+    });
+}
 
 function printVacancies(data) {
     var favoriteVacancies = [];
@@ -279,7 +311,6 @@ function printVacancies(data) {
                 }
             });
             return bool;
-
         }
     });
 }
@@ -369,16 +400,6 @@ function getCityByCoords(lat, lng) {
 
 function getAllVacanciesByPoint(point) {
     getSortedVac(point);
-    $(window).scroll(function () {
-        if ($(document).height() - $(window).height() === $(window).scrollTop()) {
-            block = true;
-            if (page <= total_pages) {
-                if (blockScroll==false) {
-                    getSortedVac(point);
-                }
-            }
-        }
-    });
 }
 
 function getSortedVac(point) {
@@ -407,13 +428,39 @@ function getViewedVacancies(user_id) {
         type: "GET",
         async: false,
         success: function (vacancies) {
+            $("#viewedVac").append('<div class="empCard" id="empCardVac" style="margin-left: 0px;">' +
+                '<div class="card mb-3">' +
+                '<h3 class="card-header">Ранее просмотренные вакансии:</h3>' +
+                '<div class="card-body" style="overflow-x: scroll; white-space: nowrap;">' +
+                '<ul id="viewed_vacancies"></ul></div></div></div>');
             $.each(vacancies.reverse(), function (key, value) {
-                $("#seeker_footer").append(
-                    '<li class="btn btn-outline-light" data-toggle="modal" data-target="#vacancyModal" onclick="showVacancy('
-                    + value.id + ')" style="white-space: pre; color: #777777; font-size: small">' + value.headline + '</li>');
+                $("#viewed_vacancies").append(
+                    '<li class="card border-success" style="margin: 10px; display: inline-block">' +
+                    '<div class="card-header"><span>' + value.headline + '</span></div>' +
+                    '<div class="card-body"><h6 style="color: #777777;">Компания:</h6><span>' + value.companyname + '</span><br/><br/><h6 style="color: #777777;">Зарплата:</h6>'
+                    +salaryFormat(value.salarymin, value.salarymax)+'</div>' +
+                    '<div class="card-footer">' +
+                    '<span class="btn btn-outline-success btn-sm"' +
+                    ' onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span></div></li>');
             })
         }
     })
+}
+
+function salaryFormat(salarymin, salarymax) {
+    var salary = '';
+    if (salarymin.localeCompare('0')!=0 && salarymax.localeCompare('0')!=0) {
+        return salary = '<span style="white-space: pre">от:  ' + salarymin + ' &#8381   до:  ' + salarymax +' &#8381</span>';
+    }
+    else if (salarymin.localeCompare('0')==0 && salarymax.localeCompare('0')!=0) {
+        return salary = '<span style="white-space: pre">до:  ' + salarymax +' &#8381</span>';
+    }
+    else if (salarymin.localeCompare('0')!=0 && salarymax.localeCompare('0')==0) {
+        return salary = '<span style="white-space: pre">от:  ' + salarymin + ' &#8381</span>';
+    }
+    else if (salarymin.localeCompare('0')==0 && salarymax.localeCompare('0')==0) {
+        return salary = '<span style="white-space: pre">Зарплата не указана</span>';
+    }
 }
 
 
