@@ -133,18 +133,34 @@ $(document).ready(function () {
     reviewEditBasedOnVotes();
 });
 
+function sortByNestedText(parent, childSelector, keySelector) {
+    var items = parent.children(childSelector).sort(function (a, b) {
+        var vA = $(keySelector, a).text();
+        var vB = $(keySelector, b).text();
+        return (vA > vB) ? -1 : (vA < vB) ? 1 : 0;
+    });
+    parent.append(items);
+}
+
+function sortByLikes(){
+    sortByNestedText($('#reviews'), "div", "span.likes");
+}
+
+function sortByDislikes(){
+    sortByNestedText($('#reviews'), "div", "span.dislikes");
+}
+
 function reviewEditBasedOnVotes() {
     var x = document.getElementsByClassName("editCardReview");
     for (i = 0; i < x.length; i++) {
         let blockId = x[i].id;
-        blockId = blockId.substring(blockId.indexOf('_')+1);
-        let likes= parseInt(document.getElementById('reviewLikeCount_'+blockId).innerHTML);
-        let dislikes=parseInt(document.getElementById('reviewDislikeCount_'+blockId).innerHTML);
-        let sum=likes+dislikes;
-        if (sum>=5){
+        blockId = blockId.substring(blockId.indexOf('_') + 1);
+        let likes = parseInt(document.getElementById('reviewLikeCount_' + blockId).innerHTML);
+        let dislikes = parseInt(document.getElementById('reviewDislikeCount_' + blockId).innerHTML);
+        let sum = likes + dislikes;
+        if (sum >= 5) {
             x[i].style.display = "none";
-        }
-        else {
+        } else {
             x[i].style.display = "block"
         }
     }

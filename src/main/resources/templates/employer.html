@@ -150,7 +150,9 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <button class="button" onclick="sortByLikes()">Сортировка по лайкам</button>
+                                        <button class="button" onclick="sortByDislikes()">Сортировка по дизлайкам</button>
+                                        <div class="row" id="reviews">
                                             <th:block th:each="review : ${employerProfileReviews}">
                                                 <div class="col-sm-6">
                                                     <div class="reviewCard" style="margin-top: 20px"
@@ -212,14 +214,14 @@
                                                                                   th:id="'reviewLike_' + ${review.id}"
                                                                                   th:onclick="'toLike('+ ${review.id} +')'">
                                                                                 <i class="fas fa-thumbs-up"></i>
-                                                                                <span th:id="'reviewLikeCount_'+${review.id}"
+                                                                                <span class="likes" th:id="'reviewLikeCount_'+${review.id}"
                                                                                       th:text="${review.like}"></span>
                                                                             </span>
                                                                             <span class="reviewDislike"
                                                                                   th:id="'reviewDislike_' + ${review.id}"
                                                                                   th:onclick="'toDislike('+ ${review.id} +')'">
                                                                                     <i class="fas fa-thumbs-down"></i>
-                                                                                    <span th:id="'reviewDislikeCount_'+${review.id}"
+                                                                                    <span class="dislikes" th:id="'reviewDislikeCount_'+${review.id}"
                                                                                           th:text="${review.dislike}"></span>
                                                                             </span>
                                                                         </span>
