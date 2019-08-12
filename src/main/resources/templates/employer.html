@@ -170,7 +170,8 @@
                                                                          th:text="${#dates.format(review.dateReviews, 'yyyy-MM-dd HH:mm')}">
                                                                     </div>
                                                                     <div class="editCardReview"
-                                                                         th:if="${review.seekerProfile.id eq seekerProfileId}">
+                                                                         th:id="'editCardReview_' + ${review.id}"
+                                                                         th:if="${review.seekerProfile.id eq seekerProfileId and (T(java.lang.System).currentTimeMillis()-review.dateReviews.getTime()) < 604800000}">
                                                                         <i data-toggle="modal"
                                                                            data-target="#editReviewModal"
                                                                            title="редактитовать отзыв"
