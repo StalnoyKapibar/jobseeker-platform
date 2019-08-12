@@ -4,6 +4,8 @@ import com.jm.jobseekerplatform.model.Portfolio;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -36,6 +38,7 @@ public class SeekerProfile extends Profile implements Serializable {
     private Set<Portfolio> portfolios;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Vacancy> favoriteVacancy;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

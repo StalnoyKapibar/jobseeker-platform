@@ -78,14 +78,14 @@ function add_emploer_img(id) {
     });
 }
 
-function show_delete_vacancy_alert(vacancyId, headline) {
-    $('#vac_name_to_del').append(headline);
+function show_delete_vacancy_alert(vacancyId) {
+    $('#vac_name_to_del').text($('[data-id = '+vacancyId+']').text());
     $('#del_vac_allert').modal('show');
     $('#del_yes').click( function () {
         $.ajax({
             type: 'post',
-            url: "/api/employerprofiles/delete_vacancy",
-            data: JSON.stringify({'vacancy':vacancyId})
+            url: "/api/vacancies/delete",
+            data: JSON.stringify({'id':vacancyId})
             ,
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
@@ -95,6 +95,7 @@ function show_delete_vacancy_alert(vacancyId, headline) {
             success: function (vacancies) {
                 $('[data-id = '+vacancyId+']').remove();
                 $('#del_vac_allert').modal('show');
+
             },
             error: function (error) {
                 console.log(error);

@@ -138,6 +138,13 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         return new VacancyPageDTO(vacancies, totalPages);
     }
 
+    public void delete(Vacancy vacancy){
+        entityManager.unwrap(Session.class)
+                .createSQLQuery("delete from profile_favorite_vacancy where = favorite_vacancy_id = :id")
+                .setParameter("id", vacancy.getId());
+        entityManager.remove(vacancy);
+    }
+
     @Override
     public Vacancy getById(Long id) {
         return entityManager.createQuery("select v from Vacancy v where v.id=:id", Vacancy.class).setParameter("id", id)

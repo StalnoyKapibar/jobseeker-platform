@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -58,6 +60,7 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     private Integer publicationPosition;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Tag> tags;
 
     @OneToOne(fetch = FetchType.LAZY)
