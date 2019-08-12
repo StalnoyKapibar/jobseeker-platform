@@ -153,6 +153,30 @@ function sortByRating() {
     parent.append(items);
 }
 
+function sortByDateNewFirst() {
+    let parent = $('#reviews');
+    let childSelector = "div";
+    let keySelector="div.reviewDate";
+    let items = parent.children(childSelector).sort(function (a, b) {
+        let vA = $(keySelector, a).text();
+        let vB = $(keySelector, b).text();
+        return (vA > vB) ? -1 : (vA < vB) ? 1 : 0;
+    });
+    parent.append(items);
+}
+
+function sortByDateOldFirst() {
+    let parent = $('#reviews');
+    let childSelector = "div";
+    let keySelector="div.reviewDate";
+    let items = parent.children(childSelector).sort(function (a, b) {
+        let vA = $(keySelector, a).text();
+        let vB = $(keySelector, b).text();
+        return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
+    });
+    parent.append(items);
+}
+
 function sortByLikes(){
     sortByNestedText($('#reviews'), "div", "span.likes");
 }
