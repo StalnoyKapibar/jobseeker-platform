@@ -131,7 +131,24 @@ $(document).ready(function () {
 
     getReviewVotes(seekerProfileId, employerProfileId);
     reviewEditBasedOnVotes();
+    sortByDateNewFirst();
 });
+
+function sortType(sortType) {
+    if (sortType === 'sortByRatingDesc') {
+        sortByRatingDESC();
+    } else if (sortType === 'sortByRatingAsc') {
+        sortByRatingASC();
+    } else if (sortType === 'sortByDateNewFirst') {
+        sortByDateNewFirst();
+    } else if (sortType === 'sortByDateOldFirst') {
+        sortByDateOldFirst();
+    } else if (sortType === 'sortByLikes') {
+        sortByLikes();
+    } else if (sortType === 'sortByDislikes') {
+        sortByDislikes();
+    }
+}
 
 function sortByNestedText(parent, childSelector, keySelector) {
     let items = parent.children(childSelector).sort(function (a, b) {
@@ -162,6 +179,7 @@ function sortByRatingASC() {
         return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
     });
     parent.append(items);
+    document.getElementById('btnGroupDrop1').innerHTML='Date';
 }
 
 function sortByDateNewFirst() {
@@ -225,6 +243,9 @@ function hidePositive() {
 }
 
 function showAll() {
+    let e = document.getElementById("sortSelect");
+    let sort = e.options[e.selectedIndex].value;
+    sortType(sort);
     let parent = $('#reviews');
     let childSelector = "div";
     let items = parent.children(childSelector);

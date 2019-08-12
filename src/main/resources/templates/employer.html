@@ -150,15 +150,29 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <button class="button" onclick="sortByLikes()">Сортировка по лайкам</button>
-                                        <button class="button" onclick="sortByDislikes()">Сортировка по дизлайкам</button>
-                                        <button class="button" onclick="sortByRatingDESC()">Сортировка по рейтингу(Сначала лучшие)</button>
-                                        <button class="button" onclick="sortByRatingASC()">Сортировка по рейтингу(Сначала худшие)</button>
-                                        <button class="button" onclick="sortByDateNewFirst()">Сортировка по дате (сначала новые)</button>
-                                        <button class="button" onclick="sortByDateOldFirst()">Сортировка по дате (сначала старые)</button>
-                                        <button class="button" onclick="hideNegative()">Hide Negative</button>
-                                        <button class="button" onclick="hidePositive()">Hide Positive</button>
-                                        <button class="button" onclick="showAll()">Show All</button>
+
+                                        <div class="form-group">
+                                            <select class="mdb-select md-form md-outline colorful-select dropdown-primary" id="sortSelect" style="width: auto;" onchange="sortType(value)">
+                                                <option value="sortByDateNewFirst" selected>Сортировка по дате (сначала новые)</option>
+                                                <option value="sortByDateOldFirst">Сортировка по дате (сначала старые)</option>
+                                                <option value="sortByRatingDesc">Сортировка по рейтингу (сначала лучшие)</option>
+                                                <option value="sortByRatingAsc">Сортировка по рейтингу (сначала худшие)</option>
+                                                <option value="sortByLikes">Сортировка по лайкам</option>
+                                                <option value="sortByDislikes">Сортировка по дизлайкам</option>
+                                            </select>
+                                            <br>
+                                            <br>
+                                            <label class="radio-inline">
+                                                <input type="radio" checked onclick="showAll()" name="optradio">Показать все
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" onclick="hideNegative()" name="optradio">Скрыть негативные
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" onclick="hidePositive()" name="optradio">Скрыть положительные
+                                            </label>
+                                        </div>
+
                                         <div class="row" id="reviews">
                                             <th:block th:each="review : ${employerProfileReviews}">
                                                 <div class="col-sm-6">
