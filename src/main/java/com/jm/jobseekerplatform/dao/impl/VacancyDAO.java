@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.dto.VacancyPageDTO;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 
+import org.hibernate.Session;
 import org.hibernate.annotations.QueryHints;
 import org.hibernate.query.Query;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,15 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     //language=SQL
     private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.employerProfile.id = :param";
 
+    public List<Vacancy> getTrackedByEmployerProfileId(Long id) {
+        List<Vacancy> vacancies = new ArrayList<>();
+        Query query = entityManager.unwrap(Session.class)
+                .createSQLQuery("SELECT * FROM (SELECT * FROM vacancies where publication_position IS NOT NULL ORDER BY publication_position)as t where employer_profile_id = :id")
+                .addEntity(Vacancy.class)
+                .setParameter("id", id);
+        vacancies.addAll(query.getResultList());
+        return vacancies;
+    }
     public Set<Vacancy> getAllByTags(Set<Tag> tags, int limit) {
         Set<Vacancy> vacancies = new HashSet<>();
         vacancies.addAll(entityManager

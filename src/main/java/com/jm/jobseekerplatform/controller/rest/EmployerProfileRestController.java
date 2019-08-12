@@ -44,7 +44,7 @@ public class EmployerProfileRestController {
     }
 
     @RequestMapping("/{employerProfileId:\\d+}")
-    public EmployerProfile getEmployerProfileById(@PathVariable Long employerProfileId){
+    public EmployerProfile getEmployerProfileById(@PathVariable Long employerProfileId) {
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
         return employerProfile;
     }
@@ -52,42 +52,17 @@ public class EmployerProfileRestController {
     @RequestMapping(value = "/block/{vacancyId:\\d+}", method = RequestMethod.POST)
     public void blockEmployerProfile(@PathVariable("vacancyId") Long id, @RequestBody int periodInDays) {
         EmployerProfile employerProfile = employerProfileService.getById(id);
-        if (periodInDays == 0){
+        if (periodInDays == 0) {
             employerProfileService.blockPermanently(employerProfile);
         }
-        if (periodInDays > 0 && periodInDays < 15){
+        if (periodInDays > 0 && periodInDays < 15) {
             employerProfileService.blockTemporary(employerProfile, periodInDays);
         }
     }
 
-
-//    @PostMapping("/update")
-//    @ResponseBody
-//    public EmployerProfile editProfile (@RequestParam(value = "id") long id,
-//                                        @RequestParam(value = "companyname", required = false) String companyName,
-//                                        @RequestParam(value = "website", required = false) String website,
-//                                        @RequestParam(value = "description", required = false) String description) {
-//
-//        EmployerProfile profile = employerProfileService.getById(id);
-//        if(companyName!=null){
-//            profile.setCompanyName(companyName);
-//        }
-//        if(website!=null){
-//            profile.setWebsite(website);
-//        }
-//
-//        if(description!=null){
-//            profile.setDescription(description);
-//        }
-//        employerProfileService.update(profile);
-//
-//        return profile;
-//
-//    }
-
     @PostMapping("/update")
     @ResponseBody
-    public EmployerProfile  getSearchUserProfiles(@RequestBody String jsonReq) throws JSONException {
+    public EmployerProfile getSearchUserProfiles(@RequestBody String jsonReq) throws JSONException {
         JSONObject jsonData = new JSONObject(jsonReq);
         JSONObject jsonProfile = new JSONObject(String.valueOf(jsonData.getJSONObject("profile")));
         EmployerProfile updatedProfile = employerProfileService.getById(jsonProfile.getLong("id"));
@@ -96,28 +71,25 @@ public class EmployerProfileRestController {
         updatedProfile.setDescription(jsonProfile.getString("description"));
         JSONArray vacArr = jsonData.getJSONArray("vacancies");
         Set<Vacancy> profileVacansies = vacancyService.getAllByEmployerProfileId(jsonProfile.getLong("id"));
-        profileVacansies.forEach(n->n.setPublicationPosition(null));
+        profileVacansies.forEach(n -> n.setPublicationPosition(null));
         Vacancy vacancy;
-        for(int i = 0; i<vacArr.length(); i++){
+        for (int i = 0; i < vacArr.length(); i++) {
             vacancy = vacancyService.getById(vacArr.getJSONObject(i).getLong("id"));
             vacancy.setPublicationPosition(vacArr.getJSONObject(i).getInt("position"));
             vacancyService.update(vacancy);
         }
         employerProfileService.update(updatedProfile);
         return updatedProfile;
-
     }
-
 
     @RequestMapping(value = "/update_image", method = RequestMethod.POST)
     public String updateImage(@RequestParam(value = "id") long id,
                               @RequestParam(value = "image") MultipartFile img) {
         EmployerProfile profile = employerProfileService.getById(id);
-        if (img!=null) {
-            //                saveUploadedFiles(img);
+        if (img != null) {
             BufferedImage image = null;
             try {
-                image = ImageIO.read(new File(img.getOriginalFilename()));
+                image = ImageIO.read(new File());
                 profile.setLogo(imageService.resizePhotoSeeker(image));
                 employerProfileService.update(profile);
             } catch (IOException e) {
@@ -127,12 +99,4 @@ public class EmployerProfileRestController {
         }
         return Base64.getEncoder().encodeToString(profile.getLogo());
     }
-
-//    private void saveUploadedFiles(MultipartFile file) throws IOException {
-//
-//        byte[] bytes = file.getBytes();
-//        Path path = Paths.get(avaFolderPath + file.getOriginalFilename());
-//        Files.write(path, bytes);
-//    }
-
 }

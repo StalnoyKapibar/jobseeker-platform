@@ -24,43 +24,25 @@ $( document ).ready(function() {
 });
 
 function update(id) {
-    var companyName = document.getElementById("companyname").value;
-    var site = document.getElementById("companywebsite").value;
-    var description = document.getElementById("description").value;
-    var vacansies = JSON.parse(sessionStorage.getItem('vacancies'));
-    var vac = {'publicationPosition': 2,
-        'id': 4};
+    // var companyName = document.getElementById("companyname").value;
+    // var site = document.getElementById("companywebsite").value;
+    // var description = document.getElementById("description").value;
+    // var vacansies = JSON.parse(sessionStorage.getItem('vacancies'));
+    // var vac = {'publicationPosition': 2,
+    //     'id': 4};
 
-    var obj = {
+    var profile = {
         'profile':
             {'id':id,
-            'companyname':companyName,
-            'site':site,
-            'description':description,
+            'companyname':document.getElementById("companyname").value,
+            'site':document.getElementById("companywebsite").value,
+            'description':document.getElementById("description").value,
             },
-        'vacancies': vacansies};
-
-
-    // var profile = {
-    //     'id': id,
-    //     'companyName': companyName,
-    //     'website': site,
-    //     'description': description,
-    //
-    //
-    // }
-
-
+        'vacancies': JSON.parse(sessionStorage.getItem('vacancies'))};
     $.ajax({
         type: 'post',
-        // url: "/api/employerprofiles/update?" +
-        //     "id=" + id +
-        //     "companyname="+companyName+
-        //     "site="+site+
-        //     "description="+description+
-        //     "vacs="+JSON.stringify(vac),
         url: "/api/employerprofiles/update",
-        data: JSON.stringify(obj)
+        data: JSON.stringify(profile)
         ,
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
@@ -68,8 +50,7 @@ function update(id) {
             request.setRequestHeader(header, token);
         },
         success: function (profile) {
-            $('#company_name').text(profile.companyName);
-            $('#update_modal_close_btn').click();
+            alert("Изменения успешно внесены")
         },
         error: function (error) {
             console.log(error);
@@ -82,7 +63,7 @@ function update(id) {
 
 
 function add_emploer_img(id) {
-    var form = $('#fileUploadForm')[0];
+    var form = $('#imageUploadForm')[0];
     var data = new FormData(form);
     data.append("id", id);
     $("#btnSubmit").prop("disabled", true);
@@ -99,15 +80,16 @@ function add_emploer_img(id) {
         cache: false,
         timeout: 600000,
         success: function (image) {
+            alert("successfull image update")
 
-            var profile_img = document.getElementById('profile_img');
-            profile_img.innerHTML = '';
-            var img = document.createElement('img');
-            img.setAttribute('class', 'img-rounded');
-            img.setAttribute('alt', 'Photo');
-            img.setAttribute('src', 'data:image/png;base64,'+image);
-            profile_img.appendChild(img);
-            $("#btnSubmit").prop("disabled", false);
+            // var profile_img = document.getElementById('profile_img');
+            // profile_img.innerHTML = '';
+            // var img = document.createElement('img');
+            // img.setAttribute('class', 'img-rounded');
+            // img.setAttribute('alt', 'Photo');
+            // img.setAttribute('src', 'data:image/png;base64,'+image);
+            // profile_img.appendChild(img);
+            // $("#btnSubmit").prop("disabled", false);
 
         },
         error: function (e) {

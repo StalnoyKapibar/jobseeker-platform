@@ -54,7 +54,7 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     @Column(name = "salarymax")
     private Integer salaryMax;
 
-    @Column(name = "publication_position", unique = true)
+    @Column(name = "publication_position")
     private Integer publicationPosition;
 
     @ManyToMany(fetch = FetchType.LAZY)

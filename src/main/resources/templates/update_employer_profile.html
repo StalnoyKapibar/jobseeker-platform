@@ -31,7 +31,7 @@
                                 <img th:src="@{'data:image/png;base64,' + ${logoimg}}" class="img-rounded"
                                      alt="Logo of company">
                                 <div class="row">
-                                <form method="POST" enctype="multipart/form-data" id="fileUploadForm" class="col-lg-6" >
+                                <form method="POST" enctype="multipart/form-data" id="imageUploadForm" class="col-lg-6" >
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="image" id="customFile">
                                         <label class="custom-file-label" for="customFile">Choose file</label>
@@ -65,26 +65,34 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row col-l-11">
             <div class="col-lg-5 empCard">
                 <div class="card mb-3">
                     <h5 class="card-header">Опубликованные вакансии:</h5>
                     <div class="card-body">
                         <div class="list-group" id="trckVacancies" style="height: 200px; overflow: auto;">
-
+                            <li class="card border-success vac" style="margin: 5px" th:each="vacancy: ${trakedvacancies}">
+                                <div class="input-group">
+                                    <div class="card-header" style="width: 80%"><span
+                                            th:text="${vacancy.headline}" th:data-id="${vacancy.id}"></span></div>
+                                    <button class="input-group-btn btn btn-primary go inline" style="width: 10%;">
+                                        <i class="fas fa-user-edit"></i>
+                                    </button>
+                                    <button class="input-group-btn btn btn-danger go inline" style="width: 10%;">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </li>
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <div class="col-lg-5 empCard" id="empVacancies">
                 <div class="card mb-3">
                             <div class="card-header d-flex justify-content-between">
                                 <h5>Все вакансии:</h5>
-                                <div>
-                                <a href="#" >Добавить вакансию ✚</a>
-                                </div>
+                                <div><a href="#" >Добавить вакансию ✚</a></div>
                                 </div>
                         <div class="card-body">
                             <div class="list-group" id="allVacancies" style="height: 200px; overflow: auto;">
@@ -93,9 +101,10 @@
                                         <div class="card-header" style="width: 80%"><span
                                                 th:text="${vacancy.headline}" th:data-id="${vacancy.id}"></span></div>
                                         <button class="input-group-btn btn btn-primary go inline" style="width: 10%;">
-                                            ✎
+                                            <i class="fas fa-user-edit"></i>
                                         </button>
-                                        <button class="input-group-btn btn btn-danger go inline" style="width: 10%;">✕
+                                        <button class="input-group-btn btn btn-danger go inline" style="width: 10%;">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </div>
                                 </li>
