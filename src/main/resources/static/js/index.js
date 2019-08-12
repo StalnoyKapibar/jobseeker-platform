@@ -300,10 +300,10 @@ function printVacancies(data) {
 
         function check_seeker_tags(tag) {
             var bool = false;
-            $.each(seeker_tags, function (i,item) {
+            $.each(seeker_tags, function (i, item) {
                 var s_tag = item.name.toString().split(' ').join('').replace("/", "").toLocaleLowerCase();
                 var v_tag = tag.name.toString().split(' ').join('').replace("/", "").toLocaleLowerCase();
-                if (s_tag.localeCompare(v_tag)==0) {
+                if (s_tag.localeCompare(v_tag) == 0) {
                     bool = true;
                 }
             });
@@ -358,7 +358,7 @@ function getSeekerTags(user_id) {
         type: "GET",
         async: false,
         success: function (data) {
-            seeker_tags=data;
+            seeker_tags = data;
         }
     })
     return seeker_tags;

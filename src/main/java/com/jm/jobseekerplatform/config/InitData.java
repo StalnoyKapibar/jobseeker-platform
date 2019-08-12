@@ -92,6 +92,9 @@ public class InitData {
     @Autowired
     private NewsService newsService;
 
+    @Autowired
+    private ReviewVoteService reviewVoteService;
+
     private Faker faker = new Faker(new Locale("ru"));
 
     private Random rnd = new Random();
@@ -111,7 +114,6 @@ public class InitData {
 
         initReviews();
         initChat();
-
         initNews();
     }
 
@@ -195,26 +197,26 @@ public class InitData {
 
         Set<EmployerReviews> reviewsOne = new HashSet<>();
         reviewsOne.add(reviewOne);
-        reviewsOne.add(reviewTwo);
+        reviewsOne.add(reviewThree);
 
         Set<EmployerReviews> reviewsTwo = new HashSet<>();
-        reviewsTwo.add(reviewThree);
-        reviewsTwo.add(reviewFour);
+        reviewsTwo.add(reviewOne);
+        reviewsTwo.add(reviewFive);
 
         Set<EmployerReviews> reviewsThree = new HashSet<>();
-        reviewsThree.add(reviewFive);
-        reviewsThree.add(reviewSix);
+        reviewsThree.add(reviewTwo);
+        reviewsThree.add(reviewFour);
 
         Set<EmployerReviews> reviewsFour = new HashSet<>();
-        reviewsFour.add(reviewOne);
-        reviewsFour.add(reviewFour);
+        reviewsFour.add(reviewTwo);
+        reviewsFour.add(reviewSix);
 
         Set<EmployerReviews> reviewsFive = new HashSet<>();
-        reviewsFive.add(reviewThree);
+        reviewsFive.add(reviewOne);
         reviewsFive.add(reviewSix);
 
         Set<EmployerReviews> reviewsSix = new HashSet<>();
-        reviewsSix.add(reviewTwo);
+        reviewsSix.add(reviewThree);
         reviewsSix.add(reviewFive);
 
         EmployerProfile employerProfileOne = employerProfileService.getById(2L);
