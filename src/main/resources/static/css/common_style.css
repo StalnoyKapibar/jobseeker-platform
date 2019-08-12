@@ -425,3 +425,9 @@ li {
 .editCardReview:hover {
     color: #777777;
 }
+
+/*Select style*/
+select {
+    background: var(--bg-color);
+    color: var(--text-color);
+}
