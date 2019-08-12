@@ -161,6 +161,44 @@ function sortByDislikes(){
     sortByNestedText($('#reviews'), "div", "span.dislikes");
 }
 
+function hideNegative() {
+    let parent = $('#reviews');
+    let childSelector = "div";
+    let items = parent.children(childSelector);
+
+    for (let i=0; i<items.length; i++) {
+        items[i].style.display = 'block';
+        let rating = items[i].getElementsByClassName("fas fa-star").length;
+        if (rating <= 2) {
+            items[i].style.display = 'none';
+        }
+    }
+}
+
+function hidePositive() {
+    let parent = $('#reviews');
+    let childSelector = "div";
+    let items = parent.children(childSelector);
+
+    for (let i=0; i<items.length; i++) {
+        items[i].style.display = 'block';
+        let rating = items[i].getElementsByClassName("fas fa-star").length;
+        if (rating >= 3) {
+            items[i].style.display = 'none';
+        }
+    }
+}
+
+function showAll() {
+    let parent = $('#reviews');
+    let childSelector = "div";
+    let items = parent.children(childSelector);
+
+    for (let i=0; i<items.length; i++) {
+        items[i].style.display = 'block';
+    }
+}
+
 function reviewEditBasedOnVotes() {
     var x = document.getElementsByClassName("editCardReview");
     for (i = 0; i < x.length; i++) {

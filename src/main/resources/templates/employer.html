@@ -153,6 +153,9 @@
                                         <button class="button" onclick="sortByLikes()">Сортировка по лайкам</button>
                                         <button class="button" onclick="sortByDislikes()">Сортировка по дизлайкам</button>
                                         <button class="button" onclick="sortByRating()">Сортировка по рейтингу</button>
+                                        <button class="button" onclick="hideNegative()">Hide Negative</button>
+                                        <button class="button" onclick="hidePositive()">Hide Positive</button>
+                                        <button class="button" onclick="showAll()">Show All</button>
                                         <div class="row" id="reviews">
                                             <th:block th:each="review : ${employerProfileReviews}">
                                                 <div class="col-sm-6">
