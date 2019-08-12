@@ -17,7 +17,6 @@
     <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <script type="text/javascript" src="/js/seeker.js"></script>
     <script type="text/javascript" src="/js/responding.js"></script>
-    <script type="text/javascript" src="/js/date_status_format.js"></script>
 </head>
 
 <body>
@@ -140,44 +139,6 @@
                     <div id="chat_alert" class="alert alert-success mt-3 d-none" role="alert">
                         Вы отправили заявку на интрервью. Для того, чтобы обсудить
                         детали , перейдите в приватный <a id="chat_ref" href="/chat/">чат</a> с работодателем.
-                    </div>
-                </div>
-                <div th:if="${isOwner}" id="table" style="padding: 15px;">
-                    <table class="table table-striped">
-                        <thead class="" style="border-width: 0px;">
-                        <h3>Откликнулись</h3>
-                        <tr style="font-weight: bold; ">
-                            <th scope="col">№</th>
-                            <th scope="col">Соискатель</th>
-                            <th scope="col">Профиль</th>
-                            <th scope="col">Статус</th>
-                            <th scope="col">Дата встречи</th>
-                            <th scope="col">Управление</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:if="${!vacancyFromServer.meetings.isEmpty()}" id="tableRows" th:each="meeting,mCount: ${vacancyFromServer.meetings}" style="font-weight: normal;">
-                            <td th:text="${mCount.count}"></td>
-                            <td th:text="${meeting.seekerProfile.name} + ' ' + ${meeting.seekerProfile.surname}"></td>
-                            <td><a th:href="@{'/seeker/' +  ${meeting.seekerProfile.id}}">подробнее</a></td>
-                            <td class="tableStatus" th:text="${meeting.status}"></td>
-                            <td class="tableDate" th:text="${meeting.date!=null ? meeting.date : 'N/A'}"></td>
-                            <td>
-                                <button th:if="${meeting.status==meeting.status.NOT_CONFIRMED}" th:onclick="'editMeeting(' + ${meeting.id} + ')'"
-                                        type="button" class="btn btn-dark">Назначить дату</button>
-                                <button th:if="${meeting.status==meeting.status.SCHEDUALED}" type="button" disabled="disabled"
-                                        class="btn btn-warning disabled">Ожидание подверждения</button>
-                                <button th:if="${meeting.status==meeting.status.CONFIRMED_BY_USER}"
-                                        th:onclick="'updateMeeting(' + ${meeting.id} + ')'" type="button"
-                                        class="btn btn-dark">Подтвердить встречу</button>
-                                <button th:if="${meeting.status==meeting.status.CONFIRMED}" type="button" disabled="disabled"
-                                        class="btn btn-success disabled">Встреча назначена</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <div  th:if="${vacancyFromServer.meetings.isEmpty()}">
-                        <h5>список заявок пуст</h5>
                     </div>
                 </div>
             </div>

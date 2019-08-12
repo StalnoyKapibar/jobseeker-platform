@@ -36,6 +36,14 @@ public class SeekerController {
     @RequestMapping("/{seekerProfileId}")
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        model.addAttribute("seekerProfile", seekerProfile);
+        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerProfile.getPhoto()));
+        return "seeker";
+    }
+
+    @RequestMapping("/meetings/{seekerProfileId}")
+    public String seekerMeetingsPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         boolean isOwner = false;
         if (authentication != null) {
             Long id = ((User) authentication.getPrincipal()).getId();
@@ -45,8 +53,7 @@ public class SeekerController {
         }
         model.addAttribute("isOwner", isOwner);
         model.addAttribute("seekerProfile", seekerProfile);
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerProfile.getPhoto()));
-        return "seeker";
+        return "meetings";
     }
 
     @RequestMapping("/vacancies/{seekerProfileId}")

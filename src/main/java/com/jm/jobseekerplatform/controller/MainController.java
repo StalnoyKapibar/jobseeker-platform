@@ -184,7 +184,6 @@ public class MainController {
 
     @RequestMapping(value = "/vacancy/{vacancyId}", method = RequestMethod.GET)
     public String viewVacancy(@PathVariable Long vacancyId, Model model, Authentication authentication) {
-        boolean isOwner = false;
         Vacancy vacancy = vacancyService.getById(vacancyId);
         if (authentication != null) {
             boolean isContain;
@@ -203,12 +202,8 @@ public class MainController {
                 model.addAttribute("seekerProfileId", profile.getId());
                 model.addAttribute("hasResponded", hasResponded);
             }
-            if (id.equals(vacancy.getCreatorProfile().getId())) {
-                isOwner=true;
-            }
             model.addAttribute("profileId", profile.getId());
         }
-        model.addAttribute("isOwner", isOwner);
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("vacancyFromServer", vacancy);
         model.addAttribute("EmployerProfileFromServer", vacancy.getCreatorProfile());

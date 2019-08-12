@@ -140,3 +140,7 @@ img{ max-width:100%;}
 .data_block{
     display: none;
 }
+
+.container-fluid {
+    width: auto;
+}

@@ -10,32 +10,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script th:src="@{/js/new_chat.js}"></script>
+    <script th:src="@{/js/date_status_format.js}"></script>
+    <script th:src="@{/js/responding.js}"></script>
 </head>
 <body>
 <th:block layout:fragment="content">
     <div class="container-fluid" style="margin-left: 15%;margin-right: 15%; margin-top: 5%;">
-        <h3 class=" text-center">Тема чата: <span th:text="${topicName + ' ' + topic.headline}"></span></h3>
+        <h3 class="text-center">Тема чата: <span th:text="${topicName + ' ' + topic.headline}"></span></h3>
         <div class="data_block" id="chatId" th:text="${chatId}"></div>
         <div class="data_block" id="userId" th:text="${profileId}"></div>
+        <div class="data_block" id="meetingId" th:text="${meeting.id}"></div>
         <div class="messaging">
             <div class="inbox_msg">
                 <div class="mesgs">
-                    <div class="msg_history">
-                        <!--<div class="incoming_msg">-->
-                            <!--<div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>-->
-                            <!--<div class="received_msg">-->
-                                <!--<div class="received_withd_msg">-->
-                                    <!--<p>Test which is a new approach to have all-->
-                                        <!--solutions</p>-->
-                                    <!--<span class="time_date"> 11:01 AM    |    June 9</span></div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="outgoing_msg">-->
-                            <!--<div class="sent_msg">-->
-                                <!--<p>Test which is a new approach to have all-->
-                                    <!--solutions</p>-->
-                                <!--<span class="time_date"> 11:01 AM    |    June 9</span> </div>-->
-                        <!--</div>-->
+                    <div class="msg_history mb-3">
                     </div>
                     <div class="type_msg">
                         <div class="input_msg_write">
@@ -47,7 +35,49 @@
                     </div>
                 </div>
             </div>
+            <div th:if="${isOwner}" class="text-center mb-2 mr-2 mt-1">
+                <button th:if="${meeting.status==meeting.status.NOT_CONFIRMED}" th:onclick="'editMeeting(' + ${meeting.id} + ')'"
+                        type="button" class="btn btn-dark">Назначить дату</button>
+                <button th:if="${meeting.status==meeting.status.SCHEDUALED}" type="button" disabled="disabled"
+                        class="btn btn-warning disabled">Ожидание подверждения</button>
+                <button th:if="${meeting.status==meeting.status.CONFIRMED_BY_USER}"
+                        th:onclick="'updateMeeting(' + ${meeting.id} + ')'" type="button"
+                        class="btn btn-dark">Подтвердить встречу</button>
+                <button th:if="${meeting.status==meeting.status.CONFIRMED}" type="button" disabled="disabled"
+                        class="btn btn-success disabled">Встреча назначена</button>
+            </div>
+            <div th:if="not ${isOwner}" class="text-center mb-2 mr-2 mt-1">
+                <button th:if="${meeting.status==meeting.status.SCHEDUALED}" th:onclick="'confirmMeeting(' + ${meeting.id} + ')'" type="button" class="btn btn-dark">Подтвердить</button>
+                <button th:if="${meeting.status==meeting.status.NOT_CONFIRMED}"
+                        type="button" disabled="disabled" class="btn btn-warning disabled">Встреча не назначена</button>
+                <button th:if="${meeting.status==meeting.status.CONFIRMED_BY_USER}"
+                        type="button" disabled="disabled" class="btn btn-warning disabled">Ожидание подверждения</button>
+                <button th:if="${meeting.status==meeting.status.CONFIRMED}" type="button" disabled="disabled"
+                        class="btn btn-success disabled">Встреча назначена</button>
+            </div>
         </div>
+    </div>
+    <!-- Meeting model -->
+    <div id="meetingModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Управление встречей</h2>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input id="dateTimeLocal" type="datetime-local">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="sendMeetingEdition()">
+                        Сохранить
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="height: 150px"></div>
     </div>
 </th:block>
 </body>

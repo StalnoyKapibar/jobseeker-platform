@@ -1,5 +1,3 @@
-let meeting;
-
 function sendRespond(vacancyId, seekerId) {
     $.ajax({
         type: 'post',
@@ -41,10 +39,16 @@ function sendMeetingEdition() {
             console.log(error);
             alert(error.toString());
         }
-    })
+    });
+    sendSpecialMessage("/me " + status + dateFormat(meeting.date));
 }
 
-function editMeeting(id) {
+async function editMeeting(id) {
+    await getMeeting(id);
+    $('#meetingModal').modal('toggle');
+}
+
+function getMeeting(id) {
     $.ajax({
         url: '/api/meetings/' + id,
         type: 'get',
@@ -52,8 +56,6 @@ function editMeeting(id) {
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
             meeting = data;
-            console.log(meeting);
-            $('#meetingModal').modal('toggle');
         }
     });
 }
@@ -75,6 +77,7 @@ function updateMeeting(id) {
             alert(error.toString());
         }
     });
+    sendSpecialMessage("/me " + status);
 }
 
 
@@ -95,4 +98,53 @@ function createChat(vacancyId, seekerId) {
             alert(error.toString());
         }
     })
+}
+
+function confirmMeeting(id){
+    let status = "CONFIRMED_BY_USER";
+    $.ajax({
+        type: 'patch',
+        url: "/api/meetings/" + id,
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(status),
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        success: function () {
+        },
+        error: function (error) {
+            console.log(error);
+            alert(error.toString());
+        }
+    });
+    sendSpecialMessage("/me " + status);
+}
+
+function updateButtons(message, replaced){
+    let buttonBlock = $(".text-center.mb-2.mr-2.mt-1");
+    if(replaced === "CONFIRMED") {
+        buttonBlock.empty();
+        buttonBlock.append('<button type="button" disabled="disabled"\n' +
+            '                        class="btn btn-success disabled">Встреча назначена</button>');
+    }else if(replaced === "CONFIRMED_BY_USER") {
+        if(message.creatorProfile === currentProfileId){
+            buttonBlock.empty();
+            buttonBlock.append('<button type="button" disabled="disabled" ' +
+                '                       class="btn btn-warning disabled">Ожидание подверждения</button>')
+        }else{
+            buttonBlock.empty();
+            buttonBlock.append('<button onclick="updateMeeting(' + currentMeetingId +')" type="button"' +
+                '                        class="btn btn-dark">Подтвердить встречу</button>')
+        }
+    } else {
+        if (message.creatorProfile === currentProfileId) {
+            buttonBlock.empty();
+            buttonBlock.append('<button type="button" disabled="disabled"\n' +
+                '                        class="btn btn-warning disabled">Ожидание подверждения</button>');
+        } else {
+            buttonBlock.empty();
+            buttonBlock.append('<button onclick="confirmMeeting(' + currentMeetingId + ')" ' +
+                '                           type="button" class="btn btn-dark">Подтвердить</button>');
+        }
+    }
 }

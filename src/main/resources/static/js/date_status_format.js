@@ -6,6 +6,21 @@ function getMonth(month) {
     return months[parseInt(month-1)];
 }
 
+function messageDateFormat(date) {
+    let month = date.substring(5, 7);
+    let day = date.substring(8, 10);
+    let time = date.substring(11, 19);
+    return time + '    |    ' + day + " " + getMonth(month);
+}
+
+function dateFormat(date) {
+    let year = date.substring(0, 4);
+    let month = date.substring(5, 7);
+    let day = date.substring(8, 10);
+    let time = date.substring(11, 16);
+    return day + " " + getMonth(month) + " " +  year + " в " + time;
+}
+
 function formatDates(list) {
     for (let i = 0; i < list.length; i++) {
         let date = $(list[i]).text();
@@ -13,11 +28,7 @@ function formatDates(list) {
             $(list[i]).text("не назначено");
             continue;
         }
-        let year = date.substring(0, 4);
-        let month = date.substring(5, 7);
-        let day = date.substring(8, 10);
-        let time = date.substring(11, 16);
-        $(list[i]).text(day + " " + getMonth(month) + " в " + time);
+        $(list[i]).text(dateFormat(date));
     }
 }
 
