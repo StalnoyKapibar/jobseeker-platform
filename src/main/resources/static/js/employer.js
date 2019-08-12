@@ -142,13 +142,24 @@ function sortByNestedText(parent, childSelector, keySelector) {
     parent.append(items);
 }
 
-function sortByRating() {
+function sortByRatingDESC() {
     let parent = $('#reviews');
     let childSelector = "div";
     let items = parent.children(childSelector).sort(function (a, b) {
         let vA= a.getElementsByClassName("fas fa-star").length;
         let vB= b.getElementsByClassName("fas fa-star").length;
         return (vA > vB) ? -1 : (vA < vB) ? 1 : 0;
+    });
+    parent.append(items);
+}
+
+function sortByRatingASC() {
+    let parent = $('#reviews');
+    let childSelector = "div";
+    let items = parent.children(childSelector).sort(function (a, b) {
+        let vA= a.getElementsByClassName("fas fa-star").length;
+        let vB= b.getElementsByClassName("fas fa-star").length;
+        return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
     });
     parent.append(items);
 }
