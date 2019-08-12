@@ -13,14 +13,14 @@ body {
 }
 .loader .face {
     position:absolute;
-    border:2px solid #0074ff;
+    border:2px solid #00bb8b;
 }
 .loader .face.face1 {
     top:0;
     left:0;
     right:0;
     bottom:0;
-    background: #7295b1;
+    background: #00bb8b;
     box-shadow:0 0 10px rgba(0,0,0,1);
     border-radius:50%;
     border-left:2px solid #ffd700;
@@ -32,7 +32,7 @@ body {
     left:30px;
     right:30px;
     bottom:30px;
-    background: #5ba6e9;
+    background: #f39b19;
     box-shadow:0 0 10px rgba(0,0,0,1);
     border-radius:50%;
     border-right:2px solid #fff9ff;
