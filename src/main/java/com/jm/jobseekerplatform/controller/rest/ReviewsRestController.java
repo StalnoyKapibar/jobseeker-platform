@@ -74,7 +74,6 @@ public class ReviewsRestController {
     }*/
 
     @GetMapping(value = "/find", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public ResponseEntity<EmployerReviews> findReviewBySeekerIdAndEmployerIdForEdit(@RequestBody Map<String, Object> map) {
         try {
             EmployerProfile employerProfile = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
@@ -88,19 +87,16 @@ public class ReviewsRestController {
     }
 
     @GetMapping("/get_all")
-    @ResponseBody
     public ResponseEntity<Set<EmployerReviews>> getAllReviewsByEmployerProfileId(@RequestParam("employerProfileId") Long employerProfileId) {
         return new ResponseEntity<>(employerProfileService.getById(employerProfileId).getReviews(), HttpStatus.OK);
     }
 
     @GetMapping("/get")
-    @ResponseBody
     public ResponseEntity<EmployerReviews> geReviewtById(@RequestParam("reviewId") Long reviewId) {
         return new ResponseEntity<>(employerReviewsService.getById(reviewId), HttpStatus.OK);
     }
 
     @PostMapping("/add")
-    @ResponseBody
     public ResponseEntity addNewReview(@RequestBody EmployerReviews reviews,
                                        @RequestParam("seekerProfileId") Long seekerProfileId,
                                        @RequestParam("employerProfileId") Long employerProfileId) {
@@ -116,7 +112,6 @@ public class ReviewsRestController {
     }
 
     @PostMapping("/update")
-    @ResponseBody
     public ResponseEntity updateReview(@RequestBody EmployerReviews reviews,
                                        @RequestParam("seekerProfileId") Long seekerProfileId) {
         reviews.setSeekerProfile(seekerProfileService.getById(seekerProfileId));
@@ -125,7 +120,6 @@ public class ReviewsRestController {
     }
 
     @GetMapping("/delete")
-    @ResponseBody
     public ResponseEntity deleteReview(@RequestParam("reviewId") Long reviewId) {
         try {
             employerReviewsService.deleteById(reviewId);

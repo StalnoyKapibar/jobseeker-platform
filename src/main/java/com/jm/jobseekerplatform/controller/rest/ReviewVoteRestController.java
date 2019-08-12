@@ -24,7 +24,6 @@ public class ReviewVoteRestController {
     ReviewVoteService reviewVoteService;
 
     @GetMapping("/get_all")
-    @ResponseBody
     public ResponseEntity<Set<ReviewVote>> getAllReviewVotesByEmployerProfileAndSeekerProfileId(@RequestParam("employerProfileId") Long employerProfileId,
                                                                                                 @RequestParam("seekerProfileId") Long seekerProfileId) {
         List<ReviewVote> reviewVotes = reviewVoteService.getAllReviewVotesByEmployerProfileAndSeekerProfileId(seekerProfileId, employerProfileId);
@@ -32,7 +31,6 @@ public class ReviewVoteRestController {
     }
 
     @PostMapping("/add_like")
-    @ResponseBody
     public ResponseEntity<EmployerReviews> addNewReviewLike(@RequestBody ReviewVote reviewVote) {
         EmployerReviews employerReviews = employerReviewsService.getById(reviewVote.getReviewId());
         employerReviews.incrementLike();
@@ -42,7 +40,6 @@ public class ReviewVoteRestController {
     }
 
     @PostMapping("/add_dislike")
-    @ResponseBody
     public ResponseEntity<EmployerReviews> addNewReviewDislike(@RequestBody ReviewVote reviewVote) {
         EmployerReviews employerReviews = employerReviewsService.getById(reviewVote.getReviewId());
         employerReviews.incrementDislike();
@@ -52,7 +49,6 @@ public class ReviewVoteRestController {
     }
 
     @PostMapping("/update_like")
-    @ResponseBody
     public ResponseEntity<EmployerReviews> updateReviewLike(@RequestParam("reviewId") Long reviewId,
                                                             @RequestParam("seekerProfileId") Long seekerProfileId) {
         ReviewVote reviewVote = reviewVoteService.getByReviewAndSeekerProfileId(reviewId, seekerProfileId);
@@ -67,7 +63,6 @@ public class ReviewVoteRestController {
     }
 
     @PostMapping("/update_dislike")
-    @ResponseBody
     public ResponseEntity<EmployerReviews> updateReviewDislike(@RequestParam("reviewId") Long reviewId,
                                                                @RequestParam("seekerProfileId") Long seekerProfileId) {
         ReviewVote reviewVote = reviewVoteService.getByReviewAndSeekerProfileId(reviewId, seekerProfileId);
@@ -82,7 +77,6 @@ public class ReviewVoteRestController {
     }
 
     @GetMapping("/delete_like")
-    @ResponseBody
     public ResponseEntity<EmployerReviews> deleteReviewLike(@RequestParam("reviewId") Long reviewId,
                                                             @RequestParam("seekerProfileId") Long seekerProfileId) {
         EmployerReviews employerReviews = employerReviewsService.getById(reviewId);
@@ -93,7 +87,6 @@ public class ReviewVoteRestController {
     }
 
     @GetMapping("/delete_dislike")
-    @ResponseBody
     public ResponseEntity<EmployerReviews> deleteReviewDislike(@RequestParam("reviewId") Long reviewId,
                                                                @RequestParam("seekerProfileId") Long seekerProfileId) {
         reviewVoteService.delete(reviewVoteService.getByReviewAndSeekerProfileId(reviewId, seekerProfileId));
