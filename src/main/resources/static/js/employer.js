@@ -134,9 +134,20 @@ $(document).ready(function () {
 });
 
 function sortByNestedText(parent, childSelector, keySelector) {
-    var items = parent.children(childSelector).sort(function (a, b) {
-        var vA = $(keySelector, a).text();
-        var vB = $(keySelector, b).text();
+    let items = parent.children(childSelector).sort(function (a, b) {
+        let vA = $(keySelector, a).text();
+        let vB = $(keySelector, b).text();
+        return (vA > vB) ? -1 : (vA < vB) ? 1 : 0;
+    });
+    parent.append(items);
+}
+
+function sortByRating() {
+    let parent = $('#reviews');
+    let childSelector = "div";
+    let items = parent.children(childSelector).sort(function (a, b) {
+        let vA= a.getElementsByClassName("fas fa-star").length;
+        let vB= b.getElementsByClassName("fas fa-star").length;
         return (vA > vB) ? -1 : (vA < vB) ? 1 : 0;
     });
     parent.append(items);
