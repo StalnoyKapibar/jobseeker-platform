@@ -94,4 +94,23 @@ public class NewsRestController {
         newsService.update(news);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/updateNews", method = RequestMethod.POST)
+    public ResponseEntity updateNews(@RequestParam("newsId") Long newsId
+            , @RequestParam("viewed") boolean viewed) {
+        News news = newsService.getById(newsId);
+        Long totalViews = news.getNumberOfViews();
+
+        // проверка на то что в БД просмотр новостней не имеет значение Null
+        if (totalViews == null) {
+            totalViews = 0L;
+        }
+
+        // если новость просмотрена то прибавляем один просмотр и обновляем данные
+        if(viewed) {
+            news.setNumberOfViews(totalViews + 1);
+            newsService.update(news);
+        }
+        return new ResponseEntity<>(news.getNumberOfViews(), HttpStatus.OK);
+    }
 }
