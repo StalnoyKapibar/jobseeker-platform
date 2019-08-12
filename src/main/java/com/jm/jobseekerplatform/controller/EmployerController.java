@@ -48,13 +48,10 @@ public class EmployerController {
     public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {
         boolean isOwner = false;
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
-
         model.addAttribute("employerProfile", employerProfile);
-
         List<Vacancy> vacancies = vacancyService.getTrackedByEmployerProfileId(employerProfile.getId());
         model.addAttribute("vacancies", vacancies);
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
-
         if (authentication != null && authentication.isAuthenticated()) {
             Long userId = ((User) authentication.getPrincipal()).getId();
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
@@ -82,10 +79,8 @@ public class EmployerController {
                 model.addAttribute("reviewStatus", false);
             }
         }
-
         model.addAttribute("isOwner", isOwner);
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-
         return "employer";
     }
 

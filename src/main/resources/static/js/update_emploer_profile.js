@@ -9,10 +9,7 @@ $( document ).ready(function() {
             $('#trckVacancies li').each(function () {
                     vacancies.push({'position':$(this).index()+1, 'id':$(this).find('span').data('id')});
             });
-            // var saveSort = {vacancies};
-            // sessionStorage.setItem('vacancies', JSON.stringify(vacancies));
             sessionStorage.setItem('vacancies', JSON.stringify(vacancies));
-
         }
     });
 
@@ -24,13 +21,6 @@ $( document ).ready(function() {
 });
 
 function update(id) {
-    // var companyName = document.getElementById("companyname").value;
-    // var site = document.getElementById("companywebsite").value;
-    // var description = document.getElementById("description").value;
-    // var vacansies = JSON.parse(sessionStorage.getItem('vacancies'));
-    // var vac = {'publicationPosition': 2,
-    //     'id': 4};
-
     var profile = {
         'profile':
             {'id':id,
@@ -57,10 +47,7 @@ function update(id) {
             alert(error.toString());
         }
     })
-
 }
-
-
 
 function add_emploer_img(id) {
     var form = $('#imageUploadForm')[0];
@@ -80,24 +67,61 @@ function add_emploer_img(id) {
         cache: false,
         timeout: 600000,
         success: function (image) {
-            alert("successfull image update")
-
-            // var profile_img = document.getElementById('profile_img');
-            // profile_img.innerHTML = '';
-            // var img = document.createElement('img');
-            // img.setAttribute('class', 'img-rounded');
-            // img.setAttribute('alt', 'Photo');
-            // img.setAttribute('src', 'data:image/png;base64,'+image);
-            // profile_img.appendChild(img);
-            // $("#btnSubmit").prop("disabled", false);
-
+            $('#logo').html('<img src="data:image/png;base64,'+image+'" class="img-rounded"' +
+                '                                     alt="Logo of company">');
+            $("#btnSubmit").prop("disabled", false);
         },
         error: function (e) {
-
             console.log("ERROR : ", e.responseText);
             $("#btnSubmit").prop("disabled", false);
-
         }
     });
+}
+
+function show_delete_vacancy_alert(vacancyId, headline) {
+    $('#vac_name_to_del').append(headline);
+    $('#del_vac_allert').modal('show');
+    $('#del_yes').click( function () {
+        $.ajax({
+            type: 'post',
+            url: "/api/employerprofiles/delete_vacancy",
+            data: JSON.stringify({'vacancy':vacancyId})
+            ,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (request) {
+                request.setRequestHeader(header, token);
+            },
+            success: function (vacancies) {
+                $('[data-id = '+vacancyId+']').remove();
+                $('#del_vac_allert').modal('show');
+            },
+            error: function (error) {
+                console.log(error);
+                alert(error.toString());
+            }
+        })
+    })
 
 }
+
+// function delete_vacancy(vacancyId) {
+//     $.ajax({
+//         type: 'post',
+//         url: "/api/employerprofiles/delete_vacancy",
+//         data: JSON.stringify({'vacancy':vacancyId})
+//         ,
+//         dataType: "json",
+//         contentType: 'application/json; charset=utf-8',
+//         beforeSend: function (request) {
+//             request.setRequestHeader(header, token);
+//         },
+//         success: function (vacancies) {
+//             $(this).remove();
+//         },
+//         error: function (error) {
+//             console.log(error);
+//             alert(error.toString());
+//         }
+//     })
+// }

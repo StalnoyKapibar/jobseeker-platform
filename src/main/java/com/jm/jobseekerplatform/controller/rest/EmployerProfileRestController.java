@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.service.impl.ImageService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
@@ -17,6 +18,7 @@ import javax.imageio.ImageIO;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -87,16 +89,14 @@ public class EmployerProfileRestController {
                               @RequestParam(value = "image") MultipartFile img) {
         EmployerProfile profile = employerProfileService.getById(id);
         if (img != null) {
-            BufferedImage image = null;
             try {
-                image = ImageIO.read(new File());
-                profile.setLogo(imageService.resizePhotoSeeker(image));
-                employerProfileService.update(profile);
+                profile.setLogo(imageService.resizePhotoSeeker(ImageIO.read(new ByteArrayInputStream(img.getBytes()))));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+            employerProfileService.update(profile);
         }
         return Base64.getEncoder().encodeToString(profile.getLogo());
     }
+
 }
