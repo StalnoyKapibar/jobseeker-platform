@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.service.impl.ImageService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import javafx.scene.chart.ValueAxis;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,10 +95,15 @@ public class EmployerProfileRestController {
         updatedProfile.setWebsite(jsonProfile.getString("site"));
         updatedProfile.setDescription(jsonProfile.getString("description"));
         JSONArray vacArr = jsonData.getJSONArray("vacancies");
+        Set<Vacancy> profileVacansies = vacancyService.getAllByEmployerProfileId(jsonProfile.getLong("id"));
+        profileVacansies.forEach(n->n.setPublicationPosition(null));
+        Vacancy vacancy;
         for(int i = 0; i<vacArr.length(); i++){
-            vacancyService.getById(vacArr.getJSONObject(i).getLong("id")).
-                    setPublicationPosition(vacArr.getJSONObject(i).getInt("position"));
+            vacancy = vacancyService.getById(vacArr.getJSONObject(i).getLong("id"));
+            vacancy.setPublicationPosition(vacArr.getJSONObject(i).getInt("position"));
+            vacancyService.update(vacancy);
         }
+        employerProfileService.update(updatedProfile);
         return updatedProfile;
 
     }

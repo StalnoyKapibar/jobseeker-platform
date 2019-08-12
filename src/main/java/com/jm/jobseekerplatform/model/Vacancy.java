@@ -15,7 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "vacancies")
 @Cacheable
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "vacancy")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "vacancy")
 @NamedEntityGraph(name = "vacancy-all-nodes", attributeNodes = {
         @NamedAttributeNode("employerProfile"),
         @NamedAttributeNode("city"),
@@ -54,7 +54,7 @@ public class Vacancy implements Serializable, CreatedByEmployerProfile {
     @Column(name = "salarymax")
     private Integer salaryMax;
 
-    @Column(name = "publication_position")
+    @Column(name = "publication_position", unique = true)
     private Integer publicationPosition;
 
     @ManyToMany(fetch = FetchType.LAZY)
