@@ -17,39 +17,59 @@
             border-style: solid;
             border-color: #5CB85C;
         }
-        .col-md-7.inputGroupContainer{
+
+        .col-md-7.inputGroupContainer {
             flex: none;
             max-width: none;
             padding-left: 10%;
         }
-        #techLabel{
+
+        #techLabel {
             flex: none;
             max-width: none;
             padding-left: 10%;
         }
+
+        /*Эти стили нужны для корректной работы формы автозаполнения*/
+
+        .pac-container {
+            background-color: #FFF;
+            z-index: 2001;
+            position: fixed;
+            display: inline-block;
+            float: left;
+        }
+
+        .modal {
+            z-index: 2000;
+        }
+
+        .modal-backdrop {
+            z-index: 1000;
+        }
+
     </style>
     <!--<script type="text/javascript"-->
     <!--src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>-->
     <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.css" rel="stylesheet">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
-
     <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
     <script type="text/javascript" src="/js/new_vacancy.js"></script>
-    <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey})}"
+    <script th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleMapsApiKey} + '&libraries=places'}"
             async defer></script>
     <script type="text/javascript" src="/js/map.js"></script>
 </head>
 <body>
-
 <div layout:fragment="content">
     <div class="container-fluid" id="vacancy_container">
         <div class="row">
             <div class="col-sm-2">
             </div>
             <div class="col-sm-8">
-                <form class="well form-horizontal" id="vacancy_form">
+                <form class="well form-horizontal card empCard" id="vacancy_form" style="margin-top: 40px">
+                    <div class="card-body">
                     <fieldset>
-                        <legend align="center">
+                        <legend align="center" class="card-header">
                             <h2><b>Создание новой вакансии</b></h2>
                         </legend>
                         <br>
@@ -76,14 +96,14 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary" type="button" data-toggle="modal"
-                                                    data-target="#mapModal"
+                                                    data-target="#mapModal" style="background-color: #F39C12; color: #222"
                                                     onclick="initV_Map()"><i class="fas fa-map"></i>
                                             </button>
                                         </span>
                                     </div>
                                     <input name="v_address" id="v_address"
-                                           placeholder="Введите полный адрес вручную или выберите на карте (обязательно)"
-                                           class="form-control is-invalid" type="text">
+                                           placeholder="<----- Введите адрес или выберите на карте"
+                                           class="form-control is-invalid" type="text" readonly>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +115,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-home"></i></span>
                                     </div>
-                                    <select name="v_remote" id="v_remote" placeholder="Нужно выбрать место" class="form-control selectpicker is-invalid">
+                                    <select name="v_remote" id="v_remote" placeholder="Нужно выбрать место"
+                                            class="form-control selectpicker is-invalid">
                                         <option value="">Выберите роль</option>
                                         <option value="false">В офисе работодателя</option>
                                         <option value="true">Удаленная работа</option>
@@ -166,12 +187,13 @@
                             <div class="col-sm-1"></div>
                             <label class="col-md-11 control-label">Подробное описание вакансии</label>
                             <div class="col-sm-1"></div>
-                            <div class="col-md-10 inputGroupContainer">
+                            <div class="col-md-10 inputGroupContainer" style="background-color: #222">
                                 <form method="post">
                                     <textarea id="v_description" name="editordata"></textarea>
                                 </form>
                                 <div class="input-group">
-                                    <div class="invalid-feedback-description" style="width: 100%; margin-top: .25rem; font-size: 80%; color: #dc3545">
+                                    <div class="invalid-feedback-description"
+                                         style="width: 100%; margin-top: .25rem; font-size: 80%; color: #dc3545">
                                         сделайте полное описание, не менее 100 символов
                                     </div>
                                 </div>
@@ -187,8 +209,8 @@
                                 </button>
                             </div>
                         </div>
-
                     </fieldset>
+                    </div>
                 </form>
             </div>
         </div>
@@ -272,11 +294,14 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <div id="v_map" style="height: 600px"></div>
+                    <input name="v_address_modal" id="v_address_modal"
+                           placeholder="Введите полный адрес вручную или выберите на карте"
+                           class="form-control is-invalid" type="text">
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                </div>
+                <div id="v_map" style="height: 600px"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
             </div>
         </div>
     </div>

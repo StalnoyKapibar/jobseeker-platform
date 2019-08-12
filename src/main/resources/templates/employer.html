@@ -16,149 +16,345 @@
 </head>
 
 <body>
-
 <div layout:fragment="content">
+    <input type="hidden" id="employerProfileId" th:value="${employerProfile.id}">
+    <input type="hidden" id="seekerProfileId" th:value="${seekerProfileId}">
     <div id="eProfileDiv" class="container-fluid">
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
-                    <span id="EPId" th:text="${employerProfile.id}" hidden></span>
-                    <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown">
-                        Блокировать<span
-                            class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        <li><a onclick="blockEmployerProfile(1)">На сутки</a></li>
-                        <li><a onclick="blockEmployerProfile(3)">На 3 дня</a></li>
-                        <li><a onclick="blockEmployerProfile(7)">На 7 дней</a></li>
-                        <li><a onclick="blockEmployerProfile(14)">На 14 дней</a></li>
-                        <li><a onclick="blockEmployerProfile(0)">Бессрочно</a></li>
-                    </ul>
-                </div>
-                <h1><span id="EPcompanyName" th:text="${employerProfile.companyName}"></span></h1>
-                <h2><a th:href="@{'http://' + ${employerProfile.website}}" th:text="${employerProfile.website}"></a></h2>
-            </div>
-            <div class="col-sm-3" align="center">
-                <img th:src="@{'data:image/png;base64,' + ${logoimg}}" class="img-rounded"
-                     alt="Logo of company">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-5">
-                <span>О нас:</span><br/>
-                <div class="well well-sm">
-                    <span th:text="${employerProfile.description}"></span>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <span>Наши вакансии:</span>
-                <div class="list-group">
-                    <a th:each="vacancy, index: ${vacancies}" class="list-group-item"
-                       th:text="${vacancy.headline}"
-                       data-toggle="modal" data-target="#vacancyModal"
-                       th:onclick="'showVacancy('+${vacancy.id}+')'"></a>
-                </div>
-            </div>
-        </div>
-
-        <div sec:authorize="hasAnyRole('ROLE_SEEKER','ROLE_ADMIN')">
-            <div class="row">
-                <div class="col-sm-3">
-                </div>
-                <div class="col-sm-3">
-                    <h5><span>Отзывы о компании: </span>
-                        <input name="reviews-fix" type="number" class="rating fixed-rating"
-                               readonly="true" data-size="xs" data-rtl="false"
-                               th:value="${employerProfile.getAverageRating()}">
-                    </h5>
-                    <div th:if="${reviewStatus == false}">
-                        <p>Еще нет отзывов</p>
+        <div class="row" style="margin-top: 30px">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-10">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active"
+                           style="background-color: var(--sidebar-bg-color);color: var(--text-color)" id="nav-home-tab"
+                           data-toggle="tab" href="#nav-home"
+                           role="tab"
+                           aria-controls="nav-home" aria-selected="true">Основная информация</a>
+                        <a th:unless="${reviewStatus}"
+                           style="background-color: var(--sidebar-bg-color);color: var(--text-color)"
+                           class="nav-item nav-link" id="nav-reviews-tab" data-toggle="tab"
+                           href="#nav-reviews"
+                           role="tab"
+                           aria-controls="nav-reviews" aria-selected="false">Отзывы</a>
+                        <a th:if="${reviewStatus}"
+                           style="background-color: var(--sidebar-bg-color);color: var(--text-color)"
+                           class="nav-item nav-link" id="nav-reviews-tab" data-toggle="tab"
+                           href="#nav-reviews"
+                           role="tab"
+                           aria-controls="nav-reviews" aria-selected="false"
+                           th:text="'Отзывы (' + ${employerProfileReviews.size()} +')'"></a>
                     </div>
-                    <div th:if="${maxReviewsEvaluation != null}" class="panel panel-default">
-                        <a th:href="@{'/seeker/' + ${maxReviewsEvaluation.seekerProfile.id}}"
-                           th:text="${maxReviewsEvaluation.seekerProfile.name}"></a> <span
-                            th:text="${#dates.format(maxReviewsEvaluation.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
-                        <input name="reviews-fix" type="number" class="rating fixed-rating"
-                               readonly="true" data-size="xs" data-rtl="false"
-                               th:value="${maxReviewsEvaluation.evaluation}">
-                        <p th:text="${maxReviewsEvaluation.reviews}"></p>
-                    </div>
-                    <div th:if="${minReviewsEvaluation != null}" class="panel panel-default">
-                        <a th:href="@{'/seeker/' + ${minReviewsEvaluation.seekerProfile.id}}"
-                           th:text="${minReviewsEvaluation.seekerProfile.name}"></a> <span
-                            th:text="${#dates.format(minReviewsEvaluation.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
-                        <input name="reviews-fix" type="number" class="rating fixed-rating"
-                               readonly="true" data-size="xs" data-rtl="false"
-                               th:value="${minReviewsEvaluation.evaluation}">
-                        <p th:text="${minReviewsEvaluation.reviews}"></p>
-                    </div>
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <button type="button" class="btn btn-primary btn-sm btn-block"
-                                        data-toggle="modal"
-                                        data-target="#reviewsModal">Оставить отзыв
-                                </button>
+                </nav>
+                <div class="tab-content employerTab" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <div class="container-fluid">
+                            <div th:each="vac : ${vacancies}">
+                                <input type="hidden" class="employerVacancies" th:value="${vac}">
                             </div>
-                            <div class="col-sm-6" th:if="${employerProfile.getReviews().size() > 2}">
-                                <button type="button" class="btn btn-primary btn-sm btn-block"
-                                        data-toggle="modal"
-                                        data-target="#allReviewsModal">Все отзывы
-                                </button>
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 empCard" id="empVacancies">
+                                    <div class="card mb-3">
+                                        <h3 class="card-header">Наши вакансии:</h3>
+                                        <div class="card-body">
+                                            <div class="list-group">
+                                                <li th:each="vacancy, index: ${vacancies}" class="card border-success"
+                                                    style="margin-bottom: 20px"
+                                                    data-toggle="modal" data-target="#vacancyModal"
+                                                    th:onclick="'showVacancy('+${vacancy.id}+')'">
+                                                    <div class="card-header"><span th:text="${vacancy.headline}"></span>
+                                                    </div>
+                                                    <div class="card-body"><span
+                                                            th:text="${vacancy.shortDescription}"></span></div>
+                                                </li>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 empCard">
+                                    <div class="card mb-3">
+                                        <h3 class="card-header"><span id="EPcompanyName"
+                                                                      th:text="${employerProfile.companyName}"></span>
+                                        </h3>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-lg-6" style="position: relative">
+                                                    <img th:src="@{'data:image/png;base64,' + ${logoimg}}"
+                                                         class="img-rounded" alt="Logo of company">
+                                                </div>
+                                                <div class="col-lg-6" style="position: relative">
+                                                    <input name="reviews-fix" type="number"
+                                                           class="rating fixed-rating rating-loading" readonly="true"
+                                                           data-size="xs" data-rtl="false"
+                                                           th:value="${employerProfile.getAverageRating()}">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <p class="card-text"><span th:text="${employerProfile.description}"></span>
+                                            </p>
+                                            <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                                                <span id="EPId" th:text="${employerProfile.id}" hidden></span>
+                                                <button class="btn btn-danger dropdown-toggle" type="button"
+                                                        data-toggle="dropdown">
+                                                    Блокировать<span
+                                                        class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a onclick="blockEmployerProfile(1)">На сутки</a></li>
+                                                    <li><a onclick="blockEmployerProfile(3)">На 3 дня</a></li>
+                                                    <li><a onclick="blockEmployerProfile(7)">На 7 дней</a></li>
+                                                    <li><a onclick="blockEmployerProfile(14)">На 14 дней</a></li>
+                                                    <li><a onclick="blockEmployerProfile(0)">Бессрочно</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-muted">
+                                            <a th:href="@{'http://' + ${employerProfile.website}}"
+                                               th:text="${employerProfile.website}"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-reviews" role="tabpanel" aria-labelledby="nav-reviews-tab">
+                        <div>
+                            <div class="row" style="margin-top: 20px">
+                                <div class="col-sm-12">
+                                    <div th:unless="${reviewStatus}">
+                                        <div>
+                                            <span>Еще нет отзывов.</span>
+                                        </div>
+                                        <button style="margin-top: 30px" type="button" class="btn btn-primary btn-sm "
+                                                data-toggle="modal"
+                                                data-target="#addNewReview">Оставить отзыв
+                                        </button>
+                                    </div>
+                                    <div th:if="${reviewStatus}">
+                                        <div class="row" style="margin-top: 30px">
+                                            <div class="col-sm-6">
+                                                <h4><span>Отзывы о компании:</span></h4>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <h5><span th:text="'Средняя оценка ' + ${averageRating}"></span></h5>
+                                            </div>
+                                            <div sec:authorize="hasRole('ROLE_SEEKER')" th:unless="${isContain}"
+                                                 class="col-sm-3">
+                                                <button type="button" class="btn btn-primary btn-sm btn-block"
+                                                        data-toggle="modal"
+                                                        data-target="#addNewReview">Оставить отзыв
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <th:block th:each="review : ${employerProfileReviews}">
+                                                <div class="col-sm-6">
+                                                    <div class="reviewCard" style="margin-top: 20px"
+                                                         th:id="'cardReview_' + ${review.id}">
+                                                        <div class="card-body" style="border: 1px solid #00a379">
+                                                            <div class="row">
+                                                                <div class="col-sm-4">
+                                                                    <img class="rounded-circle" id="seekerProfilePhoto"
+                                                                         th:src="@{'data:image/png;base64,' + ${review.seekerProfile.encoderPhoto}}"
+                                                                         name="photo" alt=""
+                                                                         style="height: 100px;width: 100px">
+                                                                    <div th:id="'ratingReview_' + ${review.id}"
+                                                                         style="margin-top: 15%; font-size: 0.85em;"></div>
+                                                                </div>
+                                                                <div class="col-sm-8">
+                                                                    <div class="reviewDate"
+                                                                         th:text="${#dates.format(review.dateReviews, 'yyyy-MM-dd HH:mm')}">
+                                                                    </div>
+                                                                    <div class="editCardReview"
+                                                                         th:id="'editCardReview_' + ${review.id}"
+                                                                         th:if="${review.seekerProfile.id eq seekerProfileId and (T(java.lang.System).currentTimeMillis()-review.dateReviews.getTime()) < 604800000}">
+                                                                        <i data-toggle="modal"
+                                                                           data-target="#editReviewModal"
+                                                                           title="редактитовать отзыв"
+                                                                           class="fas fa-edit"
+                                                                           th:onclick="'showEditReview('+${review.id}+')'"></i>
+                                                                    </div>
+                                                                    <blockquote class="blockquote mb-0">
+                                                                        <p th:if="${review.reviews.length()>60}"
+                                                                           class="textReview">
+                                                                            <span th:value="${review.reviews}"
+                                                                                  th:text="${#strings.substring(review.reviews,0,60)} + ' ...'">
+                                                                            </span>
+                                                                            <span>
+                                                                                <button class="btn btn-link readMoreReviewButton"
+                                                                                        data-toggle="modal"
+                                                                                        data-target="#reviewsModal"
+                                                                                        th:onclick="'showReview('+${review.id}+')'"
+                                                                                        style="text-decoration: none">Читать полностью
+                                                                                </button>
+                                                                            </span>
+                                                                        </p>
+                                                                        <p th:unless="${review.reviews.length()>60}"
+                                                                           class="textReview">
+                                                                            <span th:text="${review.reviews}"></span>
+                                                                        </p>
+                                                                        <footer class="blockquote-footer seekerReviewName">
+                                                                            <cite title="На страницу соискателя">
+                                                                                <a class="btn btn-link"
+                                                                                   th:href="@{'/seeker/' + ${review.seekerProfile.id}}"
+                                                                                   th:text="${review.seekerProfile.name}">
+                                                                                </a>
+                                                                            </cite>
+                                                                        </footer>
+
+                                                                        <span class="reviewVotes"
+                                                                              sec:authorize="hasRole('ROLE_SEEKER')">
+                                                                            <span class="reviewLike"
+                                                                                  th:id="'reviewLike_' + ${review.id}"
+                                                                                  th:onclick="'toLike('+ ${review.id} +')'">
+                                                                                <i class="fas fa-thumbs-up"></i>
+                                                                                <span th:id="'reviewLikeCount_'+${review.id}"
+                                                                                      th:text="${review.like}"></span>
+                                                                            </span>
+                                                                            <span class="reviewDislike"
+                                                                                  th:id="'reviewDislike_' + ${review.id}"
+                                                                                  th:onclick="'toDislike('+ ${review.id} +')'">
+                                                                                    <i class="fas fa-thumbs-down"></i>
+                                                                                    <span th:id="'reviewDislikeCount_'+${review.id}"
+                                                                                          th:text="${review.dislike}"></span>
+                                                                            </span>
+                                                                        </span>
+                                                                    </blockquote>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </th:block>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row" style="height: 150px;"></div>
     </div>
 
-    <!--allReviewsModal-->
-    <div class="modal fade" id="allReviewsModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+    <!-- reviewsModal -->
+    <div class="modal fade" id="reviewsModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <!-- Modal content-->
             <div class="modal-content form-group">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Комментарий</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
                 <div class="modal-body">
-                    <div th:each="review : ${employerProfile.getReviews()}" class="panel panel-default">
-                        <a th:href="@{'/seeker/' + ${review.seekerProfile.id}}"
-                           th:text="${review.seekerProfile.name}"></a> <span
-                            th:text="${#dates.format(review.dateReviews, 'yyyy-MM-dd HH:mm')}"></span>
-                        <input name="reviews-fix" type="number" class="rating fixed-rating"
-                               readonly="true" data-size="xs" data-rtl="false"
-                               th:value="${review.evaluation}">
-                        <p th:text="${review.reviews}"></p>
-                    </div>
+                    <label for="reviewsText">Описание:</label>
+                    <textarea style="min-height: 200px" class="form-control" id="reviewsText" readonly></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- reviewsModal -->
-    <div class="modal fade" id="reviewsModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <!-- Modal content-->
-            <div class="modal-content form-group">
+    <!-- Add Review Modal -->
+    <div class="modal fade" id="addNewReview">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">Оцените</h4>
-                    <input id="review_evaluation"
-                           th:attr="data-employer-profile-id=${employerProfile.id}, data-seeker-profile-id=${seekerProfileId}"
-                           name="input-name" type="number" class="rating" min=0 max=5 step=1 data-size="lg">
+                    <h4 class="modal-title">Новый отзыв</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
+
+                <!-- Modal body -->
                 <div class="modal-body">
-                    <label for="reviewsText">Описание:</label>
-                    <textarea class="form-control rounded-0" id="reviewsText"></textarea>
+                    <div class="container-fluid" align="center">
+                        <div class="control-label">Описание</div>
+                        <div class="form-group">
+                                        <textarea rows="10" class="form-control" name="RMDescription"
+                                                  id="RMDescription"></textarea>
+                        </div>
+                        <div class="control-label">
+                            <span style="margin-right: 10px">Оценка:</span>
+                            <span id="RMRating" style="cursor: pointer">
+                                <i title="1" id="1" class="far fa-star RMStars" onclick="getNewReviewRating(1)"></i>
+                                <i title="2" id="2" class="far fa-star RMStars" onclick="getNewReviewRating(2)"></i>
+                                <i title="3" id="3" class="far fa-star RMStars" onclick="getNewReviewRating(3)"></i>
+                                <i title="4" id="4" class="far fa-star RMStars" onclick="getNewReviewRating(4)"></i>
+                                <i title="5" id="5" class="far fa-star RMStars" onclick="getNewReviewRating(5)"></i>
+                            </span>
+                            <span style="margin-left: 20px;cursor: pointer">
+                                <i title="сбросить оценку" class="fas fa-undo-alt" onclick="resetRating()"></i>
+                            </span>
+                            <input type="hidden" id="RMRatingValue" value="0">
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Modal footer -->
                 <div class="modal-footer">
-                    <input name="_csrf" type="hidden" th:value="${_csrf.token}"/>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-primary postReview">Добавить отзыв</button>
+                    <button type="button" class="btn btn-success" onclick="addModalReview()">Добавить
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Review Modal -->
+    <div class="modal fade" id="editReviewModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Редактирование отзыва</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body reviewCard" align="center">
+                    <div class="control-label">Описание</div>
+                    <div class="form-group">
+                                        <textarea rows="10" class="form-control" name="RMEditDescription"
+                                                  id="RMEditDescription"></textarea>
+                    </div>
+                    <div class="control-label">
+                        <span style="margin-right: 10px">Оценка:</span>
+                        <span id="RMEditRating" style="cursor: pointer">
+                            </span>
+                        <span style="margin-left: 20px;cursor: pointer">
+                                <i title="сбросить оценку" class="fas fa-undo-alt" onclick="resetEditRating()"></i>
+                            </span>
+                        <input type="hidden" id="RMEditRatingValue" value="0">
+                    </div>
+                    <input type="hidden" id="RMEditId" name="RMEditId">
+                    <input type="hidden" id="RMEditDate" name="RMEditDate">
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="editModalReview()">Изменить
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="deleteReview()">Удалить</button>
+                </div>
+
             </div>
         </div>
     </div>
 
     <!-- vacancyModal -->
     <div id="vacancyModal" class="modal fade" role="dialog">
-        <div class="modal-dialog  modal-lg">
+        <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
@@ -170,7 +366,7 @@
                     <h3><span id="VMHeadline"></span><br/></h3>
                     <span id="VMCity"></span>
                     <span id="VMRemote"> (Удаленная работа)</span><br/>
-                    <span id="VMAddress"></span><br>
+                    <span id="VMAddress"></span>
                     <a data-toggle="collapse" data-target="#map_collapse"> Показать на карте</a>
                     <div id="map_collapse" class="collapsed collapse">
                         <div id="map" style="height: 300px"></div>
@@ -202,7 +398,6 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                     </div>
                     <div sec:authorize="!hasRole('ROLE_ADMIN')">
-                        <a class="btn btn-secondary" id="VMedit_butt" href="#">Редактировать вакансию</a>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                     </div>
                 </div>

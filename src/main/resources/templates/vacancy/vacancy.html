@@ -17,12 +17,11 @@
     <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <script type="text/javascript" src="/js/seeker.js"></script>
     <script type="text/javascript" src="/js/responding.js"></script>
+    <script type="text/javascript" src="/js/vacancy.js"></script>
 </head>
-
 <body>
-
 <div layout:fragment="content">
-    <div class="container-fluid" id="vacancy_container" style="margin-left: 15%; margin-right: 15%">
+    <div class="container-fluid" id="vacancy_container" style="margin-left: 15%; margin-right: 15%; margin-top: 40px">
         <div class="row">
             <div class="col-sm-8">
                 <h1 th:utext="'<b>'+${vacancyFromServer.getHeadline()}+'</b>'"></h1>
@@ -135,6 +134,21 @@
                                 th:onclick="'toSubscribe(' + ${vacancyFromServer.id} + ',' + ${seekerProfileId} + ')'">
                             Подтвердить
                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8">
+                <div sec:authorize="hasRole('ROLE_SEEKER')" class="container-fluid" style="padding-right: 0px; padding-left: 0px">
+                    <div class="empCard" style="margin-left: 0px;">
+                        <div class="card mb-3">
+                            <h3 class="card-header">Ранее просмотренные вакансии:</h3>
+                            <div class="card-body" style="overflow-x: scroll; white-space: nowrap;">
+                                <input type="hidden" id="seekerProfileId" th:value="${seekerProfileId}">
+                                <ul id="viewed_vacancies"></ul>
+                            </div>
+                        </div>
                     </div>
                     <div id="chat_alert" class="alert alert-success mt-3 d-none" role="alert">
                         Вы отправили заявку на интрервью. Для того, чтобы обсудить
