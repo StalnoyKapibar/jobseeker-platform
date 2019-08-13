@@ -43,6 +43,7 @@ public class SeekerProfile extends Profile implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST,
             fetch = FetchType.EAGER,
             mappedBy = "seekerProfile")
+    @OrderBy("status, date desc")
     private Set<Meeting> meetings;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

@@ -5,7 +5,6 @@ import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.io.Serializable;
 
 @Entity
@@ -81,14 +80,14 @@ public class Meeting implements Serializable {
         this.status = status;
     }
 
-//    @Override
-//    public String toString() {
-//        return "Meeting{" +
-//                "id=" + id +
-//                ", seekerProfile=" + seekerProfile +
-//                ", vacancy='" + vacancy + '\'' +
-//                ", date='" + date + '\'' +
-//                ", status=" + status +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "Meeting{" +
+                "id=" + id +
+                ", seekerProfile=" + seekerProfile +
+                ", vacancy='" + vacancy + '\'' +
+                ", date='" + date + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

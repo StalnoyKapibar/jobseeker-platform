@@ -48,6 +48,9 @@ function formatStatuses(list) {
             case "CONFIRMED_BY_USER":
                 $(list[i]).text("Одобрена кандидатом");
                 break;
+            case "PASSED":
+                $(list[i]).text("Завершилась");
+                break;
         }
     }
 }

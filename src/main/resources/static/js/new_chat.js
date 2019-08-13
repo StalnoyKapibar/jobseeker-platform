@@ -114,7 +114,7 @@ function getMessageLog(message) {
 
 function addSpecialMessage(message) {
     let messageLog = getMessageLog(message);
-    $(".msg_history").append('<div class="text-center"><p>'+ messageLog +'</p></div>')
+    $(".msg_history").append('<div class="special_msg text-center"><p>'+ messageLog +'</p></div>')
 }
 
 function addYourMessage(message) {

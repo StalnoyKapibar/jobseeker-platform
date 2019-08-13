@@ -1,12 +1,11 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.Meeting;
-import com.jm.jobseekerplatform.model.Status;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
-import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
@@ -32,7 +31,6 @@ public class ChatController {
         User user = (User) authentication.getPrincipal();
         Long userId = user.getProfile().getId();
         ChatWithTopic chat = chatWithTopicService.getById(chatId);
-
         /*
         * Блок кода выполняется в случае, если тема топика вакансия
         * Если так, происходит проверка, является ли юзер работодателем,
@@ -52,11 +50,12 @@ public class ChatController {
             boolean isVacancyOwner = !userId.equals(seekerId);
             model.addAttribute("isOwner", isVacancyOwner);
         }
-
+        if(user.getClass() == SeekerUser.class){
+            model.addAttribute("seekerProfileId", userId);
+        }
 
         model.addAttribute("profileId", userId);
         model.addAttribute("chatId", chatId);
-
 
         return "chat";
     }

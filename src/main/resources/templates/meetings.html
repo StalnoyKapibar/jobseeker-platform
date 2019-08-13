@@ -10,42 +10,33 @@
     <script type="text/javascript" src="/js/date_status_format.js"></script>
 </head>
 <body>
-<div id="sProfileDiv"  layout:fragment="content">
-    <div class="container-fluid">
-                <div th:if="${isOwner && !seekerProfile.meetings.isEmpty()}" id="table" style="padding: 15px;">
-                    <table class="table table-striped">
-                        <thead class="" style="border-width: 0px;">
-                        <h3>Текущие приглашения</h3>
-                        <tr style="font-weight: bold; ">
-                            <th scope="col">№</th>
-                            <th scope="col">Вакансия</th>
-                            <th scope="col">Профиль</th>
-                            <th scope="col">Статус</th>
-                            <th scope="col">Дата встречи</th>
-                            <th scope="col">Подтверждение</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr id="tableRows" th:each="meeting,mCount: ${seekerProfile.meetings}" style="font-weight: normal;">
-                            <td th:text="${mCount.count}"></td>
-                            <td th:text="${meeting.vacancy.headline}"></td>
-                            <td><a th:href="@{'/vacancy/' +  ${meeting.vacancy.id}}">вакансия</a></td>
-                            <td class="tableStatus" th:text="${meeting.status}"></td>
-                            <td class="tableDate" th:text="${meeting.date!=null ? meeting.date : 'N/A'}"></td>
-                            <td>
-                                <button th:if="${meeting.status==meeting.status.SCHEDUALED}" th:onclick="'confirmMeeting(' + ${meeting.id} + ')'" type="button" class="btn btn-dark">Подтвердить</button>
-                                <button th:if="${meeting.status==meeting.status.NOT_CONFIRMED || meeting.status==meeting.status.CONFIRMED_BY_USER}"
-                                        type="button" disabled="disabled" class="btn btn-warning disabled">Ожидание подверждения</button>
-                                <button th:if="${meeting.status==meeting.status.CONFIRMED}" type="button" disabled="disabled"
-                                        class="btn btn-success disabled">Встреча назначена</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+<div id="sProfileDiv" layout:fragment="content">
+    <div class="container-fluid" style="margin: 30px">
+        <h3>Текущие приглашения</h3>
+        <h4 th:if="${seekerProfile.meetings.isEmpty()}">У вас пока нет приглашений</h4>
+        <div th:if="${isOwner && !seekerProfile.meetings.isEmpty()}" id="table" style="padding: 15px;">
+            <table class="table table-sm table-bordered" style=" width: 80% ;background-color: var(--sidebar-bg-color); color: var(--text-color)">
+                <thead class="" style="border-width: 0px;">
+                    <tr style="font-weight: bold; ">
+                        <th scope="col">№</th>
+                        <th scope="col">Вакансия</th>
+                        <th scope="col">Страница</th>
+                        <th scope="col">Статус</th>
+                        <th scope="col">Дата встречи</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr id="tableRows" th:each="meeting,mCount: ${seekerProfile.meetings}" style="font-weight: normal;">
+                    <td th:text="${mCount.count}"></td>
+                    <td th:text="${meeting.vacancy.headline}"></td>
+                    <td><a th:href="@{'/vacancy/' +  ${meeting.vacancy.id}}">вакансия</a></td>
+                    <td class="tableStatus" th:text="${meeting.status}"></td>
+                    <td class="tableDate" th:text="${meeting.date!=null ? meeting.date : 'N/A'}"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-
 </body>
 </html>
