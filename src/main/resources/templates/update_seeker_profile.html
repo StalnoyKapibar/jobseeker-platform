@@ -23,21 +23,21 @@
                                     <div class="input-group-prepend" style="width: 30%">
                                         <span>Имя</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="Имя" th:value="${seekerProfile.name}">
+                                    <input type="text" class="form-control" placeholder="Имя" th:value="${seekerProfile.name}" id="name">
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend" style="width: 30%">
                                         <span >Фамилия</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="Фамилия" th:value="${seekerProfile.surname}">
+                                    <input type="text" class="form-control" placeholder="Фамилия" th:value="${seekerProfile.surname}" id="surname">
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend" style="width: 30%">
                                         <span >Отчество</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="Отчество" th:value="${seekerProfile.patronymic}">
+                                    <input type="text" class="form-control" placeholder="Отчество" th:value="${seekerProfile.patronymic}" id="patronymic">
                                 </div>
 
                                 <h6>Теги:</h6>
@@ -55,7 +55,9 @@
                                 </div>
                             </div>
                             <div class="col-sm-6 ml-auto" >
+                                <div id = "profile_img">
                                 <img th:src="@{'data:image/png;base64,' + ${photoimg}}" class="img-rounded" alt="Photo">
+                                </div>
                                 <div class="input-group">
                                 <form method="POST" enctype="multipart/form-data" id="imageUploadForm" class="col-lg-6" >
                                     <div class="custom-file">
@@ -68,21 +70,25 @@
                                 </div>
                                 </div>
                         </div>
+                        <br/>
                         <div class="row">
                             <div class="col-sm-11">
-                                <span>Мои проекты:</span><br/>
-                                <div class="list-group">
-                                    <a th:each="portfolio, index: ${seekerProfile.portfolios}" class="list-group-item list-group-item-action"
+                                    <div class="d-flex justify-content-between ">
+                                        <span>Мои проекты:</span>
+                                        <a href="javascript:false" class="text-primary" th:onclick="'show_add_portf_modal('+${seekerProfile.id}+')'">Добавить проект <i class="far fa-plus-square"></i></a>
+                                    </div>
+                                <div class="list-group" id = "portfolio_list">
+                                    <a th:each="portfolio, index: ${seekerProfile.portfolios}" th:id ="${portfolio.id}+'_portf'" class="list-group-item list-group-item-action"
                                        href="#"  th:text="${portfolio.projectName}" data-toggle="modal" data-target="#portfolioModal"
                                        th:onclick="'show_portfolio('+${portfolio.id}+')'"></a>
                                 </div><br/>
                                 <span>Обо мне:</span><br/>
                                 <div class="well well-sm" style="background-color: var(--card-bg-color)">
-                                 <textarea class="form-control" id="description" rows="3"
-                                 th:text="${seekerProfile.description}" style="height: 100px"></textarea>
+                                 <textarea class="form-control" rows="3"
+                                 th:text="${seekerProfile.description}" style="height: 100px" id="profile_description"></textarea>
                                 </div><br>
                                 <!-- кнопка сохранения изменения -->
-                                <button type="button" class="btn btn-primary">Сохранить изменения</button>
+                                <button type="button" class="btn btn-primary" th:onclick="'update('+${seekerProfile.id}+')'">Сохранить изменения</button>
                             </div>
                         </div>
                     </div>
@@ -100,6 +106,7 @@
                         <div class="modal-body">
                             <div class="input-group mb-3">
                             <div class="input-group-prepend" style="width: 30%">
+                                <input type="hidden" id="prtf_id_to_updte">
                                 <span>Название проекта</span>
                             </div>
                             <input type="text" class="form-control" placeholder="Название проекта" id = "portf_name_input">
@@ -122,11 +129,54 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal" style="margin-right: 20px">Удалить проект</button>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Сохранить</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="update_prtf()">Сохранить</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
                         </div>
                     </div>
 
+                </div>
+            </div>
+
+<!--            модальное окно добавления проекта-->
+            <div class="modal fade" id="add_prtf_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Добавление проекта</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend" style="width: 30%">
+                                    <input type="hidden" id="profile_id_to_add_portf">
+                                    <span>Название проекта</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Название проекта" id = "add_portf_name_input">
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend" style="width: 30%">
+                                    <span>Ссылка</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Ссылка напроект" id = "add_portf_link_input">
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend" style="width: 30%">
+                                    <span>Описание</span>
+                                </div>
+                                <textarea class="form-control" id="add_portf_description_textarea" rows="3" style="height: 100px"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="add_portfolio()">Добавить</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

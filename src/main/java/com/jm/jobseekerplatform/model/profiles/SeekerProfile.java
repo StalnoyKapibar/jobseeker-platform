@@ -1,5 +1,7 @@
 package com.jm.jobseekerplatform.model.profiles;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.jm.jobseekerplatform.model.Portfolio;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
@@ -39,6 +41,7 @@ public class SeekerProfile extends Profile implements Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Set<Vacancy> favoriteVacancy;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
