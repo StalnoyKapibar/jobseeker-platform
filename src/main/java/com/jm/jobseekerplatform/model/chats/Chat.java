@@ -12,6 +12,9 @@ import java.util.List;
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
  */
 
+//todo (Nick Dolgopolov) кэширование
+//todo (Nick Dolgopolov) EAGER -> LAZY
+
 @Entity
 @Inheritance
 @Table(name = "chats")
