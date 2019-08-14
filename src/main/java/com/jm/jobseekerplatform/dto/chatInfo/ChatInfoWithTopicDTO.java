@@ -1,13 +1,12 @@
-package com.jm.jobseekerplatform.dto;
+package com.jm.jobseekerplatform.dto.chatInfo;
 
-import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 
 /**
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
  */
-public class ChatInfoDetailWithTopicDTO extends ChatInfoDetailDTO {
+public class ChatInfoWithTopicDTO extends ChatInfoDTO {
 
     private long topicCreatorProfileId;
 
@@ -21,8 +20,8 @@ public class ChatInfoDetailWithTopicDTO extends ChatInfoDetailDTO {
 
     private String topicTitle;
 
-    public ChatInfoDetailWithTopicDTO(ChatWithTopicVacancy chatWithTopic, Long countOfUnreadMessages, ChatMessage lastMessage) {
-        super(chatWithTopic, countOfUnreadMessages, lastMessage);
+    public ChatInfoWithTopicDTO(ChatWithTopicVacancy chatWithTopic) {
+        super(chatWithTopic);
         this.topicTitle = chatWithTopic.getTopic().getHeadline();
         InitCommon(chatWithTopic);
     }
@@ -84,4 +83,5 @@ public class ChatInfoDetailWithTopicDTO extends ChatInfoDetailDTO {
     public void setTopicTitle(String topicTitle) {
         this.topicTitle = topicTitle;
     }
+
 }

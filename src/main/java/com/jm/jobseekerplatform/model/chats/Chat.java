@@ -37,7 +37,6 @@ public class Chat implements Serializable {
     @JsonIgnore
     private List<ChatMessage> chatMessages;
 
-
     public Chat() {
     }
 
@@ -61,20 +60,12 @@ public class Chat implements Serializable {
         this.creatorProfile = creatorProfile;
     }
 
-    public Profile getCreator() {
-        return creatorProfile;
-    }
-
     public List<Profile> getChatMembers() {
         return chatMembers;
     }
 
     public void setChatMembers(List<Profile> chatMembers) {
         this.chatMembers = chatMembers;
-    }
-
-    public void setChatMessages(List<ChatMessage> chatMessages) {
-        this.chatMessages = chatMessages;
     }
 
     public List<ChatMessage> getChatMessages() {

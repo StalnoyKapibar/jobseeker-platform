@@ -1,4 +1,4 @@
-package com.jm.jobseekerplatform.dto;
+package com.jm.jobseekerplatform.dto.chatInfo;
 
 import com.jm.jobseekerplatform.model.chats.Chat;
 
@@ -15,9 +15,9 @@ public class ChatInfoDTO {
     public ChatInfoDTO(Chat chat) {
         this.id = chat.getId();
 
-        this.creatorProfileId = chat.getCreator().getId();
-        this.creatorName = chat.getCreator().getFullName();
-        this.creatorType = chat.getCreator().getTypeName();
+        this.creatorProfileId = chat.getCreatorProfile().getId();
+        this.creatorName = chat.getCreatorProfile().getFullName();
+        this.creatorType = chat.getCreatorProfile().getTypeName();
     }
 
     public long getId() {

@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.service.impl.chats;
 
 import com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicAbstractDAO;
-import com.jm.jobseekerplatform.dto.ChatInfoDetailWithTopicDTO;
+import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;

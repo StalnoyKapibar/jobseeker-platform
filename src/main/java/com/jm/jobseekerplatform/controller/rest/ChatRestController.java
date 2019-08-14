@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.dto.ChatInfoDetailWithTopicDTO;
-import com.jm.jobseekerplatform.dto.ChatInfoWithTopicDTO;
+import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO;
+import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoWithTopicDTO;
 import com.jm.jobseekerplatform.dto.MessageReadDataDTO;
 import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;

@@ -42,11 +42,13 @@ $(document).ready(function () {
             {
                 "mData": "null",
                 "mRender": function (data, type, full) {
-                    const text = full.lastMessage === null ? "no messages" : full.lastMessage.text;
-                    const date = full.lastMessage === null ? "" : full.lastMessage.date;
-
-                    return "<p>" + text + "<\p>"
-                        + "<p>" + date + "<\p>";
+                    const author =
+                        full.lastMessageCreatorType + " " +
+                        full.lastMessageCreatorName + " " +
+                        "(id=" + full.lastMessageProfileId + ")";
+                    return "<p>" + author + "<\p>" +
+                            "<p>" + full.lastMessageText + "<\p>" +
+                             "<p>" + full.lastMessageDate + "<\p>";
                 }
             },
             {
@@ -59,7 +61,7 @@ $(document).ready(function () {
     });
 });
 
-$(document).ready (function () {
+$(document).ready(function () {
     'use strict';
 
     feather.replace()

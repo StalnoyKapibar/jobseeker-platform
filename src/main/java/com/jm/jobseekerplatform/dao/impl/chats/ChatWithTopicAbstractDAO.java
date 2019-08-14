@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.dao.impl.chats;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
-import com.jm.jobseekerplatform.dto.ChatInfoDetailWithTopicDTO;
+import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import org.springframework.stereotype.Repository;
 
@@ -177,7 +177,7 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
 
         List<ChatInfoDetailWithTopicDTO> listOfChatInfoDetailWithTopicDTO =
                 entityManager.createQuery(
-                        "SELECT new com.jm.jobseekerplatform.dto.ChatInfoDetailWithTopicDTO(" +
+                        "SELECT new com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO(" +
                                 "c, count (case " +
                                 "when (exists( " +
                                 "select m3 " +
