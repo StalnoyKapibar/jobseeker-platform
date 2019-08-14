@@ -30,7 +30,7 @@ public class MeetingService {
 
     public void updateMeetingsOnPassing() {
         List<Meeting> meetings = dao.getAllWihoutPassed();
-        if(meetings != null) {
+        if (meetings != null) {
             LocalDateTime dateTime = LocalDateTime.now();
             for (Meeting meeting : meetings) {
                 if (dateTime.isAfter(meeting.getDate())) {

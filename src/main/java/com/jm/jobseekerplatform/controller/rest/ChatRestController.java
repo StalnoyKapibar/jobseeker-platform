@@ -95,9 +95,8 @@ public class ChatRestController {
         return chatsInfo;
     }
 
-    @PostMapping(params = {"vacancyId","seekerId"})
-    public String saveMeeting(@RequestParam("vacancyId") Long vacancyId,
-                            @RequestParam("seekerId") Long seekerId){
+    @PostMapping
+    public String saveMeeting(@RequestParam("vacancyId") Long vacancyId, @RequestParam("seekerId") Long seekerId){
         SeekerProfile seeker = seekerProfileService.getById(seekerId);
         ChatWithTopic<Vacancy> chat = chatWithTopicService.getByTopicIdCreatorProfileIdChatType(vacancyId, seeker.getId(), ChatWithTopicVacancy.class);
         if (chat == null) {
