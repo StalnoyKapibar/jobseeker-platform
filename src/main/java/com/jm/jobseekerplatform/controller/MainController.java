@@ -1,5 +1,7 @@
 package com.jm.jobseekerplatform.controller;
 
+import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.Vacancy;
@@ -182,21 +184,25 @@ public class MainController {
 
     @RequestMapping(value = "/vacancy/{vacancyId}", method = RequestMethod.GET)
     public String viewVacancy(@PathVariable Long vacancyId, Model model, Authentication authentication) {
-
         Vacancy vacancy = vacancyService.getById(vacancyId);
         if (authentication != null) {
             boolean isContain;
             boolean isSubscribe;
+            boolean hasResponded;
             Long id = ((User) authentication.getPrincipal()).getId();
             Profile profile = userService.getById(id).getProfile();
             if (profile instanceof SeekerProfile) {
                 Subscription subscription = subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, vacancy.getCreatorProfile());
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
                 isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(subscription);
+                hasResponded = vacancy.getMeetings()
+                        .stream().filter(meeting -> meeting.getSeekerProfile().getId().equals(id)).findFirst().isPresent();
                 model.addAttribute("isContain", isContain);
                 model.addAttribute("isSubscribe", isSubscribe);
                 model.addAttribute("seekerProfileId", profile.getId());
+                model.addAttribute("hasResponded", hasResponded);
             }
+            model.addAttribute("profileId", profile.getId());
         }
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("vacancyFromServer", vacancy);

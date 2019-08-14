@@ -1,9 +1,11 @@
 package com.jm.jobseekerplatform.controller;
 
+import com.jm.jobseekerplatform.model.Meeting;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
@@ -25,13 +27,29 @@ public class ChatController {
     private ChatWithTopicService chatWithTopicService;
 
     @RequestMapping("/chat/{chatId}")
-    public String getChatById(@PathVariable("chatId") String chatId, Authentication authentication, Model model) {
-
+    public String getChatById(@PathVariable("chatId") Long chatId, Authentication authentication, Model model) {
         User user = (User) authentication.getPrincipal();
-
-        model.addAttribute("profileId", user.getProfile().getId());
+        Long userId = user.getProfile().getId();
+        ChatWithTopic chat = chatWithTopicService.getById(chatId);
+        if(chat.getClass() == ChatWithTopicVacancy.class) {
+            ChatWithTopicVacancy chatWithTopicVacancy = (ChatWithTopicVacancy) chat;
+            model.addAttribute("topicName", "вакансия");
+            model.addAttribute("topic", chatWithTopicVacancy.getTopic());
+            Long seekerId = chatWithTopicVacancy.getCreator().getId();
+            Long vacancyId = chatWithTopicVacancy.getTopic().getId();
+            Meeting newMeeting = chatWithTopicVacancy.getTopic().getMeetings().stream()
+                    .filter(meeting -> meeting.getSeekerProfile().getId().equals(seekerId)
+                            && meeting.getVacancy().getId().equals(vacancyId))
+                    .findFirst()
+                    .orElse(null);
+            model.addAttribute("meeting", newMeeting);
+            model.addAttribute("isOwner", !userId.equals(seekerId));
+        }
+        if(user.getClass() == SeekerUser.class) {
+            model.addAttribute("seekerProfileId", userId);
+        }
+        model.addAttribute("profileId", userId);
         model.addAttribute("chatId", chatId);
-
         return "chat";
     }
 
