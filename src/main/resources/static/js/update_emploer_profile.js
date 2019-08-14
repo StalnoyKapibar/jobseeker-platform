@@ -83,8 +83,6 @@ function show_delete_vacancy_alert(vacancyId) {
     $('#del_vac_id').val(vacancyId);
     $('#del_vac_allert').modal('show');
 }
-
-
 function delete_vacancy(){
         $.ajax({
             type: 'post',
