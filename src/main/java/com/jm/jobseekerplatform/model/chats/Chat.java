@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -34,13 +36,11 @@ public class Chat implements Serializable {
     @JsonIgnore
     private List<ChatMessage> chatMessages;
 
-
     public Chat(){ }
 
     public Chat(Profile creator){
         this.creator = creator;
     }
-
 
     public Long getId() {
         return id;

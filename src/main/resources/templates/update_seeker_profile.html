@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <title>UpdateSeekerProfile</title>
+    <script type="text/javascript" src="/js/update_seeker_profile.js"></script>
+    <style>
+
+    </style>
+</head>
+<body style="background-color: var(--bg-color)">
+<div id="sProfileDiv"  layout:fragment="content">
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-8">
+            <div class="container-fluid" style="margin-left: 15%;margin-right: 15%">
+                <div class="card mb-3 empCard" style="margin-top: 40px">
+                    <div class="card-header"><h4>Профиль</h4></div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend" style="width: 30%">
+                                        <span>Имя</span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Имя" th:value="${seekerProfile.name}">
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend" style="width: 30%">
+                                        <span >Фамилия</span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Фамилия" th:value="${seekerProfile.surname}">
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend" style="width: 30%">
+                                        <span >Отчество</span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Отчество" th:value="${seekerProfile.patronymic}">
+                                </div>
+
+                                <h6>Теги:</h6>
+                                <h6><span th:each="tag : ${seekerProfile.tags}" th:text="${tag.name} + ' '" class="badge badge-pill badge-success btnClick text-dark"></span></h6>
+
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Tags" id = "tags_input">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default" type="submit">
+                                            <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-5" align="right">
+                                <img th:src="@{'data:image/png;base64,' + ${photoimg}}" class="img-rounded" alt="Photo">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-11">
+                                <span>Мои проекты:</span><br/>
+                                <div class="list-group">
+                                    <a th:each="portfolio, index: ${seekerProfile.portfolios}" class="list-group-item"
+                                       th:text="${portfolio.projectName}" data-toggle="modal" data-target="#portfolioModal"
+                                       th:onclick="'showPortfolio('+${portfolio.id}+')'"></a>
+                                </div><br/>
+                                <span>Обо мне:</span><br/>
+                                <div class="well well-sm" style="background-color: var(--card-bg-color)">
+                                    <span th:text="${seekerProfile.description}"></span>
+                                </div><br>
+                                <!-- кнопка приглашения -->
+                                <button type="button" th:onclick="'showInviteModal('+${seekerProfile.id}+')'" class="btn btn-warning">
+                                    <i class="fas fa-user-plus"></i>InviteFriend</button>
+                                <button class="btn btn-success" th:onclick="'window.location.href = \'' + @{/seeker/vacancies/{id}(id=${seekerProfile.id})} + '\''">Избранное</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div id="portfolioModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title"><span id="PMHeadline"></span></h2>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <h4><a id="PMlink"></a></h4>
+                            <div class="well well-sm">
+                                <span id="PMDescription"></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- модальное окно приглашения -->
+    <div id="inviteFriendModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Вы можете пригласить друга здесь</h2>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body text-center edit-form">
+
+
+                    <label for="seekerProfile-input-add">Seeker</label>
+                    <input id="seekerProfile-input-add" class="form-control"
+                           type="text"
+                           placeholder="Seeker" name="seekerProfile"/>
+
+                    <label for="friend-input-add">Friend</label>
+                    <input id="friend-input-add" class="form-control"
+                           type="text" placeholder="Введите Email друга"
+                           name="friend"/>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="inviteFriend(document.getElementById('seekerProfile-input-add').value,
+                    document.getElementById('friend-input-add').value)"
+                            class="btn btn-primary "><i class="fas fa-envelope"></i>
+                        Send Invitation
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -80,12 +80,16 @@ function add_emploer_img(id) {
 
 function show_delete_vacancy_alert(vacancyId) {
     $('#vac_name_to_del').text($('[data-id = '+vacancyId+']').text());
+    $('#del_vac_id').val(vacancyId);
     $('#del_vac_allert').modal('show');
-    $('#del_yes').click( function () {
+}
+
+
+function delete_vacancy(){
         $.ajax({
             type: 'post',
             url: "/api/vacancies/delete",
-            data: JSON.stringify({'id':vacancyId})
+            data: JSON.stringify({'id':$('#del_vac_id').val()})
             ,
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
@@ -93,36 +97,13 @@ function show_delete_vacancy_alert(vacancyId) {
                 request.setRequestHeader(header, token);
             },
             success: function (vacancies) {
-                $('[data-id = '+vacancyId+']').remove();
-                $('#del_vac_allert').modal('show');
-
+                $('#'+$('#del_vac_id').val()+'_li').remove();
+                $('#del_vac_allert').modal('hide');
             },
             error: function (error) {
                 console.log(error);
                 alert(error.toString());
+                $('#'+vacancyId+'_del_btn').setAttribute('onclick', '');
             }
         })
-    })
-
 }
-
-// function delete_vacancy(vacancyId) {
-//     $.ajax({
-//         type: 'post',
-//         url: "/api/employerprofiles/delete_vacancy",
-//         data: JSON.stringify({'vacancy':vacancyId})
-//         ,
-//         dataType: "json",
-//         contentType: 'application/json; charset=utf-8',
-//         beforeSend: function (request) {
-//             request.setRequestHeader(header, token);
-//         },
-//         success: function (vacancies) {
-//             $(this).remove();
-//         },
-//         error: function (error) {
-//             console.log(error);
-//             alert(error.toString());
-//         }
-//     })
-// }

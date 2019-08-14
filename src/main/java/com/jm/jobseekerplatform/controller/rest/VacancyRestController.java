@@ -107,9 +107,6 @@ public class VacancyRestController {
     @PostMapping("/delete")
     @ResponseBody
     public List<Vacancy> getSearchUserProfiles(@RequestBody Vacancy vacancy) throws JSONException {
-//        JSONObject jsonData = new JSONObject(jsonReq);
-//        JSONObject jsonVacancy= new JSONObject(String.valueOf(jsonData.getJSONObject("vacancy")));
-//        vacancyService.delete(vacancyService.getById(jsonVacancy.getLong("id")));
         long id = vacancy.getId();
         Vacancy delVacancy = vacancyService.getById(id);
         vacancyService.delete(delVacancy);

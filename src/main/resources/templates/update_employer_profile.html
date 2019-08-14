@@ -99,7 +99,9 @@
                                 </div>
                         <div class="card-body">
                             <div class="list-group" id="allVacancies" style="height: 200px; overflow: auto;">
-                                <li class="card border-success vac" style="margin: 5px" th:each="vacancy: ${vacancies}">
+                                <div th:each="vacancy: ${vacancies}">
+                                <li class="card border-success vac" style="margin: 5px"
+                                    th:id ="${vacancy.id}+'_li'" th:if="${vacancy.publicationPosition} == null">
                                     <div class="input-group">
                                         <div class="card-header" style="width: 80%"><span
                                                 th:text="${vacancy.headline}" th:data-id="${vacancy.id}"></span></div>
@@ -112,6 +114,7 @@
                                         </button>
                                     </div>
                                 </li>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -155,11 +158,6 @@
                 </div>
             </div>
 
-<!--        &lt;!&ndash; Button trigger modal &ndash;&gt;-->
-<!--        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#del_vac_allert">-->
-<!--            Launch demo modal-->
-<!--        </button>-->
-
         <!-- delete vacancy alert modal -->
         <div class="modal fade" id="del_vac_allert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -173,9 +171,10 @@
                     <div class="modal-body">
                         <div class="h5">Вы действительно хотите удалить вакансию:</div>
                         <div id="vac_name_to_del" class="h4"></div>
+                        <input type="hidden" id="del_vac_id">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" id="del_yes">Да</button>
+                        <button type="button" class="btn btn-danger" id="del_yes" onclick="delete_vacancy()">Да</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Нет</button>
                     </div>
                 </div>
@@ -184,10 +183,5 @@
 
         </div>
     </div>
-
-    <script>
-        $("#card_body_2").sortable();
-    </script>
-
 </body>
 </html>

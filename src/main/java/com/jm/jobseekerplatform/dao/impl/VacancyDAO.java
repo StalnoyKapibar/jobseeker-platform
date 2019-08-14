@@ -139,10 +139,27 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     }
 
     public void delete(Vacancy vacancy){
-        entityManager.unwrap(Session.class)
-                .createSQLQuery("delete from profile_favorite_vacancy where = favorite_vacancy_id = :id")
-                .setParameter("id", vacancy.getId());
-        entityManager.remove(vacancy);
+        List<String> qeries = new LinkedList<>();
+        qeries.add("delete from profile_favorite_vacancy where favorite_vacancy_id  = :id");
+        qeries.add("delete from chats_chat_messages ccm where exists(select * from chats ch where ccm.chat_id = ch.id and ch.topic_id = :id)");
+        qeries.add("delete from chats where topic_id = :id");
+        qeries.add("delete from vacancies where id = :id");
+        qeries.forEach(n->entityManager.createNativeQuery(n).setParameter("id", vacancy.getId()).executeUpdate());
+//        entityManager.createNativeQuery("delete from profile_favorite_vacancy where favorite_vacancy_id  = :id")
+//                .setParameter("id", vacancy.getId())
+//                .executeUpdate();
+//
+//        entityManager.createNativeQuery("delete from chats_chat_messages ccm where exists(select * from chats ch where ccm.chat_id = ch.id and ch.topic_id = :id)")
+//                .setParameter("id",vacancy.getId())
+//                .executeUpdate();
+//
+//        entityManager.createNativeQuery("delete from chats where topic_id = :id")
+//                .setParameter("id", vacancy.getId())
+//                .executeUpdate();
+//
+//        entityManager.createNativeQuery("delete from vacancies where id = :id")
+//                .setParameter("id", vacancy.getId())
+//                .executeUpdate();
     }
 
     @Override
