@@ -23,7 +23,7 @@ public class MeetingRestController {
     @Autowired
     private SeekerProfileService seekerProfileService;
 
-    @PostMapping(params = {"vacancyId","seekerId"})
+    @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public void saveMeeting(@RequestParam("vacancyId") Long vacancyId, @RequestParam("seekerId") Long seekerId) {
         Meeting meeting = new Meeting();

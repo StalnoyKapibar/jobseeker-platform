@@ -45,11 +45,7 @@ public class SeekerController {
     public String seekerMeetingsPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Long id = ((User) authentication.getPrincipal()).getId();
-        boolean isOwner = false;
-        if(seekerProfileId.equals(id)) {
-            isOwner = true;
-        }
-        model.addAttribute("isOwner", isOwner);
+        model.addAttribute("isOwner", seekerProfileId.equals(id));
         model.addAttribute("seekerProfile", seekerProfile);
         return "meetings";
     }
