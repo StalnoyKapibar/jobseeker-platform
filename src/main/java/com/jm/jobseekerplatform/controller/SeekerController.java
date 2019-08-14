@@ -34,7 +34,7 @@ public class SeekerController {
     private NewsService newsService;
 
     @RequestMapping("/{seekerProfileId}")
-    public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
+    public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         model.addAttribute("seekerProfile", seekerProfile);
         model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerProfile.getPhoto()));
@@ -44,12 +44,10 @@ public class SeekerController {
     @RequestMapping("/meetings/{seekerProfileId}")
     public String seekerMeetingsPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        Long id = ((User) authentication.getPrincipal()).getId();
         boolean isOwner = false;
-        if (authentication != null) {
-            Long id = ((User) authentication.getPrincipal()).getId();
-            if(seekerProfileId.equals(id)){
-                isOwner=true;
-            }
+        if(seekerProfileId.equals(id)) {
+            isOwner = true;
         }
         model.addAttribute("isOwner", isOwner);
         model.addAttribute("seekerProfile", seekerProfile);

@@ -28,13 +28,14 @@ public class MeetingService {
         dao.update(toUpdate);
     }
 
-    public void updateMeetingsOnPassing(){
+    public void updateMeetingsOnPassing() {
         List<Meeting> meetings = dao.getAllWihoutPassed();
-        LocalDateTime dateTime = LocalDateTime.now();
-        if(meetings==null)
+        if(meetings == null) {
             return;
+        }
+        LocalDateTime dateTime = LocalDateTime.now();
         for (Meeting meeting : meetings) {
-            if(dateTime.isAfter(meeting.getDate())){
+            if(dateTime.isAfter(meeting.getDate())) {
                 meeting.setStatus(Status.PASSED);
                 dao.update(meeting);
             }

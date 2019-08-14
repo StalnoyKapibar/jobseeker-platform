@@ -31,32 +31,25 @@ public class ChatController {
         User user = (User) authentication.getPrincipal();
         Long userId = user.getProfile().getId();
         ChatWithTopic chat = chatWithTopicService.getById(chatId);
-        /*
-        * Блок кода выполняется в случае, если тема топика вакансия
-        * Если так, происходит проверка, является ли юзер работодателем,
-        * а потом вытаскивается вакансия
-        * */
-        if(chat.getClass() == ChatWithTopicVacancy.class){
+        if(chat.getClass() == ChatWithTopicVacancy.class) {
             ChatWithTopicVacancy chatWithTopicVacancy = (ChatWithTopicVacancy) chat;
             model.addAttribute("topicName", "вакансия");
             model.addAttribute("topic", chatWithTopicVacancy.getTopic());
-
             Long seekerId = chatWithTopicVacancy.getCreator().getId();
             Long vacancyId = chatWithTopicVacancy.getTopic().getId();
-            Meeting newMeeting = chatWithTopicVacancy.getTopic().getMeetings().stream().filter(meeting ->
-                    meeting.getSeekerProfile().getId().equals(seekerId) && meeting.getVacancy().getId().equals(vacancyId)).findFirst().orElse(null);
+            Meeting newMeeting = chatWithTopicVacancy.getTopic().getMeetings().stream()
+                    .filter(meeting -> meeting.getSeekerProfile().getId().equals(seekerId)
+                            && meeting.getVacancy().getId().equals(vacancyId))
+                    .findFirst()
+                    .orElse(null);
             model.addAttribute("meeting", newMeeting);
-
-            boolean isVacancyOwner = !userId.equals(seekerId);
-            model.addAttribute("isOwner", isVacancyOwner);
+            model.addAttribute("isOwner", !userId.equals(seekerId));
         }
-        if(user.getClass() == SeekerUser.class){
+        if(user.getClass() == SeekerUser.class) {
             model.addAttribute("seekerProfileId", userId);
         }
-
         model.addAttribute("profileId", userId);
         model.addAttribute("chatId", chatId);
-
         return "chat";
     }
 

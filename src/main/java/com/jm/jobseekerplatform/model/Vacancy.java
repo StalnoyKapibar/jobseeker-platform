@@ -57,9 +57,7 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     @Column(name = "expiry_block")
     private Date expiryBlock;
 
-    @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
-            mappedBy = "vacancy")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vacancy")
     private Set<Meeting> meetings;
 
     public Vacancy() {

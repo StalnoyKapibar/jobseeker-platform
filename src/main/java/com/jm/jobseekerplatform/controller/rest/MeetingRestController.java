@@ -25,41 +25,33 @@ public class MeetingRestController {
 
     @PostMapping(params = {"vacancyId","seekerId"})
     @ResponseStatus(HttpStatus.OK)
-    public void saveMeeting(@RequestParam("vacancyId") Long vacancyId,
-                            @RequestParam("seekerId") Long seekerId){
+    public void saveMeeting(@RequestParam("vacancyId") Long vacancyId, @RequestParam("seekerId") Long seekerId) {
         Meeting meeting = new Meeting();
         meeting.setVacancy(vacancyService.getById(vacancyId));
         meeting.setSeekerProfile(seekerProfileService.getById(seekerId));
         meeting.setStatus(Status.NOT_CONFIRMED);
-
         meetingService.addMeeting(meeting);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateMeeting(@PathVariable("id") Long id,
-                              @RequestBody Meeting meeting){
+    public void updateMeeting(@PathVariable("id") Long id, @RequestBody Meeting meeting) {
         Meeting toUpdate = meetingService.getMeetingById(id);
-
         toUpdate.setDate(meeting.getDate());
         toUpdate.setStatus(meeting.getStatus());
-
         meetingService.updateMeeting(toUpdate);
     }
 
     @GetMapping("/{id}")
-    public Meeting getMeeting(@PathVariable("id") Long id){
+    public Meeting getMeeting(@PathVariable("id") Long id) {
         return meetingService.getMeetingById(id);
     }
 
-    @PatchMapping ("/{id}")
+    @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void patchMeeting(@PathVariable("id") Long id,
-                              @RequestBody Status status){
+    public void patchMeeting(@PathVariable("id") Long id, @RequestBody Status status) {
         Meeting toUpdate = meetingService.getMeetingById(id);
-
         toUpdate.setStatus(status);
-
         meetingService.updateMeeting(toUpdate);
     }
 }
