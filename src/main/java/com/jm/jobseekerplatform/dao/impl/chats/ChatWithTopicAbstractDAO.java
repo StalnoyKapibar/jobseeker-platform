@@ -158,6 +158,8 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
                 throw new RuntimeException("something goes wrong");
         }
 
+
+// Разные способы обработки getSingleResult:
 //        countOfUnreadChats.stream().findFirst().orElse(0L); //примеры обработки getResultList вместо GetSingleResult (NoResultException)
 //
 //        int size = countOfUnreadChats.size();
@@ -173,22 +175,41 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
 
     public List<ChatInfoDetailWithTopicDTO> getAllChatsInfoDTOByProfileId(Long profileId) { //todo (Nick Dolgopolov) метод дублировать в ChatWithTopicDAO и ChatDAO. Этот метод будет выдавать только чаты, которым от параметризован.
 
-        //todo ДЕЛАЮ ЭТО
-        //todo ПОПРОБОВАТЬ ДВОЙНОЙ СЕЛЕКТ
-
         List<ChatInfoDetailWithTopicDTO> listOfChatInfoDetailWithTopicDTO =
-                entityManager.createQuery("SELECT new com.jm.jobseekerplatform.dto.ChatInfoDetailWithTopicDTO(" +
-                        "c, sum (case when (:profileId NOT MEMBER OF m2.isReadByProfilesId ) then 1 else 0 end), MAX(m2) " +
-                        ") " +
-                        "FROM " + clazz.getName() + " c " +
-//                        "LEFT JOIN c.chatMessages m1 " +
-                        "JOIN c.chatMessages m2 " +
-                        "WHERE (c.creatorProfile.id = :profileId " +
-                        "OR c.topic.creatorProfile.id = :profileId " +
-                        "OR m2.creatorProfile.id = :profileId) " +
-                        "GROUP BY c.id", ChatInfoDetailWithTopicDTO.class)
-                        .setParameter("profileId", profileId)
-                        .getResultList();
+                entityManager.createQuery(
+                        "SELECT new com.jm.jobseekerplatform.dto.ChatInfoDetailWithTopicDTO(" +
+                                "c, count (case " +
+                                "when (exists( " +
+                                "select m3 " +
+                                "from ChatMessage m3 " +
+                                "where (m3.id = m.id AND " +
+                                "m3 not in " +
+                                "( " +
+                                " select distinct m4 " +
+                                "from ChatMessage m4 " +
+                                "join m4.isReadByProfilesId irbpid " +
+                                "where (m4.id = m3.id " +
+                                " and irbpid = :profileId)" +
+
+                                ")" +
+                                "))" +
+                                ")" +
+                                " then 1 else null end), MAX(m) " +
+                                ") " +
+                                "FROM " + clazz.getName() + " c " +
+                                "JOIN c.chatMessages m " +
+                                "WHERE " +
+                                "(c in (select distinct c2 " +
+                                "from " + clazz.getName() + " c2 " +
+                                "JOIN c2.chatMessages m2 " +
+                                "where " +
+                                "(c2.creatorProfile.id = :profileId " + "OR " +
+                                "c2.topic.creatorProfile.id = :profileId " + "OR " +
+                                "m2.creatorProfile.id = :profileId) " +
+                                " )) " +
+
+                                "GROUP BY c.id", ChatInfoDetailWithTopicDTO.class)
+                        .setParameter("profileId", profileId).getResultList();
 
 //        Более строгий запрос. Выбор последнего сообщения по дате, а не по id
 //        entityManager.createQuery("SELECT c, COUNT (DISTINCT m1), m2 FROM " + clazz.getName() + " c " +
@@ -197,6 +218,37 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
 //                "WHERE m2.date = (SELECT max(m3.date) FROM " + clazz.getName() + " c1 " +  " JOIN c1.chatMessages m3 WHERE c1.id = c.id)  " +
 //                "GROUP BY c.id ")
 //                .getResultList()
+
+
+
+//запрос в SQL для работы с базой напрямую:
+//        select c.id,
+//                count(case
+//                when (exists(select cm1.id
+//                        from chatmessages cm1
+//                        where (
+//                                cm1.id = ccm.chat_messages_id AND
+//                                cm1.id not in (select distinct cmirbp2.chat_message_id
+//                                        from chat_message_is_read_by_profiles_id cmirbp2
+//                                        where cmirbp2.chat_message_id = cm1.id
+//                                        AND cmirbp2.is_read_by_profiles_id = 1)
+//                        )
+//                ))
+//        then 1
+//                 else null end)
+//        from chats c
+//        JOIN chats_chat_messages ccm on c.id = ccm.chat_id
+//        where (c.id in (select distinct c.id
+//                FROM chats c
+//                JOIN chats_chat_messages ccm on c.id = ccm.chat_id
+//                JOIN chatmessages cm on ccm.chat_messages_id = cm.id
+//                JOIN chat_message_is_read_by_profiles_id cmirbpi on cm.id = cmirbpi.chat_message_id
+//                JOIN vacancies v on c.topic_id = v.id
+//                WHERE (c.creator_profile_id = 1 OR
+//                        v.creator_profile_id = 1 OR
+//                        cm.creator_profile_id = 1)))
+//        group by c.id;
+
 
         return listOfChatInfoDetailWithTopicDTO;
     }
