@@ -3,13 +3,22 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.dto.MessageReadDataDTO;
 import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO;
 import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoWithTopicDTO;
+import com.jm.jobseekerplatform.model.Meeting;
+import com.jm.jobseekerplatform.model.Status;
+import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
+import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
+import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicVacancyService;
+import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -21,8 +30,14 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/chats/")
+@RequestMapping("/api/chats")
 public class ChatRestController {
+
+    @Autowired
+    private ChatWithTopicService chatWithTopicService;
+
+    @Autowired
+    private SeekerProfileService seekerProfileService;
 
     @Autowired
     VacancyService vacancyService;
@@ -64,6 +79,17 @@ public class ChatRestController {
         long countOfUnreadChatsByProfileId = chatWithTopicVacancyService.getCountOfUnreadChatsByProfileId(user.getProfile().getId());
 
         return new ResponseEntity(countOfUnreadChatsByProfileId, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public String saveMeeting(@RequestParam("vacancyId") Long vacancyId, @RequestParam("seekerId") Long seekerId){
+        SeekerProfile seeker = seekerProfileService.getById(seekerId);
+        ChatWithTopic<Vacancy> chat = chatWithTopicService.getByTopicIdCreatorProfileIdChatType(vacancyId, seeker.getId(), ChatWithTopicVacancy.class);
+        if (chat == null) {
+            chat = new ChatWithTopicVacancy(seeker, vacancyService.getById(vacancyId));
+            chatWithTopicService.add(chat);
+        }
+        return chat.getId().toString();
     }
 
 

@@ -11,7 +11,7 @@ function showVacancy(id) {
             $("#VMTags").html(tags);
             $("#VMHeadline").text(data.headline);
             $("#VMCity").text(data.city);
-            $("#VMDescription").text(data.description);
+            $("#VMDescription").html(data.description);
 
             var str = "Зарплата: ";
 

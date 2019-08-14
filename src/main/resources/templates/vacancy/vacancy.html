@@ -16,6 +16,7 @@
     <title>Вакансия</title>
     <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <script type="text/javascript" src="/js/seeker.js"></script>
+    <script type="text/javascript" src="/js/responding.js"></script>
     <script type="text/javascript" src="/js/vacancy.js"></script>
 </head>
 <body>
@@ -79,20 +80,20 @@
         <div class="row">
             <div class="col-sm-8 col-sm-offset-8">
                 <div sec:authorize="hasRole('ROLE_SEEKER')" id="buttons" style="padding: 15px;">
-                    <button type="button" class="btn btn-success"
-                            onclick="alert('кнопка не работает')">Откликнуться
+                    <button th:if="not ${hasResponded}" id="respond" type="button" class="btn btn-success"
+                            th:onclick="'sendRespond(' + ${vacancyFromServer.id} + ',' + ${profileId} + ')'" style="width: 150px;">Откликнуться
                         <i class="fas fa-envelope"></i>
                     </button>
                     <span id="btnFavorite">
                         <button th:if="${isContain}" id="outFavorite" class="btn btn-primary"
-                                th:onclick="'outFavorite(' + ${vacancyFromServer.id} + ',' + ${seekerProfileId} + ')'">
-                            Убрать из
-                            избранное
-                        </button>
-                        <button th:unless="${isContain}" id="inFavorite" class="btn btn-primary"
-                                th:onclick="'inFavorite(' + ${vacancyFromServer.id} + ',' + ${seekerProfileId} + ')'">
-                            В избранное
-                        </button>
+                                th:onclick="'outFavorite(' + ${vacancyFromServer.id} + ',' + ${profileId} + ')'">
+                        Убрать из
+                        избранное
+                    </button>
+                    <button th:unless="${isContain}" id="inFavorite" class="btn btn-primary"
+                            th:onclick="'inFavorite(' + ${vacancyFromServer.id} + ',' + ${profileId} + ')'">
+                        В избранное
+                    </button>
                     </span>
                     <span id="btnSubscribe">
                         <button th:if="${isSubscribe}" type="button" id="unSubscribe" class="btn btn-outline-primary"
@@ -139,6 +140,10 @@
         </div>
         <div class="row">
             <div class="col-sm-8">
+                <div id="chat_alert" class="alert alert-success mt-3 d-none" role="alert">
+                    Вы отправили заявку на интрервью. Для того, чтобы обсудить
+                    детали , перейдите в приватный <a id="chat_ref" href="/chat/">чат</a> с работодателем.
+                </div>
                 <div sec:authorize="hasRole('ROLE_SEEKER')" class="container-fluid" style="padding-right: 0px; padding-left: 0px">
                     <div class="empCard" style="margin-left: 0px;">
                         <div class="card mb-3">
@@ -149,6 +154,29 @@
                             </div>
                         </div>
                     </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meeting model -->
+    <div id="meetingModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Управление встречей</h2>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input id="dateTimeLocal" type="datetime-local">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="sendMeetingEdition()">
+                        Сохранить
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
                 </div>
             </div>
         </div>
@@ -177,3 +205,4 @@
 </div>
 
 </body>
+</html>
