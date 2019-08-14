@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.service.impl.chats;
 
 import com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicAbstractDAO;
 import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO;
+import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoWithTopicDTO;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,11 @@ public abstract class ChatWithTopicAbstractService<T extends ChatWithTopic> exte
         return chatWithTopicDAO.getCountOfUnreadChatsByProfileId(profileId);
     }
 
-    public List<ChatInfoDetailWithTopicDTO>  getAllChatsInfoDTOByProfileId(Long profileId) {
+    public List<ChatInfoWithTopicDTO> getAllChatsInfoDTO() {
+        return chatWithTopicDAO.getAllChatsInfoDTO();
+    }
+
+    public List<ChatInfoDetailWithTopicDTO> getAllChatsInfoDTOByProfileId(Long profileId) {
         return chatWithTopicDAO.getAllChatsInfoDTOByProfileId(profileId);
     }
 

@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $.ajax({
-        url: "/api/chats/getCountOfChatsByAuthProfileId",
+        url: "/api/chats/getCountOfUnreadChatsByProfileId",
         type: "GET",
         async: true,
         success: function (data) {

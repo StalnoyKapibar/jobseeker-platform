@@ -1,11 +1,9 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.dto.MessageReadDataDTO;
 import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO;
 import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoWithTopicDTO;
-import com.jm.jobseekerplatform.dto.MessageReadDataDTO;
-import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
-import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
@@ -19,7 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/chats/")
@@ -40,31 +39,12 @@ public class ChatRestController {
     @Autowired
     ChatWithTopicVacancyService chatWithTopicVacancyService;
 
-    @GetMapping("/last")
-    public HttpEntity getAllLastMessages() { //todo (Nick Dolgopolov)
-        List<MessageWithDateDTO> lastMessages = chatMessageService.getAllLastMessages();
-        Collections.sort(lastMessages);
-        return new ResponseEntity(lastMessages, HttpStatus.OK);
-    }
-
     @GetMapping("all")
     public HttpEntity getAllChats() {
-        List<ChatWithTopicVacancy> chats = chatWithTopicVacancyService.getAll();
+        List<ChatInfoWithTopicDTO> chatsInfo = chatWithTopicVacancyService.getAllChatsInfoDTO();
 
-        List<ChatInfoWithTopicDTO> chatsInfo = getChatInfoDTOs(chats);
-
-        //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov)
+        //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov) как организовывать сортировку?
         return new ResponseEntity(chatsInfo, HttpStatus.OK);
-    }
-
-    private List<ChatInfoWithTopicDTO> getChatInfoDTOs(Collection<ChatWithTopicVacancy> chats) {
-        List<ChatInfoWithTopicDTO> chatsInfo = new ArrayList<>();
-
-        for (ChatWithTopicVacancy chat : chats) {
-            ChatInfoWithTopicDTO chatInfoWithTopicDTO = new ChatInfoWithTopicDTO(chat);
-            chatsInfo.add(chatInfoWithTopicDTO);
-        }
-        return chatsInfo;
     }
 
     @GetMapping("getAllChatsByProfileId/{profileId:\\d+}")
@@ -72,29 +52,12 @@ public class ChatRestController {
 
         List<ChatInfoDetailWithTopicDTO> chatsInfo = chatWithTopicVacancyService.getAllChatsInfoDTOByProfileId(profileId);
 
-        //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov)
+        //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov) как организовывать сортировку?
         return new ResponseEntity(chatsInfo, HttpStatus.OK);
     }
 
-    @GetMapping("getAllUnreadChatsByProfileId/{profileId:\\d+}")
-    public HttpEntity getAllUnreadChatsByProfileId(@PathVariable("profileId") Long profileId) {
-
-        //todo (Nick Dolgopolov)
-        Set<ChatWithTopicVacancy> chats = new HashSet<>(chatWithTopicVacancyService.getAllUnreadChatsByProfileId(profileId));
-
-        return new ResponseEntity(chats, HttpStatus.OK);
-    }
-
-    @GetMapping("getAllUnreadChatsByAuthProfileId")
-    public HttpEntity getAllUnreadChatsByAuthProfileId(Authentication authentication) {
-
-        User user = (User) authentication.getPrincipal();
-
-        return getAllUnreadChatsByProfileId(user.getProfile().getId());
-    }
-
-    @GetMapping("getCountOfChatsByAuthProfileId")
-    public HttpEntity getCountOfChatsByAuthProfileId(Authentication authentication) {
+    @GetMapping("getCountOfUnreadChatsByProfileId")
+    public HttpEntity getCountOfUnreadChatsByProfileId(Authentication authentication) {
 
         User user = (User) authentication.getPrincipal();
 
@@ -116,16 +79,16 @@ public class ChatRestController {
 
         List<ChatMessage> chatMessageList = chatService.getById(messageReadDataDTO.getChatId()).getChatMessages();
 
-        for (int i = chatMessageList.size() - 1; i >= 0; i--) {
+        for (int i = chatMessageList.size() - 1; i >= 0; i--) { //todo (Nick Dolgopolov) переделать на зарос, который будет в базе менять статус только у нужных сообщений (фильтр)
             ChatMessage chatMessage = chatMessageList.get(i);
             if (/*chatMessage.getId() <= messageReadDataDTO.getLastReadMessageId() &&*/ //todo (Nick Dolgopolov) по id или надо по дате?
                     !chatMessage.getCreatorProfile().getId().equals(messageReadDataDTO.getReaderProfileId()) &&
-                    !chatMessage.getIsReadByProfilesId().contains(messageReadDataDTO.getReaderProfileId())) {
+                            !chatMessage.getIsReadByProfilesId().contains(messageReadDataDTO.getReaderProfileId())) {
                 chatMessage.getIsReadByProfilesId().add(messageReadDataDTO.getReaderProfileId());
 
                 chatMessageService.update(chatMessage);
             }
-        } //todo (Nick Dolgopolov) запросом + фильтр
+        }
 
         return new ResponseEntity(HttpStatus.OK);
     }

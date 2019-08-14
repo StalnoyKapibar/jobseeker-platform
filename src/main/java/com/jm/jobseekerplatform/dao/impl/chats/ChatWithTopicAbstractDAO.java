@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.dao.impl.chats;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO;
+import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoWithTopicDTO;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import org.springframework.stereotype.Repository;
 
@@ -220,7 +221,6 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
 //                .getResultList()
 
 
-
 //запрос в SQL для работы с базой напрямую:
 //        select c.id,
 //                count(case
@@ -251,5 +251,14 @@ public abstract class ChatWithTopicAbstractDAO<T extends ChatWithTopic> extends 
 
 
         return listOfChatInfoDetailWithTopicDTO;
+    }
+
+    public List<ChatInfoWithTopicDTO> getAllChatsInfoDTO() {
+        List<ChatInfoWithTopicDTO> listOfChatInfoWithTopicDTO =
+                entityManager.createQuery(
+                        "SELECT new com.jm.jobseekerplatform.dto.chatInfo.ChatInfoWithTopicDTO(c) " +
+                                "FROM " + clazz.getName() + " c ", ChatInfoWithTopicDTO.class)
+                        .getResultList();
+        return listOfChatInfoWithTopicDTO;
     }
 }
