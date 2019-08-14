@@ -30,6 +30,11 @@ public class Chat implements Serializable {
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = org.hibernate.annotations.FetchMode.SELECT)
     @JsonIgnore
+    private List<Profile> chatMembers;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = org.hibernate.annotations.FetchMode.SELECT)
+    @JsonIgnore
     private List<ChatMessage> chatMessages;
 
 
@@ -44,8 +49,32 @@ public class Chat implements Serializable {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Profile getCreatorProfile() {
+        return creatorProfile;
+    }
+
+    public void setCreatorProfile(Profile creatorProfile) {
+        this.creatorProfile = creatorProfile;
+    }
+
     public Profile getCreator() {
         return creatorProfile;
+    }
+
+    public List<Profile> getChatMembers() {
+        return chatMembers;
+    }
+
+    public void setChatMembers(List<Profile> chatMembers) {
+        this.chatMembers = chatMembers;
+    }
+
+    public void setChatMessages(List<ChatMessage> chatMessages) {
+        this.chatMessages = chatMessages;
     }
 
     public List<ChatMessage> getChatMessages() {

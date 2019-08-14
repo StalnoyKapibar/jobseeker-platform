@@ -8,9 +8,12 @@
     --form-border-color: #F39C12;
     --card-bg-color: #F3F4F6;
     --card-header-bg-color: #ccc;
+    --review-voted-color: #222;
+    --review-voted-hoover: #222;
+    --review-voted-count-color: #999999
 }
 
-:root[theme='dark']{
+:root[theme='dark'] {
     --bg-color: #222;
     --navbar-bg-color: #00bc8c;
     --sidebar-bg-color: #303030;
@@ -20,6 +23,9 @@
     --form-border-color: #222;
     --card-bg-color: #303030;
     --card-header-bg-color: #444;
+    --review-voted-color: #F39C12;
+    --review-voted-hoover: #F39C12;
+    --review-voted-count-color: silver
 }
 
 body {
@@ -86,13 +92,11 @@ li {
 
 .sidebar a {
     text-decoration: none;
-    /*color: #7295b1;*/
     color: var(--sidebar-text-color);
     display: block;
 }
 
 .sidebar li :hover {
-    /*color: #4177A3;*/
     color: #F39C12;
 }
 
@@ -125,6 +129,7 @@ li {
 .container-fluid .search_area {
     margin-top: 25px;
 }
+
 .container-fluid #search_advice_wrapper {
     display: none;
     width: 58%;
@@ -173,7 +178,6 @@ li {
     font-size: 20px;
     font-weight: bold;
     color: #3498DB;
-    /*color: #7295b1;*/
 }
 
 .container-fluid .vacancyTags {
@@ -183,7 +187,6 @@ li {
 }
 
 .container-fluid .btnClick {
-    /*background-color: teal;*/
     background-color: #F39C12;
     cursor: pointer;
     margin: 3px;
@@ -323,6 +326,10 @@ li {
     background-color: var(--card-header-bg-color);
 }
 
+.container-fluid .reviewCard .card-body {
+    background-color: var(--card-bg-color);
+}
+
 .container-fluid .img-rounded {
     margin: 10px;
     border-radius: 8px;
@@ -352,8 +359,65 @@ li {
     height: 100%;
 }
 
-.input-group-prepend .input-group-text{
+.input-group-prepend .input-group-text {
     background-color: #F39C12;
     color: #222;
 }
 
+.reviewVotes {
+    position: absolute;
+    bottom: 0;
+    right: 5%;
+}
+
+.reviewVotes span {
+    margin-right: 10px;
+    font-size: 0.8em;
+    color: var(--review-voted-count-color);
+    cursor: pointer;
+}
+
+.reviewVotes span > i:hover {
+    color: var(--review-voted-hoover);
+}
+
+.reviewVotes i {
+    margin-right: 5px;
+}
+
+.voted {
+    color: var(--review-voted-color) !important;
+}
+
+.textReview {
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 0.8em;
+    line-height: 1.6em;
+}
+
+.readMoreReviewButton {
+    font-size: 0.8em;
+    line-height: 1.6em;
+}
+
+.reviewDate {
+    color: #999999;
+    font-size: 0.9em;
+}
+
+.seekerReviewName {
+    position: absolute;
+    bottom: -5px;
+}
+
+.editCardReview {
+    position: absolute;
+    right: 5%;
+    top: -5%;
+    color: #999999;
+    cursor: pointer;
+}
+
+.editCardReview:hover {
+    color: #777777;
+}

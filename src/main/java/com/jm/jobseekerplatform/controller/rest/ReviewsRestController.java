@@ -1,9 +1,10 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.EmployerReviews;
-import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.service.impl.EmployerReviewsService;
+import com.jm.jobseekerplatform.service.impl.ReviewVoteService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,8 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 @RestController
@@ -28,7 +29,10 @@ public class ReviewsRestController {
     @Autowired
     EmployerProfileService employerProfileService;
 
-    @RequestMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Autowired
+    ReviewVoteService reviewVoteService;
+
+/*    @RequestMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> addNewReviews(@RequestBody Map<String, Object> map) {
         try {
@@ -56,9 +60,9 @@ public class ReviewsRestController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-    }
+    }*/
 
-    @RequestMapping("/delete/{reviewId}")
+    /*@RequestMapping("/delete/{reviewId}")
     @ResponseBody
     public ResponseEntity<String> getUserById(@PathVariable Long reviewId) {
         try {
@@ -67,11 +71,10 @@ public class ReviewsRestController {
         } catch (Exception e) {
             return new ResponseEntity<String>("{\"status\" :" + e.getMessage() + "}", HttpStatus.BAD_REQUEST);
         }
-    }
+    }*/
 
-    @RequestMapping(value = "/find", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<EmployerReviews> findReviewBySeekerIdAndEmloerIdForEdit(@RequestBody Map<String, Object> map) {
+    @GetMapping(value = "/find", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EmployerReviews> findReviewBySeekerIdAndEmployerIdForEdit(@RequestBody Map<String, Object> map) {
         try {
             EmployerProfile employerProfile = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
             Set<EmployerReviews> reviewsSet = employerProfile.getReviews();
@@ -81,5 +84,49 @@ public class ReviewsRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/get_all")
+    public ResponseEntity<Set<EmployerReviews>> getAllReviewsByEmployerProfileId(@RequestParam("employerProfileId") Long employerProfileId) {
+        return new ResponseEntity<>(employerProfileService.getById(employerProfileId).getReviews(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<EmployerReviews> geReviewtById(@RequestParam("reviewId") Long reviewId) {
+        return new ResponseEntity<>(employerReviewsService.getById(reviewId), HttpStatus.OK);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity addNewReview(@RequestBody EmployerReviews reviews,
+                                       @RequestParam("seekerProfileId") Long seekerProfileId,
+                                       @RequestParam("employerProfileId") Long employerProfileId) {
+        EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
+        if (employerProfile.getReviews().stream().anyMatch(reviews1 -> Objects.equals(reviews1.getSeekerProfile().getId(), seekerProfileId))) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        reviews.setSeekerProfile(seekerProfileService.getById(seekerProfileId));
+        employerReviewsService.add(reviews);
+        employerProfile.getReviews().add(reviews);
+        employerProfileService.update(employerProfile);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity updateReview(@RequestBody EmployerReviews reviews,
+                                       @RequestParam("seekerProfileId") Long seekerProfileId) {
+        reviews.setSeekerProfile(seekerProfileService.getById(seekerProfileId));
+        employerReviewsService.update(reviews);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/delete")
+    public ResponseEntity deleteReview(@RequestParam("reviewId") Long reviewId) {
+        try {
+            employerReviewsService.deleteById(reviewId);
+            reviewVoteService.deleteByReviewId(reviewId);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
     }
 }
