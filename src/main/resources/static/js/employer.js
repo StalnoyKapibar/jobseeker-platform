@@ -194,6 +194,19 @@ function sortByDateNewFirst() {
     parent.append(items);
 }
 
+function MyFunction() {
+    let l=document.getElementById('myLink');
+    l.setAttribute('onclick', 'MyFunction2()');
+
+    l.innerHTML=(' <i class="fas fa-sort-amount-up" style="font-size:14px"></i>дате');
+}
+
+function MyFunction2() {
+    let l=document.getElementById('myLink');
+    l.setAttribute('onclick', 'MyFunction()');
+    l.innerHTML=(' <i class="fas fa-sort-amount-down" style="font-size:14px"></i>дате');
+}
+
 function sortByDateOldFirst() {
     let parent = $('#reviews');
     let childSelector = "div";

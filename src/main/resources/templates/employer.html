@@ -173,6 +173,10 @@
                                             </label>
                                         </div>
 
+                                        <div id="sort">Сортировать по:
+                                        <a id="myLink" href="javascript:void(0);" onclick="MyFunction();">дате</a>
+                                        <a id="myLink" href="javascript:void(0);" >лайкам</a>
+                                        </div>
                                         <div class="row" id="reviews">
                                             <th:block th:each="review : ${employerProfileReviews}">
                                                 <div class="col-sm-6">
