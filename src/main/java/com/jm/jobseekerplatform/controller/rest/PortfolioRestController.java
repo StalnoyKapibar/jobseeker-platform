@@ -49,14 +49,16 @@ public class PortfolioRestController {
         return updatedProfile.getPortfolios();
     }
 
-//    @RequestMapping(value = "/add", method = RequestMethod.POST)
-//    public Portfolio addPortfolio(@RequestParam("profileId") Long profileId,
-//                                             @RequestParam("nmae") String name,
-//                                             @RequestParam("link") String link,
-//                                             @RequestParam("description") String description) {
-//        SeekerProfile profile =
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public ResponseEntity addPortfolio(@RequestParam("profileId") Long profileId,
+                                  @RequestParam("portfolioId") Long portfolioId) {
+        SeekerProfile updatedProfile = seekerProfileService.getById(profileId);
+        Set<Portfolio> newPortfolio = updatedProfile.getPortfolios();
+        Portfolio deletedPortfolio = portfolioService.getById(portfolioId);
+        newPortfolio.remove(deletedPortfolio);
+        seekerProfileService.update(updatedProfile);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
     @RequestMapping("/update")
     @ResponseBody

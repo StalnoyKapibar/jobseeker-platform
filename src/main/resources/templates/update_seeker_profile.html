@@ -10,6 +10,7 @@
 </head>
 <body style="background-color: var(--bg-color)">
 <div id="sProfileDiv"  layout:fragment="content">
+    <input type="hidden" id = "profile_id" th:value="${seekerProfile.id}">
     <div class="row">
         <div class="col-sm-1"></div>
         <div class="col-sm-8">
@@ -75,7 +76,7 @@
                             <div class="col-sm-11">
                                     <div class="d-flex justify-content-between ">
                                         <span>Мои проекты:</span>
-                                        <a href="javascript:false" class="text-primary" th:onclick="'show_add_portf_modal('+${seekerProfile.id}+')'">Добавить проект <i class="far fa-plus-square"></i></a>
+                                        <a href="javascript:false" class="text-primary" onclick="show_add_portf_modal()">Добавить проект <i class="far fa-plus-square"></i></a>
                                     </div>
                                 <div class="list-group" id = "portfolio_list">
                                     <a th:each="portfolio, index: ${seekerProfile.portfolios}" th:id ="${portfolio.id}+'_portf'" class="list-group-item list-group-item-action"
@@ -106,7 +107,7 @@
                         <div class="modal-body">
                             <div class="input-group mb-3">
                             <div class="input-group-prepend" style="width: 30%">
-                                <input type="hidden" id="prtf_id_to_updte">
+                                <input type="hidden" id="prtf_id_to_update">
                                 <span>Название проекта</span>
                             </div>
                             <input type="text" class="form-control" placeholder="Название проекта" id = "portf_name_input">
@@ -127,8 +128,8 @@
                             </div>
 
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal" style="margin-right: 20px">Удалить проект</button>
+                        <div class="modal-footer" id = "update_btns">
+                            <button type="button" class="btn btn-danger"  style="margin-right: 20px" onclick="show_del_btns()">Удалить проект</button>
                             <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="update_prtf()">Сохранить</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
                         </div>
@@ -151,7 +152,6 @@
                         <div class="modal-body">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend" style="width: 30%">
-                                    <input type="hidden" id="profile_id_to_add_portf">
                                     <span>Название проекта</span>
                                 </div>
                                 <input type="text" class="form-control" placeholder="Название проекта" id = "add_portf_name_input">
@@ -179,7 +179,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+
     </div>
 </div>
 </body>

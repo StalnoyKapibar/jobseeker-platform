@@ -3,7 +3,6 @@ var header = $("meta[name='_csrf_header']").attr("content");
 var tagsName = [];
 var avelibleTags = [];
 $(document).ready(function () {
-
     $.ajax({
         url: "/api/tags/",
         type: "GET",
@@ -64,7 +63,7 @@ function show_portfolio(id) {
             $("#portf_name_input").val(data.projectName);
             $("#portf_link_input").val(data.link);
             $("#portf_description_textarea").text(data.description);
-            $('#prtf_id_to_updte').val(data.id);
+            $('#prtf_id_to_update').val(data.id);
             $("#portfolioModal").modal('show');
         }
     });
@@ -118,15 +117,15 @@ function update(id) {
 
 }
 
-function show_add_portf_modal(id) {
-    $('#profile_id_to_add_portf').val(id);
+function show_add_portf_modal() {
+    // $('#profile_id_to_add_portf').val(id);
     $('#add_prtf_modal').modal('show');
 }
 
 function add_portfolio() {
     var profile =
         {
-            'id': $('#profile_id_to_add_portf').val(),
+            'id': $('#profile_id').val(),
             'portfolios':
                 [{
                     'projectName': $('#add_portf_name_input').val(),
@@ -164,7 +163,7 @@ function add_portfolio() {
 
 function update_prtf() {
     var portfolio = {
-        'id': $('#prtf_id_to_updte').val(),
+        'id': $('#prtf_id_to_update').val(),
         'projectName': $('#portf_name_input').val(),
         'link': $('#portf_link_input').val(),
         'description': $('#portf_description_textarea').val()
@@ -189,28 +188,40 @@ function update_prtf() {
     })
 }
 
-function del_prtf(id) {
-    var portfolio = {
-        'id': $('#prtf_id_to_updte').val()
-    };
+function del_prtf() {
+    var portfolioId = $('#prtf_id_to_update').val();
     $.ajax({
         type: 'post',
-        url: "/api/portfolios/delete",
-        data: JSON.stringify(portfolio),
-        dataType: "json",
+        url: "/api/portfolios/delete?" +
+            "profileId=" + $('#profile_id').val() +
+            "&portfolioId=" + portfolioId,
         contentType: 'application/json; charset=utf-8',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
         success: function (portfolio) {
-            $('#' + portfolio.id + '_portf').text(portfolio.projectName);
-            $('#portf_modal').modal('hide');
+            $('#'+portfolioId+'_portf').remove();
+            $('#prtf_id_to_update').val('');
+            $('#portfolioModal').modal('hide');
         },
         error: function (error) {
             console.log(error);
             alert(error.responseText);
         }
     })
+}
+
+function show_del_btns() {
+    $('#update_btns').html('<h6>Вы действительно хотите удалить проект </h6>' +
+        '<button type="button" class="btn btn-danger" onclick="del_prtf()">Да</button>' +
+        '<button type="button" class="btn btn-secondary" onclick="cancel_delete()">Нет</button>');
+
+}
+
+function cancel_delete() {
+    $('#update_btns').html(' <button type="button" class="btn btn-danger"  style="margin-right: 20px" onclick="show_del_btns()">Удалить проект</button>' +
+        '<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="update_prtf()">Сохранить</button>' +
+        '<button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>');
 }
 
 
