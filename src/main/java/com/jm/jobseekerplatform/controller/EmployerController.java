@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.terracotta.context.ContextListener;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.Base64;
@@ -100,4 +101,16 @@ public class EmployerController {
         model.addAttribute("employerProfileId", employerProfileId);
         return "employer_chats_my";
     }
+
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @RequestMapping("/employer/chat_with_admin/{seekerProfileId}")
+    public String EmployerChatWithAdmin(@PathVariable Long seekerProfileId, Authentication authentication, Model model) {
+        User user = (User) authentication.getPrincipal();
+        model.addAttribute("employerProfileId", user.getProfile().getId());
+        model.addAttribute("employerProfileEmail", user.getEmail());
+        model.addAttribute("seekerProfileId", seekerProfileId);
+        return "employer_complain_to_admin";
+    }
+
+
 }

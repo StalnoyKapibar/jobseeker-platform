@@ -422,7 +422,7 @@ li {
     cursor: pointer;
 }
 
-.employerComplaint{
+.employerComplaint i{
     font-size: 1.3em;
     position: absolute;
     right: 2%;

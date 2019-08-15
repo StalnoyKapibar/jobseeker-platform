@@ -178,7 +178,9 @@
                                                                            th:onclick="'showEditReview('+${review.id}+')'"></i>
                                                                     </div>
                                                                     <div class="employerComplaint" sec:authorize="hasRole('ROLE_EMPLOYER')">
-                                                                        <i class="fas fa-ban" title="пожаловаться администратору"></i>
+                                                                        <a th:href="@{/employer/chat_with_admin/{id}(id=${review.seekerProfile.id})}">
+                                                                            <i class="fas fa-ban" title="пожаловаться администратору"></i>
+                                                                        </a>
                                                                     </div>
                                                                     <blockquote class="blockquote mb-0">
                                                                         <p th:if="${review.reviews.length()>60}"
