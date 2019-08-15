@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.Base64;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,13 +47,10 @@ public class EmployerController {
     public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {
         boolean isOwner = false;
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
-
         model.addAttribute("employerProfile", employerProfile);
-
-        Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
+        List<Vacancy> vacancies = vacancyService.getTrackedByEmployerProfileId(employerProfile.getId());
         model.addAttribute("vacancies", vacancies);
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
-
         if (authentication != null && authentication.isAuthenticated()) {
             Long userId = ((User) authentication.getPrincipal()).getId();
             Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> (grantedAuthority).getAuthority()).collect(Collectors.toSet());
@@ -93,4 +91,18 @@ public class EmployerController {
         model.addAttribute("employerProfileId", employerProfileId);
         return "employer_all_news";
     }
+
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @RequestMapping("/employer/update/{employerProfileId}")
+    public String getEmployerProfileUpdatePage(@PathVariable Long employerProfileId, Model model) {
+        EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
+        model.addAttribute("employerProfile", employerProfile);
+        Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
+        model.addAttribute("vacancies", vacancies);
+        List<Vacancy> trakedVacancies = vacancyService.getTrackedByEmployerProfileId(employerProfile.getId());
+        model.addAttribute("trakedvacancies", trakedVacancies);
+        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
+        return "update_employer_profile";
+    }
+
 }

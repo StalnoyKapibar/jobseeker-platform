@@ -7,6 +7,9 @@ import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -113,5 +116,14 @@ public class VacancyRestController {
             }
         }
         return vacancyService.findVacanciesByPoint(city, point, limit, page);
+    }
+
+    @PostMapping("/delete")
+    @ResponseBody
+    public List<Vacancy> getSearchUserProfiles(@RequestBody Vacancy vacancy) throws JSONException {
+        long id = vacancy.getId();
+        Vacancy delVacancy = vacancyService.getById(id);
+        vacancyService.delete(delVacancy);
+        return vacancyService.getAll();
     }
 }

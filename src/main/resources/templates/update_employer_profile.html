@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <meta name="apiKey" th:content="${googleMapsApiKey}"/>
+    <title>Employer's profile</title>
+    <script type="text/javascript" src="/js/update_emploer_profile.js"></script>
+    <script type="text/javascript" src="/js/star-rating.min.js"></script>
+    <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey})}"
+            async defer></script>
+    <script type="text/javascript" src="/js/map.js"></script>
+    <link href="/css/star-rating.min.css" th:href="@{/css/star-rating.min.css}" rel="stylesheet"/>
+</head>
+<body style="background-color: var(--bg-color)">
+<div layout:fragment="content">
+    <div id="eProfileDiv" class="container-fluid">
+        <div class="row">
+            <div class="col-lg-11 empCard">
+                <div class="card mb-3">
+                    <h3 class="card-header">
+                        <input type="text" class="form-control" id="companyname" placeholder="Название компании"
+                               th:value="${employerProfile.companyName}">
+                    </h3>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6" style="position: relative" >
+                            <div id = "logo">
+                                <img th:src="@{'data:image/png;base64,' + ${logoimg}}" class="img-rounded"
+                                     alt="Logo of company">
+                            </div>
+                                <div class="row">
+                                <form method="POST" enctype="multipart/form-data" id="imageUploadForm" class="col-lg-6" >
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="image" id="customFile">
+                                        <label class="custom-file-label" for="customFile">Choose file</label>
+                                    </div>
+                                </form>
+                                <button type="submit" id="btnSubmit" class="btn btn-outline-primary"
+                                        th:onclick="'add_emploer_img('+${employerProfile.id}+')'" style="margin-left: 5px;">Submit</button>
+                                </div>
+                            </div>
+                            <div class="col-lg-6" style="position: relative">
+                                <input name="reviews-fix" type="number" class="rating fixed-rating rating-loading"
+                                       readonly="true" data-size="xs" data-rtl="false"
+                                       th:value="${employerProfile.getAverageRating()}">
+                                <div class="card-body">
+
+                                    <p class="card-text">
+                            <textarea class="form-control" id="description" rows="3"
+                                      th:text="${employerProfile.description}" style="height: 320px"></textarea>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer text-muted">
+                        <input type="text" class="form-control" id="companywebsite" placeholder="Название компании"
+                               th:value="${employerProfile.website}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row col-l-11">
+            <div class="col-lg-5 empCard">
+                <div class="card mb-3">
+                    <h5 class="card-header">Опубликованные вакансии:</h5>
+                    <div class="card-body">
+                        <div class="list-group" id="trckVacancies" style="height: 200px; overflow: auto;">
+                            <li class="card border-success vac" style="margin: 5px" th:each="vacancy: ${trakedvacancies}">
+                                <div class="input-group">
+                                    <div class="card-header" style="width: 80%"><span
+                                            th:text="${vacancy.headline}" th:data-id="${vacancy.id}"></span></div>
+                                    <button class="input-group-btn btn btn-primary go inline" style="width: 10%;">
+                                        <i class="fas fa-user-edit"></i>
+                                    </button>
+                                    <button class="input-group-btn btn btn-danger go inline" style="width: 10%;"
+                                            th:onclick="'show_delete_vacancy_alert('+${vacancy.id}+')'">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 empCard" id="empVacancies">
+                <div class="card mb-3">
+                                <h5>Все вакансии:</h5>
+                        <div class="card-body">
+                            <div class="list-group" id="allVacancies" style="height: 200px; overflow: auto;">
+                                <div th:each="vacancy: ${vacancies}">
+                                <li class="card border-success vac" style="margin: 5px"
+                                    th:id ="${vacancy.id}+'_li'" th:if="${vacancy.publicationPosition} == null">
+                                    <div class="input-group">
+                                        <div class="card-header" style="width: 80%"><span
+                                                th:text="${vacancy.headline}" th:data-id="${vacancy.id}"></span></div>
+                                        <button class="input-group-btn btn btn-primary go inline" style="width: 10%;">
+                                            <i class="fas fa-user-edit"></i>
+                                        </button>
+                                        <button class="input-group-btn btn btn-danger go inline" style="width: 10%;"
+                                                th:onclick="'show_delete_vacancy_alert('+${vacancy.id}+')'">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="container-fluid">
+            <button type="button" class="btn btn-primary btn-lg" th:onclick="'update('+${employerProfile.id}+')'">Сохранить изменения</button>
+        </div>
+
+            <!-- vacancyModal -->
+            <div id="vacancyModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3><span id="VMHeadline"></span><br/></h3>
+                        </div>
+                        <div class="modal-body">
+                            <h6>Теги:</h6>
+                            <h6><span id="VMTags"></span></h6>
+                            <h6>Город:</h6>
+                            <h6><span id="VMCity"></span></h6>
+                            <span id="VMRemote"> (Удаленная работа)</span>
+                            <a data-toggle="collapse" data-target="#map_collapse"
+                               style="color: #3498DB; white-space: pre">Показать на карте <span
+                                    class="far fa-map"></span></a><br/>
+                            <div id="map_collapse" class="collapsed collapse">
+                                <div id="map" style="height: 300px"></div>
+                            </div>
+                            <br/>
+                            <h6>Адрес:</h6>
+                            <h6><span id="VMAddress"></span></h6><br/>
+                            <h6 style="white-space: pre; color: red">Зарплата: <span id="VMSalary"></span></h6><br/>
+                            <span>Подробное описание:</span><br/>
+                            <div class="well well-sm">
+                                <span id="VMDescription"></span>
+                            </div>
+                            <span id="VMId" hidden></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- delete vacancy alert modal -->
+        <div class="modal fade" id="del_vac_allert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="h5">Вы действительно хотите удалить вакансию:</div>
+                        <div id="vac_name_to_del" class="h4"></div>
+                        <input type="hidden" id="del_vac_id">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="del_yes" onclick="delete_vacancy()">Да</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Нет</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+</body>
+</html>

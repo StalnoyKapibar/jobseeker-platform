@@ -37,6 +37,10 @@ public class VacancyService extends AbstractService<Vacancy> {
     private Pattern pattern;
     private Matcher matcher;
 
+    public List<Vacancy> getTrackedByEmployerProfileId(Long id){
+        return dao.getTrackedByEmployerProfileId(id);
+    }
+
     public Set<Vacancy> getAllByEmployerProfileId(Long id, int limit) {
         return dao.getAllByEmployerProfileId(id, limit);
     }

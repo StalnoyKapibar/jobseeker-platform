@@ -21,7 +21,8 @@ public class EmployerUserRestController {
     private EmployerProfileService employerProfileService;
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity updateEmployer(@RequestBody EmployerUser employerUser) {
+    public @ResponseBody
+    ResponseEntity updateEmployer(@RequestBody EmployerUser employerUser) {
         Long employerProfileId = employerUser.getProfile().getId();
         EmployerProfile tmpEmployer = employerProfileService.getById(employerProfileId);
 
@@ -35,8 +36,9 @@ public class EmployerUserRestController {
     }
 
     @RequestMapping(value = "/editLogo", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<EmployerProfile> updateEmployerLogo(@RequestParam(value = "file", required = false) MultipartFile file,
-                                                                            @RequestParam("id") String id) {
+    public @ResponseBody
+    ResponseEntity<EmployerProfile> updateEmployerLogo(@RequestParam(value = "file", required = false) MultipartFile file,
+                                                       @RequestParam("id") String id) {
         EmployerUser employerUser = employerUserService.getById(Long.parseLong(id));
         if (!file.isEmpty()) {
             try {

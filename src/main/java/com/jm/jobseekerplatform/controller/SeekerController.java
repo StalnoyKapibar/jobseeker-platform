@@ -72,4 +72,12 @@ public class SeekerController {
         model.addAttribute("seekerProfileId", seekerProfileId);
         return "seeker_subscription_news";
     }
+
+    @RequestMapping("/update/{seekerProfileId}")
+    public String UpdateSeekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        model.addAttribute("seekerProfile", seekerProfile);
+        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerProfile.getPhoto()));
+        return "update_seeker_profile";
+    }
 }

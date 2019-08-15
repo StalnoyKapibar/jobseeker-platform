@@ -3,6 +3,8 @@ package com.jm.jobseekerplatform.model;
 import com.jm.jobseekerplatform.model.createdByProfile.CreatedByEmployerProfileBase;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -44,7 +46,11 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     @Column(name = "salarymax")
     private Integer salaryMax;
 
+    @Column(name = "publication_position")
+    private Integer publicationPosition;
+
     @ManyToMany(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Tag> tags;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -136,6 +142,10 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     public State getState() {
         return state;
     }
+
+    public Integer getPublicationPosition(){return publicationPosition;}
+
+    public void setPublicationPosition(Integer publicationPosition){this.publicationPosition = publicationPosition;}
 
     public void setState(State state) {
         this.state = state;
