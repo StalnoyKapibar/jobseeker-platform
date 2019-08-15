@@ -93,4 +93,11 @@ public class EmployerController {
         model.addAttribute("employerProfileId", employerProfileId);
         return "employer_all_news";
     }
+
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @RequestMapping("/employer/get_resumes/")
+    public String getResumes() {
+        return "resume/all_resumes";
+    }
+
 }
