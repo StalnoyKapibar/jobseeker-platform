@@ -2,6 +2,7 @@ var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
 var tagsName = [];
 var avelibleTags = [];
+
 $(document).ready(function () {
     $.ajax({
         url: "/api/tags/",
@@ -118,7 +119,6 @@ function update(id) {
 }
 
 function show_add_portf_modal() {
-    // $('#profile_id_to_add_portf').val(id);
     $('#add_prtf_modal').modal('show');
 }
 

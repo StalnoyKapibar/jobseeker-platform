@@ -14,7 +14,6 @@
     <script type="text/javascript" src="/js/map.js"></script>
     <link href="/css/star-rating.min.css" th:href="@{/css/star-rating.min.css}" rel="stylesheet"/>
 </head>
-
 <body style="background-color: var(--bg-color)">
 <div layout:fragment="content">
     <div id="eProfileDiv" class="container-fluid">
@@ -38,7 +37,6 @@
                                         <input type="file" class="custom-file-input" name="image" id="customFile">
                                         <label class="custom-file-label" for="customFile">Choose file</label>
                                     </div>
-
                                 </form>
                                 <button type="submit" id="btnSubmit" class="btn btn-outline-primary"
                                         th:onclick="'add_emploer_img('+${employerProfile.id}+')'" style="margin-left: 5px;">Submit</button>
@@ -58,7 +56,6 @@
                             </div>
                         </div>
                     </div>
-
 
                     <div class="card-footer text-muted">
                         <input type="text" class="form-control" id="companywebsite" placeholder="Название компании"
