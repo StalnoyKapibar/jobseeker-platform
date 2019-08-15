@@ -167,6 +167,10 @@ function sortByRatingDESC() {
         let vB= b.getElementsByClassName("fas fa-star").length;
         return (vA > vB) ? -1 : (vA < vB) ? 1 : 0;
     });
+    $('#sort li').remove();
+    let link=document.getElementById('rateSort');
+    link.setAttribute('onclick', 'sortByRatingASC()');
+    link.innerHTML=('рейтингу<li class="fas fa-sort-amount-down" style="font-size:14px"></li>');
     parent.append(items);
 }
 
@@ -178,8 +182,11 @@ function sortByRatingASC() {
         let vB= b.getElementsByClassName("fas fa-star").length;
         return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
     });
+    $('#sort li').remove();
+    let link=document.getElementById('rateSort');
+    link.setAttribute('onclick', 'sortByRatingDESC()');
+    link.innerHTML=('рейтингу<li class="fas fa-sort-amount-up" style="font-size:14px"></li>');
     parent.append(items);
-    document.getElementById('btnGroupDrop1').innerHTML='Date';
 }
 
 function sortByDateNewFirst() {
@@ -191,20 +198,11 @@ function sortByDateNewFirst() {
         let vB = $(keySelector, b).text();
         return (vA > vB) ? -1 : (vA < vB) ? 1 : 0;
     });
+    $('#sort li').remove();
+    let link=document.getElementById('dateSort');
+    link.setAttribute('onclick', 'sortByDateOldFirst()');
+    link.innerHTML=('дате<li value="sortByDateNewFirst" class="fas fa-sort-amount-down" style="font-size:14px"></li>');
     parent.append(items);
-}
-
-function MyFunction() {
-    let l=document.getElementById('myLink');
-    l.setAttribute('onclick', 'MyFunction2()');
-
-    l.innerHTML=(' <i class="fas fa-sort-amount-up" style="font-size:14px"></i>дате');
-}
-
-function MyFunction2() {
-    let l=document.getElementById('myLink');
-    l.setAttribute('onclick', 'MyFunction()');
-    l.innerHTML=(' <i class="fas fa-sort-amount-down" style="font-size:14px"></i>дате');
 }
 
 function sortByDateOldFirst() {
@@ -216,14 +214,26 @@ function sortByDateOldFirst() {
         let vB = $(keySelector, b).text();
         return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
     });
+    $('#sort li').remove();
+    let link=document.getElementById('dateSort');
+    link.setAttribute('onclick', 'sortByDateNewFirst()');
+    link.innerHTML=('дате<li value="sortByDateOldFirst" class="fas fa-sort-amount-up" style="font-size:14px"></li>');
     parent.append(items);
 }
 
 function sortByLikes(){
+    $('#sort i').remove();
+    let link=document.getElementById('likeSort');
+    link.setAttribute('onclick', 'sortByDislikes()');
+    link.innerHTML=('дизлайкам');
     sortByNestedText($('#reviews'), "div", "span.likes");
 }
 
 function sortByDislikes(){
+    $('#sort i').remove();
+    let link=document.getElementById('likeSort');
+    link.setAttribute('onclick', 'sortByLikes()');
+    link.innerHTML=('лайкам');
     sortByNestedText($('#reviews'), "div", "span.dislikes");
 }
 
@@ -256,16 +266,26 @@ function hidePositive() {
 }
 
 function showAll() {
-    let e = document.getElementById("sortSelect");
-    let sort = e.options[e.selectedIndex].value;
-    sortType(sort);
-    let parent = $('#reviews');
-    let childSelector = "div";
-    let items = parent.children(childSelector);
+    let e = document.getElementById("sort");
 
-    for (let i=0; i<items.length; i++) {
-        items[i].style.display = 'block';
-    }
+    alert($("#sort").children().find('li').length);
+
+    // let a= e.getElementsByTagName('a');
+    // for (let i=0; i<a.length; i++){
+    //     let s=a[i].getElementsByTagName('li');
+    //     if (s.length>0){
+    //         alert(s[0].innerHTML)
+    //     }
+    // }
+    // let sort = e.options[e.selectedIndex].value;
+    // sortType(sort);
+    // let parent = $('#reviews');
+    // let childSelector = "div";
+    // let items = parent.children(childSelector);
+    //
+    // for (let i=0; i<items.length; i++) {
+    //     items[i].style.display = 'block';
+    // }
 }
 
 function reviewEditBasedOnVotes() {
