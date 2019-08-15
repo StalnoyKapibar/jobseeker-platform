@@ -42,7 +42,9 @@ public class PortfolioRestController {
     public Set<Portfolio> getUserById(@RequestBody SeekerProfile profile){
         long id=profile.getId();
         SeekerProfile updatedProfile = seekerProfileService.getById(profile.getId());
-        updatedProfile.setPortfolios(profile.getPortfolios());
+        Set<Portfolio> newPortfolio = updatedProfile.getPortfolios();
+        newPortfolio.addAll(profile.getPortfolios());
+        updatedProfile.setPortfolios(newPortfolio);
         seekerProfileService.update(updatedProfile);
         return updatedProfile.getPortfolios();
     }

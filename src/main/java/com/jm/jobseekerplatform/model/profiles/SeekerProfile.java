@@ -36,7 +36,7 @@ public class SeekerProfile extends Profile implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Tag> tags;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Portfolio> portfolios;
 
     @ManyToMany(fetch = FetchType.EAGER)

@@ -80,9 +80,7 @@ function add_new_tag() {
         $('#tag_list span').each(function () {
             var tagFromList = $(this).find('span').text();
             if (tagFromList !== null) {
-                var result = avelibleTags.find(x => x.name === tagFromList
-            )
-                ;
+                var result = avelibleTags.find(x => x.name === tagFromList);
                 newTagsToUpdate.push(result);
             }
         });
@@ -147,10 +145,14 @@ function add_portfolio() {
         },
         success: function (portfolios) {
             $('#portfolio_list').empty();
-            portfolios.each(function () {
+
+            for(var i = 0; i<portfolios.length; i++){
                 $('#portfolio_list').append(' <a class="list-group-item list-group-item-action" href="#" ' +
-                    'data-toggle="modal" data-target="#portfolioModal" onclick="show_portfolio(' + $(this).id + ')">' + $(this).projectName + '</a>');
-            });
+                    'data-toggle="modal" data-target="#portfolioModal" onclick="show_portfolio(' + portfolios[i].id + ')">' + portfolios[i].projectName + '</a>')
+            }
+            $('#add_portf_name_input').val('');
+            $('#add_portf_link_input').val('');
+            $('#add_portf_description_textarea').val('');
             $('#add_portf_modal').modal('hide');
         },
         error: function (error) {
@@ -187,7 +189,29 @@ function update_prtf() {
     })
 }
 
-
+function del_prtf(id) {
+    var portfolio = {
+        'id': $('#prtf_id_to_updte').val()
+    };
+    $.ajax({
+        type: 'post',
+        url: "/api/portfolios/delete",
+        data: JSON.stringify(portfolio),
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        success: function (portfolio) {
+            $('#' + portfolio.id + '_portf').text(portfolio.projectName);
+            $('#portf_modal').modal('hide');
+        },
+        error: function (error) {
+            console.log(error);
+            alert(error.responseText);
+        }
+    })
+}
 
 
 
