@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.util;
 
+import com.jm.jobseekerplatform.service.impl.MeetingService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class Scheduler {
     @Autowired
     EmployerProfileService employerProfileService;
 
+    @Autowired
+    MeetingService meetingService;
+
     @Scheduled(cron = "${scheduler.deleteExpiryVacancies.cron}")
     public void deleteExpiryVacancies() {
         vacancyService.deletePermanentBlockVacancies();
@@ -29,5 +33,10 @@ public class Scheduler {
     public void deleteExpiryEmployerProfiles() {
         employerProfileService.deletePermanentBlockEmployerProfiles();
         employerProfileService.deleteExpiryBlockEmployerProfiles();
+    }
+
+    @Scheduled(cron = "${scheduler.updateMeetingStatus.cron}")
+    public void updateMeetingStatus() {
+        meetingService.updateMeetingsOnPassing();
     }
 }

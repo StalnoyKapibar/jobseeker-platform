@@ -87,12 +87,12 @@ public class VacancyRestController {
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<List<Vacancy>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
+    ResponseEntity<Page<Vacancy>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
         if (searchParam.isEmpty()) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
-        List<Vacancy> list = vacancyService.findAllByTags(searchParam, PageRequest.of(pageCount, 10)).getContent();
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        Page<Vacancy> page = vacancyService.findAllByTags(searchParam, PageRequest.of(pageCount, 10));
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/city/page/{page}", method = RequestMethod.POST)

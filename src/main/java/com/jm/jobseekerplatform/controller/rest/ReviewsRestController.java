@@ -73,8 +73,7 @@ public class ReviewsRestController {
         }
     }*/
 
-    @RequestMapping(value = "/find", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
+    @GetMapping(value = "/find", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmployerReviews> findReviewBySeekerIdAndEmployerIdForEdit(@RequestBody Map<String, Object> map) {
         try {
             EmployerProfile employerProfile = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
@@ -87,20 +86,17 @@ public class ReviewsRestController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping("/get_all")
-    @ResponseBody
+    @GetMapping("/get_all")
     public ResponseEntity<Set<EmployerReviews>> getAllReviewsByEmployerProfileId(@RequestParam("employerProfileId") Long employerProfileId) {
         return new ResponseEntity<>(employerProfileService.getById(employerProfileId).getReviews(), HttpStatus.OK);
     }
 
-    @RequestMapping("/get")
-    @ResponseBody
-    public ResponseEntity<EmployerReviews> getById(@RequestParam("reviewId") Long reviewId) {
+    @GetMapping("/get")
+    public ResponseEntity<EmployerReviews> geReviewtById(@RequestParam("reviewId") Long reviewId) {
         return new ResponseEntity<>(employerReviewsService.getById(reviewId), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping("/add")
     public ResponseEntity addNewReview(@RequestBody EmployerReviews reviews,
                                        @RequestParam("seekerProfileId") Long seekerProfileId,
                                        @RequestParam("employerProfileId") Long employerProfileId) {
@@ -115,8 +111,7 @@ public class ReviewsRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping("/update")
     public ResponseEntity updateReview(@RequestBody EmployerReviews reviews,
                                        @RequestParam("seekerProfileId") Long seekerProfileId) {
         reviews.setSeekerProfile(seekerProfileService.getById(seekerProfileId));
@@ -124,8 +119,7 @@ public class ReviewsRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping("/delete")
-    @ResponseBody
+    @GetMapping("/delete")
     public ResponseEntity deleteReview(@RequestParam("reviewId") Long reviewId) {
         try {
             employerReviewsService.deleteById(reviewId);
