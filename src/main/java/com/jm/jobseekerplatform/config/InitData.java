@@ -8,6 +8,9 @@ import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 import com.jm.jobseekerplatform.model.profiles.*;
 import com.jm.jobseekerplatform.model.users.*;
 import com.jm.jobseekerplatform.service.impl.*;
+import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicVacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
@@ -75,6 +78,9 @@ public class InitData {
     private ChatService chatService;
 
     @Autowired
+    private ChatWithTopicVacancyService chatWithTopicVacancyService;
+
+    @Autowired
     private PointService pointService;
 
     @Autowired
@@ -85,6 +91,9 @@ public class InitData {
 
     @Autowired
     private NewsService newsService;
+
+    @Autowired
+    private ReviewVoteService reviewVoteService;
 
     private Faker faker = new Faker(new Locale("ru"));
 
@@ -105,7 +114,6 @@ public class InitData {
 
         initReviews();
         initChat();
-
         initNews();
     }
 
@@ -189,26 +197,26 @@ public class InitData {
 
         Set<EmployerReviews> reviewsOne = new HashSet<>();
         reviewsOne.add(reviewOne);
-        reviewsOne.add(reviewTwo);
+        reviewsOne.add(reviewThree);
 
         Set<EmployerReviews> reviewsTwo = new HashSet<>();
-        reviewsTwo.add(reviewThree);
-        reviewsTwo.add(reviewFour);
+        reviewsTwo.add(reviewOne);
+        reviewsTwo.add(reviewFive);
 
         Set<EmployerReviews> reviewsThree = new HashSet<>();
-        reviewsThree.add(reviewFive);
-        reviewsThree.add(reviewSix);
+        reviewsThree.add(reviewTwo);
+        reviewsThree.add(reviewFour);
 
         Set<EmployerReviews> reviewsFour = new HashSet<>();
-        reviewsFour.add(reviewOne);
-        reviewsFour.add(reviewFour);
+        reviewsFour.add(reviewTwo);
+        reviewsFour.add(reviewSix);
 
         Set<EmployerReviews> reviewsFive = new HashSet<>();
-        reviewsFive.add(reviewThree);
+        reviewsFive.add(reviewOne);
         reviewsFive.add(reviewSix);
 
         Set<EmployerReviews> reviewsSix = new HashSet<>();
-        reviewsSix.add(reviewTwo);
+        reviewsSix.add(reviewThree);
         reviewsSix.add(reviewFive);
 
         EmployerProfile employerProfileOne = employerProfileService.getById(2L);
@@ -295,24 +303,24 @@ public class InitData {
 
     public void initVacancies() {
         String shortDescr = "Ищем талантливого разработчика, умеющего все и немного больше";
-        String description = "Обязанности:\n" +
-                "\n" +
-                "Разработка новых модулей системы\n" +
-                "Перевод существующих модулей на микросервисную архитектуру\n" +
-                "Требования:\n" +
-                "Высшее образование\n" +
-                "Опыт работы с мультипоточностью (multithreading)\n" +
-                "Владение основными паттернами проектирования\n" +
-                "Знание и понимание RESTful-протоколов\n" +
-                "Умение быстро разбираться в чужом коде\n" +
-                "Английский язык (на уровне intermediate)\n" +
-                "Опыт работы в проектах с Docker, Kubernetes;\n" +
-                "Условия:\n" +
-                "Белая заработная плата, официальное трудоустройство\n" +
-                "Гибкий график работы\n" +
-                "Лояльное отношение к сотрудникам\n" +
-                "Дружный коллектив\n" +
-                "Дополнительная информация:\n" +
+        String description = "Обязанности:<br>" +
+                "<br>" +
+                "Разработка новых модулей системы<br>" +
+                "Перевод существующих модулей на микросервисную архитектуру<br>" +
+                "Требования:<br>" +
+                "Высшее образование<br>" +
+                "Опыт работы с мультипоточностью (multithreading)<br>" +
+                "Владение основными паттернами проектирования<br>" +
+                "Знание и понимание RESTful-протоколов<br>" +
+                "Умение быстро разбираться в чужом коде<br>" +
+                "Английский язык (на уровне intermediate)<br>" +
+                "Опыт работы в проектах с Docker, Kubernetes;<br>" +
+                "Условия:<br>" +
+                "Белая заработная плата, официальное трудоустройство<br>" +
+                "Гибкий график работы<br>" +
+                "Лояльное отношение к сотрудникам<br>" +
+                "Дружный коллектив<br>" +
+                "Дополнительная информация:<br>" +
                 "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!";
 
         Vacancy vacancy;
@@ -385,7 +393,7 @@ public class InitData {
         employerProfile.setState(State.ACCESS);
         employerProfileService.add(employerProfile);
 
-        for (Long i = 0L; i <= 3L; i++) {
+        for (long i = 0L; i <= 3L; i++) {
             image = getBufferedImage();
             employerProfile = new EmployerProfile(faker.company().name(), faker.company().url(), faker.company().bs(), imageService.resizeLogoEmployer(image));
             employerProfile.setState(State.ACCESS);
@@ -473,16 +481,18 @@ public class InitData {
 
         Random rnd = new Random();
 
-        for (Long i = 1L; i < 6L; i++) {
+        List<Profile> profileList = profileService.getAll();
+
+        for (long i = 1L; i < 6L; i++) {
             List<ChatMessage> messages = new ArrayList<>();
             for (int k = 0; k < 5; k++) {
-                ChatMessage chatMessage = new ChatMessage(faker.gameOfThrones().quote(), userService.findByEmail("admin@mail.ru"), new Date(), false);
+                ChatMessage chatMessage = new ChatMessage(faker.gameOfThrones().quote(), profileList.get(rnd.nextInt(profileList.size())), new Date());
                 chatMessageService.add(chatMessage);
                 messages.add(chatMessage);
             }
 
             Vacancy randomVacancy = vacancyService.getById(rnd.nextInt(30) + 1L);
-            Profile chatCreator = getRandomProfileExceptWithId(randomVacancy.getEmployerProfile().getId());
+            Profile chatCreator = getRandomProfileExceptWithId(randomVacancy.getCreatorProfile().getId());
 
             Chat chat = new ChatWithTopicVacancy(chatCreator, randomVacancy);
             chat.setChatMessages(messages);
@@ -491,22 +501,20 @@ public class InitData {
         }
     }
 
-    private Profile getRandomProfileExceptWithId(Long exceptId) {
+    private Profile getRandomProfileExceptWithId(Long exceptProfileId) {
         boolean ready = false;
 
         int amountOfProfiles = profileService.getAll().size();
         int randomId = -1;
 
         while (!ready) {
-            randomId = rnd.nextInt(amountOfProfiles);
-            if (randomId != exceptId) {
+            randomId = rnd.nextInt(amountOfProfiles) + 1;
+            if (randomId != exceptProfileId) {
                 ready = true;
             }
         }
 
-        Profile randomProfile = profileService.getById((long) randomId);
-
-        return randomProfile;
+        return profileService.getById((long) randomId);
     }
 
     private EmployerProfile getRandomEmployerProfile() {

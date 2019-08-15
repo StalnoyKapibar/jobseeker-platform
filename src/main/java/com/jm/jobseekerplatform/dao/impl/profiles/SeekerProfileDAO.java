@@ -4,6 +4,7 @@ import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.Tag;
 import org.springframework.stereotype.Repository;
+
 import java.util.*;
 
 @Repository("seekerProfileDAO")

@@ -17,7 +17,7 @@ import java.util.Collection;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "users")
-public class User<T extends Profile> implements Serializable, UserDetails {
+public abstract class User<T extends Profile> implements Serializable, UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,7 @@ public class User<T extends Profile> implements Serializable, UserDetails {
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
-    @OneToOne(fetch = FetchType.EAGER, targetEntity=Profile.class)
+    @OneToOne(fetch = FetchType.EAGER, targetEntity = Profile.class)
     private T profile;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -73,8 +73,8 @@ public class User<T extends Profile> implements Serializable, UserDetails {
         this.email = email;
     }
 
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
-    @JsonIdentityReference(alwaysAsId=true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     public T getProfile() {
         return profile;
     }

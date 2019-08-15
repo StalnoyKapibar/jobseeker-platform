@@ -110,9 +110,11 @@ function exists() {
             if (result) {
                 $('#user_email').addClass("is-invalid");
                 $('#exists_warning').html("Email-адрес уже существует");
+                $('#recovery_message').slideDown({opacity: "show"}, "slow");
                 email_check = false;
             } else {
                 $('#user_email').addClass("is-valid");
+                $('#recovery_message').hide();
                 email_check = true;
             }
         }

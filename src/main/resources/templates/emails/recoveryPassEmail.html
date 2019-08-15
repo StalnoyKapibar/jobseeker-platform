@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<table style="background-color: #ffffff;padding-top: 20px;color: #434245;width: 100%;-webkit-font-smoothing:antialiased;
+       -moz-osx-font-smoothing:grayscale;border: 0;text-align: center;border-collapse: collapse;"
+       class="background">
+    <tbody>
+    <tr>
+        <td style="font-size: 15px;color: #717274;text-align: center;width: 100%;border-bottom: 1px solid #E1E1E4">
+            <table style="margin-top: 20px;background-color: white;border: 0;text-align: center;border-collapse: collapse;">
+                <tbody>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td> Здравствуйте, <strong><span th:text="${your_login}"></span></strong></td>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+    <tr>
+        <td style="vertical-align: top;padding: 0" align="center">
+            <table
+                    style="border: 0;border-collapse: collapse;margin: 0 auto;background: white;border-radius: 8px;margin-bottom: 16px;">
+                <tbody>
+                <tr>
+                    <td style="width: 546px;vertical-align: top;padding-top: 32px">
+                        <div style="max-width: 600px;margin: 0 auto;">
+                            <h1 style="font-size: 30px;padding-right: 30px;padding-left: 30px;">
+                                Вы сделали запрос на востановление пароля на платформе JobSeeker <hr>
+                                <span th:text="${#dates.format(subscriptionDate)}"></span></h1>
+                            <p style="font-size: 17px;padding-right: 30px;padding-left: 30px;">
+                                Подтвердив свой E-mail адрес
+                                вы перейдете на старницу <strong>создания нового пароля</strong>
+                            </p>
+                            <div style="padding-right: 30px;padding-left: 30px;margin-top: 40px;margin-bottom: 30px;">
+                                <table style="width: 100%;">
+                                    <tbody>
+                                    <tr style="width: 100%;">
+                                        <td style="width: 100%;"><span
+                                                style="display: inline-block;border-radius:4px;background-color:#2ea664;"><a
+                                                class="button"
+                                                th:href="${href}"
+                                                style="min-width:196px;border-top:13px solid;border-bottom:13px solid;border-right:24px solid;border-left:24px solid;border-color:#2ea664;border-radius:4px;background-color:#2ea664;color:#ffffff;font-size:18px;line-height:18px;word-break:break-word;text-shadow:0 1px 1px #2e9a5f;display: inline-block;text-align: center;font-weight: 900;text-decoration: none !important;"
+                                                target="_blank"
+                                                rel=" noopener noreferrer">Подтвердить</a></span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 15px;color: #717274;text-align: center;width: 100%;border-top: 1px solid #E1E1E4">
+            <table style="margin-top: 20px;background-color: white;border: 0;text-align: center;border-collapse: collapse;">
+                <tbody>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td> C нилучшими пожеланиями, команда <strong> JobSeeker</strong></td>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

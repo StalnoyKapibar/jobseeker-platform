@@ -74,7 +74,6 @@ function showTags() {
             $.each(data, function (key, value) {
                 $("#tagsWell").append("<span class='badge badge-pill badge-success' value='" + value.name + "' id='tagLabel_" + value.id + "' onclick='addTag(" + value.id + ",\"" + value.name + "\")'>" + value.name + "</span>");
             });
-            flagTag = true;
         }
     });
 }
@@ -92,6 +91,7 @@ function addTag(id, name) {
 }
 
 function deleteTag(id, name) {
+    var div = document.getElementById("selectedTags");
     $('#tagItem-' + id).remove();
     $("#tagsWell").append("<span class='badge badge-pill badge-success' value='" + name + "'id='tagLabel_" + id + "' onclick='addTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
     $("#v_tagLabel_" + id).remove();

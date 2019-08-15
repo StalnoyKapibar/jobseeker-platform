@@ -10,14 +10,16 @@
         #success_message {
             display: none;
         }
-
         #ups_message {
+            display: none;
+        }
+        #recovery_message{
             display: none;
         }
     </style>
 </head>
 
-<body style="background-color: var(--bg-color)">
+<body>
 <div layout:fragment="content">
     <div class="container">
         <br>
@@ -105,7 +107,15 @@
                                 Вы также можете <a href="/">вернуться на главную страницу</a>
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            <div class="alert alert-danger" role="alert" id="recovery_message">
+                                      Вы уже зарегистрированы в нашей базе
+                                 <i class="fas fa-registered"></i>
+                                <hr>
+                                перейти на <a href="/login"> страницу входа</a>
+                                или <a href="/recovery"> востановить пароль</a>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="alert alert-danger" role="alert" id="ups_message">
                                 Форма заполнена не верно<i

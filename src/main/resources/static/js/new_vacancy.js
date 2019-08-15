@@ -30,6 +30,21 @@ $(document).ready(function () {
             address_check = false;
         }
     });
+
+    bootstrapValidate('#v_address_modal', 'required:', function (isValid) {
+        if (isValid) {
+            $('#v_address_modal').removeClass('is-invalid');
+            $('#v_address_modal').addClass('is-valid');
+            $('#v_address').removeClass('is-invalid');
+            $('#v_address').addClass('is-valid');
+            address_check = true;
+        } else {
+            $('#v_address_modal').removeClass('is-valid');
+            $('#v_address_modal').addClass('is-invalid');
+        }
+    });
+
+
     bootstrapValidate('#v_remote', 'required:', function (isValid) {
         if (isValid) {
             $('#v_remote').removeClass('is-invalid');

@@ -10,7 +10,7 @@
     <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
     <script type="text/javascript" src="/js/add_news.js"></script>
 </head>
-<body style="background-color: var(--bg-color)">
+<body>
 <div layout:fragment="content">
     <div class="container-fluid">
         <div class="row">
@@ -49,6 +49,30 @@
                                 <div class="form-group">
                                     <textarea name="n_description" id="n_description"
                                               class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" id="myDIV">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-11 control-label">Теги (минимум один)</label>
+                            <div class="col-sm-1"></div>
+                            <div class="col-md-10 inputGroupContainer">
+                                <div class="search_area">
+                                    <form class="form-inline" style="margin-bottom: 5px;">
+                                        <input class="form-control mr-sm-2 form-search" id="search_box" type="search"
+                                               name="query" placeholder="Поиск тегов..."
+                                               aria-label="Search" value="" autocomplete="off" style="width: 100%">
+                                    </form>
+                                    <input type="hidden" id="searchBoxId" value="">
+                                    <div id="search_advice_wrapper"></div>
+                                </div>
+                                <div id="searchButtons" style="margin-bottom: 10px"></div>
+                                <div id="tagsWell">
+                                </div>
+                                <hr>
+                                <div id="selectedTags" style="display: none">
+                                    <p><b>Выбранные теги:</b></p>
                                 </div>
                             </div>
                         </div>

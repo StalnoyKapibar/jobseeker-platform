@@ -6,6 +6,9 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,6 +39,16 @@ public class EmployerProfile extends Profile implements Serializable {
     public EmployerProfile() {
     }
 
+    @Override
+    public String getFullName() {
+        return companyName;
+    }
+
+    @Override
+    public String getTypeName() {
+        return "Работодатель";
+    }
+
     public EmployerProfile(String companyName, String website, String description, byte[] logo) {
         super();
         this.companyName = companyName;
@@ -44,9 +57,14 @@ public class EmployerProfile extends Profile implements Serializable {
         this.logo = logo;
     }
 
-    @JsonValue
     public String getCompanyName() {
         return companyName;
+    }
+
+    @JsonValue
+    @Override
+    public Long getId() {
+        return super.getId();
     }
 
     public void setCompanyName(String companyName) {
@@ -73,6 +91,10 @@ public class EmployerProfile extends Profile implements Serializable {
         return logo;
     }
 
+    public String getEncoderLogo() {
+        return Base64.getEncoder().encodeToString(this.getLogo());
+    }
+
     public void setLogo(byte[] logo) {
         this.logo = logo;
     }
@@ -96,7 +118,9 @@ public class EmployerProfile extends Profile implements Serializable {
 
     public Double getAverageRating() {
         if (reviews != null) {
-            return reviews.stream().mapToInt(EmployerReviews::getEvaluation).average().orElse(0);
+            BigDecimal bd = new BigDecimal(Double.toString(reviews.stream().mapToInt(EmployerReviews::getEvaluation).average().orElse(0)));
+            bd = bd.setScale(1, RoundingMode.HALF_UP);
+            return bd.doubleValue();
         } else {
             return 0d;
         }

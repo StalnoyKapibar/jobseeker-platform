@@ -11,8 +11,6 @@ import org.hibernate.query.Query;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
@@ -32,7 +30,7 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
             "select v.id, count(v.id) as c from Vacancy v join v.tags t where v.state='ACCESS' and t in (:tags) group by (v.id) order by c desc";
 
     //language=SQL
-    private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.employerProfile.id = :param";
+    private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v WHERE v.creatorProfile.id = :param";
 
     public List<Vacancy> getTrackedByEmployerProfileId(Long id) {
         List<Vacancy> vacancies = new ArrayList<>();
@@ -145,21 +143,7 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         qeries.add("delete from chats where topic_id = :id");
         qeries.add("delete from vacancies where id = :id");
         qeries.forEach(n->entityManager.createNativeQuery(n).setParameter("id", vacancy.getId()).executeUpdate());
-//        entityManager.createNativeQuery("delete from profile_favorite_vacancy where favorite_vacancy_id  = :id")
-//                .setParameter("id", vacancy.getId())
-//                .executeUpdate();
-//
-//        entityManager.createNativeQuery("delete from chats_chat_messages ccm where exists(select * from chats ch where ccm.chat_id = ch.id and ch.topic_id = :id)")
-//                .setParameter("id",vacancy.getId())
-//                .executeUpdate();
-//
-//        entityManager.createNativeQuery("delete from chats where topic_id = :id")
-//                .setParameter("id", vacancy.getId())
-//                .executeUpdate();
-//
-//        entityManager.createNativeQuery("delete from vacancies where id = :id")
-//                .setParameter("id", vacancy.getId())
-//                .executeUpdate();
+
     }
 
     @Override
@@ -172,6 +156,10 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     public List<Vacancy> getAll() {
         return entityManager.createQuery("select v from Vacancy v", Vacancy.class)
                 .setHint(QueryHints.FETCHGRAPH, entityManager.getEntityGraph("vacancy-all-nodes")).getResultList();
+    }
+
+    public void updateVacancy(Vacancy vacancy){
+
     }
 }
 

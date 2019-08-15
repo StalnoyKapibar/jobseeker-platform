@@ -4,6 +4,7 @@ import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.service.impl.ImageService;
 import com.jm.jobseekerplatform.service.impl.SubscriptionService;
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -87,7 +89,8 @@ public class SeekerProfileRestController {
                                              @RequestParam("seekerProfileId") Long seekerProfileId) {
 
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        EmployerProfile employerProfile = vacancyService.getById(vacancyId).getEmployerProfile();
+        Vacancy vacancy = vacancyService.getById(vacancyId);
+        EmployerProfile employerProfile =  employerProfileService.getById(((Profile)vacancy.getCreatorProfile()).getId());
         Subscription subscription = subscriptionService.findBySeekerAndEmployer(seekerProfile, employerProfile);
         subscriptionService.deleteSubscription(subscription);
         return new ResponseEntity(HttpStatus.OK);
@@ -99,11 +102,9 @@ public class SeekerProfileRestController {
                                              @RequestParam("tags") Set<String> tags) {
 
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        EmployerProfile employerProfile = vacancyService.getById(vacancyId).getEmployerProfile();
-        Set<Tag> tagSet = new HashSet<>();
-        for (String s : tags) {
-            tagSet.add(tagService.findByName(s));
-        }
+        Vacancy vacancy = vacancyService.getById(vacancyId);
+        EmployerProfile employerProfile =  employerProfileService.getById(((Profile)vacancy.getCreatorProfile()).getId());
+        Set<Tag> tagSet = tagService.getTagsByStringNames(tags);
         Subscription subscription = new Subscription(employerProfile, seekerProfile, tagSet);
         seekerProfile.getSubscriptions().add(subscription);
         seekerProfileService.update(seekerProfile);

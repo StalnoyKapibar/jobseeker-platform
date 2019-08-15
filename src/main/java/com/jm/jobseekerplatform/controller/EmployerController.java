@@ -1,6 +1,5 @@
 package com.jm.jobseekerplatform.controller;
 
-import com.jm.jobseekerplatform.model.EmployerReviews;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
@@ -13,7 +12,6 @@ import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.annotation.security.RolesAllowed;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -54,33 +53,35 @@ public class EmployerController {
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
         if (authentication != null && authentication.isAuthenticated()) {
             Long userId = ((User) authentication.getPrincipal()).getId();
-            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
+            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> (grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
                 EmployerUser employerUser = employerUserService.getById(userId);
                 isOwner = employerUser.getProfile().getId().equals(employerProfileId);
             }
             if (roles.contains("ROLE_SEEKER") | roles.contains("ROLE_ADMIN")) {
                 if (roles.contains("ROLE_SEEKER")) {
+                    boolean isContain = false;
                     SeekerUser seekerUser = seekerUserService.getById(userId);
+                    if (employerProfile.getReviews().stream().anyMatch(reviews1 -> Objects.equals(reviews1.getSeekerProfile().getId(), seekerUser.getProfile().getId()))) {
+                        isContain = true;
+                    }
                     model.addAttribute("seekerProfileId", seekerUser.getProfile().getId());
+                    model.addAttribute("isContain", isContain);
                 }
-            }
-            if (!employerProfile.getReviews().isEmpty()) {
-                Set<EmployerReviews> employerReviews = employerProfile.getReviews();
-                if (employerReviews.size() < 2) {
-                    model.addAttribute("minReviewsEvaluation", employerReviews.iterator().next());
-                } else if (employerReviews.size() >= 2) {
-                    model.addAttribute("minReviewsEvaluation", employerReviews.stream().sorted().skip(employerReviews.size() - 1).findFirst().orElse(null));
-                    model.addAttribute("maxReviewsEvaluation", employerReviews.stream().sorted().findFirst().orElse(null));
-                } else {
-                    model.addAttribute("reviewStatus", false);
-                }
-            } else {
-                model.addAttribute("reviewStatus", false);
             }
         }
+
+        if (!employerProfile.getReviews().isEmpty()) {
+            model.addAttribute("employerProfileReviews", employerProfile.getReviews());
+            model.addAttribute("reviewStatus", true);
+            model.addAttribute("averageRating", employerProfile.getAverageRating());
+        } else {
+            model.addAttribute("reviewStatus", false);
+        }
+
         model.addAttribute("isOwner", isOwner);
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+
         return "employer";
     }
 

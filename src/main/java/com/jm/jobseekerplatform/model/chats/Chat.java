@@ -1,13 +1,8 @@
 package com.jm.jobseekerplatform.model.chats;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -27,27 +22,56 @@ public class Chat implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
-    @JsonIdentityReference(alwaysAsId=true)
-    private Profile creator;
+    @JsonProperty("creatorProfile")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private Profile creatorProfile;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = org.hibernate.annotations.FetchMode.SELECT)
+    @JsonIgnore
+    private List<Profile> chatMembers;
 
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = org.hibernate.annotations.FetchMode.SELECT)
     @JsonIgnore
     private List<ChatMessage> chatMessages;
 
-    public Chat(){ }
 
-    public Chat(Profile creator){
-        this.creator = creator;
+    public Chat() {
     }
+
+    public Chat(Profile creatorProfile) {
+        this.creatorProfile = creatorProfile;
+    }
+
 
     public Long getId() {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Profile getCreatorProfile() {
+        return creatorProfile;
+    }
+
+    public void setCreatorProfile(Profile creatorProfile) {
+        this.creatorProfile = creatorProfile;
+    }
+
     public Profile getCreator() {
-        return creator;
+        return creatorProfile;
+    }
+
+    public List<Profile> getChatMembers() {
+        return chatMembers;
+    }
+
+    public void setChatMembers(List<Profile> chatMembers) {
+        this.chatMembers = chatMembers;
     }
 
     public void setChatMessages(List<ChatMessage> chatMessages) {

@@ -15,6 +15,7 @@
     <li><a href="#"><span>Все компании</span></a></li>
     <li><a th:href="@{/seeker/get_subscriptions/{id}(id=${seekerProfileId})}"><span>Мои подписки</span></a></li>
     <li><a class="font-color" href="#">Мои чаты<span id="count_not_read_messages"></span></a></li>
+    <li><a th:href="@{/seeker/meetings/{id}(id=${seekerProfileId})}"><span>Мои встречи</span></a></li>
     <li><a th:href="@{/seeker/update/{id}(id=${seekerProfileId})}">Редактировать профиль</a></li>
     <li><span id="username" th:utext="${username}"></span></li>
     <li><span id="vacancyId" th:utext="${vacancyId}"></span></li>

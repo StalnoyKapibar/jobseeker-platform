@@ -2,7 +2,9 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Subscription;
+import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.service.impl.NewsService;
+import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,11 +33,17 @@ public class NewsRestController {
     @Autowired
     private SeekerProfileService seekerProfileService;
 
+    @Autowired
+    private TagService tagService;
+
     @RolesAllowed({"ROLE_EMPLOYER"})
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseEntity addNews(@RequestBody News news,
-                                  @RequestParam("employerProfileId") Long employerProfileId) {
+                                  @RequestParam("employerProfileId") Long employerProfileId,
+                                  @RequestParam("tags") Set<String> tags) {
         news.setAuthor(employerProfileService.getById(employerProfileId));
+        Set<Tag> tagSet = tagService.getTagsByStringNames(tags);
+        news.setTags(tagSet);
         newsService.add(news);
         return new ResponseEntity(HttpStatus.OK);
     }

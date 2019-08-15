@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.model.profiles;
 
+import com.jm.jobseekerplatform.model.Meeting;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.jm.jobseekerplatform.model.Portfolio;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Base64;
 import java.util.Set;
 
 @Entity
@@ -44,10 +46,24 @@ public class SeekerProfile extends Profile implements Serializable {
     @JsonIgnore
     private Set<Vacancy> favoriteVacancy;
 
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "seekerProfile")
+    @OrderBy("status, date desc")
+    private Set<Meeting> meetings;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Subscription> subscriptions;
 
     public SeekerProfile() {
+    }
+
+    @Override
+    public String getFullName() {
+        return surname + " " + name + " " + patronymic;
+    }
+
+    @Override
+    public String getTypeName() {
+        return "Соискатель";
     }
 
     public SeekerProfile(String name, String patronymic, String surname, String description, byte[] photo, Set<Tag> tags,
@@ -108,6 +124,10 @@ public class SeekerProfile extends Profile implements Serializable {
         return photo;
     }
 
+    public String getEncoderPhoto() {
+        return Base64.getEncoder().encodeToString(this.getPhoto());
+    }
+
     public void setPhoto(byte[] photo) {
         this.photo = photo;
     }
@@ -135,4 +155,13 @@ public class SeekerProfile extends Profile implements Serializable {
     public void setSubscriptions(Set<Subscription> subscriptions) {
         this.subscriptions = subscriptions;
     }
+
+    public Set<Meeting> getMeetings() {
+        return meetings;
+    }
+
+    public void setMeetings(Set<Meeting> meetings) {
+        this.meetings = meetings;
+    }
+
 }

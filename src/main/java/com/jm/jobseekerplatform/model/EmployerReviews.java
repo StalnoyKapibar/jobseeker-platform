@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "employer_reviews")
-public class EmployerReviews implements Serializable, Comparable<EmployerReviews>{
+public class EmployerReviews implements Serializable, Comparable<EmployerReviews> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +24,14 @@ public class EmployerReviews implements Serializable, Comparable<EmployerReviews
     @Column(name = "evaluation")
     private Integer evaluation;
 
-    @OneToOne(cascade=CascadeType.REFRESH, fetch=FetchType.EAGER)
-    @JoinColumn(name="seekerProfile")
+    @Column(name = "review_like")
+    private int like;
+
+    @Column(name = "review_dislike")
+    private int dislike;
+
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "seekerProfile")
     private SeekerProfile seekerProfile;
 
     public EmployerReviews() {
@@ -70,6 +76,38 @@ public class EmployerReviews implements Serializable, Comparable<EmployerReviews
         this.evaluation = evaluation;
     }
 
+    public int getLike() {
+        return like;
+    }
+
+    public void setLike(int like) {
+        this.like = like;
+    }
+
+    public int getDislike() {
+        return dislike;
+    }
+
+    public void setDislike(int dislike) {
+        this.dislike = dislike;
+    }
+
+    public void incrementLike() {
+        ++this.like;
+    }
+
+    public void incrementDislike() {
+        ++this.dislike;
+    }
+
+    public void decrementLike() {
+        --this.like;
+    }
+
+    public void decrementDislike() {
+        --this.dislike;
+    }
+
     public SeekerProfile getSeekerProfile() {
         return seekerProfile;
     }
@@ -97,11 +135,11 @@ public class EmployerReviews implements Serializable, Comparable<EmployerReviews
 
     @Override
     public int compareTo(EmployerReviews o) {
-        if (this.getEvaluation().equals(o.getEvaluation())){
+        if (this.getEvaluation().equals(o.getEvaluation())) {
             return 0;
-        }else if (this.getEvaluation() > o.getEvaluation()){
+        } else if (this.getEvaluation() > o.getEvaluation()) {
             return -1;
-        }else {
+        } else {
             return 1;
         }
     }
