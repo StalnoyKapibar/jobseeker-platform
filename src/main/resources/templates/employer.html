@@ -151,7 +151,13 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group">
+                                        <div id="sort">Сортировать по:
+                                            <a id="dateSort" href="javascript:void(0);" onclick="sortByDateOldFirst();">дате</a>
+                                            <a id="rateSort" href="javascript:void(0);" onclick="sortByRatingDESC()">рейтингу</a>
+                                            <a id="likeSort" href="javascript:void(0);" onclick="sortByLikes();">лайкам</a>
+                                        </div>
+
+                                        <div class="form-group" style="margin-bottom: 0px; margin-top: 10px">
                                             <label class="radio-inline">
                                                 <input type="radio" checked onclick="showAll()" name="optradio">Показать все
                                             </label>
@@ -163,11 +169,6 @@
                                             </label>
                                         </div>
 
-                                        <div id="sort">Сортировать по:
-                                        <a id="dateSort" href="javascript:void(0);" onclick="sortByDateOldFirst();">дате</a>
-                                        <a id="likeSort" href="javascript:void(0);" onclick="sortByLikes();" >лайкам</a>
-                                        <a id="rateSort" href="javascript:void(0);" onclick="sortByRatingDESC()">рейтингу</a>
-                                        </div>
                                         <div class="row" id="reviews">
                                             <th:block th:each="review : ${employerProfileReviews}">
                                                 <div class="col-sm-6">
