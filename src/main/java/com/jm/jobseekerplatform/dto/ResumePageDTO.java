@@ -11,7 +11,11 @@ public class ResumePageDTO extends PageImpl<Resume> {
 
     public ResumePageDTO(List<Resume> content) {
         super(content);
-        this.totalPages=content.size();
+    }
+
+    public ResumePageDTO(List<Resume> content, int totalPages) {
+        super(content);
+        this.totalPages = totalPages;
     }
 
     @Override

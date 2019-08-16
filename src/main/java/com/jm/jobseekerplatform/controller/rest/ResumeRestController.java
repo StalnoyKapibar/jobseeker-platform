@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.model.Resume;
 import com.jm.jobseekerplatform.service.impl.ResumeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,9 +18,10 @@ public class ResumeRestController {
     ResumeService resumeService;
 
 
-    @RequestMapping("/")
-    public Page<Resume> getAllResumes(){
-        List<Resume> resumes= resumeService.getAll();
-        return new ResumePageDTO(resumes);
+    @RequestMapping("/{page}")
+    public Page<Resume> getAllResumes(@PathVariable("page") int page) {
+        int limit = 10;
+        List<Resume> resumes = resumeService.getAll();
+        return new ResumePageDTO(resumes.subList(0, limit), page);
     }
 }

@@ -556,16 +556,52 @@ public class InitData {
         resumeFive.setEmployerProfile(seekerProfileService.getById(10L));
         resumeService.add(resumeFive);
 
+        Resume resumeSix = new Resume("Смоленск2");
+        resumeSix.setEmployerProfile(seekerProfileService.getById(10L));
+        resumeService.add(resumeSix);
+
+        Resume resumeSeven = new Resume("Москва2");
+        resumeSeven.setEmployerProfile(seekerProfileService.getById(8L));
+        resumeService.add(resumeSeven);
+
+        Resume resumeEight = new Resume("Питер2");
+        resumeEight.setEmployerProfile(seekerProfileService.getById(9L));
+        resumeService.add(resumeEight);
+
+        Resume resumeNine = new Resume("Смоленск3");
+        resumeNine.setEmployerProfile(seekerProfileService.getById(10L));
+        resumeService.add(resumeNine);
+
+        Resume resumeTen = new Resume("Смоленск2");
+        resumeTen.setEmployerProfile(seekerProfileService.getById(10L));
+        resumeService.add(resumeTen);
+
+        Resume resumeEleven = new Resume("Москва3");
+        resumeEleven.setEmployerProfile(seekerProfileService.getById(8L));
+        resumeService.add(resumeEleven);
+
+        Resume resumeTwelve = new Resume("Питер3");
+        resumeTwelve.setEmployerProfile(seekerProfileService.getById(9L));
+        resumeService.add(resumeTwelve);
+
+
         Set<Resume> resumesOne = new HashSet<>();
         resumesOne.add(resumeOne);
         resumesOne.add(resumeThree);
+        resumesOne.add(resumeSeven);
+        resumesOne.add(resumeEleven);
 
         Set<Resume> resumesTwo = new HashSet<>();
         resumesTwo.add(resumeTwo);
         resumesTwo.add(resumeFour);
+        resumesTwo.add(resumeEight);
+        resumesTwo.add(resumeTwelve);
 
         Set<Resume> resumesThree = new HashSet<>();
         resumesThree.add(resumeFive);
+        resumesThree.add(resumeSix);
+        resumesThree.add(resumeNine);
+        resumesThree.add(resumeTen);
 
         SeekerProfile seekerProfileOne = seekerProfileService.getById(8L);
         seekerProfileOne.setResumes(resumesOne);

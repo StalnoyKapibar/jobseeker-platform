@@ -17,9 +17,6 @@ public class Resume extends CreatedByProfileBase<SeekerProfile> implements Seria
     @Column(name = "place", nullable = false)
     private String place;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private SeekerProfile seekerProfile;
-
     public Resume() {
     }
 
@@ -48,11 +45,4 @@ public class Resume extends CreatedByProfileBase<SeekerProfile> implements Seria
         this.place = place;
     }
 
-//    public SeekerProfile getSeekerProfile() {
-//        return seekerProfile;
-//    }
-//
-//    public void setSeekerProfile(SeekerProfile seekerProfile) {
-//        this.seekerProfile = seekerProfile;
-//    }
 }

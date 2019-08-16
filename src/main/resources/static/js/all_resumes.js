@@ -1,6 +1,8 @@
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
 
+var page=1;
+
 $(function () {
     searchResults();
     $('#search_box').bind("input keyup click", function () {
@@ -54,13 +56,13 @@ function searchResults() {
     $('#searchList').remove();
     $('#searchResult').append('<ul id="searchList" class="list-group"></ul>');
     $.ajax ({
-        url: "api/resumes/",
+        url: "api/resumes/"+page,
         type: "GET",
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
         success: function (data) {
-            $.each(data, function (key, value) {
+            $.each(data.content, function (key, value) {
                 $('#searchList').append('<li class="list-group-item clearfix" ' +
                     '<div class="headLine"><span>' + value.id + '</span>'+
                     '<div class="vacancyDescription"><span>' + value.place + '</span></div>' +
@@ -68,6 +70,7 @@ function searchResults() {
                     '<span class="btn btn-outline-success btn-sm btnOnVacancyPage"' +
                     'onclick="window.location.href =\'/seeker/' + value.creatorProfile + '\'">На страницу сикера</span>'+'</div>' +
                     '</li>');
+                page++;
             })
         }
     });
