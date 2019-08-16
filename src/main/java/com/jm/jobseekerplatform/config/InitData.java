@@ -537,23 +537,23 @@ public class InitData {
 
     public void initResumes() {
         Resume resumeOne = new Resume("Москва");
-        resumeOne.setSeekerProfile(seekerProfileService.getById(8L));
+        resumeOne.setEmployerProfile(seekerProfileService.getById(8L));
         resumeService.add(resumeOne);
 
         Resume resumeTwo = new Resume("Питер");
-        resumeTwo.setSeekerProfile(seekerProfileService.getById(9L));
+        resumeTwo.setEmployerProfile(seekerProfileService.getById(9L));
         resumeService.add(resumeTwo);
 
         Resume resumeThree = new Resume("Нижний Новгород");
-        resumeThree.setSeekerProfile(seekerProfileService.getById(8L));
+        resumeThree.setEmployerProfile(seekerProfileService.getById(8L));
         resumeService.add(resumeThree);
 
         Resume resumeFour = new Resume("Казань");
-        resumeFour.setSeekerProfile(seekerProfileService.getById(9L));
+        resumeFour.setEmployerProfile(seekerProfileService.getById(9L));
         resumeService.add(resumeFour);
 
         Resume resumeFive = new Resume("Смоленск");
-        resumeFive.setSeekerProfile(seekerProfileService.getById(10L));
+        resumeFive.setEmployerProfile(seekerProfileService.getById(10L));
         resumeService.add(resumeFive);
 
         Set<Resume> resumesOne = new HashSet<>();
