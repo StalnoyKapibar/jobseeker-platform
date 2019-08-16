@@ -572,7 +572,7 @@ public class InitData {
         resumeNine.setEmployerProfile(seekerProfileService.getById(10L));
         resumeService.add(resumeNine);
 
-        Resume resumeTen = new Resume("Смоленск2");
+        Resume resumeTen = new Resume("Смоленск4");
         resumeTen.setEmployerProfile(seekerProfileService.getById(10L));
         resumeService.add(resumeTen);
 
