@@ -1,10 +1,6 @@
 package com.jm.jobseekerplatform.model.profiles;
 
-import com.jm.jobseekerplatform.model.Meeting;
-import com.jm.jobseekerplatform.model.Portfolio;
-import com.jm.jobseekerplatform.model.Subscription;
-import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -46,6 +42,9 @@ public class SeekerProfile extends Profile implements Serializable {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Subscription> subscriptions;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Resume> resumes;
 
     public SeekerProfile() {
     }
@@ -158,4 +157,11 @@ public class SeekerProfile extends Profile implements Serializable {
         this.meetings = meetings;
     }
 
+    public Set<Resume> getResumes() {
+        return resumes;
+    }
+
+    public void setResumes(Set<Resume> resumes) {
+        this.resumes = resumes;
+    }
 }

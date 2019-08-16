@@ -1,5 +1,7 @@
 package com.jm.jobseekerplatform.model;
 
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -13,6 +15,9 @@ public class Resume implements Serializable {
 
     @Column(name = "place", nullable = false)
     private String place;
+
+    @ManyToOne
+    private SeekerProfile seekerProfile;
 
     public Resume() {
     }
@@ -35,5 +40,13 @@ public class Resume implements Serializable {
 
     public void setPlace(String place) {
         this.place = place;
+    }
+
+    public SeekerProfile getSeekerProfile() {
+        return seekerProfile;
+    }
+
+    public void setSeekerProfile(SeekerProfile seekerProfile) {
+        this.seekerProfile = seekerProfile;
     }
 }

@@ -95,6 +95,9 @@ public class InitData {
     @Autowired
     private ReviewVoteService reviewVoteService;
 
+    @Autowired
+    private ResumeService resumeService;
+
     private Faker faker = new Faker(new Locale("ru"));
 
     private Random rnd = new Random();
@@ -115,6 +118,7 @@ public class InitData {
         initReviews();
         initChat();
         initNews();
+        initResumes();
     }
 
     private void initNews() {
@@ -529,5 +533,50 @@ public class InitData {
         cityService.initCity("Казань", new Point(55.825853F, 49.117538F));
         cityService.initCity("Екатеринбург", new Point(56.825312F, 60.608923F));
         cityService.initCity("Нижний Новгород", new Point(56.299846F, 43.904104F));
+    }
+
+    public void initResumes() {
+        Resume resumeOne = new Resume("Москва");
+        resumeOne.setSeekerProfile(seekerProfileService.getById(8L));
+        resumeService.add(resumeOne);
+
+        Resume resumeTwo = new Resume("Питер");
+        resumeTwo.setSeekerProfile(seekerProfileService.getById(9L));
+        resumeService.add(resumeTwo);
+
+        Resume resumeThree = new Resume("Нижний Новгород");
+        resumeThree.setSeekerProfile(seekerProfileService.getById(8L));
+        resumeService.add(resumeThree);
+
+        Resume resumeFour = new Resume("Казань");
+        resumeFour.setSeekerProfile(seekerProfileService.getById(9L));
+        resumeService.add(resumeFour);
+
+        Resume resumeFive = new Resume("Смоленск");
+        resumeFive.setSeekerProfile(seekerProfileService.getById(10L));
+        resumeService.add(resumeFive);
+
+        Set<Resume> resumesOne = new HashSet<>();
+        resumesOne.add(resumeOne);
+        resumesOne.add(resumeThree);
+
+        Set<Resume> resumesTwo = new HashSet<>();
+        resumesTwo.add(resumeTwo);
+        resumesTwo.add(resumeFour);
+
+        Set<Resume> resumesThree = new HashSet<>();
+        resumesThree.add(resumeFive);
+
+        SeekerProfile seekerProfileOne = seekerProfileService.getById(8L);
+        seekerProfileOne.setResumes(resumesOne);
+        seekerProfileService.update(seekerProfileOne);
+
+        SeekerProfile seekerProfileTwo = seekerProfileService.getById(9L);
+        seekerProfileTwo.setResumes(resumesTwo);
+        seekerProfileService.update(seekerProfileTwo);
+
+        SeekerProfile seekerProfileThree = seekerProfileService.getById(10L);
+        seekerProfileThree.setResumes(resumesThree);
+        seekerProfileService.update(seekerProfileThree);
     }
 }
