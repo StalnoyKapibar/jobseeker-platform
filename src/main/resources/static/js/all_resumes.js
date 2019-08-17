@@ -38,6 +38,9 @@ $(function () {
                                 $('#search_advice_wrapper').append('<div class="advice_variant" onclick="addTag(\'' + value.id + '\',\'' + value.name + '\')">' + value.name + '</div>');
                             }
                         });
+                        if ($('.advice_variant').length===0){
+                            $('#search_advice_wrapper').append('<div class="advice_variant"> По запросу "' + param + '" ничего не найдено</div>');
+                        }
                     }
                 },
                 error: function (error) {

@@ -79,8 +79,8 @@ $(function () {
                     if (data.length == 0) {
                         $('#search_advice_wrapper').append('<div class="advice_variant"> По запросу "' + param + '" ничего не найдено</div>');
                     } else {
-                        var isAdded = false;
                         $.each(data, function (key, value) {
+                            var isAdded = false;
                             $('.listTags').each(function (i, item) {
                                 var tagName = $(this).find('.tagButton').text();
                                 if (value.name === tagName) {
@@ -91,8 +91,8 @@ $(function () {
                                 $('#search_advice_wrapper').append('<div class="advice_variant" onclick="addTagToSearch(\'' + value.id + '\',\'' + value.name + '\')">' + value.name + '</div>');
                             }
                         });
-                        if (isAdded && $('.advice_variant').length===0){
-                            $('#search_advice_wrapper').append('<div class="advice_variant"> По запросdddу "' + param + '" ничего не найдено</div>');
+                        if ($('.advice_variant').length===0){
+                            $('#search_advice_wrapper').append('<div class="advice_variant"> По запросу "' + param + '" ничего не найдено</div>');
                         }
                     }
                 },
