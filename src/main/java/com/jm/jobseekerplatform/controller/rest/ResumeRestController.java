@@ -21,7 +21,6 @@ public class ResumeRestController {
     @RequestMapping("/{page}")
     public Page<Resume> getAllResumes(@PathVariable("page") int page) {
         int limit = 10;
-        List<Resume> resumes = resumeService.getAll();
-        return new ResumePageDTO(resumes.subList(0, limit), page);
+        return resumeService.getAllResumes(limit,page);
     }
 }
