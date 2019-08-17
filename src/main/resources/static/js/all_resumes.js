@@ -37,10 +37,12 @@ $(function () {
                             if (!isAdded) {
                                 $('#search_advice_wrapper').append('<div class="advice_variant" onclick="addTag(\'' + value.id + '\',\'' + value.name + '\')">' + value.name + '</div>');
                             }
+                            $('.document').ready(function () {
+                                if (isAdded && $('.advice_variant').length === 0) {
+                                    $('#search_advice_wrapper').append('<div class="advice_variant"> Вы уже добавили "' + value.name + '" в поиск</div>');
+                                }
+                            });
                         });
-                        if ($('.advice_variant').length===0){
-                            $('#search_advice_wrapper').append('<div class="advice_variant"> По запросу "' + param + '" ничего не найдено</div>');
-                        }
                     }
                 },
                 error: function (error) {
