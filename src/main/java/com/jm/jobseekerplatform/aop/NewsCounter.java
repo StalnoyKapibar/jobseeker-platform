@@ -18,12 +18,9 @@ public class NewsCounter {
     @Autowired
     private NewsService newsService;
 
-    @Pointcut("execution(* getAllNewsBySeekerProfileId(..))")
-    private void countNews() {
-    }
-
     @AfterReturning(
-            pointcut = "com.jm.jobseekerplatform.aop.NewsCounter.countNews()",
+            pointcut = "execution(* com.jm.jobseekerplatform.controller.rest" +
+                    ".NewsRestController.getAllNewsBySeekerProfileId(..))",
             returning = "retVal")
     public void doAccessCheck(Object retVal) {
         ResponseEntity responseEntity = (ResponseEntity) retVal;
