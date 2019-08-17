@@ -35,7 +35,7 @@ public class ChatController {
             ChatWithTopicVacancy chatWithTopicVacancy = (ChatWithTopicVacancy) chat;
             model.addAttribute("topicName", "вакансия");
             model.addAttribute("topic", chatWithTopicVacancy.getTopic());
-            Long seekerId = chatWithTopicVacancy.getCreator().getId();
+            Long seekerId = chatWithTopicVacancy.getCreatorProfile().getId();
             Long vacancyId = chatWithTopicVacancy.getTopic().getId();
             Meeting newMeeting = chatWithTopicVacancy.getTopic().getMeetings().stream()
                     .filter(meeting -> meeting.getSeekerProfile().getId().equals(seekerId)
