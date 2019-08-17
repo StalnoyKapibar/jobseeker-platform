@@ -87,13 +87,12 @@ $(function () {
                                     isAdded = true;
                                 }
                             });
-                            if (!isAdded) {
+                            if (isAdded) {
+                                $('#search_advice_wrapper').append('<div style="display: none" class="advice_variant"  onclick="addTagToSearch(\'' + value.id + '\',\'' + value.name + '\')">' + value.name + '</div>');
+                            } else {
                                 $('#search_advice_wrapper').append('<div class="advice_variant" onclick="addTagToSearch(\'' + value.id + '\',\'' + value.name + '\')">' + value.name + '</div>');
                             }
                         });
-                        if ($('.advice_variant').length===0){
-                            $('#search_advice_wrapper').append('<div class="advice_variant"> По запросу "' + param + '" ничего не найдено</div>');
-                        }
                     }
                 },
                 error: function (error) {
