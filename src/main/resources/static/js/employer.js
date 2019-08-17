@@ -168,6 +168,14 @@ function sortByRatingDESC() {
         return (vA > vB) ? -1 : (vA < vB) ? 1 : 0;
     });
     $('#sort li').remove();
+
+    let dateSort = document.getElementById('dateSort');
+    dateSort.setAttribute('onclick', 'sortByDateNewFirst()');
+
+    let likeSort = document.getElementById('likeSort');
+    likeSort.setAttribute('onclick', 'sortByLikes()');
+    likeSort.innerHTML = ('лайкам<li value="sortByLikes"></li>');
+
     $("#sort").children().find('u').contents().unwrap();
     let link = document.getElementById('rateSort');
     link.setAttribute('onclick', 'sortByRatingASC()');
@@ -184,6 +192,14 @@ function sortByRatingASC() {
         return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
     });
     $('#sort li').remove();
+
+    let dateSort = document.getElementById('dateSort');
+    dateSort.setAttribute('onclick', 'sortByDateNewFirst()');
+
+    let likeSort = document.getElementById('likeSort');
+    likeSort.setAttribute('onclick', 'sortByLikes()');
+    likeSort.innerHTML = ('лайкам<li value="sortByLikes"></li>');
+
     $("#sort").children().find('u').contents().unwrap();
     let link = document.getElementById('rateSort');
     link.setAttribute('onclick', 'sortByRatingDESC()');
@@ -201,6 +217,14 @@ function sortByDateNewFirst() {
         return (vA > vB) ? -1 : (vA < vB) ? 1 : 0;
     });
     $('#sort li').remove();
+
+    let likeSort = document.getElementById('likeSort');
+    likeSort.setAttribute('onclick', 'sortByLikes()');
+    likeSort.innerHTML = ('лайкам<li value="sortByLikes"></li>');
+
+    let rateSort = document.getElementById('rateSort');
+    rateSort.setAttribute('onclick', 'sortByRatingDESC()');
+
     $("#sort").children().find('u').contents().unwrap();
     let link = document.getElementById('dateSort');
     link.setAttribute('onclick', 'sortByDateOldFirst()');
@@ -218,6 +242,14 @@ function sortByDateOldFirst() {
         return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
     });
     $('#sort li').remove();
+
+    let likeSort = document.getElementById('likeSort');
+    likeSort.setAttribute('onclick', 'sortByLikes()');
+    likeSort.innerHTML = ('лайкам<li value="sortByLikes"></li>');
+
+    let rateSort = document.getElementById('rateSort');
+    rateSort.setAttribute('onclick', 'sortByRatingDESC()');
+
     $("#sort").children().find('u').contents().unwrap();
     let link = document.getElementById('dateSort');
     link.setAttribute('onclick', 'sortByDateNewFirst()');
@@ -225,8 +257,27 @@ function sortByDateOldFirst() {
     parent.append(items);
 }
 
+function resetSort() {
+    let dateSort = document.getElementById('dateSort');
+    dateSort.setAttribute('onclick', 'sortByDateNewFirst()');
+
+    let likeSort = document.getElementById('likeSort');
+    likeSort.setAttribute('onclick', 'sortByLikes()');
+    likeSort.innerHTML = ('лайкам<li value="sortByLikes"></li>');
+
+    let rateSort = document.getElementById('rateSort');
+    rateSort.setAttribute('onclick', 'sortByRatingDESC()');
+}
+
 function sortByLikes() {
     $('#sort li').remove();
+
+    let dateSort = document.getElementById('dateSort');
+    dateSort.setAttribute('onclick', 'sortByDateNewFirst()');
+
+    let rateSort = document.getElementById('rateSort');
+    rateSort.setAttribute('onclick', 'sortByRatingDESC()');
+
     $("#sort").children().find('u').contents().unwrap();
     let link = document.getElementById('likeSort');
     link.setAttribute('onclick', 'sortByDislikes()');
@@ -236,6 +287,13 @@ function sortByLikes() {
 
 function sortByDislikes() {
     $('#sort li').remove();
+
+    let dateSort = document.getElementById('dateSort');
+    dateSort.setAttribute('onclick', 'sortByDateNewFirst()');
+
+    let rateSort = document.getElementById('rateSort');
+    rateSort.setAttribute('onclick', 'sortByRatingDESC()');
+
     $("#sort").children().find('u').contents().unwrap();
     let link = document.getElementById('likeSort');
     link.setAttribute('onclick', 'sortByLikes()');
