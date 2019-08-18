@@ -5,7 +5,7 @@ import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 import com.jm.jobseekerplatform.model.profiles.Profile;
-import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
@@ -29,29 +29,39 @@ public class ChatController {
     @RequestMapping("/chat/{chatId}")
     public String getChatById(@PathVariable("chatId") Long chatId, Authentication authentication, Model model) {
         User user = (User) authentication.getPrincipal();
-        Long userId = user.getProfile().getId();
-        ChatWithTopic chat = chatWithTopicService.getById(chatId);
-        if(chat.getClass() == ChatWithTopicVacancy.class) {
-            ChatWithTopicVacancy chatWithTopicVacancy = (ChatWithTopicVacancy) chat;
-            model.addAttribute("topicName", "вакансия");
-            model.addAttribute("topic", chatWithTopicVacancy.getTopic());
-            Long seekerId = chatWithTopicVacancy.getCreator().getId();
-            Long vacancyId = chatWithTopicVacancy.getTopic().getId();
+        Long currentProfileId = user.getProfile().getId();
+        ChatWithTopic chatWithTopic = chatWithTopicService.getById(chatId);
+
+        model.addAttribute("profileId", currentProfileId);
+        model.addAttribute("chatId", chatId);
+
+        model.addAttribute("topicName", chatWithTopic.getTopic().getTypeName());
+        model.addAttribute("topic", chatWithTopic.getTopic());
+
+        if (chatWithTopic.getClass() == ChatWithTopicVacancy.class &&
+                (user.getProfile().getClass() == SeekerProfile.class ||
+                        chatWithTopic.getTopic().getCreatorProfile().getId().equals(user.getProfile().getId()))) {
+
+            Long seekerId = chatWithTopic.getCreator().getId();
+            Long vacancyId = chatWithTopic.getTopic().getId();
+
+            ChatWithTopicVacancy chatWithTopicVacancy = (ChatWithTopicVacancy) chatWithTopic;
+
             Meeting newMeeting = chatWithTopicVacancy.getTopic().getMeetings().stream()
                     .filter(meeting -> meeting.getSeekerProfile().getId().equals(seekerId)
                             && meeting.getVacancy().getId().equals(vacancyId))
                     .findFirst()
                     .orElse(null);
+
             model.addAttribute("meeting", newMeeting);
-            model.addAttribute("isOwner", !userId.equals(seekerId));
+            model.addAttribute("isOwner", !currentProfileId.equals(seekerId));
+
+            return "chats/chat-seeker-vacancy-employer";
         }
-        if(user.getClass() == SeekerUser.class) {
-            model.addAttribute("seekerProfileId", userId);
-        }
-        model.addAttribute("profileId", userId);
-        model.addAttribute("chatId", chatId);
-        return "chat";
+
+        return "chats/chat";
     }
+
 
     @RequestMapping("/chat/vacancy/{vacancyId:\\d+}")
     public String getChatByVacancyAndAuthenticatedUser(@PathVariable("vacancyId") Long vacancyId,

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <meta name="description" content="Чат">
+    <title>Чат</title>
+    <link rel="stylesheet" th:href="@{/css/new_chat.css}"/>
+</head>
+<body>
+<div layout:fragment="content">
+    <th:block th:replace="fragments/chat-with-topic-fragment::chat-with-topic (${chatId}, ${topic}, ${profileId})"></th:block>
+</div>
+</body>
+</html>
