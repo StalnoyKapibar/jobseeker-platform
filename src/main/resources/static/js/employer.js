@@ -131,20 +131,227 @@ $(document).ready(function () {
 
     getReviewVotes(seekerProfileId, employerProfileId);
     reviewEditBasedOnVotes();
+    sortByDateNewFirst();
 });
+
+function sortType(sortType) {
+    if (sortType === 'sortByRatingDesc') {
+        sortByRatingDESC();
+    } else if (sortType === 'sortByRatingAsc') {
+        sortByRatingASC();
+    } else if (sortType === 'sortByDateNewFirst') {
+        sortByDateNewFirst();
+    } else if (sortType === 'sortByDateOldFirst') {
+        sortByDateOldFirst();
+    } else if (sortType === 'sortByLikes') {
+        sortByLikes();
+    } else if (sortType === 'sortByDislikes') {
+        sortByDislikes();
+    }
+}
+
+function sortByNestedText(parent, childSelector, keySelector) {
+    let items = parent.children(childSelector).sort(function (a, b) {
+        let vA = $(keySelector, a).text();
+        let vB = $(keySelector, b).text();
+        return (vA > vB) ? -1 : (vA < vB) ? 1 : 0;
+    });
+    parent.append(items);
+}
+
+function sortByRatingDESC() {
+    let parent = $('#reviews');
+    let childSelector = "div";
+    let items = parent.children(childSelector).sort(function (a, b) {
+        let vA = a.getElementsByClassName("fas fa-star").length;
+        let vB = b.getElementsByClassName("fas fa-star").length;
+        return (vA > vB) ? -1 : (vA < vB) ? 1 : 0;
+    });
+    $('#sort li').remove();
+
+    let dateSort = document.getElementById('dateSort');
+    dateSort.setAttribute('onclick', 'sortByDateNewFirst()');
+
+    let likeSort = document.getElementById('likeSort');
+    likeSort.setAttribute('onclick', 'sortByLikes()');
+    likeSort.innerHTML = ('лайкам<li value="sortByLikes"></li>');
+
+    $("#sort").children().find('u').contents().unwrap();
+    let link = document.getElementById('rateSort');
+    link.setAttribute('onclick', 'sortByRatingASC()');
+    link.innerHTML = ('<u>рейтингу</u><li class="fas fa-sort-amount-down" style="font-size:14px"></li>');
+    parent.append(items);
+}
+
+function sortByRatingASC() {
+    let parent = $('#reviews');
+    let childSelector = "div";
+    let items = parent.children(childSelector).sort(function (a, b) {
+        let vA = a.getElementsByClassName("fas fa-star").length;
+        let vB = b.getElementsByClassName("fas fa-star").length;
+        return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
+    });
+    $('#sort li').remove();
+
+    let dateSort = document.getElementById('dateSort');
+    dateSort.setAttribute('onclick', 'sortByDateNewFirst()');
+
+    let likeSort = document.getElementById('likeSort');
+    likeSort.setAttribute('onclick', 'sortByLikes()');
+    likeSort.innerHTML = ('лайкам<li value="sortByLikes"></li>');
+
+    $("#sort").children().find('u').contents().unwrap();
+    let link = document.getElementById('rateSort');
+    link.setAttribute('onclick', 'sortByRatingDESC()');
+    link.innerHTML = ('<u>рейтингу</u><li class="fas fa-sort-amount-up" style="font-size:14px"></li>');
+    parent.append(items);
+}
+
+function sortByDateNewFirst() {
+    let parent = $('#reviews');
+    let childSelector = "div";
+    let keySelector = "div.reviewDate";
+    let items = parent.children(childSelector).sort(function (a, b) {
+        let vA = $(keySelector, a).text();
+        let vB = $(keySelector, b).text();
+        return (vA > vB) ? -1 : (vA < vB) ? 1 : 0;
+    });
+    $('#sort li').remove();
+
+    let likeSort = document.getElementById('likeSort');
+    likeSort.setAttribute('onclick', 'sortByLikes()');
+    likeSort.innerHTML = ('лайкам<li value="sortByLikes"></li>');
+
+    let rateSort = document.getElementById('rateSort');
+    rateSort.setAttribute('onclick', 'sortByRatingDESC()');
+
+    $("#sort").children().find('u').contents().unwrap();
+    let link = document.getElementById('dateSort');
+    link.setAttribute('onclick', 'sortByDateOldFirst()');
+    link.innerHTML = ('<u>дате</u><li value="sortByDateNewFirst" class="fas fa-sort-amount-down" style="font-size:14px"></li>');
+    parent.append(items);
+}
+
+function sortByDateOldFirst() {
+    let parent = $('#reviews');
+    let childSelector = "div";
+    let keySelector = "div.reviewDate";
+    let items = parent.children(childSelector).sort(function (a, b) {
+        let vA = $(keySelector, a).text();
+        let vB = $(keySelector, b).text();
+        return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
+    });
+    $('#sort li').remove();
+
+    let likeSort = document.getElementById('likeSort');
+    likeSort.setAttribute('onclick', 'sortByLikes()');
+    likeSort.innerHTML = ('лайкам<li value="sortByLikes"></li>');
+
+    let rateSort = document.getElementById('rateSort');
+    rateSort.setAttribute('onclick', 'sortByRatingDESC()');
+
+    $("#sort").children().find('u').contents().unwrap();
+    let link = document.getElementById('dateSort');
+    link.setAttribute('onclick', 'sortByDateNewFirst()');
+    link.innerHTML = ('<u>дате</u><li value="sortByDateOldFirst" class="fas fa-sort-amount-up" style="font-size:14px"></li>');
+    parent.append(items);
+}
+
+function resetSort() {
+    let dateSort = document.getElementById('dateSort');
+    dateSort.setAttribute('onclick', 'sortByDateNewFirst()');
+
+    let likeSort = document.getElementById('likeSort');
+    likeSort.setAttribute('onclick', 'sortByLikes()');
+    likeSort.innerHTML = ('лайкам<li value="sortByLikes"></li>');
+
+    let rateSort = document.getElementById('rateSort');
+    rateSort.setAttribute('onclick', 'sortByRatingDESC()');
+}
+
+function sortByLikes() {
+    $('#sort li').remove();
+
+    let dateSort = document.getElementById('dateSort');
+    dateSort.setAttribute('onclick', 'sortByDateNewFirst()');
+
+    let rateSort = document.getElementById('rateSort');
+    rateSort.setAttribute('onclick', 'sortByRatingDESC()');
+
+    $("#sort").children().find('u').contents().unwrap();
+    let link = document.getElementById('likeSort');
+    link.setAttribute('onclick', 'sortByDislikes()');
+    link.innerHTML = ('<u>дизлайкам</u><li value="sortByLikes"></li>');
+    sortByNestedText($('#reviews'), "div", "span.likes");
+}
+
+function sortByDislikes() {
+    $('#sort li').remove();
+
+    let dateSort = document.getElementById('dateSort');
+    dateSort.setAttribute('onclick', 'sortByDateNewFirst()');
+
+    let rateSort = document.getElementById('rateSort');
+    rateSort.setAttribute('onclick', 'sortByRatingDESC()');
+
+    $("#sort").children().find('u').contents().unwrap();
+    let link = document.getElementById('likeSort');
+    link.setAttribute('onclick', 'sortByLikes()');
+    link.innerHTML = ('<u>лайкам</u><li value="sortByLikes"></li>');
+    sortByNestedText($('#reviews'), "div", "span.dislikes");
+}
+
+function hideNegative() {
+    let parent = $('#reviews');
+    let childSelector = "div";
+    let items = parent.children(childSelector);
+
+    for (let i = 0; i < items.length; i++) {
+        items[i].style.display = 'block';
+        let rating = items[i].getElementsByClassName("fas fa-star").length;
+        if (rating <= 2) {
+            items[i].style.display = 'none';
+        }
+    }
+}
+
+function hidePositive() {
+    let parent = $('#reviews');
+    let childSelector = "div";
+    let items = parent.children(childSelector);
+
+    for (let i = 0; i < items.length; i++) {
+        items[i].style.display = 'block';
+        let rating = items[i].getElementsByClassName("fas fa-star").length;
+        if (rating >= 3) {
+            items[i].style.display = 'none';
+        }
+    }
+}
+
+function showAll() {
+    let sort = $("#sort").children().find('li')[0].getAttribute('value');
+    sortType(sort);
+    let parent = $('#reviews');
+    let childSelector = "div";
+    let items = parent.children(childSelector);
+
+    for (let i = 0; i < items.length; i++) {
+        items[i].style.display = 'block';
+    }
+}
 
 function reviewEditBasedOnVotes() {
     var x = document.getElementsByClassName("editCardReview");
     for (i = 0; i < x.length; i++) {
         let blockId = x[i].id;
-        blockId = blockId.substring(blockId.indexOf('_')+1);
-        let likes= parseInt(document.getElementById('reviewLikeCount_'+blockId).innerHTML);
-        let dislikes=parseInt(document.getElementById('reviewDislikeCount_'+blockId).innerHTML);
-        let sum=likes+dislikes;
-        if (sum>=5){
+        blockId = blockId.substring(blockId.indexOf('_') + 1);
+        let likes = parseInt(document.getElementById('reviewLikeCount_' + blockId).innerHTML);
+        let dislikes = parseInt(document.getElementById('reviewDislikeCount_' + blockId).innerHTML);
+        let sum = likes + dislikes;
+        if (sum >= 5) {
             x[i].style.display = "none";
-        }
-        else {
+        } else {
             x[i].style.display = "block"
         }
     }
