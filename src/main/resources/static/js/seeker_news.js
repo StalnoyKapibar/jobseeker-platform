@@ -32,21 +32,25 @@ function printSeekerNews() {
                 var month = date.getMonth() + 1;
                 month = month < 10 ? '0' + month : month;
                 var description;
+                var numberOfViews = item.numberOfViews;
+                if (numberOfViews == null) {
+                    numberOfViews = 0;
+                }
                 if (item.description.length > 150) {
                     description = item.description.substr(0, 150) +
                         '<span><button id="readMoreButton_' + item.id + '" value="' + item.description + '" onclick="getFullDescription(' + item.id + ')" class="btn btn-link">... Читать полностью' +
                         '</button></span>';
                 } else description = item.description;
-                cardHTML += '<div class="card newsCard" id="newsCard_' + item.id + '" style="margin-top: 10px">' +
+                cardHTML += '<div class="card newsCard empCard" id="newsCard_' + item.id + '" style="margin-top: 10px">' +
                     '<div class="card-body">' +
                     '<h4 class="card-title seekerNewsHeadLine">' + item.headline + '</h4>' +
                     '<p class="card-text newsDescription" id="description_' + item.id + '"><span id="newsDescription_' + item.id + '">' + description + '</span></p>' +
                     '<p class="card-text seekerNewsDate">' + 'от: ' + day + '.' + month + '.' + date.getFullYear() + '</p>' +
-                    '<a href="/employer/' + item.author.id + '" class="card-link">' + item.author.companyName + '</a>' +
+                    '<a href="/employer/' + item.author.id + '" class="card-link">' + item.author + '</a>' +
                     '</div>' +
                     // Див с классом "newsAction" сделан для примера работы функционала карточки новости
                     '<div class="card-footer newsAction">' +
-                    '<div class="views"><i class="far fa-eye"></i></i>2,907</div>' +
+                    '<div class="views" id="views_' + item.id + '"><i class="far fa-eye"></i><span></span>' + numberOfViews + '</div>' +
                     '<div class="like" id="like_' + item.id + '"><span id="newsLike_' + item.id + '" onclick="like(' + item.id + ')"><i class="far fa-heart"></i>623</span></div>' +
                     '<div class="comments" id="comments_' + item.id + '"><span id="viewComments_' + item.id + '" onclick="printComments(' + item.id + ')"><i class="far fa-comments"></i>23</span></div>' +
                     '</div>' +
