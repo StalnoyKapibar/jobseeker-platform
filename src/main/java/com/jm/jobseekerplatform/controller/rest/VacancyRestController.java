@@ -76,7 +76,8 @@ public class VacancyRestController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public boolean updateVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
-        if (vacancyService.validateVacancy(vacancy) & vacancyService.getById(vacancy.getId()).getCreatorProfile().getId() == (((EmployerUser) authentication.getPrincipal()).getProfile().getId())) {
+        System.out.println(((EmployerUser) authentication.getPrincipal()).getProfile().getId());
+        if (vacancyService.validateVacancy(vacancy) & (vacancyService.getById(vacancy.getId()).getCreatorProfile().getId().equals(((EmployerUser) authentication.getPrincipal()).getProfile().getId()))) {
             return vacancyService.updateVacancy(vacancy);
         }
         return false;

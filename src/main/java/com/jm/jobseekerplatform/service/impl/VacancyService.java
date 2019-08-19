@@ -147,7 +147,6 @@ public class VacancyService extends AbstractService<Vacancy> {
         oldVacancy.setRemote(vacancy.getRemote());
         oldVacancy.setShortDescription(vacancy.getShortDescription());
         oldVacancy.setTags(tagService.matchTagsByName(vacancy.getTags()));
-        System.out.println(vacancy);
         return true;
     }
 }
