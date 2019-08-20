@@ -98,6 +98,9 @@ public class InitData {
     @Autowired
     private ResumeService resumeService;
 
+    @Autowired
+    private JobExperienceService jobExperienceService;
+
     private Faker faker = new Faker(new Locale("ru"));
 
     private Random rnd = new Random();
@@ -118,6 +121,7 @@ public class InitData {
         initReviews();
         initChat();
         initNews();
+        initJobExperience();
         initResumes();
     }
 
@@ -526,6 +530,11 @@ public class InitData {
         return all.get(rnd.nextInt(all.size()));
     }
 
+    private SeekerProfile getRandomSeekerProfile() {
+        List<SeekerProfile> all = seekerProfileService.getAll();
+        return all.get(rnd.nextInt(all.size()));
+    }
+
     private void initCities() {
         cityService.initCity("Москва", new Point(55.752030F, 37.633685F));
         cityService.initCity("Санкт-Петербург", new Point(59.943122F, 30.276844F));
@@ -535,84 +544,44 @@ public class InitData {
         cityService.initCity("Нижний Новгород", new Point(56.299846F, 43.904104F));
     }
 
-    public void initResumes() {
-        Resume resumeOne = new Resume("Москва");
-        resumeOne.setEmployerProfile(seekerProfileService.getById(8L));
-        resumeService.add(resumeOne);
+    private void initJobExperience(){
+        for (int i=0; i<20; i++) {
+            JobExperience jobExperience = new JobExperience(faker.job().title(), faker.job().position(), faker.witcher().quote());
+            jobExperienceService.add(jobExperience);
+        }
+    }
 
-        Resume resumeTwo = new Resume("Питер");
-        resumeTwo.setEmployerProfile(seekerProfileService.getById(9L));
-        resumeService.add(resumeTwo);
+    private void initResumes() {
+        Set<Resume> resumes = new HashSet<>();
+        Set<JobExperience> jobExperiences = new HashSet<>();
+        List<City> cities = cityService.getAll();
+        List<JobExperience> jobExperienceList = jobExperienceService.getAll();
+        Resume resume;
+        Point point;
+        City city;
 
-        Resume resumeThree = new Resume("Нижний Новгород");
-        resumeThree.setEmployerProfile(seekerProfileService.getById(8L));
-        resumeService.add(resumeThree);
+        for (int i = 0; i < 14; i++) {
+            city = cities.get(rnd.nextInt(cities.size()));
+            point = city.getPoint();
+            SeekerProfile seekerProfile = getRandomSeekerProfile();
+            jobExperiences.add(jobExperienceList.get(i));
+            resume = new Resume(
+                    seekerProfile,
+                    randomTags(0L),
+                    Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), //salaryMin
+                    Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), //salaryMax
+                    jobExperiences,
+                    city,
+                    point);
 
-        Resume resumeFour = new Resume("Казань");
-        resumeFour.setEmployerProfile(seekerProfileService.getById(9L));
-        resumeService.add(resumeFour);
+            resumes.add(resume);
+            resumeService.add(resume);
 
-        Resume resumeFive = new Resume("Смоленск");
-        resumeFive.setEmployerProfile(seekerProfileService.getById(10L));
-        resumeService.add(resumeFive);
+            seekerProfile.setResumes(resumes);
+            seekerProfileService.update(seekerProfile);
 
-        Resume resumeSix = new Resume("Смоленск2");
-        resumeSix.setEmployerProfile(seekerProfileService.getById(10L));
-        resumeService.add(resumeSix);
-
-        Resume resumeSeven = new Resume("Москва2");
-        resumeSeven.setEmployerProfile(seekerProfileService.getById(8L));
-        resumeService.add(resumeSeven);
-
-        Resume resumeEight = new Resume("Питер2");
-        resumeEight.setEmployerProfile(seekerProfileService.getById(9L));
-        resumeService.add(resumeEight);
-
-        Resume resumeNine = new Resume("Смоленск3");
-        resumeNine.setEmployerProfile(seekerProfileService.getById(10L));
-        resumeService.add(resumeNine);
-
-        Resume resumeTen = new Resume("Смоленск4");
-        resumeTen.setEmployerProfile(seekerProfileService.getById(10L));
-        resumeService.add(resumeTen);
-
-        Resume resumeEleven = new Resume("Москва3");
-        resumeEleven.setEmployerProfile(seekerProfileService.getById(8L));
-        resumeService.add(resumeEleven);
-
-        Resume resumeTwelve = new Resume("Питер3");
-        resumeTwelve.setEmployerProfile(seekerProfileService.getById(9L));
-        resumeService.add(resumeTwelve);
-
-
-        Set<Resume> resumesOne = new HashSet<>();
-        resumesOne.add(resumeOne);
-        resumesOne.add(resumeThree);
-        resumesOne.add(resumeSeven);
-        resumesOne.add(resumeEleven);
-
-        Set<Resume> resumesTwo = new HashSet<>();
-        resumesTwo.add(resumeTwo);
-        resumesTwo.add(resumeFour);
-        resumesTwo.add(resumeEight);
-        resumesTwo.add(resumeTwelve);
-
-        Set<Resume> resumesThree = new HashSet<>();
-        resumesThree.add(resumeFive);
-        resumesThree.add(resumeSix);
-        resumesThree.add(resumeNine);
-        resumesThree.add(resumeTen);
-
-        SeekerProfile seekerProfileOne = seekerProfileService.getById(8L);
-        seekerProfileOne.setResumes(resumesOne);
-        seekerProfileService.update(seekerProfileOne);
-
-        SeekerProfile seekerProfileTwo = seekerProfileService.getById(9L);
-        seekerProfileTwo.setResumes(resumesTwo);
-        seekerProfileService.update(seekerProfileTwo);
-
-        SeekerProfile seekerProfileThree = seekerProfileService.getById(10L);
-        seekerProfileThree.setResumes(resumesThree);
-        seekerProfileService.update(seekerProfileThree);
+            resumes.clear();
+            jobExperiences.clear();
+        }
     }
 }
