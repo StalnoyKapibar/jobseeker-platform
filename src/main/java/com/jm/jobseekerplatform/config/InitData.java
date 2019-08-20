@@ -5,8 +5,14 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
-import com.jm.jobseekerplatform.model.profiles.*;
-import com.jm.jobseekerplatform.model.users.*;
+import com.jm.jobseekerplatform.model.profiles.AdminProfile;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import com.jm.jobseekerplatform.model.users.AdminUser;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
 import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatService;
@@ -159,41 +165,23 @@ public class InitData {
     }
 
     public void initReviews() {
-        EmployerReviews reviewOne = new EmployerReviews();
-        reviewOne.setDateReviews(new Date());
-        reviewOne.setEvaluation(4);
-        reviewOne.setSeekerProfile(seekerProfileService.getById(8L));
-        reviewOne.setReviews("Хорошая контора. Отличный коллектив, только директор придурковатый");
+        EmployerReviews reviewOne = new EmployerReviews("Хорошая контора. Отличный коллектив, только директор придурковатый", new Date(),
+                4, seekerProfileService.getById(8L));
 
-        EmployerReviews reviewTwo = new EmployerReviews();
-        reviewTwo.setDateReviews(new Date());
-        reviewTwo.setSeekerProfile(seekerProfileService.getById(8L));
-        reviewTwo.setEvaluation(1);
-        reviewTwo.setReviews("Неадекватное руководство. Уволился через месяц");
+        EmployerReviews reviewTwo = new EmployerReviews("Неадекватное руководство. Уволился через месяц", new Date(),
+                1, seekerProfileService.getById(8L));
 
-        EmployerReviews reviewThree = new EmployerReviews();
-        reviewThree.setDateReviews(new Date());
-        reviewThree.setSeekerProfile(seekerProfileService.getById(9L));
-        reviewThree.setEvaluation(4);
-        reviewThree.setReviews("Очень низкие зарплаты, уволился через полгода");
+        EmployerReviews reviewThree = new EmployerReviews("Очень низкие зарплаты, уволился через полгода", new Date(),
+                2, seekerProfileService.getById(9L));
 
-        EmployerReviews reviewFour = new EmployerReviews();
-        reviewFour.setDateReviews(new Date());
-        reviewFour.setSeekerProfile(seekerProfileService.getById(9L));
-        reviewFour.setEvaluation(1);
-        reviewFour.setReviews("Неадекватное руководство. Уволился через месяц");
+        EmployerReviews reviewFour = new EmployerReviews("Неадекватное руководство. Уволился через месяц", new Date(),
+                1, seekerProfileService.getById(9L));
 
-        EmployerReviews reviewFive = new EmployerReviews();
-        reviewFive.setDateReviews(new Date());
-        reviewFive.setSeekerProfile(seekerProfileService.getById(10L));
-        reviewFive.setEvaluation(4);
-        reviewFive.setReviews("Хорошая контора. Отличный коллектив");
+        EmployerReviews reviewFive = new EmployerReviews("Хорошая контора. Отличный коллектив", new Date(),
+                4, seekerProfileService.getById(10L));
 
-        EmployerReviews reviewSix = new EmployerReviews();
-        reviewSix.setDateReviews(new Date());
-        reviewSix.setSeekerProfile(seekerProfileService.getById(10L));
-        reviewSix.setEvaluation(1);
-        reviewSix.setReviews("Все нравилось,но уволился через месяц");
+        EmployerReviews reviewSix = new EmployerReviews("Все нравилось,но уволился через месяц", new Date(),
+                3, seekerProfileService.getById(10L));
 
         Set<EmployerReviews> reviewsOne = new HashSet<>();
         reviewsOne.add(reviewOne);
@@ -328,7 +316,7 @@ public class InitData {
         City city;
         List<City> cities = cityService.getAll();
         for (int i = 0; i < 30; i++) {
-            city = cities.get(rnd.nextInt(cities.size() ));
+            city = cities.get(rnd.nextInt(cities.size()));
             point = city.getPoint();
 
             vacancy = new Vacancy(

@@ -135,6 +135,11 @@
                                         </button>
                                     </div>
                                     <div th:if="${reviewStatus}">
+                                        <div id="chat_alert" class="alert alert-success mt-3 d-none" role="alert">
+                                            Вы отправили жалобу администратору. Для того, чтобы продолжить
+                                            , перейдите в приватный <a id="chat_ref" href="/chat/">чат</a> с
+                                            администратором.
+                                        </div>
                                         <div class="row" style="margin-top: 30px">
                                             <div class="col-sm-6">
                                                 <h4><span>Отзывы о компании:</span></h4>
@@ -178,10 +183,13 @@
                                                                            class="fas fa-edit"
                                                                            th:onclick="'showEditReview('+${review.id}+')'"></i>
                                                                     </div>
-                                                                    <div class="employerComplaint" sec:authorize="hasRole('ROLE_EMPLOYER')">
-                                                                        <a th:href="@{/employer/chat_with_admin/{id}(id=${review.seekerProfile.id})}">
-                                                                            <i class="fas fa-ban" title="пожаловаться администратору"></i>
-                                                                        </a>
+                                                                    <div class="employerComplaint"
+                                                                         sec:authorize="hasRole('ROLE_EMPLOYER')">
+                                                                        <i class="fas fa-ban"
+                                                                           title="пожаловаться администратору"
+                                                                           data-toggle="modal"
+                                                                           data-target="#complainModal"
+                                                                           th:onclick="'getComplainModal('+ ${review.id} +')'"></i>
                                                                     </div>
                                                                     <blockquote class="blockquote mb-0">
                                                                         <p th:if="${review.reviews.length()>60}"
@@ -362,6 +370,38 @@
                     <button type="button" class="btn btn-success" onclick="editModalReview()">Изменить
                     </button>
                     <button type="button" class="btn btn-secondary" onclick="deleteReview()">Удалить</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Complain Review Modal -->
+    <div class="modal fade" id="complainModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Жалоба</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body" align="center">
+                    <div class="control-label">Описание</div>
+                    <div class="form-group">
+                        <input type="hidden" name="RMReviewId" id="RMReviewId">
+                        <textarea rows="10" class="form-control" name="RMComplain"
+                                  id="RMComplain"></textarea>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="addComplainReview()">Отправить
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
 
             </div>

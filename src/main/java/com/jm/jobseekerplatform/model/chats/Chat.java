@@ -2,10 +2,12 @@ package com.jm.jobseekerplatform.model.chats;
 
 import com.fasterxml.jackson.annotation.*;
 import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.users.User;
 import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,10 +29,10 @@ public class Chat implements Serializable {
     @JsonIdentityReference(alwaysAsId = true)
     private Profile creatorProfile;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(value = org.hibernate.annotations.FetchMode.SELECT)
     @JsonIgnore
-    private List<Profile> chatMembers;
+    private List<User> chatMembers;
 
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = org.hibernate.annotations.FetchMode.SELECT)
@@ -45,6 +47,11 @@ public class Chat implements Serializable {
         this.creatorProfile = creatorProfile;
     }
 
+    public Chat(Profile creatorProfile, List<User> chatMembers) {
+        this.creatorProfile = creatorProfile;
+        this.chatMembers = chatMembers;
+        this.chatMessages = new ArrayList<>();
+    }
 
     public Long getId() {
         return id;
@@ -66,11 +73,11 @@ public class Chat implements Serializable {
         return creatorProfile;
     }
 
-    public List<Profile> getChatMembers() {
+    public List<User> getChatMembers() {
         return chatMembers;
     }
 
-    public void setChatMembers(List<Profile> chatMembers) {
+    public void setChatMembers(List<User> chatMembers) {
         this.chatMembers = chatMembers;
     }
 

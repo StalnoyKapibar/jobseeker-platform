@@ -68,7 +68,7 @@ public class VacancyRestController {
     public boolean addVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
         if (vacancyService.validateVacancy(vacancy)) {
             EmployerProfile employerProfile = ((EmployerUser) authentication.getPrincipal()).getProfile();
-            vacancy.setEmployerProfile(employerProfile);
+            vacancy.setCreatorProfile(employerProfile);
             vacancyService.addNewVacancyFromRest(vacancy);
             return true;
         } else {

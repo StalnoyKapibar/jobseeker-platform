@@ -1,24 +1,25 @@
 package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.dto.ChatInfoDTO;
+import com.jm.jobseekerplatform.dto.MessageDTO;
 import com.jm.jobseekerplatform.dto.MessageReadDataDTO;
 import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
-import com.jm.jobseekerplatform.model.Meeting;
-import com.jm.jobseekerplatform.model.Status;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
+import com.jm.jobseekerplatform.model.chats.ChatWithTopicReview;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
-import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.EmployerReviewsService;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
-import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
-import com.jm.jobseekerplatform.service.impl.chats.ChatService;
-import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
-import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicVacancyService;
+import com.jm.jobseekerplatform.service.impl.chats.*;
+import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.AdminUserService;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,28 @@ public class ChatRestController {
 
     @Autowired
     ChatWithTopicVacancyService chatWithTopicVacancyService;
+
+    private final EmployerProfileService employerProfileService;
+
+    private final AdminProfileService adminProfileService;
+
+    @Autowired
+    private EmployerReviewsService employerReviewsService;
+
+    @Autowired
+    private EmployerUserService employerUserService;
+
+    @Autowired
+    private AdminUserService adminUserService;
+
+    private final ChatWithTopicReviewService chatWithTopicReviewService;
+
+    @Autowired
+    public ChatRestController(EmployerProfileService employerProfileService, AdminProfileService adminProfileService, ChatWithTopicReviewService chatWithTopicReviewService) {
+        this.employerProfileService = employerProfileService;
+        this.adminProfileService = adminProfileService;
+        this.chatWithTopicReviewService = chatWithTopicReviewService;
+    }
 
     @GetMapping("/last")
     public HttpEntity getAllLastMessages() { //todo (Nick Dolgopolov)
@@ -96,7 +119,7 @@ public class ChatRestController {
     }
 
     @PostMapping
-    public String saveMeeting(@RequestParam("vacancyId") Long vacancyId, @RequestParam("seekerId") Long seekerId){
+    public String saveMeeting(@RequestParam("vacancyId") Long vacancyId, @RequestParam("seekerId") Long seekerId) {
         SeekerProfile seeker = seekerProfileService.getById(seekerId);
         ChatWithTopic<Vacancy> chat = chatWithTopicService.getByTopicIdCreatorProfileIdChatType(vacancyId, seeker.getId(), ChatWithTopicVacancy.class);
         if (chat == null) {
@@ -106,12 +129,32 @@ public class ChatRestController {
         return chat.getId().toString();
     }
 
+    @PostMapping("/add_complain_chat")
+    public ResponseEntity<String> addComplainChat(@RequestBody MessageDTO chatMessageDto,
+                                                  @RequestParam("reviewId") Long reviewId,
+                                                  @RequestParam("employerProfileId") Long employerProfileId) {
+        ChatMessage chatMessage = new ChatMessage(chatMessageDto.getText(),
+                employerProfileService.getById(employerProfileId), chatMessageDto.getDate());
+        List<User> list = new ArrayList<>();
+        list.add(employerUserService.getByProfileId(employerProfileId));
+        list.add(adminUserService.getByProfileId(1L));
+        ChatWithTopicReview chatWithTopic = chatWithTopicService.getByTopicIdCreatorProfileIdChatType(reviewId,
+                employerProfileId, ChatWithTopicReview.class);
+        if (chatWithTopic == null) {
+            chatWithTopic = new ChatWithTopicReview(employerProfileService.getById(employerProfileId),
+                    list, employerReviewsService.getById(reviewId));
+            chatWithTopicReviewService.add(chatWithTopic);
+        }
+        chatMessageService.add(chatMessage);
+        chatService.addChatMessage(chatWithTopic.getId(), chatMessage);
+        return new ResponseEntity<>(chatWithTopic.getId().toString(), HttpStatus.OK);
+    }
 
     @GetMapping("{chatId:\\d+}")
     public HttpEntity getAllMessagesInChat(@PathVariable("chatId") Long chatId) {
         List<ChatMessage> chatMessageList = chatService.getById(chatId).getChatMessages();
         Collections.sort(chatMessageList);
-        return new ResponseEntity(chatMessageList, HttpStatus.OK);
+        return new ResponseEntity<>(chatMessageList, HttpStatus.OK);
     }
 
     @PutMapping("set_chat_read_by_profile_id")

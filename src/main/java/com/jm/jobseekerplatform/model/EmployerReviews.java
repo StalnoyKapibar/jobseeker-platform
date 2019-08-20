@@ -1,19 +1,15 @@
 package com.jm.jobseekerplatform.model;
 
+import com.jm.jobseekerplatform.model.createdByProfile.CreatedBySeekerProfileBase;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 
 @Entity
 @Table(name = "employer_reviews")
-public class EmployerReviews implements Serializable, Comparable<EmployerReviews> {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class EmployerReviews extends CreatedBySeekerProfileBase implements Serializable, Comparable<EmployerReviews> {
 
     @Column(name = "reviews")
     private String reviews;
@@ -38,18 +34,16 @@ public class EmployerReviews implements Serializable, Comparable<EmployerReviews
     }
 
     public EmployerReviews(String reviews, Date dateReviews, Integer evaluation, SeekerProfile seekerProfile) {
+        super(seekerProfile);
         this.reviews = reviews;
         this.dateReviews = dateReviews;
         this.evaluation = evaluation;
         this.seekerProfile = seekerProfile;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public String getTypeName() {
+        return "Отзыв";
     }
 
     public String getReviews() {
@@ -116,21 +110,18 @@ public class EmployerReviews implements Serializable, Comparable<EmployerReviews
         this.seekerProfile = seekerProfile;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EmployerReviews that = (EmployerReviews) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(reviews, that.reviews) &&
-                Objects.equals(dateReviews, that.dateReviews) &&
-                Objects.equals(evaluation, that.evaluation) &&
-                Objects.equals(seekerProfile, that.seekerProfile);
-    }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, reviews, dateReviews, evaluation, seekerProfile);
+    public String toString() {
+        return "EmployerReviews{" +
+                super.toString() +
+                "reviews='" + reviews + '\'' +
+                ", dateReviews=" + dateReviews +
+                ", evaluation=" + evaluation +
+                ", like=" + like +
+                ", dislike=" + dislike +
+                ", seekerProfile=" + seekerProfile +
+                '}';
     }
 
     @Override

@@ -137,14 +137,13 @@ function reviewEditBasedOnVotes() {
     var x = document.getElementsByClassName("editCardReview");
     for (i = 0; i < x.length; i++) {
         let blockId = x[i].id;
-        blockId = blockId.substring(blockId.indexOf('_')+1);
-        let likes= parseInt(document.getElementById('reviewLikeCount_'+blockId).innerHTML);
-        let dislikes=parseInt(document.getElementById('reviewDislikeCount_'+blockId).innerHTML);
-        let sum=likes+dislikes;
-        if (sum>=5){
+        blockId = blockId.substring(blockId.indexOf('_') + 1);
+        let likes = parseInt(document.getElementById('reviewLikeCount_' + blockId).innerHTML);
+        let dislikes = parseInt(document.getElementById('reviewDislikeCount_' + blockId).innerHTML);
+        let sum = likes + dislikes;
+        if (sum >= 5) {
             x[i].style.display = "none";
-        }
-        else {
+        } else {
             x[i].style.display = "block"
         }
     }
@@ -619,4 +618,36 @@ function blockEmployerProfile(period) {
             alert(data);
         }
     });
+}
+
+
+function addComplainReview() {
+    var reviewId = $('#RMReviewId').val();
+    var employerProfileId = $('#employerProfileId').val();
+    var chatMessage = {
+        'text': $('#RMComplain').val(),
+        'date': new Date()
+    };
+    $.ajax({
+        type: 'post',
+        url: "/api/chats/add_complain_chat?reviewId=" + reviewId + '&employerProfileId=' + employerProfileId,
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        data: JSON.stringify(chatMessage),
+        success: function (data) {
+            $("#complainModal").modal('hide').fadeOut(350);
+            $("#chat_alert").removeClass("d-none");
+            $("#chat_ref").attr("href", "/private_chat/" + data);
+        },
+        error: function (error) {
+            console.log(error);
+            alert(error.toString());
+        }
+    });
+}
+
+function getComplainModal(reviewId) {
+    $('#RMReviewId').val(reviewId);
 }

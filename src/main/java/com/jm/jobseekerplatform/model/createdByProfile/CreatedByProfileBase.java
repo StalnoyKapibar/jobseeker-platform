@@ -34,15 +34,15 @@ public abstract class CreatedByProfileBase<T extends Profile> implements Created
         this.id = id;
     }
 
-    public void setEmployerProfile(T creatorProfile) {
-        this.creatorProfile = creatorProfile;
-    }
-
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @Override
     public T getCreatorProfile() {
         return creatorProfile;
+    }
+
+    public void setCreatorProfile(T creatorProfile) {
+        this.creatorProfile = creatorProfile;
     }
 
     @Override
