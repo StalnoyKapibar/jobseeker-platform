@@ -91,15 +91,15 @@ function searchResults() {
                 }
 
                 $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
-                    ' data-target="#vacancyModal" onclick="showResume(\'' + value.id + '\')">' +
+                    ' data-target="#resumeModal" onclick="showResume(\'' + value.id + '\')">' +
                     '<div class="headLine"><span>' + value.headline + '</span></div>' +
                     '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
                     '<div class="companyData"><span>Сикер: ' + value.creatorProfile + '</span><br><span>Город: ' + value.city + '</span></div>' +
                     '<br>' +
                     minSalary +
                     '<div class="pull-right">' +
-                    '<span class="btn btn-outline-success btn-sm btnOnVacancyPage"' +
-                    'onclick="window.location.href =\'/seeker/' + value.creatorProfile + '\'">На страницу сикера</span>' + '</div>' +
+                    '<span class="btn btn-outline-success btn-sm btnOnResumePage"' +
+                    'onclick="window.location.href =\'/seeker/' + value.creatorProfile + '\';event.stopPropagation();">На страницу сикера</span>' + '</div>' +
                     '</li>');
             });
             page++;
@@ -117,17 +117,21 @@ function showResume(id) {
             $.each(data.tags, function (key, value) {
                 tags += '<span class="badge badge-pill badge-success btnClick text-dark">' + value.name + '</span>'
             });
-            let jobExp = "";
-            $.each(data.jobExperiences, function (key, value) {
-                jobExp += '<span>' + value.companyName + '</span> <br>';
-                jobExp += '<span>' + value.position + '</span> <br>';
-                jobExp += '<span>' + value.responsibilities + '</span> <br>';
-                let firstDay = new Date(value.firstWorkDay);
-                jobExp += '<span>' + firstDay.toLocaleDateString() + '</span> - ';
-                let lastDay = new Date(value.lastWorkDay);
-                jobExp += '<span>' + lastDay.toLocaleDateString() + '</span> <br>'
-                return key > 2;
-            });
+            let jobExp = "Предыдущий опыт работы: <br>";
+            if (data.jobExperiences.length === 0) {
+                jobExp += '<span>Нет опыта</span> <br>';
+            } else {
+                $.each(data.jobExperiences, function (key, value) {
+                    jobExp += '<span>Место работы: ' + value.companyName + '</span> <br>';
+                    jobExp += '<span>Должность: ' + value.position + '</span> <br>';
+                    jobExp += '<span>Выполняемые задачи: ' + value.responsibilities + '</span> <br>';
+                    let firstDay = new Date(value.firstWorkDay);
+                    jobExp += '<span>Время работы: ' + firstDay.toLocaleDateString() + '</span> - ';
+                    let lastDay = new Date(value.lastWorkDay);
+                    jobExp += '<span>' + lastDay.toLocaleDateString() + '</span> <br>'
+                    return key > 2;
+                });
+            }
 
             $("#VMTags").html(tags);
             $("#VMJobExp").html(jobExp);
