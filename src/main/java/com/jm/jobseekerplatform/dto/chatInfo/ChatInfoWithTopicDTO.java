@@ -20,13 +20,9 @@ public class ChatInfoWithTopicDTO extends ChatInfoDTO {
 
     private String topicTitle;
 
-    public ChatInfoWithTopicDTO(ChatWithTopicVacancy chatWithTopic) {
+    public ChatInfoWithTopicDTO(ChatWithTopic chatWithTopic) {
         super(chatWithTopic);
         this.topicTitle = chatWithTopic.getTopic().getHeadline();
-        InitCommon(chatWithTopic);
-    }
-
-    private void InitCommon(ChatWithTopic chatWithTopic) {
 
         this.topicCreatorProfileId = chatWithTopic.getTopic().getCreatorProfile().getId();
         this.topicCreatorName = chatWithTopic.getTopic().getCreatorProfile().getFullName();

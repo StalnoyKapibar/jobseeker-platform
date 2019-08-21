@@ -91,7 +91,7 @@ function createChat(vacancyId, seekerId) {
         },
         success: function (data) {
             $("#chat_alert").removeClass("d-none");
-            $("#chat_ref").attr("href","/chat/" + data);
+            $("#chat_ref").attr("href","/chat/seeker-vacancy-employer/" + data);
         },
         error: function (error) {
             console.log(error);

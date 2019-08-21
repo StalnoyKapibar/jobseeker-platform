@@ -10,7 +10,6 @@ import com.jm.jobseekerplatform.model.users.*;
 import com.jm.jobseekerplatform.service.impl.*;
 import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatService;
-import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicVacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
@@ -76,9 +75,6 @@ public class InitData {
 
     @Autowired
     private ChatService chatService;
-
-    @Autowired
-    private ChatWithTopicVacancyService chatWithTopicVacancyService;
 
     @Autowired
     private PointService pointService;

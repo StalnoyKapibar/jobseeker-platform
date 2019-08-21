@@ -11,4 +11,6 @@ public interface CreatedByProfile<T extends Profile> {
     T getCreatorProfile();
 
     String getTypeName();
+
+    String getHeadline();
 }

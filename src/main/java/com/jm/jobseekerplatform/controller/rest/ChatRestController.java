@@ -14,7 +14,6 @@ import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
-import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicVacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -29,9 +28,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/chats")
 public class ChatRestController {
-
-    @Autowired
-    private ChatWithTopicService chatWithTopicService;
 
     @Autowired
     private SeekerProfileService seekerProfileService;
@@ -49,22 +45,19 @@ public class ChatRestController {
     ChatService chatService;
 
     @Autowired
-    ChatWithTopicVacancyService chatWithTopicVacancyService;
+    private ChatWithTopicService chatWithTopicService;
 
     @GetMapping("all")
     public HttpEntity getAllChats() {
-        List<ChatInfoWithTopicDTO> chatsInfo = chatWithTopicVacancyService.getAllChatsInfoDTO();
-
-        //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov) как организовывать сортировку?
+        List<ChatInfoWithTopicDTO> chatsInfo = chatWithTopicService.getAllChatsInfoDTO();
         return new ResponseEntity(chatsInfo, HttpStatus.OK);
     }
 
     @GetMapping("getAllChatsByProfileId/{profileId:\\d+}")
     public HttpEntity getAllChatsByProfileId(@PathVariable("profileId") Long profileId) {
 
-        List<ChatInfoDetailWithTopicDTO> chatsInfo = chatWithTopicVacancyService.getAllChatsInfoDTOByProfileId(profileId);
+        List<ChatInfoDetailWithTopicDTO> chatsInfo = chatWithTopicService.getAllChatsInfoDTOByProfileId(profileId);
 
-        //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov) как организовывать сортировку?
         return new ResponseEntity(chatsInfo, HttpStatus.OK);
     }
 
@@ -73,7 +66,7 @@ public class ChatRestController {
 
         User user = (User) authentication.getPrincipal();
 
-        long countOfUnreadChatsByProfileId = chatWithTopicVacancyService.getCountOfUnreadChatsByProfileId(user.getProfile().getId());
+        long countOfUnreadChatsByProfileId = chatWithTopicService.getCountOfUnreadChatsByProfileId(user.getProfile().getId());
 
         return new ResponseEntity(countOfUnreadChatsByProfileId, HttpStatus.OK);
     }
@@ -81,7 +74,7 @@ public class ChatRestController {
     @PostMapping
     public String saveMeeting(@RequestParam("vacancyId") Long vacancyId, @RequestParam("seekerId") Long seekerId){
         SeekerProfile seeker = seekerProfileService.getById(seekerId);
-        ChatWithTopic<Vacancy> chat = chatWithTopicService.getByTopicIdCreatorProfileIdChatType(vacancyId, seeker.getId(), ChatWithTopicVacancy.class);
+        ChatWithTopic<Vacancy> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType(vacancyId, seeker.getId(), ChatWithTopicVacancy.class);
         if (chat == null) {
             chat = new ChatWithTopicVacancy(seeker, vacancyService.getById(vacancyId));
             chatWithTopicService.add(chat);
