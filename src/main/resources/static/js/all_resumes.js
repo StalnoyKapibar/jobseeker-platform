@@ -1,7 +1,7 @@
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
 
-var page=1;
+var page = 1;
 var total_pages;
 
 $(function () {
@@ -62,7 +62,7 @@ $(window).scroll(function () {
     if ($(document).height() - $(window).height() === $(window).scrollTop()) {
         if (page < total_pages) {
             searchResults();
-        } else if (page == total_pages) {
+        } else if (page === total_pages) {
             searchResults();
         }
     }
@@ -70,24 +70,83 @@ $(window).scroll(function () {
 
 function searchResults() {
     $('#searchResult').append('<ul id="searchList" class="list-group"></ul>');
-    $.ajax ({
-        url: "api/resumes/"+page,
+    $.ajax({
+        url: "api/resumes/" + page,
         type: "GET",
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
         success: function (data) {
-            total_pages=data.totalPages;
+            total_pages = data.totalPages;
+
             $.each(data.content, function (key, value) {
-                $('#searchList').append('<li class="list-group-item clearfix" ' +
-                    '<div class="headLine"><span>' + value.id + '</span>'+
-                    '<div class="vacancyDescription"><span>' + value.place + '</span></div>' +
+                let minSalary = '';
+                let resumeTags = "";
+                $.each(value.tags, function (i, item) {
+                    resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
+                });
+
+                if (value.salaryMin) {
+                    minSalary = '<div class="salary"><span>Зарплата от: ' + value.salaryMin + ' руб.</span></div>';
+                }
+
+                $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
+                    ' data-target="#vacancyModal" onclick="showResume(\'' + value.id + '\')">' +
+                    '<div class="headLine"><span>' + value.headline + '</span></div>' +
+                    '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
+                    '<div class="companyData"><span>Сикер: ' + value.creatorProfile + '</span><br><span>Город: ' + value.city + '</span></div>' +
+                    '<br>' +
+                    minSalary +
                     '<div class="pull-right">' +
                     '<span class="btn btn-outline-success btn-sm btnOnVacancyPage"' +
-                    'onclick="window.location.href =\'/seeker/' + value.creatorProfile + '\'">На страницу сикера</span>'+'</div>' +
+                    'onclick="window.location.href =\'/seeker/' + value.creatorProfile + '\'">На страницу сикера</span>' + '</div>' +
                     '</li>');
             });
             page++;
+        }
+    });
+}
+
+function showResume(id) {
+    $.ajax({
+        url: "/api/resumes/getbyid/" + id,
+        type: "GET",
+        async: false,
+        success: function (data) {
+            let tags = "";
+            $.each(data.tags, function (key, value) {
+                tags += '<span class="badge badge-pill badge-success btnClick text-dark">' + value.name + '</span>'
+            });
+            let jobExp = "";
+            $.each(data.jobExperiences, function (key, value) {
+                jobExp += '<span>' + value.companyName + '</span> <br>';
+                jobExp += '<span>' + value.position + '</span> <br>';
+                jobExp += '<span>' + value.responsibilities + '</span> <br>';
+                let firstDay = new Date(value.firstWorkDay);
+                jobExp += '<span>' + firstDay.toLocaleDateString() + '</span> - ';
+                let lastDay = new Date(value.lastWorkDay);
+                jobExp += '<span>' + lastDay.toLocaleDateString() + '</span> <br>'
+                return key > 2;
+            });
+
+            $("#VMTags").html(tags);
+            $("#VMJobExp").html(jobExp);
+            $("#VMHeadline").text(data.headline);
+            $("#VMCity").text(data.city);
+
+            var str = "Зарплата: ";
+
+            if (data.salaryMin != null) {
+                str = str + "от " + data.salaryMin + " рублей ";
+            }
+            if (data.salaryMax != null) {
+                str = str + "до " + data.salaryMax + " рублей";
+            }
+            if (str === "Зарплата: ") {
+                str = "Зарплата не указана";
+            }
+            $("#VMSalary").text(str);
+
         }
     });
 }
