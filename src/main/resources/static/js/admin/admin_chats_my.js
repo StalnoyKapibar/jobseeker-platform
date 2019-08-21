@@ -8,7 +8,7 @@ $(document).ready(function () {
         searching: false,
         info: false,
 
-        "sAjaxSource": "/api/chats/my/" + currentProfileId,
+        "sAjaxSource": "/api/chats/getAllChatsByProfileId/" + currentProfileId,
         "sAjaxDataProp": "",
         "order": [[1, "desc"]],
         "aoColumns": [
@@ -42,34 +42,24 @@ $(document).ready(function () {
             {
                 "mData": "null",
                 "mRender": function (data, type, full) {
-                    return "<p>" + full.lastMessage.text + "<\p>"
-                        + "<p>" + full.lastMessage.date + "<\p>";
+                    const author =
+                        full.lastMessageCreatorType + " " +
+                        full.lastMessageCreatorName + " " +
+                        "(id=" + full.lastMessageProfileId + ")";
+                    return "<p>" + author + "<\p>" +
+                            "<p>" + full.lastMessageText + "<\p>" +
+                             "<p>" + full.lastMessageDate + "<\p>";
+                }
+            },
+            {
+                "mData": "null",
+                "mRender": function (data, type, full) {
+                    return "<p>" + full.countOfUnreadMessages + "<\p>";
                 }
             }
         ]
     });
-
-    var url = "admin";
-    //count_not_read_messages(url); //todo (Nick Dolgopolov) добавить данные по кол-ву непрочитанных чатов и кол-ву непрочитанных сообщений в чатах
-
 });
-
-function count_not_read_messages(url) {
-    $.ajax({
-        url: "/api/chats/count_not_read_messages/" + url,
-        type: "GET",
-        async: false,
-        success: function (data) {
-            if (data !== 0) {
-                var str = "   " + data;
-                document.getElementById("count_not_read_messages").textContent = str;
-            }
-        }
-    })
-}
-
-
-/* globals Chart:false, feather:false */
 
 $(document).ready(function () {
     'use strict';

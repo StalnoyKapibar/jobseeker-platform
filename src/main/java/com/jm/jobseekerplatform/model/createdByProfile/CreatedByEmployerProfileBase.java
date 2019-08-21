@@ -12,8 +12,8 @@ public abstract class CreatedByEmployerProfileBase extends CreatedByProfileBase<
     public CreatedByEmployerProfileBase() {
     }
 
-    public CreatedByEmployerProfileBase(EmployerProfile creatorProfile) {
-        super(creatorProfile);
+    public CreatedByEmployerProfileBase(EmployerProfile creatorProfile, String headline) {
+        super(creatorProfile, headline);
     }
 
     @Override

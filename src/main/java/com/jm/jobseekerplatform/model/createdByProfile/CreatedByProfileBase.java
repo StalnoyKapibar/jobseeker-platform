@@ -18,11 +18,15 @@ public abstract class CreatedByProfileBase<T extends Profile> implements Created
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, targetEntity = Profile.class)
     private T creatorProfile;
 
+    @Column(name = "headline", nullable = false)
+    private String headline;
+
     public CreatedByProfileBase() {
     }
 
-    public CreatedByProfileBase(T creatorProfile) {
+    public CreatedByProfileBase(T creatorProfile, String headline) {
         this.creatorProfile = creatorProfile;
+        this.headline = headline;
     }
 
     @Override
@@ -45,11 +49,20 @@ public abstract class CreatedByProfileBase<T extends Profile> implements Created
         this.creatorProfile = creatorProfile;
     }
 
+    public String getHeadline() {
+        return headline;
+    }
+
+    public void setHeadline(String headline) {
+        this.headline = headline;
+    }
+
     @Override
     public String toString() {
         return "CreatedByProfileBase{" +
                 "id=" + id +
                 ", creatorProfile=" + creatorProfile +
+                ", headline='" + headline + '\'' +
                 '}';
     }
 }

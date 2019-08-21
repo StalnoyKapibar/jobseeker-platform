@@ -14,6 +14,9 @@ import java.util.List;
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
  */
 
+//todo (Nick Dolgopolov) кэширование
+//todo (Nick Dolgopolov) EAGER -> LAZY
+
 @Entity
 @Inheritance
 @Table(name = "chats")
@@ -38,7 +41,6 @@ public class Chat implements Serializable {
     @Fetch(value = org.hibernate.annotations.FetchMode.SELECT)
     @JsonIgnore
     private List<ChatMessage> chatMessages;
-
 
     public Chat() {
     }
@@ -81,11 +83,11 @@ public class Chat implements Serializable {
         this.chatMembers = chatMembers;
     }
 
-    public void setChatMessages(List<ChatMessage> chatMessages) {
-        this.chatMessages = chatMessages;
-    }
-
     public List<ChatMessage> getChatMessages() {
         return chatMessages;
+    }
+
+    public void setChatMessages(List<ChatMessage> chatMessages) {
+        this.chatMessages = chatMessages;
     }
 }

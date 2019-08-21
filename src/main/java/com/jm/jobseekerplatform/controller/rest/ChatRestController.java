@@ -1,9 +1,8 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.dto.ChatInfoDTO;
-import com.jm.jobseekerplatform.dto.MessageDTO;
 import com.jm.jobseekerplatform.dto.MessageReadDataDTO;
-import com.jm.jobseekerplatform.dto.MessageWithDateDTO;
+import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO;
+import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoWithTopicDTO;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
@@ -14,9 +13,9 @@ import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.EmployerReviewsService;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
-import com.jm.jobseekerplatform.service.impl.chats.*;
-import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
-import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.AdminUserService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
@@ -24,16 +23,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/chats")
 public class ChatRestController {
-
-    @Autowired
-    private ChatWithTopicService chatWithTopicService;
 
     @Autowired
     private SeekerProfileService seekerProfileService;
@@ -51,76 +49,36 @@ public class ChatRestController {
     ChatService chatService;
 
     @Autowired
-    ChatWithTopicVacancyService chatWithTopicVacancyService;
-
-    private final EmployerProfileService employerProfileService;
-
-    private final AdminProfileService adminProfileService;
-
-    @Autowired
-    private EmployerReviewsService employerReviewsService;
-
-    @Autowired
-    private EmployerUserService employerUserService;
-
-    @Autowired
-    private AdminUserService adminUserService;
-
-    private final ChatWithTopicReviewService chatWithTopicReviewService;
-
-    @Autowired
-    public ChatRestController(EmployerProfileService employerProfileService, AdminProfileService adminProfileService, ChatWithTopicReviewService chatWithTopicReviewService) {
-        this.employerProfileService = employerProfileService;
-        this.adminProfileService = adminProfileService;
-        this.chatWithTopicReviewService = chatWithTopicReviewService;
-    }
-
-    @GetMapping("/last")
-    public HttpEntity getAllLastMessages() { //todo (Nick Dolgopolov)
-        List<MessageWithDateDTO> lastMessages = chatMessageService.getAllLastMessages();
-        Collections.sort(lastMessages);
-        return new ResponseEntity<>(lastMessages, HttpStatus.OK);
-    }
+    private ChatWithTopicService chatWithTopicService;
 
     @GetMapping("all")
     public HttpEntity getAllChats() {
-        List<ChatWithTopic> chats = chatWithTopicService.getAll();
-        List<ChatInfoDTO> chatsInfo = getChatInfoDTOs(chats);
-
-        //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov)
-        return new ResponseEntity<>(chatsInfo, HttpStatus.OK);
+        List<ChatInfoWithTopicDTO> chatsInfo = chatWithTopicService.getAllChatsInfoDTO();
+        return new ResponseEntity(chatsInfo, HttpStatus.OK);
     }
 
-    @GetMapping("my/{profileId:\\d+}")
+    @GetMapping("getAllChatsByProfileId/{profileId:\\d+}")
     public HttpEntity getAllChatsByProfileId(@PathVariable("profileId") Long profileId) {
 
-        Set<ChatWithTopic> chats = new HashSet<>();
+        List<ChatInfoDetailWithTopicDTO> chatsInfo = chatWithTopicService.getAllChatsInfoDTOByProfileId(profileId);
 
-        chats.addAll(chatWithTopicVacancyService.getAllByChatCreatorProfileId(profileId)); //todo (Nick Dolgopolov) сделать один запрос
-        chats.addAll(chatWithTopicVacancyService.getAllByParticipantProfileId(profileId));
-        chats.addAll(chatWithTopicVacancyService.getAllChatsByTopicCreatorProfileId(profileId));
-
-        List<ChatInfoDTO> chatsInfo = getChatInfoDTOs(chats);
-
-        //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov)
-        return new ResponseEntity<>(chatsInfo, HttpStatus.OK);
+        return new ResponseEntity(chatsInfo, HttpStatus.OK);
     }
 
-    private List<ChatInfoDTO> getChatInfoDTOs(Collection<ChatWithTopic> chats) {
-        List<ChatInfoDTO> chatsInfo = new ArrayList<>();
+    @GetMapping("getCountOfUnreadChatsByProfileId")
+    public HttpEntity getCountOfUnreadChatsByProfileId(Authentication authentication) {
 
-        for (ChatWithTopic chat : chats) {
-            ChatInfoDTO chatInfoDTO = ChatInfoDTO.fromChatWithTopic(chat);
-            chatInfoDTO.setLastMessage(chatService.getLastMessage(chat.getId()));
-            chatsInfo.add(chatInfoDTO);
-        }
-        return chatsInfo;
+        User user = (User) authentication.getPrincipal();
+
+        long countOfUnreadChatsByProfileId = chatWithTopicService.getCountOfUnreadChatsByProfileId(user.getProfile().getId());
+
+        return new ResponseEntity(countOfUnreadChatsByProfileId, HttpStatus.OK);
     }
 
     @PostMapping
     public String saveMeeting(@RequestParam("vacancyId") Long vacancyId, @RequestParam("seekerId") Long seekerId) {
         SeekerProfile seeker = seekerProfileService.getById(seekerId);
-        ChatWithTopic<Vacancy> chat = chatWithTopicService.getByTopicIdCreatorProfileIdChatType(vacancyId, seeker.getId(), ChatWithTopicVacancy.class);
+        ChatWithTopic<Vacancy> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType(vacancyId, seeker.getId(), ChatWithTopicVacancy.class);
         if (chat == null) {
             chat = new ChatWithTopicVacancy(seeker, vacancyService.getById(vacancyId));
             chatWithTopicService.add(chat);
@@ -166,16 +124,16 @@ public class ChatRestController {
 
         List<ChatMessage> chatMessageList = chatService.getById(messageReadDataDTO.getChatId()).getChatMessages();
 
-        for (int i = chatMessageList.size() - 1; i >= 0; i--) {
+        for (int i = chatMessageList.size() - 1; i >= 0; i--) { //todo (Nick Dolgopolov) переделать на зарос, который будет в базе менять статус только у нужных сообщений (фильтр)
             ChatMessage chatMessage = chatMessageList.get(i);
-            if (chatMessage.getId() <= messageReadDataDTO.getLastReadMessageId() && //todo (Nick Dolgopolov) по id или надо по дате?
+            if (/*chatMessage.getId() <= messageReadDataDTO.getLastReadMessageId() &&*/ //todo (Nick Dolgopolov) по id или надо по дате?
                     !chatMessage.getCreatorProfile().getId().equals(messageReadDataDTO.getReaderProfileId()) &&
-                    !chatMessage.getIsReadByProfilesId().contains(messageReadDataDTO.getReaderProfileId())) {
+                            !chatMessage.getIsReadByProfilesId().contains(messageReadDataDTO.getReaderProfileId())) {
                 chatMessage.getIsReadByProfilesId().add(messageReadDataDTO.getReaderProfileId());
 
                 chatMessageService.update(chatMessage);
             }
-        } //todo (Nick Dolgopolov) запросом + фильтр
+        }
 
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -194,18 +152,4 @@ public class ChatRestController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
-
-//    @GetMapping("count_not_read_messages/admin") //todo (Nick Dolgopolov)
-//    public HttpEntity getCountNotReadMessagesForAdmin() {
-//        int count = chatMessageService.getNotReadMessages().size();
-//        return new ResponseEntity(count, HttpStatus.OK);
-//    }
-//
-//    @GetMapping("count_not_read_messages/{chatId}") //todo (Nick Dolgopolov)
-//    public HttpEntity getCountNotReadMessagesForUser(@PathVariable("chatId") Long chatId) {
-//        List<ChatMessage> list = new ArrayList<>(chatService.getById(chatId).getChatMessages());
-//        Long count = list.stream().filter(a -> a.getAuthor().getAuthority().equals(userRoleService.findByAuthority("ROLE_ADMIN"))).filter(a -> a.isRead() == false).count(); //todo (Nick Dolgopolov) переделать на запрос к БД
-//
-//        return new ResponseEntity(count, HttpStatus.OK);
-//    }
 }

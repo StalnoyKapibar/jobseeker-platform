@@ -16,7 +16,7 @@ import java.util.List;
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
  */
 
-@Entity
+@Entity //todo (Nick Dolgopolov) тут надо inheritance?
 public class ChatWithTopic<T extends CreatedByProfile> extends Chat {
 
     @ManyToOne(targetEntity = CreatedByProfileBase.class)
