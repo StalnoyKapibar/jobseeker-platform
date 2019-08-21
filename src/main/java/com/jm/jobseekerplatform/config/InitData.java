@@ -546,7 +546,12 @@ public class InitData {
 
     private void initJobExperience(){
         for (int i=0; i<20; i++) {
-            JobExperience jobExperience = new JobExperience(faker.job().title(), faker.job().position(), faker.witcher().quote());
+            Date date= new Date();
+            JobExperience jobExperience = new JobExperience(date,
+                    new Date(date.getTime()+(24*60*60*1000)),//+1 день
+                    faker.job().title(),
+                    faker.job().position(),
+                    faker.witcher().quote());
             jobExperienceService.add(jobExperience);
         }
     }
