@@ -79,7 +79,6 @@ public class VacancyRestController {
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public boolean updateVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
-        System.out.println(((EmployerUser) authentication.getPrincipal()).getProfile().getId());
         if (vacancyService.validateVacancy(vacancy) & (vacancyService.getById(vacancy.getId()).getCreatorProfile().getId().equals(((EmployerUser) authentication.getPrincipal()).getProfile().getId()))) {
             return vacancyService.updateVacancy(vacancy);
         }

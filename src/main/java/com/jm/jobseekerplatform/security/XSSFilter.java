@@ -15,7 +15,6 @@ public class XSSFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-        System.out.println(httpServletRequest.getMethod());
         if("POST".equals(httpServletRequest.getMethod()) | "UPDATE".equals(httpServletRequest.getMethod())) {
             logger.info("start filter");
             ReadTwiceHttpServletRequestWrapper readTwiceHttpServletRequestWrapper = new ReadTwiceHttpServletRequestWrapper((HttpServletRequest) request);
@@ -28,10 +27,9 @@ public class XSSFilter implements Filter {
     }
 
     private String cleanXSS(String value) {
-        // You'll need to remove the spaces from the html entities below
         logger.info("In cleanXSS RequestWrapper ..............." + value);
-  //      value = value.replaceAll("<", "& lt;").replaceAll(">", "& gt;");
-    //    value = value.replaceAll("\\(", "& #40;").replaceAll("\\)", "& #41;");
+  //      value = value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+    //    value = value.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
         value = value.replaceAll("'", "&#39;");
         value = value.replaceAll("eval\\((.*)\\)", "");
         value = value.replaceAll("[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']", "\"\"");
