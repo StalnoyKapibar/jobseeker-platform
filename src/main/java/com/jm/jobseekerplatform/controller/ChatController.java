@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.Principal;
 
 
 @Controller
@@ -79,16 +78,19 @@ public class ChatController {
 
     @RequestMapping("/private_chat/{chatId}")
     public String getPrivateChatById(@PathVariable("chatId") Long chatId, Model model,
-                                     Principal authentication, HttpServletResponse httpServletResponse) throws IOException {
+                                     Authentication authentication, HttpServletResponse httpServletResponse) throws IOException {
         Chat chat = chatService.getById(chatId);
-        ChatAccessHandler.isContainInChatMembers(chat, userService.findByEmail(authentication.getName()), httpServletResponse);
+        User user = (User) authentication.getPrincipal();
+        ChatAccessHandler.isContainInChatMembers(chat, userService.findByEmail(user.getUsername()), httpServletResponse);
+        model.addAttribute("profileId", user.getProfile().getId());
+        model.addAttribute("employerProfileId", user.getProfile().getId());
         if (chat instanceof ChatWithTopic) {
             ChatWithTopic chatWithTopic = (ChatWithTopic) chat;
             model.addAttribute("topicName", chatWithTopic.getTopic().getTypeName());
             model.addAttribute("topic", chatWithTopic.getTopic());
             model.addAttribute("chatWithTopic", chatWithTopic);
         }
-        return "private_chat";
+        return "chats/private_chat";
     }
 
     @RequestMapping("/chat/vacancy/{vacancyId:\\d+}")

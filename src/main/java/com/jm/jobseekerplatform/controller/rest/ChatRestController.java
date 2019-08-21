@@ -84,8 +84,7 @@ public class ChatRestController {
 
     @GetMapping("all")
     public HttpEntity getAllChats() {
-        List<ChatWithTopicVacancy> chats = chatWithTopicVacancyService.getAll();
-
+        List<ChatWithTopic> chats = chatWithTopicService.getAll();
         List<ChatInfoDTO> chatsInfo = getChatInfoDTOs(chats);
 
         //Collections.sort(chats, (o1, o2) -> ...); //todo (Nick Dolgopolov)
@@ -95,7 +94,7 @@ public class ChatRestController {
     @GetMapping("my/{profileId:\\d+}")
     public HttpEntity getAllChatsByProfileId(@PathVariable("profileId") Long profileId) {
 
-        Set<ChatWithTopicVacancy> chats = new HashSet<>();
+        Set<ChatWithTopic> chats = new HashSet<>();
 
         chats.addAll(chatWithTopicVacancyService.getAllByChatCreatorProfileId(profileId)); //todo (Nick Dolgopolov) сделать один запрос
         chats.addAll(chatWithTopicVacancyService.getAllByParticipantProfileId(profileId));
@@ -107,10 +106,10 @@ public class ChatRestController {
         return new ResponseEntity<>(chatsInfo, HttpStatus.OK);
     }
 
-    private List<ChatInfoDTO> getChatInfoDTOs(Collection<ChatWithTopicVacancy> chats) {
+    private List<ChatInfoDTO> getChatInfoDTOs(Collection<ChatWithTopic> chats) {
         List<ChatInfoDTO> chatsInfo = new ArrayList<>();
 
-        for (ChatWithTopicVacancy chat : chats) {
+        for (ChatWithTopic chat : chats) {
             ChatInfoDTO chatInfoDTO = ChatInfoDTO.fromChatWithTopic(chat);
             chatInfoDTO.setLastMessage(chatService.getLastMessage(chat.getId()));
             chatsInfo.add(chatInfoDTO);
@@ -148,6 +147,11 @@ public class ChatRestController {
         chatMessageService.add(chatMessage);
         chatService.addChatMessage(chatWithTopic.getId(), chatMessage);
         return new ResponseEntity<>(chatWithTopic.getId().toString(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get_all_by_employer_profile_id")
+    public ResponseEntity<List<ChatWithTopic>> getAllByEmployerProfileId(@RequestParam("employerProfileId") Long employerProfileId) {
+        return new ResponseEntity<>(chatWithTopicService.getByProfileId(employerProfileId), HttpStatus.OK);
     }
 
     @GetMapping("{chatId:\\d+}")

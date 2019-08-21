@@ -337,8 +337,16 @@ public class InitData {
     }
 
     private void initAdminProfile() {
+        BufferedImage image = null;
+        try {
+            URL url = new URL("https://remcomp-service.ru/wp-content/uploads/2018/01/LOGO_001.jpg");
+            image = ImageIO.read(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         AdminProfile adminProfile = new AdminProfile();
         adminProfile.setState(State.ACCESS);
+        adminProfile.setLogo(imageService.resizeLogoEmployer(image));
         adminProfileService.add(adminProfile);
     }
 

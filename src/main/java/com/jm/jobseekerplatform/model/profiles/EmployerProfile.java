@@ -91,7 +91,8 @@ public class EmployerProfile extends Profile implements Serializable {
         return logo;
     }
 
-    public String getEncoderLogo() {
+    @Override
+    public String getEncoderPhoto() {
         return Base64.getEncoder().encodeToString(this.getLogo());
     }
 

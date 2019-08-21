@@ -6,6 +6,7 @@ import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.terracotta.context.ContextListener;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.Base64;
@@ -38,6 +38,9 @@ public class EmployerController {
 
     @Autowired
     private VacancyService vacancyService;
+
+    @Autowired
+    private ChatWithTopicService chatWithTopicService;
 
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
@@ -99,18 +102,7 @@ public class EmployerController {
     @RequestMapping("/employer/chats/{employerProfileId}")
     public String EmployerPageChatsMy(@PathVariable Long employerProfileId, Authentication authentication, Model model) {
         model.addAttribute("employerProfileId", employerProfileId);
+        model.addAttribute("chats", chatWithTopicService.getByProfileId(employerProfileId));
         return "employer_chats_my";
     }
-
-    @RolesAllowed({"ROLE_EMPLOYER"})
-    @RequestMapping("/employer/chat_with_admin/{seekerProfileId}")
-    public String EmployerChatWithAdmin(@PathVariable Long seekerProfileId, Authentication authentication, Model model) {
-        User user = (User) authentication.getPrincipal();
-        model.addAttribute("employerProfileId", user.getProfile().getId());
-        model.addAttribute("employerProfileEmail", user.getEmail());
-        model.addAttribute("seekerProfileId", seekerProfileId);
-        return "employer_complain_to_admin";
-    }
-
-
 }

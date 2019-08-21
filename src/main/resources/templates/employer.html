@@ -135,10 +135,12 @@
                                         </button>
                                     </div>
                                     <div th:if="${reviewStatus}">
-                                        <div id="chat_alert" class="alert alert-success mt-3 d-none" role="alert">
+                                        <div id="chat_alert" class="alert alert-success mt-3 d-none" role="alert"
+                                             tabindex="0">
                                             Вы отправили жалобу администратору. Для того, чтобы продолжить
                                             , перейдите в приватный <a id="chat_ref" href="/chat/">чат</a> с
                                             администратором.
+                                            <i class="far fa-times-circle" onclick="closeChatAlert()"></i>
                                         </div>
                                         <div class="row" style="margin-top: 30px">
                                             <div class="col-sm-6">
@@ -159,18 +161,22 @@
                                         <div id="sort">Сортировать по:
                                             <a id="dateSort" href="javascript:void(0);" onclick="sortByDateOldFirst();">дате</a>
                                             <a id="rateSort" href="javascript:void(0);" onclick="sortByRatingDESC()">рейтингу</a>
-                                            <a id="likeSort" href="javascript:void(0);" onclick="sortByLikes();">лайкам</a>
+                                            <a id="likeSort" href="javascript:void(0);"
+                                               onclick="sortByLikes();">лайкам</a>
                                         </div>
 
                                         <div class="form-group" style="margin-bottom: 0px; margin-top: 10px">
                                             <label class="radio-inline">
-                                                <input type="radio" checked onclick="showAll()" name="optradio">Показать все
+                                                <input type="radio" checked onclick="showAll()" name="optradio">Показать
+                                                все
                                             </label>
                                             <label class="radio-inline">
-                                                <input type="radio" onclick="hideNegative()" name="optradio">Скрыть негативные
+                                                <input type="radio" onclick="hideNegative()" name="optradio">Скрыть
+                                                негативные
                                             </label>
                                             <label class="radio-inline">
-                                                <input type="radio" onclick="hidePositive()" name="optradio">Скрыть положительные
+                                                <input type="radio" onclick="hidePositive()" name="optradio">Скрыть
+                                                положительные
                                             </label>
                                         </div>
 
@@ -244,14 +250,16 @@
                                                                                   th:id="'reviewLike_' + ${review.id}"
                                                                                   th:onclick="'toLike('+ ${review.id} +')'">
                                                                                 <i class="fas fa-thumbs-up"></i>
-                                                                                <span class="likes" th:id="'reviewLikeCount_'+${review.id}"
+                                                                                <span class="likes"
+                                                                                      th:id="'reviewLikeCount_'+${review.id}"
                                                                                       th:text="${review.like}"></span>
                                                                             </span>
                                                                             <span class="reviewDislike"
                                                                                   th:id="'reviewDislike_' + ${review.id}"
                                                                                   th:onclick="'toDislike('+ ${review.id} +')'">
                                                                                     <i class="fas fa-thumbs-down"></i>
-                                                                                    <span class="dislikes" th:id="'reviewDislikeCount_'+${review.id}"
+                                                                                    <span class="dislikes"
+                                                                                          th:id="'reviewDislikeCount_'+${review.id}"
                                                                                           th:text="${review.dislike}"></span>
                                                                             </span>
                                                                         </span>

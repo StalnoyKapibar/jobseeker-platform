@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.dto;
 
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
+import com.jm.jobseekerplatform.model.chats.ChatWithTopicReview;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 
 /**
@@ -32,12 +33,19 @@ public class ChatInfoDTO {
 
     private ChatMessage lastMessage;
 
-    public static ChatInfoDTO fromChatWithTopic(ChatWithTopicVacancy chatWithTopic) {
+    public static ChatInfoDTO fromChatWithTopic(ChatWithTopic chatWithTopic) {
         ChatInfoDTO chatInfoDTO = new ChatInfoDTO();
 
         chatInfoDTO = fromChatWithTopicCommon(chatInfoDTO, chatWithTopic);
 
-        chatInfoDTO.topicTitle = chatWithTopic.getTopic().getHeadline();
+        if (chatWithTopic.getClass() == ChatWithTopicVacancy.class) {
+            ChatWithTopicVacancy chatWithTopicVacancy = (ChatWithTopicVacancy) chatWithTopic;
+            chatInfoDTO.topicTitle = chatWithTopicVacancy.getTopic().getHeadline();
+        }
+        if (chatWithTopic.getClass() == ChatWithTopicReview.class) {
+            ChatWithTopicReview chatWithTopicReview = (ChatWithTopicReview) chatWithTopic;
+            chatInfoDTO.topicTitle = chatWithTopicReview.getTopic().getSeekerProfile().getFullName();
+        }
 
         return chatInfoDTO;
     }

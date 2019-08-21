@@ -45,6 +45,8 @@ public abstract class Profile implements Serializable {
 
     public abstract String getTypeName();
 
+    public abstract String getEncoderPhoto();
+
     @Override
     public String toString() {
         return "Profile{" +

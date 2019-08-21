@@ -1,11 +1,12 @@
 package com.jm.jobseekerplatform.dao.impl.chats;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
-import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfile;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
+import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfile;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
+import java.util.List;
 
 /**
  * <p> Классы <code>ChatWithTopicAbstractDAO</code> (и его наследники)
@@ -18,9 +19,8 @@ import javax.persistence.NoResultException;
  * - класс <code>ChatWithTopicDAO</code> не требует создания наследников, но
  * требует в качестве параметра методов передавать класс чата или класс темы чата.
  *
- * @see ChatWithTopicAbstractDAO
- *
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
+ * @see ChatWithTopicAbstractDAO
  */
 
 @Repository
@@ -29,7 +29,7 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
     /**
      * Методы <code>getByTopicIdCreatorProfileIdTopicType</code>, <code>getByTopicIdCreatorProfileIdChatType</code>
      * и <code>getChatByTopicIdCreatorProfileId</code> дублируют функционал, однако используют разгную реализацию.
-     *
+     * <p>
      * В проекте существуют разные реализации для демонстрации разных подходов.
      *
      * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdChatType}
@@ -57,7 +57,7 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
     /**
      * Методы <code>getByTopicIdCreatorProfileIdTopicType</code>, <code>getByTopicIdCreatorProfileIdChatType</code>
      * и <code>getChatByTopicIdCreatorProfileId</code> дублируют функционал, однако используют разгную реализацию.
-     *
+     * <p>
      * В проекте существуют разные реализации для демонстрации разных подходов.
      *
      * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getByTopicIdCreatorProfileIdTopicType}
@@ -80,5 +80,18 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
         }
 
         return chat;
+    }
+
+    public <T extends ChatWithTopic> List<T> getByProfileId(Long profileId) {
+        List<T> list;
+        try {
+            list = entityManager.createQuery("SELECT c FROM " + clazz.getName() + " c JOIN c.chatMembers t WHERE t.id =: profileId")
+                    .setParameter("profileId", profileId)
+                    .getResultList();
+        } catch (NoResultException e) {
+            e.printStackTrace();
+            list = null;
+        }
+        return list;
     }
 }

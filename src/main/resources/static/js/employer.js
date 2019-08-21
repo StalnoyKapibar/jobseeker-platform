@@ -847,6 +847,7 @@ function addComplainReview() {
         success: function (data) {
             $("#complainModal").modal('hide').fadeOut(350);
             $("#chat_alert").removeClass("d-none");
+            $("#chat_alert").focus();
             $("#chat_ref").attr("href", "/private_chat/" + data);
         },
         error: function (error) {
@@ -858,4 +859,8 @@ function addComplainReview() {
 
 function getComplainModal(reviewId) {
     $('#RMReviewId').val(reviewId);
+}
+
+function closeChatAlert() {
+    $("#chat_alert").addClass("d-none");
 }

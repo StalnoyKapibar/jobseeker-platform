@@ -1,10 +1,6 @@
 package com.jm.jobseekerplatform.model.profiles;
 
-import com.jm.jobseekerplatform.model.Meeting;
-import com.jm.jobseekerplatform.model.Portfolio;
-import com.jm.jobseekerplatform.model.Subscription;
-import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -118,6 +114,7 @@ public class SeekerProfile extends Profile implements Serializable {
         return photo;
     }
 
+    @Override
     public String getEncoderPhoto() {
         return Base64.getEncoder().encodeToString(this.getPhoto());
     }

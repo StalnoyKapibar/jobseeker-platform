@@ -2,7 +2,6 @@ var stompClient = null;
 
 var currentChatId;
 var currentProfileId;
-var profiles = [];
 
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
@@ -12,17 +11,14 @@ var isNewMessages = false;
 //const messageForm = document.querySelector('#messageForm');
 
 $(document).ready(function () {
-    currentChatId = $("#chatId").text();
-    currentProfileId = $("#sreatorProfileId").text();
-    profiles = $(".usersId").each(function (key, value) {
-        profiles.push($(this).text());
-    });
+    currentChatId = parseInt($("#chatId").text());
+    currentProfileId = parseInt($("#profileId").text());
     connectToServerByChatId(currentChatId);
     getAllChatMessagesByChatId(currentChatId);
 });
 
 function connectToServerByChatId(chatId) {
-    var socket = new SockJS('/chat-messaging');
+    var socket = new SockJS('/private_chat-messaging');
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function (frame) {
@@ -43,39 +39,68 @@ function disconnect() {
 
 function getAllChatMessagesByChatId(chatId) {
     $.get("/api/chats/" + chatId, function (chatMessagesList) {
-        chatMessagesList.reverse();
         $(".msg_history").html("");
-        var lastReceivedMessage = chatMessagesList[chatMessagesList.length - 1];
-        $.each(chatMessagesList, function (i, message) {
-            pickDisplayStrategy(message);
-            if (!checkIsMessageWasReadByProfileId(message, currentProfileId)) {
-                //message.isReadByProfilesId.push(currentProfileId);
-                if (message === lastReceivedMessage) {
-                    updateChatReadStatusOnServer(message, currentProfileId);
+        if (chatMessagesList && chatMessagesList.length > 0) {
+            chatMessagesList.reverse();
+            var lastReceivedMessage = chatMessagesList[chatMessagesList.length - 1];
+            $.each(chatMessagesList, function (i, message) {
+                displayMessage(message);
+                if (!checkIsMessageWasReadByProfileId(message, currentProfileId)) {
+                    message.isReadByProfilesId.push(currentProfileId);
                 }
-            }
-        });
-        isNewMessages = true;
-        scrollMessageArea();
+            });
+            updateChatReadStatusOnServer(lastReceivedMessage, currentProfileId);
+            isNewMessages = true;
+            scrollMessageArea();
+        }
     });
 }
 
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
-    pickDisplayStrategy(message);
+    displayMessage(message);
     if (!checkIsMessageWasReadByProfileId(message, currentProfileId)) {
-        //message.isReadByProfilesId.push(currentProfileId);
+        message.isReadByProfilesId.push(currentProfileId);
         updateMessageReadStatusOnServer(message, currentProfileId);
     }
     scrollMessageArea();
 }
 
-function pickDisplayStrategy(message) {
-    if (message.creatorProfile === currentProfileId) {
+function displayMessage(message) {
+    if (message.text.startsWith("/me")) {
+        addSpecialMessage(message);
+    } else if (message.creatorProfile === currentProfileId) {
         addYourMessage(message);
     } else {
         addForeignMessage(message);
     }
+
+    function addSpecialMessage(message) {
+        var messageLog = getMessageLog(message);
+        $(".msg_history").append('<div class="special_msg text-center"><p>' + messageLog + '</p></div>')
+    }
+
+    function addYourMessage(message) {
+        var date = messageDateFormat(message.date);
+        $(".msg_history").append('<div class="outgoing_msg">\n' +
+            '                            <div class="sent_msg">\n' +
+            '                                <p>' + message.text + '</p>\n' +
+            '                                <span class="time_date">' + date + '</span> </div>\n' +
+            '                        </div>');
+    }
+
+    function addForeignMessage(message) {
+        var date = messageDateFormat(message.date);
+        $(".msg_history").append('<div class="incoming_msg">\n' +
+            '                            <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>\n' +
+            '                            <div class="received_msg">\n' +
+            '                                <div class="received_withd_msg">\n' +
+            '                                    <p>' + message.text + '</p>\n' +
+            '                                    <span class="time_date">' + date + '</span></div>\n' +
+            '                            </div>\n' +
+            '                        </div>');
+    }
+
 }
 
 function checkIsMessageWasReadByProfileId(message, readerProfileId) {
@@ -90,25 +115,18 @@ function checkIsMessageWasReadByProfileId(message, readerProfileId) {
     return false;
 }
 
-function addYourMessage(message) {
-    var date = messageDateFormat(message.date);
-    $(".msg_history").append('<div class="outgoing_msg">\n' +
-        '                            <div class="sent_msg">\n' +
-        '                                <p>' + message.text + '</p>\n' +
-        '                                <span class="time_date">' + date + '</span> </div>\n' +
-        '                        </div>');
-}
-
-function addForeignMessage(message) {
-    var date = messageDateFormat(message.date);
-    $(".msg_history").append('<div class="incoming_msg">\n' +
-        '                            <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>\n' +
-        '                            <div class="received_msg">\n' +
-        '                                <div class="received_withd_msg">\n' +
-        '                                    <p>' + message.text + '</p>\n' +
-        '                                    <span class="time_date">' + date + '</span></div>\n' +
-        '                            </div>\n' +
-        '                        </div>');
+function getMessageLog(message) {
+    var replaced = message.text.replace("/me ", "");
+    if (replaced === "CONFIRMED") {
+        if (isNewMessages) updateButtons(message, replaced);
+        return "Работодатель утвердил собеседование";
+    } else if (replaced === "CONFIRMED_BY_USER") {
+        if (isNewMessages) updateButtons(message, replaced);
+        return "Пользователь подтвердил дату";
+    } else {
+        if (isNewMessages) updateButtons(message, replaced);
+        return "Работодатель назначил дату встречи на <br>" + replaced.replace("SCHEDUALED", "");
+    }
 }
 
 function sendMessage() {
