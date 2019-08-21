@@ -58,7 +58,7 @@ public class AdminController {
     @RequestMapping("/admin/chats/my")
     public String adminPageChatsMy(Authentication authentication, Model model) {
 
-        User user = (User)(authentication.getPrincipal());
+        User user = (User) (authentication.getPrincipal());
 
         model.addAttribute("profileId", user.getProfile().getId());
 
@@ -144,7 +144,7 @@ public class AdminController {
 
         model.addAttribute("seekerUser", seekerUser);
         model.addAttribute("seekerProfile", seekerUser.getProfile());
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerUser.getProfile().getPhoto()));
+        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerUser.getProfile().getLogo()));
 
         return "admin/admin_seeker_edit";
     }

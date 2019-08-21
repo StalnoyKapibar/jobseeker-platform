@@ -1,11 +1,9 @@
 package com.jm.jobseekerplatform.model.profiles;
 
 import com.jm.jobseekerplatform.model.*;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Base64;
 import java.util.Set;
 
 @Entity
@@ -22,10 +20,6 @@ public class SeekerProfile extends Profile implements Serializable {
 
     @Column(name = "description", columnDefinition = "mediumtext")
     private String description;
-
-    @Column(name = "photo")
-    @Type(type = "image")
-    private byte[] photo;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Tag> tags;
@@ -58,17 +52,21 @@ public class SeekerProfile extends Profile implements Serializable {
 
     public SeekerProfile(String name, String patronymic, String surname, String description, byte[] photo, Set<Tag> tags,
                          Set<Portfolio> portfolios, Set<Vacancy> favoriteVacancy, Set<Subscription> subscriptions) {
+        super(photo);
         this.name = name;
         this.patronymic = patronymic;
         this.surname = surname;
         this.description = description;
-        this.photo = photo;
         this.tags = tags;
         this.portfolios = portfolios;
         this.favoriteVacancy = favoriteVacancy;
         this.subscriptions = subscriptions;
     }
 
+    @Override
+    public String getEncoderPhoto() {
+        return super.getEncoderPhoto();
+    }
 
     public Set<Vacancy> getFavoriteVacancy() {
         return favoriteVacancy;
@@ -108,19 +106,6 @@ public class SeekerProfile extends Profile implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public byte[] getPhoto() {
-        return photo;
-    }
-
-    @Override
-    public String getEncoderPhoto() {
-        return Base64.getEncoder().encodeToString(this.getPhoto());
-    }
-
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
     }
 
     public Set<Portfolio> getPortfolios() {

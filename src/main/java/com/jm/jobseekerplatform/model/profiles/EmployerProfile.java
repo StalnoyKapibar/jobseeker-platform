@@ -2,13 +2,11 @@ package com.jm.jobseekerplatform.model.profiles;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.jm.jobseekerplatform.model.EmployerReviews;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,10 +22,6 @@ public class EmployerProfile extends Profile implements Serializable {
 
     @Column(name = "description", columnDefinition = "mediumtext")
     private String description;
-
-    @Column(name = "logo")
-    @Type(type = "image")
-    private byte[] logo;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "employer_id")
@@ -50,11 +44,10 @@ public class EmployerProfile extends Profile implements Serializable {
     }
 
     public EmployerProfile(String companyName, String website, String description, byte[] logo) {
-        super();
+        super(logo);
         this.companyName = companyName;
         this.website = website;
         this.description = description;
-        this.logo = logo;
     }
 
     public String getCompanyName() {
@@ -85,19 +78,6 @@ public class EmployerProfile extends Profile implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public byte[] getLogo() {
-        return logo;
-    }
-
-    @Override
-    public String getEncoderPhoto() {
-        return Base64.getEncoder().encodeToString(this.getLogo());
-    }
-
-    public void setLogo(byte[] logo) {
-        this.logo = logo;
     }
 
     public Set<EmployerReviews> getReviews() {

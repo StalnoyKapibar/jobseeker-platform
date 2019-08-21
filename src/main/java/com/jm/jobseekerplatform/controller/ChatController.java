@@ -91,8 +91,6 @@ public class ChatController {
         model.addAttribute("employerProfileId", user.getProfile().getId());
         if (chat instanceof ChatWithTopic) {
             ChatWithTopic chatWithTopic = (ChatWithTopic) chat;
-            model.addAttribute("topicName", chatWithTopic.getTopic().getTypeName());
-            model.addAttribute("topic", chatWithTopic.getTopic());
             model.addAttribute("chatWithTopic", chatWithTopic);
         }
         return "chats/private_chat";

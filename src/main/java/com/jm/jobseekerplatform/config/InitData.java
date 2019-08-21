@@ -161,23 +161,26 @@ public class InitData {
     }
 
     public void initReviews() {
-        EmployerReviews reviewOne = new EmployerReviews("Хорошая контора. Отличный коллектив, только директор придурковатый", new Date(),
-                4, seekerProfileService.getById(8L));
+        SeekerProfile seekerProfile = seekerProfileService.getById(8L);
+        EmployerReviews reviewOne = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Хорошая контора. Отличный коллектив, только директор придурковатый", new Date(),
+                4, seekerProfile);
 
-        EmployerReviews reviewTwo = new EmployerReviews("Неадекватное руководство. Уволился через месяц", new Date(),
-                1, seekerProfileService.getById(8L));
+        EmployerReviews reviewTwo = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Неадекватное руководство. Уволился через месяц", new Date(),
+                1, seekerProfile);
 
-        EmployerReviews reviewThree = new EmployerReviews("Очень низкие зарплаты, уволился через полгода", new Date(),
-                2, seekerProfileService.getById(9L));
+        seekerProfile = seekerProfileService.getById(9L);
+        EmployerReviews reviewThree = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Очень низкие зарплаты, уволился через полгода", new Date(),
+                2, seekerProfile);
 
-        EmployerReviews reviewFour = new EmployerReviews("Неадекватное руководство. Уволился через месяц", new Date(),
-                1, seekerProfileService.getById(9L));
+        EmployerReviews reviewFour = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Неадекватное руководство. Уволился через месяц", new Date(),
+                1, seekerProfile);
 
-        EmployerReviews reviewFive = new EmployerReviews("Хорошая контора. Отличный коллектив", new Date(),
-                4, seekerProfileService.getById(10L));
+        seekerProfile = seekerProfileService.getById(10L);
+        EmployerReviews reviewFive = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Хорошая контора. Отличный коллектив", new Date(),
+                4, seekerProfile);
 
-        EmployerReviews reviewSix = new EmployerReviews("Все нравилось,но уволился через месяц", new Date(),
-                3, seekerProfileService.getById(10L));
+        EmployerReviews reviewSix = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Все нравилось,но уволился через месяц", new Date(),
+                3, seekerProfile);
 
         Set<EmployerReviews> reviewsOne = new HashSet<>();
         reviewsOne.add(reviewOne);

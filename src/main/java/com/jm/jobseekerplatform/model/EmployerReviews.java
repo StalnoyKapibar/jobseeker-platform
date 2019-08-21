@@ -33,12 +33,17 @@ public class EmployerReviews extends CreatedBySeekerProfileBase implements Seria
     public EmployerReviews() {
     }
 
-    public EmployerReviews(String reviews, Date dateReviews, Integer evaluation, SeekerProfile seekerProfile) {
-        super(seekerProfile);
+    public EmployerReviews(SeekerProfile creatorProfile, String headline, String reviews, Date dateReviews, Integer evaluation, SeekerProfile seekerProfile) {
+        super(creatorProfile, headline);
         this.reviews = reviews;
         this.dateReviews = dateReviews;
         this.evaluation = evaluation;
         this.seekerProfile = seekerProfile;
+    }
+
+    @Override
+    public String getHeadline() {
+        return this.seekerProfile.getFullName();
     }
 
     @Override

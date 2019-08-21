@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.dto.MessageDTO;
 import com.jm.jobseekerplatform.dto.MessageReadDataDTO;
 import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO;
 import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoWithTopicDTO;
@@ -16,6 +17,7 @@ import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.AdminUserService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
@@ -26,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,10 +54,22 @@ public class ChatRestController {
     @Autowired
     private ChatWithTopicService chatWithTopicService;
 
+    @Autowired
+    private EmployerProfileService employerProfileService;
+
+    @Autowired
+    private AdminUserService adminUserService;
+
+    @Autowired
+    private EmployerUserService employerUserService;
+
+    @Autowired
+    private EmployerReviewsService employerReviewsService;
+
     @GetMapping("all")
     public HttpEntity getAllChats() {
         List<ChatInfoWithTopicDTO> chatsInfo = chatWithTopicService.getAllChatsInfoDTO();
-        return new ResponseEntity(chatsInfo, HttpStatus.OK);
+        return new ResponseEntity<>(chatsInfo, HttpStatus.OK);
     }
 
     @GetMapping("getAllChatsByProfileId/{profileId:\\d+}")
@@ -62,7 +77,7 @@ public class ChatRestController {
 
         List<ChatInfoDetailWithTopicDTO> chatsInfo = chatWithTopicService.getAllChatsInfoDTOByProfileId(profileId);
 
-        return new ResponseEntity(chatsInfo, HttpStatus.OK);
+        return new ResponseEntity<>(chatsInfo, HttpStatus.OK);
     }
 
     @GetMapping("getCountOfUnreadChatsByProfileId")
@@ -72,7 +87,7 @@ public class ChatRestController {
 
         long countOfUnreadChatsByProfileId = chatWithTopicService.getCountOfUnreadChatsByProfileId(user.getProfile().getId());
 
-        return new ResponseEntity(countOfUnreadChatsByProfileId, HttpStatus.OK);
+        return new ResponseEntity<>(countOfUnreadChatsByProfileId, HttpStatus.OK);
     }
 
     @PostMapping
@@ -87,20 +102,20 @@ public class ChatRestController {
     }
 
     @PostMapping("/add_complain_chat")
-    public ResponseEntity<String> addComplainChat(@RequestBody MessageDTO chatMessageDto,
+    public ResponseEntity<String> addComplainChat(@RequestBody MessageDTO message,
                                                   @RequestParam("reviewId") Long reviewId,
                                                   @RequestParam("employerProfileId") Long employerProfileId) {
-        ChatMessage chatMessage = new ChatMessage(chatMessageDto.getText(),
-                employerProfileService.getById(employerProfileId), chatMessageDto.getDate());
+        ChatMessage chatMessage = new ChatMessage(message.getText(),
+                employerProfileService.getById(employerProfileId), message.getDate());
         List<User> list = new ArrayList<>();
         list.add(employerUserService.getByProfileId(employerProfileId));
         list.add(adminUserService.getByProfileId(1L));
-        ChatWithTopicReview chatWithTopic = chatWithTopicService.getByTopicIdCreatorProfileIdChatType(reviewId,
+        ChatWithTopicReview chatWithTopic = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType(reviewId,
                 employerProfileId, ChatWithTopicReview.class);
         if (chatWithTopic == null) {
             chatWithTopic = new ChatWithTopicReview(employerProfileService.getById(employerProfileId),
                     list, employerReviewsService.getById(reviewId));
-            chatWithTopicReviewService.add(chatWithTopic);
+            chatWithTopicService.add(chatWithTopic);
         }
         chatMessageService.add(chatMessage);
         chatService.addChatMessage(chatWithTopic.getId(), chatMessage);
@@ -109,7 +124,7 @@ public class ChatRestController {
 
     @GetMapping("/get_all_by_employer_profile_id")
     public ResponseEntity<List<ChatWithTopic>> getAllByEmployerProfileId(@RequestParam("employerProfileId") Long employerProfileId) {
-        return new ResponseEntity<>(chatWithTopicService.getByProfileId(employerProfileId), HttpStatus.OK);
+        return new ResponseEntity<>(chatWithTopicService.getAllChatsByMemberProfileId(employerProfileId), HttpStatus.OK);
     }
 
     @GetMapping("{chatId:\\d+}")

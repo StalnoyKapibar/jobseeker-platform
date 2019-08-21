@@ -100,9 +100,9 @@ public class EmployerController {
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @RequestMapping("/employer/chats/{employerProfileId}")
-    public String EmployerPageChatsMy(@PathVariable Long employerProfileId, Authentication authentication, Model model) {
+    public String EmployerPageChatsMy(@PathVariable Long employerProfileId, Model model) {
         model.addAttribute("employerProfileId", employerProfileId);
-        model.addAttribute("chats", chatWithTopicService.getByProfileId(employerProfileId));
+        model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(employerProfileId));
         return "employer_chats_my";
     }
 }

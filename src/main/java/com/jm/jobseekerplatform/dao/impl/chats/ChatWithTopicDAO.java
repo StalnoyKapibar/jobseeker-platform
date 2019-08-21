@@ -3,7 +3,6 @@ package com.jm.jobseekerplatform.dao.impl.chats;
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO;
 import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoWithTopicDTO;
-import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfile;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfile;
 import org.springframework.stereotype.Repository;
@@ -144,7 +143,7 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
         return chats;
     }
 
-    public  List<ChatWithTopic> getAllChatsByParticipantProfileId(Long participantProfileId) {
+    public List<ChatWithTopic> getAllChatsByParticipantProfileId(Long participantProfileId) {
 
         List<ChatWithTopic> chats = getAllChatsByParticipantProfileId(participantProfileId, clazz);
 
@@ -175,7 +174,7 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
      *
      * @param topicCreatorProfileId id профиля создателя чата
      */
-    public <T extends ChatWithTopic>  List<T> getAllChatsByTopicCreatorProfileId(Long topicCreatorProfileId, Class<T> chatClass) {
+    public <T extends ChatWithTopic> List<T> getAllChatsByTopicCreatorProfileId(Long topicCreatorProfileId, Class<T> chatClass) {
 
         List<T> chats = entityManager.createQuery("SELECT c FROM " + chatClass.getName() + " c WHERE c.topic.creatorProfile.id = :topicCreatorProfileId", chatClass)
                 .setParameter("topicCreatorProfileId", topicCreatorProfileId)
@@ -189,6 +188,23 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
         List<ChatWithTopic> chats = getAllChatsByTopicCreatorProfileId(topicCreatorProfileId, clazz);
 
         return chats;
+    }
+
+    public <T extends ChatWithTopic> List<T> getAllChatsByMemberProfileId(Long profileId, Class<T> chatClass) {
+        List<T> list;
+        try {
+            list = entityManager.createQuery("SELECT c FROM " + chatClass.getName() + " c JOIN c.chatMembers t WHERE t.id =: profileId", chatClass)
+                    .setParameter("profileId", profileId)
+                    .getResultList();
+        } catch (NoResultException e) {
+            e.printStackTrace();
+            list = null;
+        }
+        return list;
+    }
+
+    public List<ChatWithTopic> getAllChatsByMemberProfileId(Long profileId) {
+        return this.getAllChatsByMemberProfileId(profileId, ChatWithTopic.class);
     }
 
     /**

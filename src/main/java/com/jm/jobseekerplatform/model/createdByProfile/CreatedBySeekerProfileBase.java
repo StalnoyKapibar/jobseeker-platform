@@ -12,8 +12,8 @@ public abstract class CreatedBySeekerProfileBase extends CreatedByProfileBase<Se
     public CreatedBySeekerProfileBase() {
     }
 
-    public CreatedBySeekerProfileBase(SeekerProfile creatorProfile) {
-        super(creatorProfile);
+    public CreatedBySeekerProfileBase(SeekerProfile creatorProfile, String headline) {
+        super(creatorProfile, headline);
     }
 
     @Override

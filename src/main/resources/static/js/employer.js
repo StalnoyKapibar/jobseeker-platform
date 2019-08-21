@@ -421,6 +421,7 @@ function editModalReview() {
     var reviewId = $('#RMEditId').val();
     var reviewDescription = $('#RMEditDescription').val();
     var date = $('#RMEditDate').val();
+    var headline = $('#RMEditHeadLine').val();
     var evaluation = $('#RMEditRatingValue').val();
     var employerProfileId = $('#employerProfileId').val();
     var seekerProfileId = $('#seekerProfileId').val();
@@ -429,6 +430,7 @@ function editModalReview() {
 
     var review = {
         'id': reviewId,
+        'headline': headline,
         'reviews': reviewDescription,
         'dateReviews': date,
         'evaluation': evaluation,
@@ -539,6 +541,7 @@ function showEditReview(reviewId) {
         success: function (data) {
             $('#RMEditId').val(data.id);
             $('#RMEditDate').val(data.dateReviews);
+            $('#RMEditHeadLine').val(data.headline);
             $("#RMEditDescription").text(data.reviews);
             $('.RMEditStars').remove();
             var ratingStars = '';
