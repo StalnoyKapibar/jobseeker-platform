@@ -107,6 +107,30 @@ function searchResults() {
     });
 }
 
+function printResumes(data) {
+    $.each(data, function (key, value) {
+        let minSalary = '';
+        let resumeTags = "";
+        if (value.salaryMin) {
+            minSalary = '<div class="salary"><span>Зарплата от: ' + value.salaryMin + ' руб.</span></div>';
+        }
+        $.each(value.tags, function (i, item) {
+            resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
+        });
+        $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
+            ' data-target="#resumeModal" onclick="showResume(\'' + value.id + '\')">' +
+            '<div class="headLine"><span>' + value.headline + '</span></div>' +
+            '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
+            '<div class="companyData"><span>Сикер: ' + value.creatorProfile + '</span><br><span>Город: ' + value.city + '</span></div>' +
+            '<br>' +
+            minSalary +
+            '<div class="pull-right">' +
+            '<span class="btn btn-outline-success btn-sm btnOnResumePage"' +
+            'onclick="window.location.href =\'/seeker/' + value.creatorProfile + '\';event.stopPropagation();">На страницу сикера</span>' + '</div>' +
+            '</li>');
+    });
+}
+
 function showResume(id) {
     $.ajax({
         url: "/api/resumes/getbyid/" + id,
@@ -154,6 +178,62 @@ function showResume(id) {
         }
     });
 }
+
+function searchByTags() {
+    $('#allResumes').remove();
+    $('#searchList').remove();
+    $('#searchResult').append('<ul id="searchList" class="list-group"></ul>');
+    let param = [];
+    $('.listTags').each(function (key, value) {
+        var tagId = $(this).find('.tagIdH').val();
+        var tagName = $(this).find('.tagButton').text();
+        var tag = {
+            'id': tagId,
+            'name': tagName
+        };
+        param.push(tag);
+    });
+    let searchBox = $('#search_box').val();
+    if (param.length === 0 && searchBox.length === 0) {
+        $('#searchHeader').text('Задан пустой запрос');
+    } else {
+        let pageCount = 0;
+        $('#isAVShow').val('1');
+        $.ajax({
+            type: 'post',
+            url: "api/resumes/search?pageCount=" + pageCount,
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (request) {
+                request.setRequestHeader(header, token);
+            },
+            data: JSON.stringify(param),
+            success: function (data) {
+                if (data.content.length === 0) {
+                    if (searchBox.length === 0 && param.length > 0) {
+                        $('#searchHeader').text('По запросу "' + param[0].name + '" ничего не найдено');
+                    } else {
+                        $('#searchHeader').text('По запросу "' + searchBox + '" ничего не найдено');
+                    }
+                } else {
+                    if (param.length === 1) {
+                        $('#searchHeader').text('Вакансии по тегу :');
+                    } else {
+                        $('#searchHeader').text('Вакансии по тегам :');
+                    }
+                    printResumes(data.content);
+                    total_pages = data.totalPages;
+                    pageCount++;
+                    // $('#scrollPageCount').val(pageCount);
+                }
+            },
+            error: function (error) {
+                console.log(error);
+                alert(error.toString());
+            }
+        })
+    }
+}
+
 
 function addTag(id, name) {
     $('#searchButtons').append('<span class="listTags" id="tagItem-' + id + '"><span style="margin:0 5px 5px 0;" class="badge badge-pill badge-success tagButton" id="searchButton-' + id + '" onclick="deleteButton(\'' + id + '\')">' + name + '</span>' +
