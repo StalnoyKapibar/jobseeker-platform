@@ -37,7 +37,7 @@ public class VacancyRestController {
 
     @RequestMapping("/{vacancyId:\\d+}")
     public Vacancy getVacancyById(@PathVariable Long vacancyId) {
-       return vacancyService.getById(vacancyId);
+        return vacancyService.getById(vacancyId);
     }
 
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
@@ -108,7 +108,7 @@ public class VacancyRestController {
             }
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                Set<Tag> tags = ((SeekerProfile)((User)authentication.getPrincipal()).getProfile()).getTags();
+                Set<Tag> tags = ((SeekerProfile) ((User) authentication.getPrincipal()).getProfile()).getTags();
                 return vacancyService.findVacanciesByTagsAndByPoint(city, point, tags, limit, page);
             }
         }

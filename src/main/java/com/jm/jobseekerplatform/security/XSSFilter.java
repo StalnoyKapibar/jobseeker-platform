@@ -14,22 +14,21 @@ public class XSSFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-        if("POST".equals(httpServletRequest.getMethod()) | "UPDATE".equals(httpServletRequest.getMethod())) {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        if ("POST".equals(httpServletRequest.getMethod()) | "UPDATE".equals(httpServletRequest.getMethod())) {
             logger.info("start filter");
             ReadTwiceHttpServletRequestWrapper readTwiceHttpServletRequestWrapper = new ReadTwiceHttpServletRequestWrapper((HttpServletRequest) request);
-            String newBody = cleanXSS(readTwiceHttpServletRequestWrapper.getBody());
-            readTwiceHttpServletRequestWrapper.setBody(newBody);
+            readTwiceHttpServletRequestWrapper.setBody(cleanXSS(readTwiceHttpServletRequestWrapper.getBody()));
             chain.doFilter(readTwiceHttpServletRequestWrapper, response);
         } else {
-            chain.doFilter(request,response);
+            chain.doFilter(request, response);
         }
     }
 
     private String cleanXSS(String value) {
         logger.info("In cleanXSS RequestWrapper ..............." + value);
-  //      value = value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-    //    value = value.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
+        //      value = value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        //    value = value.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
         value = value.replaceAll("'", "&#39;");
         value = value.replaceAll("eval\\((.*)\\)", "");
         value = value.replaceAll("[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']", "\"\"");
