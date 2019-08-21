@@ -21,6 +21,9 @@ public class News implements Serializable {
     @Column(name = "description", columnDefinition = "mediumtext")
     private String description;
 
+    @Column(name = "numberOfViews")
+    private Long numberOfViews;
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "employerProfile_id")
     private EmployerProfile author;
@@ -90,5 +93,13 @@ public class News implements Serializable {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public Long getNumberOfViews() {
+        return numberOfViews;
+    }
+
+    public void setNumberOfViews(Long numberOfViews) {
+        this.numberOfViews = numberOfViews;
     }
 }

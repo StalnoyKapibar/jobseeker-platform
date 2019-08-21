@@ -40,7 +40,7 @@ function sendMeetingEdition() {
             alert(error.toString());
         }
     });
-    sendSpecialMessage("/me " + status + dateFormat(meeting.date));
+    sendMessageToServer("/me " + status + dateFormat(meeting.date));
 }
 
 async function editMeeting(id) {
@@ -77,7 +77,7 @@ function updateMeeting(id) {
             alert(error.toString());
         }
     });
-    sendSpecialMessage("/me " + status);
+    sendMessageToServer("/me " + status);
 }
 
 
@@ -117,7 +117,7 @@ function confirmMeeting(id){
             alert(error.toString());
         }
     });
-    sendSpecialMessage("/me " + status);
+    sendMessageToServer("/me " + status);
 }
 
 function updateButtons(message, replaced){
