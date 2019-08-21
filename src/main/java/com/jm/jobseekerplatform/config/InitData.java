@@ -572,6 +572,7 @@ public class InitData {
             jobExperiences.add(jobExperienceList.get(i));
             resume = new Resume(
                     seekerProfile,
+                    faker.job().title(),
                     randomTags(0L),
                     Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), //salaryMin
                     Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), //salaryMax

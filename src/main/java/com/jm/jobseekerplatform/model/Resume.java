@@ -15,6 +15,9 @@ public class Resume extends CreatedByProfileBase<SeekerProfile> implements Seria
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "headline", nullable = false)
+    private String headline;
+
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Tag> tags;
 
@@ -36,8 +39,9 @@ public class Resume extends CreatedByProfileBase<SeekerProfile> implements Seria
     public Resume() {
     }
 
-    public Resume(SeekerProfile creatorProfile, Set<Tag> tags, Integer salaryMin, Integer salaryMax, Set<JobExperience> jobExperiences, City city, Point coordinates) {
+    public Resume(SeekerProfile creatorProfile, String headline, Set<Tag> tags, Integer salaryMin, Integer salaryMax, Set<JobExperience> jobExperiences, City city, Point coordinates) {
         super(creatorProfile);
+        this.headline = headline;
         this.tags = tags;
         this.salaryMin = salaryMin;
         this.salaryMax = salaryMax;
@@ -81,6 +85,35 @@ public class Resume extends CreatedByProfileBase<SeekerProfile> implements Seria
 
     public void setJobExperiences(Set<JobExperience> jobExperiences) {
         this.jobExperiences = jobExperiences;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getHeadline() {
+        return headline;
+    }
+
+    public void setHeadline(String headline) {
+        this.headline = headline;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+
+    public Point getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(Point coordinates) {
+        this.coordinates = coordinates;
     }
 
     @Override

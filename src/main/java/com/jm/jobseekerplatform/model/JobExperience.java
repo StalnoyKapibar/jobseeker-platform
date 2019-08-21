@@ -30,12 +30,6 @@ public class JobExperience implements Serializable {
     public JobExperience() {
     }
 
-    public JobExperience(String companyName, String position, String responsibilities) {
-        this.companyName = companyName;
-        this.position = position;
-        this.responsibilities = responsibilities;
-    }
-
     public JobExperience(Date firstWorkDay, Date lastWorkDay, String companyName, String position, String responsibilities) {
         this.firstWorkDay = firstWorkDay;
         this.lastWorkDay = lastWorkDay;
