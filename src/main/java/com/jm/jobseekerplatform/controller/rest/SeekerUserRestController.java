@@ -21,8 +21,7 @@ public class SeekerUserRestController {
     private SeekerProfileService seekerProfileService;
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
-    ResponseEntity updateSeekerUser(@RequestBody SeekerUser seekerUser) {
+    public ResponseEntity updateSeekerUser(@RequestBody SeekerUser seekerUser) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerUser.getProfile().getId());
 
         seekerUser.getProfile().setLogo(seekerProfile.getLogo());
@@ -36,9 +35,8 @@ public class SeekerUserRestController {
     }
 
     @RequestMapping(value = "/editPhoto", method = RequestMethod.POST)
-    public @ResponseBody
-    ResponseEntity<SeekerProfile> updateSeekerPhoto(@RequestParam(value = "file", required = false) MultipartFile file,
-                                                    @RequestParam("seekerUserId") String seekerUserId) {
+    public ResponseEntity<SeekerProfile> updateSeekerPhoto(@RequestParam(value = "file", required = false) MultipartFile file,
+                                                           @RequestParam("seekerUserId") String seekerUserId) {
         SeekerUser seekerUser = seekerUserService.getById(Long.parseLong(seekerUserId));
         if (!file.isEmpty()) {
             try {
