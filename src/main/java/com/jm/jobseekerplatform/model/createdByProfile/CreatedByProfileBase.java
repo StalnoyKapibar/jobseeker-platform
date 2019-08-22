@@ -38,7 +38,7 @@ public abstract class CreatedByProfileBase<T extends Profile> implements Created
         this.id = id;
     }
 
-    public void setEmployerProfile(T creatorProfile) {
+    public void setCreatorProfile(T creatorProfile) {
         this.creatorProfile = creatorProfile;
     }
 

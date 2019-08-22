@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jm.jobseekerplatform.model.createdByProfile.CreatedByEmployerProfileBase;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -181,7 +182,6 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     }
 
     @Override
-    //todo (Nick Dolgopolov) Добавить в JSON
     public String getTypeName() {
         return "Вакансия";
     }

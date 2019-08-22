@@ -93,6 +93,7 @@ public class ChatRestController {
     @PutMapping("set_chat_read_by_profile_id")
     public HttpEntity setChatReadByProfileId(@RequestBody MessageReadDataDTO messageReadDataDTO) {
 
+        //List<ChatMessage> chatMessageList = chatService.setChatReadByProfileId(messageReadDataDTO.getChatId(), messageReadDataDTO.getReaderProfileId(), messageReadDataDTO.getLastReadMessageId());
         List<ChatMessage> chatMessageList = chatService.getById(messageReadDataDTO.getChatId()).getChatMessages();
 
         for (int i = chatMessageList.size() - 1; i >= 0; i--) { //todo (Nick Dolgopolov) переделать на зарос, который будет в базе менять статус только у нужных сообщений (фильтр)
@@ -112,7 +113,7 @@ public class ChatRestController {
     @PutMapping("set_message_read_by_profile_id")
     public HttpEntity setMessageReadByProfileId(@RequestBody MessageReadDataDTO messageReadDataDTO) {
 
-        ChatMessage chatMessage = chatMessageService.getById(messageReadDataDTO.getLastReadMessageId());
+        ChatMessage chatMessage = chatMessageService.getById(messageReadDataDTO.getMessageId());
 
         if (!chatMessage.getCreatorProfile().getId().equals(messageReadDataDTO.getReaderProfileId()) &&
                 !chatMessage.getIsReadByProfilesId().contains(messageReadDataDTO.getReaderProfileId())) {

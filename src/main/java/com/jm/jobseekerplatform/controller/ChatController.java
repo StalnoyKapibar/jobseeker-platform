@@ -64,7 +64,6 @@ public class ChatController {
         model.addAttribute("profileId", currentProfileId);
         model.addAttribute("chatId", chatWithTopic.getId());
 
-        model.addAttribute("topicName", chatWithTopic.getTopic().getTypeName());
         model.addAttribute("topic", chatWithTopic.getTopic());
     }
 
