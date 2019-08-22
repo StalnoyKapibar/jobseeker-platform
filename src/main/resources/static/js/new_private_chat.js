@@ -118,13 +118,19 @@ function checkIsMessageWasReadByProfileId(message, readerProfileId) {
 function getMessageLog(message) {
     var replaced = message.text.replace("/me ", "");
     if (replaced === "CONFIRMED") {
-        if (isNewMessages) updateButtons(message, replaced);
+        if (isNewMessages) {
+            updateButtons(message, replaced);
+        }
         return "Работодатель утвердил собеседование";
     } else if (replaced === "CONFIRMED_BY_USER") {
-        if (isNewMessages) updateButtons(message, replaced);
+        if (isNewMessages) {
+            updateButtons(message, replaced);
+        }
         return "Пользователь подтвердил дату";
     } else {
-        if (isNewMessages) updateButtons(message, replaced);
+        if (isNewMessages) {
+            updateButtons(message, replaced);
+        }
         return "Работодатель назначил дату встречи на <br>" + replaced.replace("SCHEDUALED", "");
     }
 }
