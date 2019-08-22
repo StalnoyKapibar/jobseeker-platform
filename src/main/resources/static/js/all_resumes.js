@@ -3,9 +3,13 @@ var header = $("meta[name='_csrf_header']").attr("content");
 
 var page = 1;
 var total_pages;
+var city;
 
 $(function () {
-    searchResults();
+    getCurrentLocation(function () {
+        getAllResumesByPoint(point);
+    });
+
     $('#search_box').bind("input keyup click", function () {
         if (this.value == '') {
             $("#search_advice_wrapper").remove();
@@ -61,50 +65,66 @@ $(function () {
 $(window).scroll(function () {
     if ($(document).height() - $(window).height() === $(window).scrollTop()) {
         if (page < total_pages) {
-            searchResults();
+            getSortedResumes(point);
         } else if (page === total_pages) {
-            searchResults();
+            getSortedResumes(point);
         }
     }
 });
 
-function searchResults() {
-    $('#searchResult').append('<ul id="searchList" class="list-group"></ul>');
+function getCurrentLocation(callback) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
+        point = {'latitudeY': lat, 'longitudeX': lng};
+        getCityByCoords(lat, lng);
+        callback(point);
+    }, function () {
+        point = {'latitudeY': 0, 'longitudeX': 0};
+        getAllResumesByPoint(point);
+    });
+}
+
+function getCityByCoords(lat, lng) {
     $.ajax({
-        url: "api/resumes/" + page,
+        url: "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=" + $("meta[name='apiKey']").attr("content"),
         type: "GET",
-        beforeSend: function (request) {
-            request.setRequestHeader(header, token);
-        },
+        async: false,
         success: function (data) {
-            total_pages = data.totalPages;
-
-            $.each(data.content, function (key, value) {
-                let minSalary = '';
-                let resumeTags = "";
-                $.each(value.tags, function (i, item) {
-                    resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
-                });
-
-                if (value.salaryMin) {
-                    minSalary = '<div class="salary"><span>Зарплата от: ' + value.salaryMin + ' руб.</span></div>';
+            for (let i = 0; i < data.results[0].address_components.length; i++) {
+                for (let b = 0; b < data.results[0].address_components[i].types.length; b++) {
+                    if (data.results[0].address_components[i].types[b] === "locality") { //postal_town
+                        city = data.results[0].address_components[i].long_name;
+                        break;
+                    }
                 }
+            }
+        }
+    })
+}
 
-                $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
-                    ' data-target="#resumeModal" onclick="showResume(\'' + value.id + '\')">' +
-                    '<div class="headLine"><span>' + value.headline + '</span></div>' +
-                    '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
-                    '<div class="companyData"><span>Сикер: ' + value.creatorProfile + '</span><br><span>Город: ' + value.city + '</span></div>' +
-                    '<br>' +
-                    minSalary +
-                    '<div class="pull-right">' +
-                    '<span class="btn btn-outline-success btn-sm btnOnResumePage"' +
-                    'onclick="window.location.href =\'/seeker/' + value.creatorProfile + '\';event.stopPropagation();">На страницу сикера</span>' + '</div>' +
-                    '</li>');
-            });
+function getAllResumesByPoint(point) {
+    getSortedResumes(point);
+}
+
+
+function getSortedResumes(point) {
+    $.ajax ({
+        url: "api/resumes/city/page/" + page + "?city=" + city,
+        type: "POST",
+        async: false,
+        data: JSON.stringify(point),
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.setRequestHeader("Content-Type", "application/json");
+        },
+        success: function (resumes) {
+            total_pages = resumes.totalPages;
+            printResumes(resumes.content);
             page++;
         }
-    });
+    })
 }
 
 function printResumes(data) {
@@ -180,7 +200,7 @@ function showResume(id) {
 }
 
 function searchByTags() {
-    $('#allResumes').remove();
+    $('#getAllResumes').remove();
     $('#searchList').remove();
     $('#searchResult').append('<ul id="searchList" class="list-group"></ul>');
     let param = [];

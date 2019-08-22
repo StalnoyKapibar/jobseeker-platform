@@ -98,6 +98,7 @@ public class EmployerController {
     @RequestMapping("/employer/get_resumes")
     public String getResumes(Model model, Authentication authentication) {
         model.addAttribute("employerProfileId", ((User) authentication.getPrincipal()).getId());
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "resume/all_resumes";
     }
 

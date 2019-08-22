@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.model.Point;
 import com.jm.jobseekerplatform.model.Resume;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.service.impl.ResumeService;
@@ -19,12 +20,6 @@ public class ResumeRestController {
     @Autowired
     private ResumeService resumeService;
 
-    @RequestMapping("/{page}")
-    public Page<Resume> getAllResumes(@PathVariable("page") int page) {
-        int limit = 10;
-        return resumeService.getAllResumes(limit, page);
-    }
-
     @RequestMapping("/getbyid/{resumeId}")
     public Resume getResumeById(@PathVariable Long resumeId) {
         return resumeService.getById(resumeId);
@@ -38,5 +33,15 @@ public class ResumeRestController {
         }
         Page<Resume> page = resumeService.findAllByTags(searchParam, PageRequest.of(pageCount, 10));
         return new ResponseEntity<>(page, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/city/page/{page}", method = RequestMethod.POST)
+    public Page<Resume> getPageOfResumes(@RequestBody Point point, @RequestParam("city") String city, @PathVariable("page") int page) {
+        int limit = 10;
+        if (city.equals("undefined")) {
+            return resumeService.getAllResumes(limit, page);
+        } else {
+            return resumeService.findResumesByPoint(city, point, limit, page);
+        }
     }
 }
