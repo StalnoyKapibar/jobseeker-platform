@@ -44,7 +44,11 @@ public class ChatController {
         Long currentProfileId = user.getProfile().getId();
         ChatWithTopic chatWithTopic = chatWithTopicService.getById(chatId);
 
-        PrepareModelForChat(chatId, model, currentProfileId, chatWithTopic);
+        model.addAttribute("profileId", currentProfileId);
+        model.addAttribute("chatId", chatWithTopic.getId());
+
+        model.addAttribute("topicName", chatWithTopic.getTopic().getTypeName());
+        model.addAttribute("topic", chatWithTopic.getTopic());
 
         return "chats/chat";
     }
@@ -55,7 +59,11 @@ public class ChatController {
         Long currentProfileId = user.getProfile().getId();
         ChatWithTopic chatWithTopic = chatWithTopicService.getById(chatId);
 
-        PrepareModelForChat(chatId, model, currentProfileId, chatWithTopic);
+        model.addAttribute("profileId", currentProfileId);
+        model.addAttribute("chatId", chatWithTopic.getId());
+
+        model.addAttribute("topicName", chatWithTopic.getTopic().getTypeName());
+        model.addAttribute("topic", chatWithTopic.getTopic());
 
         Long seekerId = chatWithTopic.getCreatorProfile().getId();
         Long vacancyId = chatWithTopic.getTopic().getId();
@@ -71,14 +79,6 @@ public class ChatController {
         model.addAttribute("isOwner", !currentProfileId.equals(seekerId));
 
         return "chats/chat-seeker-vacancy-employer";
-    }
-
-    private void PrepareModelForChat(Long chatId, Model model, Long currentProfileId, ChatWithTopic chatWithTopic) {
-        model.addAttribute("profileId", currentProfileId);
-        model.addAttribute("chatId", chatWithTopic.getId());
-
-        model.addAttribute("topicName", chatWithTopic.getTopic().getTypeName());
-        model.addAttribute("topic", chatWithTopic.getTopic());
     }
 
     @RequestMapping("/private_chat/{chatId}")
