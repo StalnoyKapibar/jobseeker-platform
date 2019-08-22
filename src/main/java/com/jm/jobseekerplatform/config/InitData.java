@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -338,8 +339,8 @@ public class InitData {
     private void initAdminProfile() {
         BufferedImage image = null;
         try {
-            URL url = new URL("https://remcomp-service.ru/wp-content/uploads/2018/01/LOGO_001.jpg");
-            image = ImageIO.read(url);
+            File sourceImage = new File("src/main/resources/static/img/LOGO_001.jpg");
+            image = ImageIO.read(sourceImage);
         } catch (IOException e) {
             e.printStackTrace();
         }
