@@ -14,7 +14,6 @@ public class ChatInfoDTO {
 
     public ChatInfoDTO(Chat chat) {
         this.id = chat.getId();
-
         this.creatorProfileId = chat.getCreatorProfile().getId();
         this.creatorName = chat.getCreatorProfile().getFullName();
         this.creatorType = chat.getCreatorProfile().getTypeName();

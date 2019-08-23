@@ -17,7 +17,6 @@ public class ChatInfoDetailDTO extends ChatInfoDTO {
 
     public ChatInfoDetailDTO(Chat chat, Long countOfUnreadMessages, ChatMessage lastMessage) {
         super(chat);
-
         this.countOfUnreadMessages = countOfUnreadMessages;
         this.lastMessageText = lastMessage.getText();
         this.lastMessageDate = lastMessage.getDate();

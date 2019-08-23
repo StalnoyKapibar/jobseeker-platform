@@ -24,11 +24,9 @@ public class ChatInfoDetailWithTopicDTO extends ChatInfoDetailDTO {
     public ChatInfoDetailWithTopicDTO(ChatWithTopic chatWithTopic, Long countOfUnreadMessages, ChatMessage lastMessage) {
         super(chatWithTopic, countOfUnreadMessages, lastMessage);
         this.topicTitle = chatWithTopic.getTopic().getHeadline();
-
         this.topicCreatorProfileId = chatWithTopic.getTopic().getCreatorProfile().getId();
         this.topicCreatorName = chatWithTopic.getTopic().getCreatorProfile().getFullName();
         this.topicCreatorType = chatWithTopic.getTopic().getCreatorProfile().getTypeName();
-
         this.topicId = chatWithTopic.getTopic().getId();
         this.topicType = chatWithTopic.getTopic().getTypeName();
     }
