@@ -1,11 +1,8 @@
 package com.jm.jobseekerplatform.controller;
 
-import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
-import com.jm.jobseekerplatform.model.profiles.Profile;
-import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.Vacancy;
-import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.Base64;
 import java.util.Set;
 
 @Controller
@@ -37,7 +33,7 @@ public class SeekerController {
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         model.addAttribute("seekerProfile", seekerProfile);
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerProfile.getPhoto()));
+        model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
         return "seeker";
     }
 

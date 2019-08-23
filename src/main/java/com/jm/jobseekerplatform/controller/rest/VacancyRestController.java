@@ -16,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -68,7 +67,7 @@ public class VacancyRestController {
     public boolean addVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
         if (vacancyService.validateVacancy(vacancy)) {
             EmployerProfile employerProfile = ((EmployerUser) authentication.getPrincipal()).getProfile();
-            vacancy.setEmployerProfile(employerProfile);
+            vacancy.setCreatorProfile(employerProfile);
             vacancyService.addNewVacancyFromRest(vacancy);
             return true;
         } else {

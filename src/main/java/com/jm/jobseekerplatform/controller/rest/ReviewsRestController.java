@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.EmployerReviews;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.service.impl.EmployerReviewsService;
 import com.jm.jobseekerplatform.service.impl.ReviewVoteService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
@@ -104,7 +105,10 @@ public class ReviewsRestController {
         if (employerProfile.getReviews().stream().anyMatch(reviews1 -> Objects.equals(reviews1.getSeekerProfile().getId(), seekerProfileId))) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
-        reviews.setSeekerProfile(seekerProfileService.getById(seekerProfileId));
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        reviews.setSeekerProfile(seekerProfile);
+        reviews.setCreatorProfile(seekerProfile);
+        reviews.setHeadline(seekerProfile.getFullName());
         employerReviewsService.add(reviews);
         employerProfile.getReviews().add(reviews);
         employerProfileService.update(employerProfile);
@@ -115,6 +119,7 @@ public class ReviewsRestController {
     public ResponseEntity updateReview(@RequestBody EmployerReviews reviews,
                                        @RequestParam("seekerProfileId") Long seekerProfileId) {
         reviews.setSeekerProfile(seekerProfileService.getById(seekerProfileId));
+        reviews.setCreatorProfile(seekerProfileService.getById(seekerProfileId));
         employerReviewsService.update(reviews);
         return new ResponseEntity<>(HttpStatus.OK);
     }

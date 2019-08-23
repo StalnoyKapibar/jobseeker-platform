@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 
 @Entity
 public class AdminProfile extends Profile {
+
     public AdminProfile() {
     }
 

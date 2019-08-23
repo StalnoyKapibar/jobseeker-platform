@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.service.impl.users;
 
 import com.jm.jobseekerplatform.dao.impl.users.UserDAO;
-import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.tokens.PasswordResetToken;
 import com.jm.jobseekerplatform.model.tokens.VerificationToken;
 import com.jm.jobseekerplatform.model.users.AdminUser;
@@ -10,21 +10,15 @@ import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
 import com.jm.jobseekerplatform.service.impl.MailService;
-import com.jm.jobseekerplatform.service.impl.tokens.PasswordResetTokenService;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
+import com.jm.jobseekerplatform.service.impl.tokens.PasswordResetTokenService;
 import com.jm.jobseekerplatform.service.impl.tokens.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
 import java.time.LocalDateTime;
-
-import java.util.Arrays;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
