@@ -3,8 +3,8 @@ package com.jm.jobseekerplatform.dao.impl.chats;
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO;
 import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoWithTopicDTO;
-import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfile;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
+import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfile;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
@@ -65,11 +65,11 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
                                 " then 1 else null end), MAX(m) " +
                                 ") " +
                                 "FROM " + ChatClass.getName() + " c " +
-                                "JOIN c.chatMessages m " +
+                                "LEFT JOIN c.chatMessages m " +
                                 "WHERE " +
                                 "(c in (select distinct c2 " +
                                 "from " + ChatClass.getName() + " c2 " +
-                                "JOIN c2.chatMessages m2 " +
+                                "LEFT JOIN c2.chatMessages m2 " +
                                 "where " +
                                 "(c2.creatorProfile.id = :profileId " + "OR " +
                                 "c2.topic.creatorProfile.id = :profileId " + "OR " +
