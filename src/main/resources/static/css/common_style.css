@@ -364,13 +364,13 @@ li {
     color: #222;
 }
 
-.reviewVotes {
+.reviewVotes, .reviewVotesForEmployer {
     position: absolute;
     bottom: 0;
     right: 5%;
 }
 
-.reviewVotes span {
+.reviewVotes span, .reviewVotesForEmployer span {
     margin-right: 10px;
     font-size: 0.8em;
     color: var(--review-voted-count-color);
@@ -381,7 +381,7 @@ li {
     color: var(--review-voted-hoover);
 }
 
-.reviewVotes i {
+.reviewVotes i, .reviewVotesForEmployer i {
     margin-right: 5px;
 }
 
@@ -418,6 +418,19 @@ li {
     cursor: pointer;
 }
 
+.employerComplaint i {
+    font-size: 1.3em;
+    position: absolute;
+    right: 10px;
+    top: -10px;
+    color: var(--review-voted-color);
+    cursor: pointer;
+}
+
+/*.employerComplaint:hover{
+
+}*/
+
 .editCardReview:hover {
     color: #777777;
 }
@@ -426,4 +439,44 @@ li {
 select {
     background: var(--bg-color);
     color: var(--text-color);
+}
+
+#chat_alert > i {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+}
+
+.chatImageInfo {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
+.chatMessageDate {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    color: var(--review-voted-count-color);
+}
+
+.chatMessageText {
+    position: absolute;
+    top: 40px;
+    left: 90px;
+    color: var(--text-color);
+}
+
+.chatMemberName {
+    position: absolute;
+    top: 15px;
+    left: 90px;
+    font-weight: bold;
+    color: var(--text-color);
+
+}
+
+.chatInfo {
+    min-height: 80px;
 }

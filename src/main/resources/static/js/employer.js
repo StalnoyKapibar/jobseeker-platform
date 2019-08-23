@@ -421,6 +421,7 @@ function editModalReview() {
     var reviewId = $('#RMEditId').val();
     var reviewDescription = $('#RMEditDescription').val();
     var date = $('#RMEditDate').val();
+    var headline = $('#RMEditHeadLine').val();
     var evaluation = $('#RMEditRatingValue').val();
     var employerProfileId = $('#employerProfileId').val();
     var seekerProfileId = $('#seekerProfileId').val();
@@ -429,6 +430,7 @@ function editModalReview() {
 
     var review = {
         'id': reviewId,
+        'headline': headline,
         'reviews': reviewDescription,
         'dateReviews': date,
         'evaluation': evaluation,
@@ -539,6 +541,7 @@ function showEditReview(reviewId) {
         success: function (data) {
             $('#RMEditId').val(data.id);
             $('#RMEditDate').val(data.dateReviews);
+            $('#RMEditHeadLine').val(data.headline);
             $("#RMEditDescription").text(data.reviews);
             $('.RMEditStars').remove();
             var ratingStars = '';
@@ -826,4 +829,41 @@ function blockEmployerProfile(period) {
             alert(data);
         }
     });
+}
+
+
+function addComplainReview() {
+    var reviewId = $('#RMReviewId').val();
+    var employerProfileId = $('#employerProfileId').val();
+    var chatMessage = {
+        'text': $('#RMComplain').val(),
+        'date': new Date()
+    };
+    $.ajax({
+        type: 'post',
+        url: "/api/chats/add_complain_chat?reviewId=" + reviewId + '&employerProfileId=' + employerProfileId,
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        data: JSON.stringify(chatMessage),
+        success: function (data) {
+            $("#complainModal").modal('hide').fadeOut(350);
+            $("#chat_alert").removeClass("d-none");
+            $("#chat_alert").focus();
+            $("#chat_ref").attr("href", "/private_chat/" + data);
+        },
+        error: function (error) {
+            console.log(error);
+            alert(error.toString());
+        }
+    });
+}
+
+function getComplainModal(reviewId) {
+    $('#RMReviewId').val(reviewId);
+}
+
+function closeChatAlert() {
+    $("#chat_alert").addClass("d-none");
 }

@@ -6,6 +6,7 @@ import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
@@ -37,6 +38,9 @@ public class EmployerController {
 
     @Autowired
     private VacancyService vacancyService;
+
+    @Autowired
+    private ChatWithTopicService chatWithTopicService;
 
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
@@ -92,5 +96,13 @@ public class EmployerController {
     public String getEmployerProfileNews(@PathVariable Long employerProfileId, Model model) {
         model.addAttribute("employerProfileId", employerProfileId);
         return "employer_all_news";
+    }
+
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @RequestMapping("/employer/chats/{employerProfileId}")
+    public String EmployerPageChatsMy(@PathVariable Long employerProfileId, Model model) {
+        model.addAttribute("employerProfileId", employerProfileId);
+        model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(employerProfileId));
+        return "employer_chats_my";
     }
 }

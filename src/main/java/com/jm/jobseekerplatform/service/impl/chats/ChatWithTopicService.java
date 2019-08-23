@@ -3,8 +3,8 @@ package com.jm.jobseekerplatform.service.impl.chats;
 import com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO;
 import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO;
 import com.jm.jobseekerplatform.dto.chatInfo.ChatInfoWithTopicDTO;
-import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfile;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
+import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfile;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,11 +28,12 @@ public class ChatWithTopicService extends AbstractService<ChatWithTopic> {
     public <T extends ChatWithTopic> List<ChatInfoWithTopicDTO> getAllChatsInfoDTO(Class<T> chatClass) {
         return chatWithTopicDAO.getAllChatsInfoDTO(chatClass);
     }
+
     public List<ChatInfoWithTopicDTO> getAllChatsInfoDTO() {
         return chatWithTopicDAO.getAllChatsInfoDTO();
     }
 
-    public  <T extends ChatWithTopic> List<ChatInfoDetailWithTopicDTO> getAllChatsInfoDTOByProfileId(Long profileId, Class<T> chatClass) {
+    public <T extends ChatWithTopic> List<ChatInfoDetailWithTopicDTO> getAllChatsInfoDTOByProfileId(Long profileId, Class<T> chatClass) {
         return chatWithTopicDAO.getAllChatsInfoDTOByProfileId(profileId, chatClass);
     }
 
@@ -95,4 +96,14 @@ public class ChatWithTopicService extends AbstractService<ChatWithTopic> {
     public <T extends ChatWithTopic> T getChatByTopicIdCreatorProfileIdChatType(Long topicId, Long creatorProfileId, Class<T> ChatClass) {
         return chatWithTopicDAO.getChatByTopicIdCreatorProfileIdChatType(topicId, creatorProfileId, ChatClass);
     }
+
+    public <T extends ChatWithTopic> List<T> getAllChatsByMemberProfileId(Long profileId, Class<T> chatClass) {
+        return chatWithTopicDAO.getAllChatsByMemberProfileId(profileId, chatClass);
+    }
+
+    public List<ChatWithTopic> getAllChatsByMemberProfileId(Long profileId) {
+        return chatWithTopicDAO.getAllChatsByMemberProfileId(profileId);
+    }
+
+
 }
