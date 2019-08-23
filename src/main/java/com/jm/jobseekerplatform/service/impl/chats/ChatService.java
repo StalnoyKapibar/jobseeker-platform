@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service("chatService")
 @Transactional
 public class ChatService extends AbstractService<Chat> {
@@ -23,7 +21,7 @@ public class ChatService extends AbstractService<Chat> {
         update(chat);
     }
 
-//    public List<ChatMessage> setChatReadByProfileId(Long chatId, Long readerProfileId, Long lastReadMessageId) {
-//        chatDAO.setChatReadByProfileId(chatId, readerProfileId, lastReadMessageId);
-//    }
+    public void setChatReadByProfileId(Long chatId, Long readerProfileId, Long lastReadMessageId) {
+        chatDAO.setChatReadByProfileId(chatId, readerProfileId, lastReadMessageId);
+    }
 }

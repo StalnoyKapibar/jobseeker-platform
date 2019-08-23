@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.dto.chatInfo;
 
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
-import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 
 /**
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
@@ -23,11 +22,9 @@ public class ChatInfoWithTopicDTO extends ChatInfoDTO {
     public ChatInfoWithTopicDTO(ChatWithTopic chatWithTopic) {
         super(chatWithTopic);
         this.topicTitle = chatWithTopic.getTopic().getHeadline();
-
         this.topicCreatorProfileId = chatWithTopic.getTopic().getCreatorProfile().getId();
         this.topicCreatorName = chatWithTopic.getTopic().getCreatorProfile().getFullName();
         this.topicCreatorType = chatWithTopic.getTopic().getCreatorProfile().getTypeName();
-
         this.topicId = chatWithTopic.getTopic().getId();
         this.topicType = chatWithTopic.getTopic().getTypeName();
     }
