@@ -136,9 +136,6 @@ function getMessageLog(message) {
 }
 
 function sendMessage() {
-    //scrollMessageArea();
-    //messageArea.animate({scrollTop: $container[0].scrollHeight}, "slow"); //todo (Nick Dolgopolov)
-
     var messageContent = $(".write_msg").val().trim();
     if (messageContent && stompClient) {
         var chatMessage = {
