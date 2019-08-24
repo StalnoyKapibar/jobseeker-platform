@@ -25,8 +25,7 @@ public class ChatInfoDetailDTO extends ChatInfoDTO {
             this.lastMessageProfileId = lastMessage.getCreatorProfile().getId();
             this.lastMessageCreatorName = lastMessage.getCreatorProfile().getFullName();
             this.lastMessageCreatorType = lastMessage.getCreatorProfile().getTypeName();
-        }
-        else {
+        } else {
             this.lastMessageText = "no message";
             this.lastMessageDate = new Date(0);
             this.lastMessageProfileId = 0;
