@@ -41,7 +41,7 @@ public class WebSocketController {
 
         ChatMessage chatMessage = new ChatMessage(messageDTO.getText(), creatorProfile, new Date());
 
-        chatMessageService.add(chatMessage); //todo (Nick Dolgopolov) хранимые процедуры
+        chatMessageService.add(chatMessage);
         chatService.addChatMessage(chatId, chatMessage);
 
         simpMessagingTemplate.convertAndSend("/topic/chat/" + chatId, chatMessage);

@@ -16,7 +16,7 @@ public class ChatService extends AbstractService<Chat> {
     ChatDAO chatDAO;
 
     public void addChatMessage(Long chatId, ChatMessage chatMessage) {
-        Chat chat = getById(chatId);     //todo (Nick Dolgopolov) хранимые процедуры
+        Chat chat = getById(chatId);
         chat.getChatMessages().add(chatMessage);
         update(chat);
     }
