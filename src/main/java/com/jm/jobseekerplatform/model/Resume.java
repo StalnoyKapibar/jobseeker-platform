@@ -27,7 +27,7 @@ public class Resume extends CreatedByProfileBase<SeekerProfile> implements Seria
     @Column(name = "salarymax")
     private Integer salaryMax;
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.MERGE)
     private Set<JobExperience> jobExperiences;
 
     @OneToOne(fetch = FetchType.LAZY)
