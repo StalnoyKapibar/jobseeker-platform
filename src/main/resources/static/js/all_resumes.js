@@ -218,7 +218,6 @@ function searchByTags() {
         $('#searchHeader').text('Задан пустой запрос');
     } else {
         let pageCount = 0;
-        $('#isAVShow').val('1');
         $.ajax({
             type: 'post',
             url: "api/resumes/search?pageCount=" + pageCount,
@@ -236,14 +235,21 @@ function searchByTags() {
                     }
                 } else {
                     if (param.length === 1) {
-                        $('#searchHeader').text('Вакансии по тегу :');
+                        $('#searchHeader').text('Вакансии по тегу : ');
+                        $('#searchHeader').append(param[0].name);
                     } else {
-                        $('#searchHeader').text('Вакансии по тегам :');
+                        $('#searchHeader').text('Вакансии по тегам : ');
+                        for (let i=0; i<param.length; i++) {
+                            if (i===param.length -1){
+                                $('#searchHeader').append(param[i].name);
+                            } else {
+                                $('#searchHeader').append(param[i].name + ', ');
+                            }
+                        }
                     }
                     printResumes(data.content);
                     total_pages = data.totalPages;
                     pageCount++;
-                    // $('#scrollPageCount').val(pageCount);
                 }
             },
             error: function (error) {
