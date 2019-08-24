@@ -17,14 +17,14 @@ import java.util.List;
 @Repository
 public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
 
-    // todo сделать дженерик методы
-//    public List<T> getAll() {
-//        return entityManager.createQuery("SELECT e FROM " + clazz.getName() + " e", clazz).getResultList();
-//    }
-//
-//    public List<T> getAllWithLimit(int limit) {
-//        return entityManager.createQuery("SELECT e FROM " + clazz.getName() + " e", clazz).setMaxResults(limit).getResultList();
-//    }
+
+    public <T extends ChatWithTopic> List<T> getAll(Class<T> chatClass) {
+        return entityManager.createQuery("SELECT e FROM " + chatClass.getName() + " e", chatClass).getResultList();
+    }
+
+    public <T extends ChatWithTopic> List<T> getAllWithLimit(int limit, Class<T> chatClass) {
+        return entityManager.createQuery("SELECT e FROM " + chatClass.getName() + " e", chatClass).setMaxResults(limit).getResultList();
+    }
 
     public <T extends ChatWithTopic> List<ChatInfoWithTopicDTO> getAllChatsInfoDTO(Class<T> ChatClass) {
         List<ChatInfoWithTopicDTO> listOfChatInfoWithTopicDTO =
@@ -40,7 +40,6 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
         List<ChatInfoWithTopicDTO> listOfChatInfoWithTopicDTO = getAllChatsInfoDTO(clazz);
         return listOfChatInfoWithTopicDTO;
     }
-
 
     public <T extends ChatWithTopic> List<ChatInfoDetailWithTopicDTO> getAllChatsInfoDTOByProfileId(Long profileId, Class<T> ChatClass) {
 
@@ -66,11 +65,11 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
                                 " then 1 else null end), MAX(m) " +
                                 ") " +
                                 "FROM " + ChatClass.getName() + " c " +
-                                "JOIN c.chatMessages m " +
+                                "LEFT JOIN c.chatMessages m " +
                                 "WHERE " +
                                 "(c in (select distinct c2 " +
                                 "from " + ChatClass.getName() + " c2 " +
-                                "JOIN c2.chatMessages m2 " +
+                                "LEFT JOIN c2.chatMessages m2 " +
                                 "where " +
                                 "(c2.creatorProfile.id = :profileId " + "OR " +
                                 "c2.topic.creatorProfile.id = :profileId " + "OR " +

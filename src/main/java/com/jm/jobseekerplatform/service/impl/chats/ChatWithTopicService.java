@@ -17,6 +17,14 @@ public class ChatWithTopicService extends AbstractService<ChatWithTopic> {
     @Autowired
     private ChatWithTopicDAO chatWithTopicDAO;
 
+    public <T extends ChatWithTopic> List<T> getAll(Class<T> chatClass) {
+        return chatWithTopicDAO.getAll(chatClass);
+    }
+
+    public <T extends ChatWithTopic> List<T> getAllWithLimit(int limit, Class<T> chatClass) {
+        return chatWithTopicDAO.getAllWithLimit(limit, chatClass);
+    }
+
     public <T extends ChatWithTopic> List<ChatInfoWithTopicDTO> getAllChatsInfoDTO(Class<T> chatClass) {
         return chatWithTopicDAO.getAllChatsInfoDTO(chatClass);
     }

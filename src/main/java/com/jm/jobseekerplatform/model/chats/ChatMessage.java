@@ -29,8 +29,11 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
     @Column(name = "date")
     private Date date;
 
-    @Column
     @ElementCollection
+    @CollectionTable(name = "chat_message_is_read_by_profiles_id", joinColumns = @JoinColumn(name = "chat_message_id"))
+    @Column(name = "isReadByProfilesId", nullable = false)
+    // see optimizations: https://stackoverflow.com/questions/3742897/hibernate-elementcollection-strange-delete-insert-behavior
+    // https://stackoverflow.com/questions/30053647/specifying-a-primary-key-on-elementcollection
     private Set<Long> isReadByProfilesId;
 
     public ChatMessage() {
@@ -101,8 +104,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChatMessage that = (ChatMessage) o;
-        return Objects.equals(isReadByProfilesId, that.isReadByProfilesId) && //todo (Nick Dolgopolov) как использовать isReadByProfilesId?
-                Objects.equals(id, that.id) &&
+        return  Objects.equals(id, that.id) &&
                 Objects.equals(text, that.text) &&
                 Objects.equals(creatorProfile, that.creatorProfile) &&
                 Objects.equals(date, that.date);
@@ -110,7 +112,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, creatorProfile, date, isReadByProfilesId); //todo (Nick Dolgopolov) как использовать isReadByProfilesId?
+        return Objects.hash(id, text, creatorProfile, date);
     }
 
     @Override

@@ -84,7 +84,6 @@ public class ChatRestController {
     public HttpEntity getCountOfUnreadChatsByProfileId(Authentication authentication) {
 
         User user = (User) authentication.getPrincipal();
-
         long countOfUnreadChatsByProfileId = chatWithTopicService.getCountOfUnreadChatsByProfileId(user.getProfile().getId());
 
         return new ResponseEntity<>(countOfUnreadChatsByProfileId, HttpStatus.OK);
@@ -137,18 +136,7 @@ public class ChatRestController {
     @PutMapping("set_chat_read_by_profile_id")
     public HttpEntity setChatReadByProfileId(@RequestBody MessageReadDataDTO messageReadDataDTO) {
 
-        List<ChatMessage> chatMessageList = chatService.getById(messageReadDataDTO.getChatId()).getChatMessages();
-
-        for (int i = chatMessageList.size() - 1; i >= 0; i--) { //todo (Nick Dolgopolov) переделать на зарос, который будет в базе менять статус только у нужных сообщений (фильтр)
-            ChatMessage chatMessage = chatMessageList.get(i);
-            if (/*chatMessage.getId() <= messageReadDataDTO.getLastReadMessageId() &&*/ //todo (Nick Dolgopolov) по id или надо по дате?
-                    !chatMessage.getCreatorProfile().getId().equals(messageReadDataDTO.getReaderProfileId()) &&
-                            !chatMessage.getIsReadByProfilesId().contains(messageReadDataDTO.getReaderProfileId())) {
-                chatMessage.getIsReadByProfilesId().add(messageReadDataDTO.getReaderProfileId());
-
-                chatMessageService.update(chatMessage);
-            }
-        }
+        chatService.setChatReadByProfileId(messageReadDataDTO.getChatId(), messageReadDataDTO.getReaderProfileId(), messageReadDataDTO.getMessageId());
 
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -156,14 +144,7 @@ public class ChatRestController {
     @PutMapping("set_message_read_by_profile_id")
     public HttpEntity setMessageReadByProfileId(@RequestBody MessageReadDataDTO messageReadDataDTO) {
 
-        ChatMessage chatMessage = chatMessageService.getById(messageReadDataDTO.getLastReadMessageId());
-
-        if (!chatMessage.getCreatorProfile().getId().equals(messageReadDataDTO.getReaderProfileId()) &&
-                !chatMessage.getIsReadByProfilesId().contains(messageReadDataDTO.getReaderProfileId())) {
-
-            chatMessage.getIsReadByProfilesId().add(messageReadDataDTO.getReaderProfileId());
-            chatMessageService.update(chatMessage);
-        }
+        chatMessageService.setMessageReadByProfileId(messageReadDataDTO.getReaderProfileId(), messageReadDataDTO.getMessageId());
 
         return new ResponseEntity(HttpStatus.OK);
     }

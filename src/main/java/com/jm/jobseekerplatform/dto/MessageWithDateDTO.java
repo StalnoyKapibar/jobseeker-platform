@@ -18,11 +18,9 @@ public class MessageWithDateDTO extends MessageDTO implements Comparable<Message
         return date;
     }
 
-
     public void setDate(Date date) {
         this.date = date;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -32,7 +30,6 @@ public class MessageWithDateDTO extends MessageDTO implements Comparable<Message
         MessageWithDateDTO that = (MessageWithDateDTO) o;
         return date.equals(that.date);
     }
-
 
     @Override
     public int hashCode() {

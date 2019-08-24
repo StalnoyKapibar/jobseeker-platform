@@ -18,11 +18,20 @@ public class ChatInfoDetailDTO extends ChatInfoDTO {
     public ChatInfoDetailDTO(Chat chat, Long countOfUnreadMessages, ChatMessage lastMessage) {
         super(chat);
         this.countOfUnreadMessages = countOfUnreadMessages;
-        this.lastMessageText = lastMessage.getText();
-        this.lastMessageDate = lastMessage.getDate();
-        this.lastMessageProfileId = lastMessage.getCreatorProfile().getId();
-        this.lastMessageCreatorName = lastMessage.getCreatorProfile().getFullName();
-        this.lastMessageCreatorType = lastMessage.getCreatorProfile().getTypeName();
+
+        if (lastMessage != null) {
+            this.lastMessageText = lastMessage.getText();
+            this.lastMessageDate = lastMessage.getDate();
+            this.lastMessageProfileId = lastMessage.getCreatorProfile().getId();
+            this.lastMessageCreatorName = lastMessage.getCreatorProfile().getFullName();
+            this.lastMessageCreatorType = lastMessage.getCreatorProfile().getTypeName();
+        } else {
+            this.lastMessageText = "no message";
+            this.lastMessageDate = new Date(0);
+            this.lastMessageProfileId = 0;
+            this.lastMessageCreatorName = "";
+            this.lastMessageCreatorType = "";
+        }
     }
 
     public long getCountOfUnreadMessages() {

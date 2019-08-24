@@ -14,4 +14,7 @@ public class ChatMessageService extends AbstractService<ChatMessage> {
     @Autowired
     ChatMessageDAO chatMessageDAO;
 
+    public void setMessageReadByProfileId(Long readerProfileId, Long messageId) {
+        chatMessageDAO.setMessageReadByProfileId(readerProfileId, messageId);
+    }
 }

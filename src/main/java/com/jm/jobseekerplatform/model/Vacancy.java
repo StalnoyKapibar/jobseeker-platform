@@ -181,7 +181,6 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     }
 
     @Override
-    //todo (Nick Dolgopolov) Добавить в JSON
     public String getTypeName() {
         return "Вакансия";
     }

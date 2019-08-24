@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.dto.chatInfo;
 
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
-import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 
 /**
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)

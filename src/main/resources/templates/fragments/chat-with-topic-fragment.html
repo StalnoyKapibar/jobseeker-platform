@@ -10,8 +10,7 @@
 <th:block th:fragment="chat-with-topic (chatId, topic, profileId)">
 
     <div class="container-fluid" style="margin-left: 20px ; width: 660px">
-<!--        todo (Nick Dolgopolov) topicName брать из JSON вакансии-->
-        <h3 class="text-center mt-5">Тема чата: <span th:text="${'topicName' + ' ' + topic.headline}"></span></h3>
+        <h3 class="text-center mt-5">Тема чата: <span th:text="${topic.getTypeName() + ' ' + topic.headline}"></span></h3>
         <div class="data_block" id="chatId" th:text="${chatId}"></div>
         <div class="data_block" id="profileId" th:text="${profileId}"></div>
         <div class="messaging">
