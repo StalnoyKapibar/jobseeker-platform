@@ -564,7 +564,6 @@ public class InitData {
         Resume resume;
         Point point;
         City city;
-
         for (int i = 0; i < 14; i++) {
             city = cities.get(rnd.nextInt(cities.size()));
             point = city.getPoint();
@@ -579,13 +578,10 @@ public class InitData {
                     jobExperiences,
                     city,
                     point);
-
             resumes.add(resume);
             resumeService.add(resume);
-
             seekerProfile.setResumes(resumes);
             seekerProfileService.update(seekerProfile);
-
             resumes.clear();
             jobExperiences.clear();
         }

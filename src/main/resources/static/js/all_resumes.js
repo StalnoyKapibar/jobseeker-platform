@@ -176,14 +176,11 @@ function showResume(id) {
                     return key > 2;
                 });
             }
-
             $("#VMTags").html(tags);
             $("#VMJobExp").html(jobExp);
             $("#VMHeadline").text(data.headline);
             $("#VMCity").text(data.city);
-
-            var str = "Зарплата: ";
-
+            let str = "Зарплата: ";
             if (data.salaryMin != null) {
                 str = str + "от " + data.salaryMin + " рублей ";
             }
@@ -194,7 +191,6 @@ function showResume(id) {
                 str = "Зарплата не указана";
             }
             $("#VMSalary").text(str);
-
         }
     });
 }
