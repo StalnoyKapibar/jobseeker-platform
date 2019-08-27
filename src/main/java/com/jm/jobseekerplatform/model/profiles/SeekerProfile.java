@@ -37,6 +37,9 @@ public class SeekerProfile extends Profile implements Serializable {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Subscription> subscriptions;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Resume> resumes;
+
     public SeekerProfile() {
     }
 
@@ -140,4 +143,11 @@ public class SeekerProfile extends Profile implements Serializable {
         this.meetings = meetings;
     }
 
+    public Set<Resume> getResumes() {
+        return resumes;
+    }
+
+    public void setResumes(Set<Resume> resumes) {
+        this.resumes = resumes;
+    }
 }

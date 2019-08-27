@@ -98,6 +98,12 @@ public class InitData {
     @Autowired
     private ReviewVoteService reviewVoteService;
 
+    @Autowired
+    private ResumeService resumeService;
+
+    @Autowired
+    private JobExperienceService jobExperienceService;
+
     private Faker faker = new Faker(new Locale("ru"));
 
     private Random rnd = new Random();
@@ -118,6 +124,8 @@ public class InitData {
         initReviews();
         initChat();
         initNews();
+        initJobExperience();
+        initResumes();
     }
 
     private void initNews() {
@@ -518,6 +526,11 @@ public class InitData {
         return all.get(rnd.nextInt(all.size()));
     }
 
+    private SeekerProfile getRandomSeekerProfile() {
+        List<SeekerProfile> all = seekerProfileService.getAll();
+        return all.get(rnd.nextInt(all.size()));
+    }
+
     private void initCities() {
         cityService.initCity("Москва", new Point(55.752030F, 37.633685F));
         cityService.initCity("Санкт-Петербург", new Point(59.943122F, 30.276844F));
@@ -525,5 +538,48 @@ public class InitData {
         cityService.initCity("Казань", new Point(55.825853F, 49.117538F));
         cityService.initCity("Екатеринбург", new Point(56.825312F, 60.608923F));
         cityService.initCity("Нижний Новгород", new Point(56.299846F, 43.904104F));
+    }
+
+    private void initJobExperience(){
+        for (int i=0; i<20; i++) {
+            Date date= new Date();
+            JobExperience jobExperience = new JobExperience(date,
+                    new Date(date.getTime()+(24*60*60*1000)),//+1 день
+                    faker.job().title(),
+                    faker.job().position(),
+                    faker.witcher().quote());
+            jobExperienceService.add(jobExperience);
+        }
+    }
+
+    private void initResumes() {
+        Set<Resume> resumes = new HashSet<>();
+        Set<JobExperience> jobExperiences = new HashSet<>();
+        List<City> cities = cityService.getAll();
+        List<JobExperience> jobExperienceList = jobExperienceService.getAll();
+        Resume resume;
+        Point point;
+        City city;
+        for (int i = 0; i < 14; i++) {
+            city = cities.get(rnd.nextInt(cities.size()));
+            point = city.getPoint();
+            SeekerProfile seekerProfile = getRandomSeekerProfile();
+            jobExperiences.add(jobExperienceList.get(i));
+            resume = new Resume(
+                    seekerProfile,
+                    faker.job().title(),
+                    randomTags(0L),
+                    Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), //salaryMin
+                    Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), //salaryMax
+                    jobExperiences,
+                    city,
+                    point);
+            resumes.add(resume);
+            resumeService.add(resume);
+            seekerProfile.setResumes(resumes);
+            seekerProfileService.update(seekerProfile);
+            resumes.clear();
+            jobExperiences.clear();
+        }
     }
 }
