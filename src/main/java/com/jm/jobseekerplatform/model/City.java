@@ -2,7 +2,6 @@ package com.jm.jobseekerplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,7 +22,8 @@ public class City implements Serializable {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Point point;
 
-    public City() {}
+    public City() {
+    }
 
     public City(String name, Point point) {
         this.point = point;
@@ -55,7 +55,7 @@ public class City implements Serializable {
     }
 
     @JsonValue
-    public String toJson(){
+    public String toJson() {
         return this.name;
     }
 }

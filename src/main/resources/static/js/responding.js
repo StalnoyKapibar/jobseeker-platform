@@ -40,7 +40,7 @@ function sendMeetingEdition() {
             alert(error.toString());
         }
     });
-    sendSpecialMessage("/me " + status + dateFormat(meeting.date));
+    sendMessageToServer("/me " + status + dateFormat(meeting.date));
 }
 
 async function editMeeting(id) {
@@ -77,7 +77,7 @@ function updateMeeting(id) {
             alert(error.toString());
         }
     });
-    sendSpecialMessage("/me " + status);
+    sendMessageToServer("/me " + status);
 }
 
 
@@ -91,7 +91,7 @@ function createChat(vacancyId, seekerId) {
         },
         success: function (data) {
             $("#chat_alert").removeClass("d-none");
-            $("#chat_ref").attr("href","/chat/" + data);
+            $("#chat_ref").attr("href","/chat/seeker-vacancy-employer/" + data);
         },
         error: function (error) {
             console.log(error);
@@ -117,7 +117,7 @@ function confirmMeeting(id){
             alert(error.toString());
         }
     });
-    sendSpecialMessage("/me " + status);
+    sendMessageToServer("/me " + status);
 }
 
 function updateButtons(message, replaced){

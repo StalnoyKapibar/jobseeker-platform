@@ -135,6 +135,13 @@
                                         </button>
                                     </div>
                                     <div th:if="${reviewStatus}">
+                                        <div id="chat_alert" class="alert alert-success mt-3 d-none" role="alert"
+                                             tabindex="0">
+                                            Вы отправили жалобу администратору. Для того, чтобы продолжить
+                                            , перейдите в приватный <a id="chat_ref" href="/chat/">чат</a> с
+                                            администратором.
+                                            <i class="far fa-times-circle" onclick="closeChatAlert()"></i>
+                                        </div>
                                         <div class="row" style="margin-top: 30px">
                                             <div class="col-sm-6">
                                                 <h4><span>Отзывы о компании:</span></h4>
@@ -150,7 +157,30 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <div class="row">
+
+                                        <div id="sort">Сортировать по:
+                                            <a id="dateSort" href="javascript:void(0);" onclick="sortByDateOldFirst();">дате</a>
+                                            <a id="rateSort" href="javascript:void(0);" onclick="sortByRatingDESC()">рейтингу</a>
+                                            <a id="likeSort" href="javascript:void(0);"
+                                               onclick="sortByLikes();">лайкам</a>
+                                        </div>
+
+                                        <div class="form-group" style="margin-bottom: 0px; margin-top: 10px">
+                                            <label class="radio-inline">
+                                                <input type="radio" checked onclick="showAll()" name="optradio">Показать
+                                                все
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" onclick="hideNegative()" name="optradio">Скрыть
+                                                негативные
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" onclick="hidePositive()" name="optradio">Скрыть
+                                                положительные
+                                            </label>
+                                        </div>
+
+                                        <div class="row" id="reviews">
                                             <th:block th:each="review : ${employerProfileReviews}">
                                                 <div class="col-sm-6">
                                                     <div class="reviewCard" style="margin-top: 20px"
@@ -177,6 +207,14 @@
                                                                            title="редактитовать отзыв"
                                                                            class="fas fa-edit"
                                                                            th:onclick="'showEditReview('+${review.id}+')'"></i>
+                                                                    </div>
+                                                                    <div class="employerComplaint"
+                                                                         sec:authorize="hasRole('ROLE_EMPLOYER')">
+                                                                        <i class="fas fa-ban"
+                                                                           title="пожаловаться администратору"
+                                                                           data-toggle="modal"
+                                                                           data-target="#complainModal"
+                                                                           th:onclick="'getComplainModal('+ ${review.id} +')'"></i>
                                                                     </div>
                                                                     <blockquote class="blockquote mb-0">
                                                                         <p th:if="${review.reviews.length()>60}"
@@ -212,15 +250,28 @@
                                                                                   th:id="'reviewLike_' + ${review.id}"
                                                                                   th:onclick="'toLike('+ ${review.id} +')'">
                                                                                 <i class="fas fa-thumbs-up"></i>
-                                                                                <span th:id="'reviewLikeCount_'+${review.id}"
+                                                                                <span class="likes"
+                                                                                      th:id="'reviewLikeCount_'+${review.id}"
                                                                                       th:text="${review.like}"></span>
                                                                             </span>
                                                                             <span class="reviewDislike"
                                                                                   th:id="'reviewDislike_' + ${review.id}"
                                                                                   th:onclick="'toDislike('+ ${review.id} +')'">
                                                                                     <i class="fas fa-thumbs-down"></i>
-                                                                                    <span th:id="'reviewDislikeCount_'+${review.id}"
+                                                                                    <span class="dislikes"
+                                                                                          th:id="'reviewDislikeCount_'+${review.id}"
                                                                                           th:text="${review.dislike}"></span>
+                                                                            </span>
+                                                                        </span>
+                                                                        <span class="reviewVotesForEmployer"
+                                                                              sec:authorize="hasRole('ROLE_EMPLOYER') or hasRole('ROLE_ADMIN')">
+                                                                            <span class="reviewLike">
+                                                                                <i class="fas fa-thumbs-up"></i>
+                                                                                <span th:text="${review.like}"></span>
+                                                                            </span>
+                                                                            <span class="reviewDislike">
+                                                                                    <i class="fas fa-thumbs-down"></i>
+                                                                                    <span th:text="${review.dislike}"></span>
                                                                             </span>
                                                                         </span>
                                                                     </blockquote>
@@ -339,6 +390,8 @@
                     </div>
                     <input type="hidden" id="RMEditId" name="RMEditId">
                     <input type="hidden" id="RMEditDate" name="RMEditDate">
+                    <input type="hidden" id="RMEditHeadLine" name="RMEditHeadLine">
+
                 </div>
 
                 <!-- Modal footer -->
@@ -346,6 +399,38 @@
                     <button type="button" class="btn btn-success" onclick="editModalReview()">Изменить
                     </button>
                     <button type="button" class="btn btn-secondary" onclick="deleteReview()">Удалить</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Complain Review Modal -->
+    <div class="modal fade" id="complainModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Жалоба</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body" align="center">
+                    <div class="control-label">Описание</div>
+                    <div class="form-group">
+                        <input type="hidden" name="RMReviewId" id="RMReviewId">
+                        <textarea rows="10" class="form-control" name="RMComplain"
+                                  id="RMComplain"></textarea>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="addComplainReview()">Отправить
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
 
             </div>

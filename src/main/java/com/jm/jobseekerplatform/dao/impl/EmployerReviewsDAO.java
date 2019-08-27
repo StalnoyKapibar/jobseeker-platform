@@ -6,4 +6,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository("employerReviewsDAO")
 public class EmployerReviewsDAO extends AbstractDAO<EmployerReviews> {
+    @Override
+    public void deleteById(Long reviewId) {
+        entityManager.createQuery("delete from EmployerReviews where id =: reviewId")
+                .setParameter("reviewId", reviewId)
+                .executeUpdate();
+    }
 }

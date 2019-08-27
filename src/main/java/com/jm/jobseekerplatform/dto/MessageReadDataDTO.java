@@ -3,19 +3,19 @@ package com.jm.jobseekerplatform.dto;
 public class MessageReadDataDTO {
 
     private Long chatId;
-    private Long lastReadMessageId;
+    private Long messageId;
     private Long readerProfileId;
 
-    public Long getLastReadMessageId() {
-        return lastReadMessageId;
+    public Long getMessageId() {
+        return messageId;
     }
 
     public Long getReaderProfileId() {
         return readerProfileId;
     }
 
-    public void setLastReadMessageId(Long lastReadMessageId) {
-        this.lastReadMessageId = lastReadMessageId;
+    public void setMessageId(Long messageId) {
+        this.messageId = messageId;
     }
 
     public void setReaderProfileId(Long readerProfileId) {

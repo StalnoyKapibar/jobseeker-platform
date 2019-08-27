@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.dto;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class MessageWithDateDTO extends MessageDTO implements Comparable<MessageWithDateDTO>{
@@ -8,21 +9,18 @@ public class MessageWithDateDTO extends MessageDTO implements Comparable<Message
     private Date date;
 
 
-    public MessageWithDateDTO(Long id, String text, Date date, boolean isRead, Long authorId) {
-        super(authorId, text, isRead);
+    public MessageWithDateDTO(Long creatorProfileId, List<String> members, String text, Date date) {
+        super(creatorProfileId, members, text,date);
         this.date = date;
     }
-
 
     public Date getDate() {
         return date;
     }
 
-
     public void setDate(Date date) {
         this.date = date;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -32,7 +30,6 @@ public class MessageWithDateDTO extends MessageDTO implements Comparable<Message
         MessageWithDateDTO that = (MessageWithDateDTO) o;
         return date.equals(that.date);
     }
-
 
     @Override
     public int hashCode() {

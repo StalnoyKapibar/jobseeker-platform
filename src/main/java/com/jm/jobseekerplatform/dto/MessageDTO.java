@@ -1,5 +1,7 @@
 package com.jm.jobseekerplatform.dto;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class MessageDTO {
@@ -8,14 +10,17 @@ public class MessageDTO {
 
     private Long creatorProfileId;
 
+    private List<String> members;
+
     private String text;
 
-    private boolean isRead;
+    private Date date;
 
-    public MessageDTO(Long creatorProfileId, String text, boolean isRead) {
+    public MessageDTO(Long creatorProfileId, List<String> members, String text, Date date) {
         this.creatorProfileId = creatorProfileId;
+        this.members = members;
         this.text = text;
-        this.isRead = isRead;
+        this.date = date;
     }
 
     public Long getCreatorProfileId() {
@@ -34,6 +39,14 @@ public class MessageDTO {
         this.text = text;
     }
 
+    public List<String> getMembers() {
+        return members;
+    }
+
+    public void setMembersId(List<String> members) {
+        this.members = members;
+    }
+
     public Long getId() {
         return id;
     }
@@ -42,12 +55,16 @@ public class MessageDTO {
         this.id = id;
     }
 
-    public boolean isRead() {
-        return isRead;
+    public void setMembers(List<String> members) {
+        this.members = members;
     }
 
-    public void setRead(boolean read) {
-        isRead = read;
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     @Override
@@ -55,14 +72,15 @@ public class MessageDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MessageDTO that = (MessageDTO) o;
-        return isRead == that.isRead &&
-                id.equals(that.id) &&
-                creatorProfileId.equals(that.creatorProfileId) &&
-                text.equals(that.text);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(creatorProfileId, that.creatorProfileId) &&
+                Objects.equals(members, that.members) &&
+                Objects.equals(text, that.text) &&
+                Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, creatorProfileId, text, isRead);
+        return Objects.hash(id, creatorProfileId, members, text, date);
     }
 }
