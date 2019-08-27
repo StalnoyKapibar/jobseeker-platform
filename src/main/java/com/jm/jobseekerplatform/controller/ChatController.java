@@ -2,15 +2,23 @@ package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.config.ChatAccessHandler;
 import com.jm.jobseekerplatform.model.Meeting;
+import com.jm.jobseekerplatform.model.Resume;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
+import com.jm.jobseekerplatform.model.chats.ChatWithTopicResume;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
 import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.ResumeService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
@@ -37,6 +47,15 @@ public class ChatController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ResumeService resumeService;
+
+    @Autowired
+    private SeekerUserService seekerUserService;
+
+    @Autowired
+    private SeekerProfileService seekerProfileService;
 
     @RequestMapping("/chat/{chatId}")
     public String getChatById(@PathVariable("chatId") Long chatId, Authentication authentication, Model model) {
@@ -88,7 +107,13 @@ public class ChatController {
         User user = (User) authentication.getPrincipal();
         ChatAccessHandler.isContainInChatMembers(chat, userService.findByEmail(user.getUsername()), httpServletResponse);
         model.addAttribute("profileId", user.getProfile().getId());
-        model.addAttribute("employerProfileId", user.getProfile().getId());
+        if (user.getAuthority().toString().equals("ROLE_EMPLOYER")) {
+            model.addAttribute("employerProfileId", user.getProfile().getId());
+        } else if (user.getAuthority().toString().equals("ROLE_SEEKER")) {
+            model.addAttribute("seekerProfileId", user.getProfile().getId());
+        } else {
+            model.addAttribute("adminProfileId", user.getProfile().getId());
+        }
         if (chat instanceof ChatWithTopic) {
             ChatWithTopic chatWithTopic = (ChatWithTopic) chat;
             model.addAttribute("chatWithTopic", chatWithTopic);
@@ -114,5 +139,26 @@ public class ChatController {
         }
 
         return "redirect:/chat/" + chat.getId();
+    }
+
+    @RequestMapping("chat/resume/{resumeId}")
+    public String getChatByResumeAndAuthenticatedUser(@PathVariable("resumeId") Long resumeId,
+                                                      Authentication authentication) {
+        User authenticatedUser = (User) authentication.getPrincipal();
+        Profile authenticatedProfile = authenticatedUser.getProfile();
+
+        ChatWithTopic<Resume> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType(resumeId, authenticatedProfile.getId(), ChatWithTopicResume.class);
+        if (chat == null) {
+            Resume resume = resumeService.getById(resumeId);
+            SeekerProfile seekerProfile = seekerProfileService.getById(((Profile) resume.getCreatorProfile()).getId());
+            chat = new ChatWithTopicResume(authenticatedProfile, resume);
+            List<User> chatMembers = new ArrayList<>();
+            chatMembers.add(authenticatedUser);
+            User user2 = seekerUserService.getById(seekerProfile.getId());
+            chatMembers.add(user2);
+            chat.setChatMembers(chatMembers);
+            chatWithTopicService.add(chat);
+        }
+        return "redirect:/private_chat/" + chat.getId();
     }
 }

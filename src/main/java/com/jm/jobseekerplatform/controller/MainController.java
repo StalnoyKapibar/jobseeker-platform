@@ -152,8 +152,10 @@ public class MainController {
 
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/new_vacancy", method = RequestMethod.GET)
-    public String new_vacancyPage(Model model) {
+    public String new_vacancyPage(Model model,  Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+        model.addAttribute("employerProfileId", user.getProfile().getId());
         return "/vacancy/new_vacancy";
     }
 

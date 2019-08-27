@@ -15,7 +15,10 @@
 <body>
 <div layout:fragment="content">
     <div class="container-fluid" style="margin-left: 20px ; width: 660px">
-        <h3 class="text-center mt-5">Тема чата: <span
+        <h3 class="text-center mt-5" th:if="${chatWithTopic.topic.typeName} == 'Резюме'">Тема чата: <span
+                th:text="${chatWithTopic.topic.typeName +' ' + chatWithTopic.topic.headline + ' от ' + chatWithTopic.topic.getCreatorProfile().getFullName()}"></span>
+        </h3>
+        <h3 class="text-center mt-5" th:if="${chatWithTopic.topic.typeName} != 'Резюме'">Тема чата: <span
                 th:text="${chatWithTopic.topic.typeName + ' от ' + chatWithTopic.topic.headline}"></span></h3>
         <div class="data_block" id="chatId" th:text="${chatWithTopic.id}"></div>
         <div class="data_block" id="profileId" th:text="${profileId}"></div>
