@@ -8,6 +8,7 @@ import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopic;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicResume;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
@@ -20,6 +21,7 @@ import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -55,7 +57,7 @@ public class ChatController {
     private SeekerUserService seekerUserService;
 
     @Autowired
-    private SeekerProfileService seekerProfileService;
+    private EmployerUserService employerUserService;
 
     @RequestMapping("/chat/{chatId}")
     public String getChatById(@PathVariable("chatId") Long chatId, Authentication authentication, Model model) {
@@ -133,8 +135,12 @@ public class ChatController {
         ChatWithTopic<Vacancy> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType(vacancyId, authenticatedProfile.getId(), ChatWithTopicVacancy.class);
 
         if (chat == null) {
-            chat = new ChatWithTopicVacancy(authenticatedProfile, vacancyService.getById(vacancyId));
-
+            Vacancy vacancy = vacancyService.getById(vacancyId);
+            EmployerProfile employerProfile = vacancy.getCreatorProfile();
+            List<User> chatMembers = new ArrayList<>();
+            chatMembers.add(authenticatedUser);
+            chatMembers.add(employerUserService.getByProfileId(employerProfile.getId()));
+            chat = new ChatWithTopicVacancy(authenticatedProfile, chatMembers, vacancy);
             chatWithTopicService.add(chat);
         }
 
@@ -150,13 +156,11 @@ public class ChatController {
         ChatWithTopic<Resume> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType(resumeId, authenticatedProfile.getId(), ChatWithTopicResume.class);
         if (chat == null) {
             Resume resume = resumeService.getById(resumeId);
-            SeekerProfile seekerProfile = seekerProfileService.getById(((Profile) resume.getCreatorProfile()).getId());
-            chat = new ChatWithTopicResume(authenticatedProfile, resume);
+            SeekerProfile seekerProfile = (SeekerProfile) Hibernate.unproxy(resume.getCreatorProfile());
             List<User> chatMembers = new ArrayList<>();
             chatMembers.add(authenticatedUser);
-            User user2 = seekerUserService.getById(seekerProfile.getId());
-            chatMembers.add(user2);
-            chat.setChatMembers(chatMembers);
+            chatMembers.add(seekerUserService.getByProfileId(seekerProfile.getId()));
+            chat = new ChatWithTopicResume(authenticatedProfile, chatMembers, resume);
             chatWithTopicService.add(chat);
         }
         return "redirect:/private_chat/" + chat.getId();
