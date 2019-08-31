@@ -5,7 +5,7 @@ $(document).ready(function () {
     var employerProfileId = $('#employerProfileId').val();
     $.ajax({
         type: 'get',
-        url: "/api/chats/get_all_by_employer_profile_id?employerProfileId=" + employerProfileId,
+        url: "/api/chats/getAllChatsByProfileId/" + employerProfileId,
         contentType: 'application/json; charset=utf-8',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);

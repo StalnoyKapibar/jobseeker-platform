@@ -5,7 +5,7 @@ $(document).ready(function () {
     let seekerProfileId = $('#seekerProfileId').val();
     $.ajax({
         type: 'get',
-        url: "/api/chats/get_all_by_seeker_profile_id?seekerProfileId=" + seekerProfileId,
+        url: "/api/chats/getAllChatsByProfileId/" + seekerProfileId,
         contentType: 'application/json; charset=utf-8',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
