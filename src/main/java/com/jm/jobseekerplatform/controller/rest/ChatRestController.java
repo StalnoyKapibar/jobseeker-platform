@@ -131,16 +131,6 @@ public class ChatRestController {
         return new ResponseEntity<>(chatWithTopic.getId().toString(), HttpStatus.OK);
     }
 
-    @GetMapping("/get_all_by_employer_profile_id")
-    public ResponseEntity<List<ChatWithTopic>> getAllByEmployerProfileId(@RequestParam("employerProfileId") Long employerProfileId) {
-        return new ResponseEntity<>(chatWithTopicService.getAllChatsByMemberProfileId(employerProfileId), HttpStatus.OK);
-    }
-
-    @GetMapping("/get_all_by_seeker_profile_id")
-    public ResponseEntity<List<ChatWithTopic>> getAllBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId) {
-        return new ResponseEntity<>(chatWithTopicService.getAllChatsByMemberProfileId(seekerProfileId), HttpStatus.OK);
-    }
-
     @GetMapping("{chatId:\\d+}")
     public HttpEntity getAllMessagesInChat(@PathVariable("chatId") Long chatId) {
         List<ChatMessage> chatMessageList = chatService.getById(chatId).getChatMessages();
