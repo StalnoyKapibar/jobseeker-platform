@@ -16,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -104,7 +103,7 @@ public class VacancyRestController {
                 Collections.shuffle(all);
                 return new VacancyPageDTO(all.subList(0, limit), page);
             } else {
-                return vacancyService.findVacanciesByPoint(city, point, limit, page);
+                return vacancyService.findVacanciesByPointWithLimitAndPaging(city, point, limit, page);
             }
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
@@ -112,6 +111,6 @@ public class VacancyRestController {
                 return vacancyService.findVacanciesByTagsAndByPoint(city, point, tags, limit, page);
             }
         }
-        return vacancyService.findVacanciesByPoint(city, point, limit, page);
+        return vacancyService.findVacanciesByPointWithLimitAndPaging(city, point, limit, page);
     }
 }

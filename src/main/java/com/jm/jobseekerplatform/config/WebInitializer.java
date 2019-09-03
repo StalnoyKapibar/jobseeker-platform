@@ -13,9 +13,10 @@ import javax.servlet.Filter;
 
 @Configuration
 public class WebInitializer {
+
     @Bean
-    public FilterRegistrationBean<Filter> xssFilterRegistration(){
-        FilterRegistrationBean<Filter> registration=new FilterRegistrationBean<>();
+    public FilterRegistrationBean<Filter> xssFilterRegistration() {
+        FilterRegistrationBean<Filter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new XSSFilter());
         registration.addUrlPatterns("/*");
         return registration;
