@@ -153,4 +153,10 @@ public class ChatRestController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @GetMapping("getChatByMessageId/{messageId}")
+    public HttpEntity getChatByMessageId(@PathVariable("messageId") Long messsageId) {
+        ChatWithTopic chatWithTopic= chatWithTopicService.getChatByMessageId(messsageId);
+        return new ResponseEntity<>(chatWithTopic, HttpStatus.OK);
+    }
 }

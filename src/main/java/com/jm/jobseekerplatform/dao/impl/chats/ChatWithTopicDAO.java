@@ -312,4 +312,12 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
 
         return chat;
     }
+
+    public ChatWithTopic getChatByMessageId(Long messageId) {
+        ChatWithTopic chatWithTopic = entityManager.createQuery("SELECT DISTINCT c FROM ChatWithTopic c " +
+                "JOIN c.chatMessages m where m.id= :messageId", ChatWithTopic.class)
+                .setParameter("messageId", messageId)
+                .getSingleResult();
+        return chatWithTopic;
+    }
 }
