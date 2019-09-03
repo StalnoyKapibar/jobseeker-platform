@@ -36,7 +36,7 @@ public class VacancyRestController {
 
     @RequestMapping("/{vacancyId:\\d+}")
     public Vacancy getVacancyById(@PathVariable Long vacancyId) {
-       return vacancyService.getById(vacancyId);
+        return vacancyService.getById(vacancyId);
     }
 
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
@@ -78,7 +78,7 @@ public class VacancyRestController {
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public boolean updateVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
-        if (vacancyService.validateVacancy(vacancy) & vacancyService.getById(vacancy.getId()).getCreatorProfile().getId() == (((EmployerUser) authentication.getPrincipal()).getProfile().getId())) {
+        if (vacancyService.validateVacancy(vacancy) & (vacancyService.getById(vacancy.getId()).getCreatorProfile().getId().equals(((EmployerUser) authentication.getPrincipal()).getProfile().getId()))) {
             return vacancyService.updateVacancy(vacancy);
         }
         return false;
@@ -103,14 +103,14 @@ public class VacancyRestController {
                 Collections.shuffle(all);
                 return new VacancyPageDTO(all.subList(0, limit), page);
             } else {
-                return vacancyService.findVacanciesByPoint(city, point, limit, page);
+                return vacancyService.findVacanciesByPointWithLimitAndPaging(city, point, limit, page);
             }
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                Set<Tag> tags = ((SeekerProfile)((User)authentication.getPrincipal()).getProfile()).getTags();
+                Set<Tag> tags = ((SeekerProfile) ((User) authentication.getPrincipal()).getProfile()).getTags();
                 return vacancyService.findVacanciesByTagsAndByPoint(city, point, tags, limit, page);
             }
         }
-        return vacancyService.findVacanciesByPoint(city, point, limit, page);
+        return vacancyService.findVacanciesByPointWithLimitAndPaging(city, point, limit, page);
     }
 }
