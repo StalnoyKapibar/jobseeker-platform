@@ -16,7 +16,6 @@ public class XSSFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         if ("POST".equals(httpServletRequest.getMethod()) || "UPDATE".equals(httpServletRequest.getMethod())) {
-            logger.info("start filter");
             ReadTwiceHttpServletRequestWrapper readTwiceHttpServletRequestWrapper = new ReadTwiceHttpServletRequestWrapper((HttpServletRequest) request);
             readTwiceHttpServletRequestWrapper.setBody(cleanXSS(readTwiceHttpServletRequestWrapper.getBody()));
             chain.doFilter(readTwiceHttpServletRequestWrapper, response);
