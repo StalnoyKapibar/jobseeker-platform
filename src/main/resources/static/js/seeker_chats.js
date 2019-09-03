@@ -2,10 +2,10 @@ var header = $("meta[name='_csrf_header']").attr("content");
 var token = $("meta[name='_csrf']").attr("content");
 
 $(document).ready(function () {
-    var employerProfileId = $('#employerProfileId').val();
+    let seekerProfileId = $('#seekerProfileId').val();
     $.ajax({
         type: 'get',
-        url: "/api/chats/getAllChatsByProfileId/" + employerProfileId,
+        url: "/api/chats/getAllChatsByProfileId/" + seekerProfileId,
         contentType: 'application/json; charset=utf-8',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);

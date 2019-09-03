@@ -4,6 +4,7 @@ import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.NewsService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class SeekerController {
 
     @Autowired
     private NewsService newsService;
+
+    @Autowired
+    private ChatWithTopicService chatWithTopicService;
 
     @RequestMapping("/{seekerProfileId}")
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
@@ -67,5 +71,12 @@ public class SeekerController {
     public String getSeekerSubscriptionNews(@PathVariable Long seekerProfileId, Model model) {
         model.addAttribute("seekerProfileId", seekerProfileId);
         return "seeker_subscription_news";
+    }
+
+    @RequestMapping("/chats/{seekerProfileId}")
+    public String EmployerPageChatsMy(@PathVariable Long seekerProfileId, Model model) {
+        model.addAttribute("seekerProfileId", seekerProfileId);
+        model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(seekerProfileId));
+        return "seeker_chats";
     }
 }
