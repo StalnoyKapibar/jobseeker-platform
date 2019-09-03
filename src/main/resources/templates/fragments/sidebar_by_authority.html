@@ -21,9 +21,9 @@
 </th:block>
 
 <th:block th:fragment="employer_sidebar">
-    <li><a href="#"><span>Все резюме</span></a></li>
+    <li><a th:href="@{/employer/get_resumes}"><span>Все резюме</span></a></li>
     <li><a th:href="@{/employer/get_news/{id}(id=${employerProfileId})}"><span>Мои новости</span></a></li>
-    <li><a class="font-color" href="#">Мои чаты<span id="count_not_read_messages"></span></a></li>
+    <li><a class="font-color" th:href="@{/employer/chats/{id}(id=${employerProfileId})}">Мои чаты<span id="count_not_read_messages"></span></a></li>
     <li><span id="username" th:utext="${username}"></span></li>
     <li><span id="vacancyId" th:utext="${vacancyId}"></span></li>
 </th:block>

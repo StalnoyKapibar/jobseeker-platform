@@ -7,7 +7,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -21,9 +20,6 @@ import java.util.Set;
         @NamedAttributeNode("coordinates")
 })
 public class Vacancy extends CreatedByEmployerProfileBase implements Serializable {
-
-    @Column(name = "headline", nullable = false)
-    private String headline;
 
     @OneToOne(fetch = FetchType.LAZY)
     @Embedded
@@ -64,8 +60,7 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     }
 
     public Vacancy(EmployerProfile employerProfile, String headline, City city, Boolean remote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags, Point coordinates) {
-        super(employerProfile);
-        this.headline = headline;
+        super(employerProfile, headline);
         this.city = city;
         this.remote = remote;
         this.shortDescription = shortDescription;
@@ -75,14 +70,6 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
         this.tags = tags;
         this.coordinates = coordinates;
         state = State.NO_ACCESS;
-    }
-
-    public String getHeadline() {
-        return headline;
-    }
-
-    public void setHeadline(String headline) {
-        this.headline = headline;
     }
 
     public String getDescription() {
@@ -179,7 +166,6 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     public String toString() {
         return "Vacancy{" +
                 super.toString() +
-                ", headline='" + headline + '\'' +
                 ", city=" + city.getName() +
                 ", remote=" + remote +
                 ", shortDescription='" + shortDescription + '\'' +
@@ -195,7 +181,6 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     }
 
     @Override
-    //todo (Nick Dolgopolov) Добавить в JSON
     public String getTypeName() {
         return "Вакансия";
     }

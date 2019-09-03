@@ -5,12 +5,17 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
-import com.jm.jobseekerplatform.model.profiles.*;
-import com.jm.jobseekerplatform.model.users.*;
+import com.jm.jobseekerplatform.model.profiles.AdminProfile;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import com.jm.jobseekerplatform.model.users.AdminUser;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
 import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatService;
-import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicVacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
@@ -23,6 +28,7 @@ import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -78,9 +84,6 @@ public class InitData {
     private ChatService chatService;
 
     @Autowired
-    private ChatWithTopicVacancyService chatWithTopicVacancyService;
-
-    @Autowired
     private PointService pointService;
 
     @Autowired
@@ -94,6 +97,12 @@ public class InitData {
 
     @Autowired
     private ReviewVoteService reviewVoteService;
+
+    @Autowired
+    private ResumeService resumeService;
+
+    @Autowired
+    private JobExperienceService jobExperienceService;
 
     private Faker faker = new Faker(new Locale("ru"));
 
@@ -115,6 +124,8 @@ public class InitData {
         initReviews();
         initChat();
         initNews();
+        initJobExperience();
+        initResumes();
     }
 
     private void initNews() {
@@ -159,41 +170,26 @@ public class InitData {
     }
 
     public void initReviews() {
-        EmployerReviews reviewOne = new EmployerReviews();
-        reviewOne.setDateReviews(new Date());
-        reviewOne.setEvaluation(4);
-        reviewOne.setSeekerProfile(seekerProfileService.getById(8L));
-        reviewOne.setReviews("Хорошая контора. Отличный коллектив, только директор придурковатый");
+        SeekerProfile seekerProfile = seekerProfileService.getById(8L);
+        EmployerReviews reviewOne = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Хорошая контора. Отличный коллектив, только директор придурковатый", new Date(),
+                4, seekerProfile);
 
-        EmployerReviews reviewTwo = new EmployerReviews();
-        reviewTwo.setDateReviews(new Date());
-        reviewTwo.setSeekerProfile(seekerProfileService.getById(8L));
-        reviewTwo.setEvaluation(1);
-        reviewTwo.setReviews("Неадекватное руководство. Уволился через месяц");
+        EmployerReviews reviewTwo = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Неадекватное руководство. Уволился через месяц", new Date(),
+                1, seekerProfile);
 
-        EmployerReviews reviewThree = new EmployerReviews();
-        reviewThree.setDateReviews(new Date());
-        reviewThree.setSeekerProfile(seekerProfileService.getById(9L));
-        reviewThree.setEvaluation(4);
-        reviewThree.setReviews("Очень низкие зарплаты, уволился через полгода");
+        seekerProfile = seekerProfileService.getById(9L);
+        EmployerReviews reviewThree = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Очень низкие зарплаты, уволился через полгода", new Date(),
+                2, seekerProfile);
 
-        EmployerReviews reviewFour = new EmployerReviews();
-        reviewFour.setDateReviews(new Date());
-        reviewFour.setSeekerProfile(seekerProfileService.getById(9L));
-        reviewFour.setEvaluation(1);
-        reviewFour.setReviews("Неадекватное руководство. Уволился через месяц");
+        EmployerReviews reviewFour = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Неадекватное руководство. Уволился через месяц", new Date(),
+                1, seekerProfile);
 
-        EmployerReviews reviewFive = new EmployerReviews();
-        reviewFive.setDateReviews(new Date());
-        reviewFive.setSeekerProfile(seekerProfileService.getById(10L));
-        reviewFive.setEvaluation(4);
-        reviewFive.setReviews("Хорошая контора. Отличный коллектив");
+        seekerProfile = seekerProfileService.getById(10L);
+        EmployerReviews reviewFive = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Хорошая контора. Отличный коллектив", new Date(),
+                4, seekerProfile);
 
-        EmployerReviews reviewSix = new EmployerReviews();
-        reviewSix.setDateReviews(new Date());
-        reviewSix.setSeekerProfile(seekerProfileService.getById(10L));
-        reviewSix.setEvaluation(1);
-        reviewSix.setReviews("Все нравилось,но уволился через месяц");
+        EmployerReviews reviewSix = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Все нравилось,но уволился через месяц", new Date(),
+                3, seekerProfile);
 
         Set<EmployerReviews> reviewsOne = new HashSet<>();
         reviewsOne.add(reviewOne);
@@ -328,7 +324,7 @@ public class InitData {
         City city;
         List<City> cities = cityService.getAll();
         for (int i = 0; i < 30; i++) {
-            city = cities.get(rnd.nextInt(cities.size() ));
+            city = cities.get(rnd.nextInt(cities.size()));
             point = city.getPoint();
 
             vacancy = new Vacancy(
@@ -349,8 +345,16 @@ public class InitData {
     }
 
     private void initAdminProfile() {
+        BufferedImage image = null;
+        try {
+            File sourceImage = new File("src/main/resources/static/img/LOGO_001.jpg");
+            image = ImageIO.read(sourceImage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         AdminProfile adminProfile = new AdminProfile();
         adminProfile.setState(State.ACCESS);
+        adminProfile.setLogo(imageService.resizeLogoEmployer(image));
         adminProfileService.add(adminProfile);
     }
 
@@ -522,6 +526,11 @@ public class InitData {
         return all.get(rnd.nextInt(all.size()));
     }
 
+    private SeekerProfile getRandomSeekerProfile() {
+        List<SeekerProfile> all = seekerProfileService.getAll();
+        return all.get(rnd.nextInt(all.size()));
+    }
+
     private void initCities() {
         cityService.initCity("Москва", new Point(55.752030F, 37.633685F));
         cityService.initCity("Санкт-Петербург", new Point(59.943122F, 30.276844F));
@@ -529,5 +538,48 @@ public class InitData {
         cityService.initCity("Казань", new Point(55.825853F, 49.117538F));
         cityService.initCity("Екатеринбург", new Point(56.825312F, 60.608923F));
         cityService.initCity("Нижний Новгород", new Point(56.299846F, 43.904104F));
+    }
+
+    private void initJobExperience(){
+        for (int i=0; i<20; i++) {
+            Date date= new Date();
+            JobExperience jobExperience = new JobExperience(date,
+                    new Date(date.getTime()+(24*60*60*1000)),//+1 день
+                    faker.job().title(),
+                    faker.job().position(),
+                    faker.witcher().quote());
+            jobExperienceService.add(jobExperience);
+        }
+    }
+
+    private void initResumes() {
+        Set<Resume> resumes = new HashSet<>();
+        Set<JobExperience> jobExperiences = new HashSet<>();
+        List<City> cities = cityService.getAll();
+        List<JobExperience> jobExperienceList = jobExperienceService.getAll();
+        Resume resume;
+        Point point;
+        City city;
+        for (int i = 0; i < 14; i++) {
+            city = cities.get(rnd.nextInt(cities.size()));
+            point = city.getPoint();
+            SeekerProfile seekerProfile = getRandomSeekerProfile();
+            jobExperiences.add(jobExperienceList.get(i));
+            resume = new Resume(
+                    seekerProfile,
+                    faker.job().title(),
+                    randomTags(0L),
+                    Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), //salaryMin
+                    Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), //salaryMax
+                    jobExperiences,
+                    city,
+                    point);
+            resumes.add(resume);
+            resumeService.add(resume);
+            seekerProfile.setResumes(resumes);
+            seekerProfileService.update(seekerProfile);
+            resumes.clear();
+            jobExperiences.clear();
+        }
     }
 }

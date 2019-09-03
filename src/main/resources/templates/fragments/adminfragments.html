@@ -37,7 +37,6 @@
 </th:block>
 
 <th:block th:fragment="sidebar">
-    <nav class="col-md-2 d-none d-md-block bg-light sidebar">
         <div class="sidebar-sticky">
             <ul class="nav flex-column">
                 <li class="nav-item">
@@ -71,10 +70,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'chatsMy' ? 'active' : ''}" href="/admin/chats/my">
+                    <a class="nav-link" th:classappend="${side == 'chatsMy' ? 'active' : ''}" href="/admin/chats/my" style="display: inline; padding-right: 0;">
                         <span data-feather="message-circle"></span>
                         Мои чаты
                     </a>
+                    <a class="nav-link" href="" id="count_not_read_chats" style="display: inline; padding-left: 0"></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:classappend="${side == 'chatsAll' ? 'active' : ''}" href="/admin/chats/all">
@@ -90,7 +90,6 @@
                 </li>
             </ul>
         </div>
-    </nav>
 </th:block>
 
 <th:block th:fragment="scripts">

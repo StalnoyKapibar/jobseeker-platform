@@ -1,9 +1,11 @@
 package com.jm.jobseekerplatform.model.profiles;
 
 import com.jm.jobseekerplatform.model.State;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Base64;
 
 /**
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
@@ -21,8 +23,17 @@ public abstract class Profile implements Serializable {
     @Enumerated(value = EnumType.STRING)
     private State state;
 
+    @Column(name = "logo")
+    @Type(type = "image")
+    private byte[] logo;
+
     public Profile() {
         this.state = State.NO_ACCESS;
+    }
+
+    public Profile(byte[] logo) {
+        this();
+        this.logo = logo;
     }
 
     public Long getId() {
@@ -44,6 +55,18 @@ public abstract class Profile implements Serializable {
     public abstract String getFullName();
 
     public abstract String getTypeName();
+
+    public String getEncoderPhoto() {
+        return Base64.getEncoder().encodeToString(this.getLogo());
+    }
+
+    public byte[] getLogo() {
+        return logo;
+    }
+
+    public void setLogo(byte[] logo) {
+        this.logo = logo;
+    }
 
     @Override
     public String toString() {
