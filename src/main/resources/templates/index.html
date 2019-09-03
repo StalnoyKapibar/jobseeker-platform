@@ -8,18 +8,12 @@
     <title>Hello</title>
     <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <script type="text/javascript" src="/js/index.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
 <div class="container-fluid">
     <div class="row">
         <div class="main-block chromeFix" layout:fragment="content">
             <div id="vacancyDiv" class="container-fluid" style="margin-top: 30px">
-                <div sec:authorize="isAuthenticated()">
-                    <script>connectToServerByChatId()</script>
-                    <div id="snackbar"></div>
-                </div>
                 <div class="row">
                     <div class="col-sm-1"></div>
                     <div class="col-sm-10">
