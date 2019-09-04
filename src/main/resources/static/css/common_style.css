@@ -10,7 +10,9 @@
     --card-header-bg-color: #ccc;
     --review-voted-color: #222;
     --review-voted-hoover: #222;
-    --review-voted-count-color: #999999
+    --review-voted-count-color: #999999;
+    --snackbar-background-color: #222;
+    --snackbar-color: #fff;
 }
 
 :root[theme='dark'] {
@@ -25,7 +27,9 @@
     --card-header-bg-color: #444;
     --review-voted-color: #F39C12;
     --review-voted-hoover: #F39C12;
-    --review-voted-count-color: silver
+    --review-voted-count-color: silver;
+    --snackbar-background-color: #fff;
+    --snackbar-color: #222;
 }
 
 body {
@@ -479,4 +483,47 @@ select {
 
 .chatInfo {
     min-height: 80px;
+}
+
+#snackbar {
+    visibility: hidden;
+    min-width: 15%;
+    /*margin-left: -125px;*/
+    background: var(--snackbar-background-color);
+    color: var(--snackbar-color);
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    bottom: 0;
+    font-size: 17px;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 3.5s;
+    animation: fadein 0.5s, fadeout 0.5s 3.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 0; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 0; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 0; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 0; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
 }
