@@ -6,6 +6,7 @@ import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 
@@ -34,21 +34,22 @@ public class SeekerController {
     private NewsService newsService;
 
     @Autowired
+    private ChatWithTopicService chatWithTopicService;
+
+    @Autowired
     private TagService tagService;
 
     @RequestMapping("/{seekerProfileId}")
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-
         Set<Tag> tags = seekerProfile.getTags();
         List<Tag> notSelectedTags = tagService.getAll();
         tags.forEach(x -> {
             notSelectedTags.remove(x);
         });
-
         model.addAttribute("notSelectedTags", notSelectedTags);
         model.addAttribute("seekerProfile", seekerProfile);
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerProfile.getPhoto()));
+        model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
         return "seeker";
     }
 
@@ -82,5 +83,12 @@ public class SeekerController {
     public String getSeekerSubscriptionNews(@PathVariable Long seekerProfileId, Model model) {
         model.addAttribute("seekerProfileId", seekerProfileId);
         return "seeker_subscription_news";
+    }
+
+    @RequestMapping("/chats/{seekerProfileId}")
+    public String EmployerPageChatsMy(@PathVariable Long seekerProfileId, Model model) {
+        model.addAttribute("seekerProfileId", seekerProfileId);
+        model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(seekerProfileId));
+        return "seeker_chats";
     }
 }
