@@ -89,5 +89,8 @@ public class ChatWithTopicService extends AbstractService<ChatWithTopic> {
         return chatWithTopicDAO.getAllChatsByMemberProfileId(profileId);
     }
 
+    public ChatWithTopic getChatByMessageId(Long messageId) {
+        return chatWithTopicDAO.getChatByMessageId(messageId);
+    }
 
 }
