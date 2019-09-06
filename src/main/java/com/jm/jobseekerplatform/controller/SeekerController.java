@@ -44,9 +44,7 @@ public class SeekerController {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Set<Tag> tags = seekerProfile.getTags();
         List<Tag> notSelectedTags = tagService.getAll();
-        tags.forEach(x -> {
-            notSelectedTags.remove(x);
-        });
+        notSelectedTags.removeAll(tags);
         model.addAttribute("notSelectedTags", notSelectedTags);
         model.addAttribute("seekerProfile", seekerProfile);
         model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
