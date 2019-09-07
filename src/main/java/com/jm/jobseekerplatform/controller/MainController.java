@@ -91,8 +91,7 @@ public class MainController {
             }
 
             if (authentication.getAuthorities().contains(roleEmployer)) {
-                Long id = ((User) authentication.getPrincipal()).getId();
-                EmployerProfile profile = employerProfileService.getById(id);//employerUserService.getById(id).getProfile();
+                Profile profile = ((User) authentication.getPrincipal()).getProfile();
                 model.addAttribute("employerProfileId", profile.getId());
             }
         }
