@@ -1,8 +1,6 @@
 package com.jm.jobseekerplatform.model.users;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.UserRole;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +13,15 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = EmployerUser.class, name = "employer"),
+        @JsonSubTypes.Type(value = SeekerUser.class, name = "seeker"),
+        @JsonSubTypes.Type(value = AdminUser.class, name = "admin")
+})
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "users")
