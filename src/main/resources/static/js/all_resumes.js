@@ -147,7 +147,7 @@ function printResumes(data) {
             '<div class="pull-right">' +
             '<span class="btn btn-outline-success btn-sm btnOnResumePage"' +
             'onclick="window.location.href =\'/seeker/' + value.creatorProfile + '\';event.stopPropagation();">На страницу сикера</span>' + '</div>' +
-            '</li>');
+        '</li>');
     });
 }
 
