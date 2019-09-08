@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
-<th:block th:fragment="head">
+ <th:block th:fragment="head">
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -21,6 +17,7 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
 </th:block>
 
+<body>
 <th:block th:fragment="sidebar">
     <div class="sidebar">
         <ul sec:authorize="!isAuthenticated()">
