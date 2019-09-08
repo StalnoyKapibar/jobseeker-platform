@@ -352,16 +352,16 @@ function outFavorite(vacancyId, seekerProfileId) {
 }
 
 function getSeekerTags(user_id) {
-    var seeker_tags;
+    var tags = null;
     $.ajax({
         url: "/api/tags/seeker/" + user_id,
         type: "GET",
         async: false,
         success: function (data) {
-            seeker_tags = data;
+            tags = data;
         }
-    })
-    return seeker_tags;
+    });
+    return tags;
 }
 
 
