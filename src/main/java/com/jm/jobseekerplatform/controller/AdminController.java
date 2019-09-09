@@ -104,7 +104,9 @@ public class AdminController {
         model.addAttribute("employerUser", employerUser);
         model.addAttribute("employerProfile", employerUser.getProfile());
         model.addAttribute("vacancies", vacancyService.getAllByEmployerProfileId(employerUser.getProfile().getId()));
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(employerUser.getProfile().getLogo()));
+        if(employerUser.getProfile().getLogo() != null) {
+            model.addAttribute("photoimg", Base64.getEncoder().encodeToString(employerUser.getProfile().getLogo()));
+        }
 
         return "admin/admin_employer_edit";
     }
@@ -144,7 +146,10 @@ public class AdminController {
 
         model.addAttribute("seekerUser", seekerUser);
         model.addAttribute("seekerProfile", seekerUser.getProfile());
-        model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerUser.getProfile().getLogo()));
+        if(seekerUser.getProfile().getLogo() != null){
+            model.addAttribute("photoimg", Base64.getEncoder().encodeToString(seekerUser.getProfile().getLogo()));
+        }
+
 
         return "admin/admin_seeker_edit";
     }
