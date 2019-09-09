@@ -18,4 +18,8 @@ public class SeekerHistoryService extends AbstractService<SeekerVacancyRecord> {
     public List<ViewedVacanciesDTO> getViewedVacanciesBySeeker(Long seekerId) {
         return seekerVacancyRecordDAO.getViewedVacanciesBySeeker(seekerId);
     }
+
+    public List<ViewedVacanciesDTO> getAllViewedVacanciesBySeeker(Long seekerId) {
+        return seekerVacancyRecordDAO.getAllViewedVacanciesBySeeker(seekerId);
+    }
 }
