@@ -76,7 +76,8 @@ $('#editEmployerForm').click(function (event) {
         'authority': userAuthority,
         'enabled': enabled,
         'confirm': confirm,
-        'profile': profile
+        'profile': profile,
+        'type': 'employer'
     };
 
     $.ajax({
