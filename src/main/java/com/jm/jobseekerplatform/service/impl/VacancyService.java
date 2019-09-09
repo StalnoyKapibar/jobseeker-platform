@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -135,6 +136,15 @@ public class VacancyService extends AbstractService<Vacancy> {
         String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
         return dao.getVacanciesByTagsAndSortByCity(city, tags, limit, page);
     }
+
+    public Page<Vacancy> findVacanciesByTagsAndByPointAndByViews(String currentCity, Point point, Set<Tag> tags,
+                                                                 int limit,
+                                                                 int page,
+                                                                 HashMap<Vacancy, Long> numberOfViewsVacanciesByTag) {
+        String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
+        return dao.getVacanciesByTagsAndSortByCityAndByViews(city, tags, limit, page, numberOfViewsVacanciesByTag);
+    }
+
     public boolean updateVacancy(Vacancy vacancy){
         Vacancy oldVacancy= getById(vacancy.getId());
         oldVacancy.setHeadline(vacancy.getHeadline());
