@@ -17,8 +17,10 @@
     <div class="row" style="padding-top: 30px">
         <div class="col-4" id="employerLogo">
             <form id="editLogoForm" class="form-inline">
-                <img id="eLogo" th:src="@{'data:image/png;base64,' + ${photoimg}}" name="logo" alt=""
-                     style="width: 300px;height: 300px;"><br>
+                <img th:if="${photoimg != null}" id="eLogo" th:src="@{'data:image/png;base64,' + ${photoimg}}" name="logo" alt=""
+                     style="width: 300px;height: 300px;">
+                <div th:if="${photoimg == null}" style="width: 300px;height: 300px; background: #808080"></div>
+                <br>
                 <div class="custom-file mt-4">
                     <div class="input-group">
                         <div class="row">
@@ -50,8 +52,9 @@
                 </div>
                 <div class="form-group">
                     <label>Employer last visit : </label><input class="form-control" type="text"
-                                                                th:value="${employerUser.date}" name="date"
+                                                                th:value="${#temporals.format(employerUser.date, 'dd MMMM yyyy HH:mm')}"
                                                                 readonly>
+                    <input class="form-control" type="hidden" th:value="${employerUser.date}" name="date">
                 </div>
                 <div class="form-group">
                     <input class="form-control" type="hidden" th:value="${employerUser.password}"
