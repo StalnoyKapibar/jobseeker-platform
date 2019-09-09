@@ -92,6 +92,62 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         return getVacancies(query, tags, limit, page);
     }
 
+    public Page<Vacancy> getVacanciesByTagsAndSortByCityAndByViews(String city, Set<Tag> tags, int limit, int page,
+                                                                   HashMap<Vacancy, Long> numberOfViewsVacanciesByTag) {
+        page = (page == 0) ? page : --page;
+
+        Query query = (Query) entityManager.createQuery(query_for_find_vacancies_by_tags_and_sorted_by_city)
+                .setParameter("tags", tags).setParameter("city", city);
+        return getVacanciesSortByViews(query, tags, limit, page, numberOfViewsVacanciesByTag);
+    }
+
+    private Page<Vacancy> getVacanciesSortByViews(Query query, Set<Tag> tags, int limit, int page,
+                                                  HashMap<Vacancy, Long> numberOfViewsVacanciesByTag) {
+        long totalElements = (long) entityManager
+                .createQuery("select count(distinct v) from Vacancy v join v.tags t where v.state='ACCESS' and t in (:tags)")
+                .setParameter("tags", tags).getSingleResult();
+
+        int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
+
+        List ids = query.setFirstResult(page * limit).setMaxResults(limit).getResultList();
+        List<Long> vacancyIds = new ArrayList<>();
+        for (Object vacancy : ids) {
+            vacancyIds.add((Long) ((Object[]) vacancy)[0]);
+        }
+
+        List<Vacancy> vacancyList = entityManager.createQuery("select v from Vacancy v where v.id in (:ids)").setParameter("ids", vacancyIds)
+                .setHint(QueryHints.FETCHGRAPH, entityManager.getEntityGraph("vacancy-all-nodes")).getResultList();
+
+        List<Vacancy> vacancies = new ArrayList<>();
+        for (Long id : vacancyIds) {
+            for (Vacancy v : vacancyList) {
+                if (v.getId().equals(id)) {
+                    vacancies.add(v);
+                }
+            }
+        }
+
+        vacancies.sort((vNext, vPrevious) -> {
+            if (vNext.getCity().equals(vPrevious.getCity())) {
+                if (numberOfViewsVacanciesByTag.containsKey(vNext)
+                        && numberOfViewsVacanciesByTag.containsKey(vPrevious)) {
+                    return numberOfViewsVacanciesByTag.get(vPrevious).compareTo(numberOfViewsVacanciesByTag.get(vNext));
+                } else if (!numberOfViewsVacanciesByTag.containsKey(vNext)
+                        && numberOfViewsVacanciesByTag.containsKey(vPrevious)) {
+                    return 1;
+                } else if (numberOfViewsVacanciesByTag.containsKey(vNext)
+                        && !numberOfViewsVacanciesByTag.containsKey(vPrevious)) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            } else {
+                return 0;
+            }
+        });
+        return new VacancyPageDTO(vacancies, totalPages);
+    }
+
     public Page<Vacancy> getVacanciesByTag(Set<Tag> tags, int limit, int page) {
         Query query = (Query) entityManager.createQuery(query_for_find_vacancies_by_tags)
                 .setParameter("tags", tags);
