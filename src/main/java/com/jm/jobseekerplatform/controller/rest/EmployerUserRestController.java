@@ -37,17 +37,8 @@ public class EmployerUserRestController {
     @RequestMapping(value = "/editLogo", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<EmployerProfile> updateEmployerLogo(@RequestParam(value = "file", required = false) MultipartFile file,
                                                                             @RequestParam("id") String id) {
-        EmployerUser employerUser = employerUserService.getById(Long.parseLong(id));
-        if (!file.isEmpty()) {
-            try {
-                byte[] logo = file.getBytes();
-                employerUser.getProfile().setLogo(logo);
-                employerProfileService.update(employerUser.getProfile());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return new ResponseEntity<>(employerUser.getProfile(), HttpStatus.OK);
+        employerProfileService.updatePhoto(Long.parseLong(id),file);
+        return new ResponseEntity<>(employerUserService.getById(Long.parseLong(id)).getProfile(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{employerUserId}", method = RequestMethod.GET)

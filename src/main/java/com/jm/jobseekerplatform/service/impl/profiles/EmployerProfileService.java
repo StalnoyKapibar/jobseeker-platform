@@ -3,10 +3,14 @@ package com.jm.jobseekerplatform.service.impl.profiles;
 import com.jm.jobseekerplatform.dao.impl.profiles.EmployerProfileDAO;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.State;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.service.AbstractService;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -17,6 +21,10 @@ public class EmployerProfileService extends AbstractService<EmployerProfile> {
 
     @Autowired
     private EmployerProfileDAO dao;
+    @Autowired
+    private EmployerUserService employerUserService;
+    @Autowired
+    private EmployerProfileService employerProfileService;
 
     public void blockPermanently(EmployerProfile employerProfile) {
         employerProfile.setState(State.BLOCK_PERMANENT);
@@ -52,5 +60,18 @@ public class EmployerProfileService extends AbstractService<EmployerProfile> {
 
     public int deleteExpiryBlockEmployerProfiles() {
         return dao.deleteExpiryBlockEmployerProfiles();
+    }
+
+    public void updatePhoto(long id, MultipartFile file){
+        EmployerUser employerUser = employerUserService.getById(id);
+        if (!file.isEmpty()) {
+            try {
+                byte[] logo = file.getBytes();
+                employerUser.getProfile().setLogo(logo);
+                employerProfileService.update(employerUser.getProfile());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

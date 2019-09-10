@@ -38,15 +38,7 @@ public class SeekerUserRestController {
     public ResponseEntity<SeekerProfile> updateSeekerPhoto(@RequestParam(value = "file", required = false) MultipartFile file,
                                                            @RequestParam("seekerUserId") String seekerUserId) {
         SeekerUser seekerUser = seekerUserService.getById(Long.parseLong(seekerUserId));
-        if (!file.isEmpty()) {
-            try {
-                byte[] photo = file.getBytes();
-                seekerUser.getProfile().setLogo(photo);
-                seekerProfileService.update(seekerUser.getProfile());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        seekerProfileService.updatePhoto(Long.parseLong(seekerUserId),file);
         return new ResponseEntity<>(seekerUser.getProfile(), HttpStatus.OK);
     }
 
