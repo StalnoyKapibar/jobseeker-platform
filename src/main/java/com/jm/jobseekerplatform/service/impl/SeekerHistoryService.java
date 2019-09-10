@@ -3,10 +3,13 @@ package com.jm.jobseekerplatform.service.impl;
 import com.jm.jobseekerplatform.dao.impl.SeekerVacancyRecordDAO;
 import com.jm.jobseekerplatform.dto.ViewedVacanciesDTO;
 import com.jm.jobseekerplatform.model.SeekerVacancyRecord;
+import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -19,7 +22,7 @@ public class SeekerHistoryService extends AbstractService<SeekerVacancyRecord> {
         return seekerVacancyRecordDAO.getViewedVacanciesBySeeker(seekerId);
     }
 
-    public List<ViewedVacanciesDTO> getAllViewedVacanciesBySeeker(Long seekerId) {
-        return seekerVacancyRecordDAO.getAllViewedVacanciesBySeeker(seekerId);
+    public HashMap<Vacancy, Long> getNumberOfViewsOffAllVacanciesByTagForSeeker(SeekerProfile seekerProfile) {
+        return seekerVacancyRecordDAO.getNumberOfViewsOffAllVacanciesByTagForSeeker(seekerProfile);
     }
 }
