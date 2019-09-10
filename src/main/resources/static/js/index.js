@@ -188,7 +188,7 @@ function searchResults() {
 }
 
 $(window).scroll(function () {
-    if ($(document).height() - $(window).height() === $(window).scrollTop()) {
+    if (Math.abs(($(document).height() - $(window).height()) - $(window).scrollTop()) < 50) {
         if (block = true) {
             if (page < total_pages) {
                 if (blockScroll == false) {
