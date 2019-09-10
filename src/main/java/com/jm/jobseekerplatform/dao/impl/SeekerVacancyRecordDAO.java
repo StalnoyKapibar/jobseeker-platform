@@ -3,13 +3,24 @@ package com.jm.jobseekerplatform.dao.impl;
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.dto.ViewedVacanciesDTO;
 import com.jm.jobseekerplatform.model.SeekerVacancyRecord;
+import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import com.jm.jobseekerplatform.service.impl.VacancyService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class SeekerVacancyRecordDAO extends AbstractDAO<SeekerVacancyRecord> {
+
+    @Autowired
+    VacancyService vacancyService;
+
 
     //language=SQL
     private final static String query_for_get_viewed_vacancies =
@@ -41,11 +52,15 @@ public class SeekerVacancyRecordDAO extends AbstractDAO<SeekerVacancyRecord> {
         return listVacancies;
     }
 
-    public List<ViewedVacanciesDTO> getAllViewedVacanciesBySeeker(Long seekerId) {
-        List<ViewedVacanciesDTO> listVacancies = new ArrayList();
+    public HashMap<Vacancy, Long> getNumberOfViewsOffAllVacanciesByTagForSeeker(SeekerProfile seekerProfile) {
+        Long profileId = seekerProfile.getId();
+        Set<Tag> profileTags = seekerProfile.getTags();
+        HashMap<Vacancy, Long> numberOfViewsVacanciesByTag = new HashMap<>();
+
+        List<ViewedVacanciesDTO> vacanciesDTOList = new ArrayList();
         List vacancies = entityManager
                 .createNativeQuery(query_for_get_all_viewed_vacancies)
-                .setParameter("id", seekerId).getResultList();
+                .setParameter("id", profileId).getResultList();
 
         for (Object vacancy : vacancies) {
             ViewedVacanciesDTO dto = new ViewedVacanciesDTO();
@@ -54,8 +69,31 @@ public class SeekerVacancyRecordDAO extends AbstractDAO<SeekerVacancyRecord> {
             dto.setSalarymin(Integer.parseInt(((Object[]) vacancy)[2].toString()));
             dto.setSalarymax(Integer.parseInt(((Object[]) vacancy)[3].toString()));
             dto.setCompanyname((String)((Object[]) vacancy)[4]);
-            listVacancies.add(dto);
+            vacanciesDTOList.add(dto);
         }
-        return listVacancies;
+
+        List<Vacancy> vacancyList = vacancyService.getAll();
+        HashMap<Long, Vacancy> vacancyHashMap = new HashMap<>();
+        for (Vacancy vacancy : vacancyList) {
+            vacancyHashMap.put(vacancy.getId(), vacancy);
+        }
+
+        for (ViewedVacanciesDTO vacanciesDTO : vacanciesDTOList) {
+            Vacancy vacancy = vacancyHashMap.get(vacanciesDTO.getId());
+            Set<Tag> tagsVacancies = vacancy.getTags();
+            for (Tag tag : tagsVacancies) {
+                if (profileTags.contains(tag)) {
+                    if (numberOfViewsVacanciesByTag.containsKey(vacancy)) {
+                        Long aLong = numberOfViewsVacanciesByTag.get(vacancy);
+                        numberOfViewsVacanciesByTag.replace(vacancy, ++aLong);
+                        break;
+                    } else {
+                        numberOfViewsVacanciesByTag.put(vacancy, 1L);
+                        break;
+                    }
+                }
+            }
+        }
+        return numberOfViewsVacanciesByTag;
     }
 }
