@@ -7,6 +7,7 @@ import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 @Controller
@@ -21,13 +23,7 @@ import java.util.Set;
 public class SeekerController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private SeekerProfileService seekerProfileService;
-
-    @Autowired
-    private NewsService newsService;
 
     @RequestMapping("/{seekerProfileId}")
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
@@ -67,5 +63,27 @@ public class SeekerController {
     public String getSeekerSubscriptionNews(@PathVariable Long seekerProfileId, Model model) {
         model.addAttribute("seekerProfileId", seekerProfileId);
         return "seeker_subscription_news";
+    }
+
+    @Value("${google.maps.api.key}")
+    private String googleMapsApiKey;
+
+    @RequestMapping("/resumes/{seekerProfileId}")
+    public String seekerResumesPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication,
+                                    HttpServletRequest request) {
+       if (request.isUserInRole("ROLE_EMPLOYER")) {
+           SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+           model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
+           model.addAttribute("resumesList", seekerProfile.getResumes());
+           model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+           return "resumes";
+       }
+       else {
+           SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getId());
+           model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
+           model.addAttribute("resumesList", seekerProfile.getResumes());
+           model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+           return "resumes";
+       }
     }
 }

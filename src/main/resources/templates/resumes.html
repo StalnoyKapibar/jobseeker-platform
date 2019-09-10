@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+
+<head>
+    <title>Резюме</title>
+    <meta name="apiKey" th:content="${googleMapsApiKey}"/>
+    <script sec:authorize="hasRole('ROLE_SEEKER')" type="text/javascript" src="/js/seeker_resumes.js"></script>
+    <script sec:authorize="hasRole('ROLE_EMPLOYER')" type="text/javascript" src="/js/seeker_resumes_for_employer.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="main-block chromeFix" layout:fragment="content">
+            <div id="resumeDiv" class="container-fluid" style="margin-top: 30px">
+                <div class="row" style="margin-top: 30px">
+                    <div class="col-sm-1">
+                    </div>
+                    <div class="col-sm-10">
+                        <div id="allResumes">
+                            <ul class="list-group">
+                            </ul>
+                        </div>
+                        <div id="searchResumes">
+                            <span id="searchHeader" style="color: #4177A3;"></span>
+                            <div class="list-group" id="searchResult">
+                                <ul id="searchList" class="list-group"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div id="resumeModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content card border-light">
+                            <div class="modal-header card-header">
+                                <h2><span id="VMHeadline"></span><br/></h2>
+                            </div>
+                            <div class="modal-body">
+                                <h6><span id="VMTags"></span><br></h6>
+                                <span id="VMJobExp" >
+                                </span><br>
+                                <h6 style="white-space: pre">Город:  <span id="VMCity"></span></h6>
+                                <h6 style="white-space: pre; color: #dc3545"><span id="VMSalary"></span></h6><br/>
+                                <div class="well well-sm">
+                                    <span id="VMDescription"></span>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
