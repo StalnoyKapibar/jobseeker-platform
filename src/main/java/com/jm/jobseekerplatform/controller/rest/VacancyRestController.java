@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.dto.VacancyPageDTO;
-import com.jm.jobseekerplatform.dto.ViewedVacanciesDTO;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
@@ -118,29 +117,11 @@ public class VacancyRestController {
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 SeekerProfile profile = (SeekerProfile) ((User) authentication.getPrincipal()).getProfile();
-                Long profileId = profile.getId();
                 Set<Tag> profileTags = profile.getTags();
-                HashMap<Vacancy, Long> numberOfViewsVacanciesByTag = new HashMap<>();
-                List<ViewedVacanciesDTO> allViewedVacanciesBySeeker =
-                        seekerHistoryService.getAllViewedVacanciesBySeeker(profileId);
-                for (ViewedVacanciesDTO vacanciesDTO : allViewedVacanciesBySeeker) {
-                    Vacancy vacancy = vacancyService.getById(vacanciesDTO.getId());
-                    Set<Tag> tagsVacancies = vacancy.getTags();
-                    for (Tag tag : tagsVacancies) {
-                        if (profileTags.contains(tag)) {
-                            if (numberOfViewsVacanciesByTag.containsKey(vacancy)) {
-                                Long aLong = numberOfViewsVacanciesByTag.get(vacancy);
-                                numberOfViewsVacanciesByTag.replace(vacancy, ++aLong);
-                                break;
-                            } else {
-                                numberOfViewsVacanciesByTag.put(vacancy, 1L);
-                                break;
-                            }
-                        }
-                    }
-                }
+                HashMap<Vacancy, Long> numberOfViewsVacanciesByTagForSeeker =
+                        seekerHistoryService.getNumberOfViewsOffAllVacanciesByTagForSeeker(profile);
                 return vacancyService.findVacanciesByTagsAndByPointAndByViews(city, point, profileTags, limit, page,
-                        numberOfViewsVacanciesByTag);
+                        numberOfViewsVacanciesByTagForSeeker);
             }
         }
         return vacancyService.findVacanciesByPointWithLimitAndPaging(city, point, limit, page);
