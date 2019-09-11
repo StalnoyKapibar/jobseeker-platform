@@ -7,11 +7,13 @@ import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.service.impl.ImageService;
 import com.jm.jobseekerplatform.service.impl.SubscriptionService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -40,6 +43,10 @@ public class SeekerProfileRestController {
 
     @Autowired
     private TagService tagService;
+    @Autowired
+    ImageService imageService;
+    @Autowired
+    SeekerUserService seekerUserService;
 
     @RequestMapping("/")
     public List<SeekerProfile> getAllSeekerProfiles() {
@@ -149,4 +156,27 @@ public class SeekerProfileRestController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
+    @PostMapping("/update")
+    @ResponseBody
+    public SeekerProfile updateSeekerProfie (@RequestBody SeekerProfile seekerProfile) {
+        SeekerProfile updatedProfile = seekerProfileService.getById(seekerProfile.getId());
+        updatedProfile.setName(seekerProfile.getName());
+        updatedProfile.setSurname(seekerProfile.getSurname());
+        updatedProfile.setPatronymic(seekerProfile.getPatronymic());
+        updatedProfile.setDescription(seekerProfile.getDescription());
+        updatedProfile.setTags(seekerProfile.getTags());
+        seekerProfileService.update(updatedProfile);
+        return updatedProfile;
+    }
+
+    @RequestMapping(value = "/update_image", method = RequestMethod.POST)
+    public String updateImage(@RequestParam(value = "id") long id,
+                              @RequestParam(value = "image") MultipartFile img) {
+        seekerProfileService.updatePhoto(id,img);
+        return seekerProfileService.getById(id).getEncoderPhoto();
+        //return new ResponseEntity<>(seekerUser.getProfile(), HttpStatus.OK);
+    }
+
+
+
 }

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -149,5 +150,8 @@ public class VacancyService extends AbstractService<Vacancy> {
         oldVacancy.setShortDescription(vacancy.getShortDescription());
         oldVacancy.setTags(tagService.matchTagsByName(vacancy.getTags()));
         return true;
+    }
+    public List<Vacancy> getTrackedByEmployerProfileId(Long id){
+        return dao.getTrackedByEmployerProfileId(id);
     }
 }

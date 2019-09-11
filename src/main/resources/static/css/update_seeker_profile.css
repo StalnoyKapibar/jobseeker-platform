@@ -1,0 +1,31 @@
+ul.ui-autocomplete.ui-menu{
+    width: 100px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    color: #0a0a0a;
+    margin-left: 0;
+    padding-left: 0;
+    position: absolute;
+}
+li {
+    list-style-type: none;
+}
+
+.list-group-item-action{
+    color: #0a0a0a;
+}
+
+.list-group-item-action:hover{
+    color: white;
+}
+.list-group-item-action:hover{
+    color: white;
+}
+.card.tagcard{
+    background-color: gainsboro;
+    border-width: 1px;
+    border-color: #8c8c8c;
+    height: 75px;
+
+
+}

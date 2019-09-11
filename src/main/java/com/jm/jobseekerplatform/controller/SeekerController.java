@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 
@@ -88,5 +89,12 @@ public class SeekerController {
         model.addAttribute("seekerProfileId", seekerProfileId);
         model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(seekerProfileId));
         return "seeker_chats";
+    }
+    @RequestMapping("/update/{seekerProfileId}")
+    public String UpdateSeekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        model.addAttribute("seekerProfile", seekerProfile);
+        model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
+        return "update_seeker_profile";
     }
 }
