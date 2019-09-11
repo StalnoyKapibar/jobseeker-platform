@@ -3,6 +3,7 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.Point;
 import com.jm.jobseekerplatform.model.Resume;
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.ResumeService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
@@ -54,12 +55,10 @@ public class ResumeRestController {
     }
 
     @RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
-    public Set<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, HttpServletRequest request,
-                                            Authentication authentication) {
-        if (request.isUserInRole("ROLE_EMPLOYER")) {
+    public Set<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, Authentication authentication) {
+        if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
             return seekerProfileService.getById(seekerProfileId).getResumes();
-        }
-        else {
+        } else {
             return seekerProfileService.getById(((User) authentication.getPrincipal()).getId()).getResumes();
         }
     }
@@ -67,7 +66,6 @@ public class ResumeRestController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateSeekerUser(@RequestBody Resume resume) {
         resumeService.update(resume);
-
         return new ResponseEntity(HttpStatus.OK);
     }
 

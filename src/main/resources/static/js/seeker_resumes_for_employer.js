@@ -2,11 +2,8 @@ let header = $("meta[name='_csrf_header']").attr("content");
 let token = $("meta[name='_csrf']").attr("content");
 
 $(document).ready(function () {
-
     let url = window.location.pathname;
-
     let seekerProfileId = url.substring(url.lastIndexOf('/') + 1);
-
     getSeekerResumes(seekerProfileId);
 });
 
@@ -15,10 +12,8 @@ function getSeekerResumes(seekerProfileId) {
         url: "api/resumes/seeker/" + seekerProfileId,
         type: "POST",
         async: false,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader(header, token);
-            xhr.setRequestHeader("Accept", "application/json");
-            xhr.setRequestHeader("Content-Type", "application/json");
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
         },
         success: function (resumes) {
             seekerResumes(resumes);

@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.controller;
 
+import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
@@ -69,16 +70,14 @@ public class SeekerController {
     private String googleMapsApiKey;
 
     @RequestMapping("/resumes/{seekerProfileId}")
-    public String seekerResumesPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication,
-                                    HttpServletRequest request) {
-       if (request.isUserInRole("ROLE_EMPLOYER")) {
+    public String seekerResumesPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
+       if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
            SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
            model.addAttribute("resumesList", seekerProfile.getResumes());
            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
            return "resumes";
-       }
-       else {
+       } else {
            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getId());
            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
            model.addAttribute("resumesList", seekerProfile.getResumes());
