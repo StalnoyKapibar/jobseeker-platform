@@ -92,9 +92,9 @@ public class EmployerController {
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-    @RequestMapping("/employer/get_news/{employerProfileId}")
-    public String getEmployerProfileNews(@PathVariable Long employerProfileId, Model model) {
-        model.addAttribute("employerProfileId", employerProfileId);
+    @RequestMapping("/employer/get_news")
+    public String getEmployerProfileNews(Model model, Authentication authentication) {
+        model.addAttribute("employerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
         return "employer_all_news";
     }
 
