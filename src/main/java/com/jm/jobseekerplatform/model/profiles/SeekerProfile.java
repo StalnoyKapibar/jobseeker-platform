@@ -37,7 +37,7 @@ public class SeekerProfile extends Profile implements Serializable {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Subscription> subscriptions;
 
-    @OneToMany(mappedBy = "creatorProfile", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<Resume> resumes;
 
     public SeekerProfile() {

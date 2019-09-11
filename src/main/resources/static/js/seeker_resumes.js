@@ -11,7 +11,6 @@ $(document).ready(function () {
 });
 
 function getSeekerResumes(seekerProfileId) {
-    // let seekerProfileIdResume = $('#seekerProfileIdResume').val();
     $.ajax ({
         url: "api/resumes/seeker/" + seekerProfileId,
         type: "POST",
@@ -100,8 +99,6 @@ function showChosenResume(id) {
 }
 
 function deleteSeekerResumeById(seekerProfileIdResume) {
-    // let resumeId = $('#resumeId').val();
-    // let seekerProfileIdResume = $('#seekerProfileIdResume').val();
 
     $.ajax({
         url: '/api/resumes/delete/' + seekerProfileIdResume,

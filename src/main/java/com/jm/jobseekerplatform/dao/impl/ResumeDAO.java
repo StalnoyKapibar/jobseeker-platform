@@ -53,6 +53,7 @@ public class ResumeDAO extends AbstractDAO<Resume> {
     }
 
     public void deleteResumeById(Long id) {
+        entityManager.createNativeQuery("delete from profile_resumes where profile_resumes.resumes_id = :id").setParameter("id", id).executeUpdate();
         entityManager.createQuery("delete from Resume where id = :id").setParameter("id", id).executeUpdate();
     }
 }

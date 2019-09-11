@@ -11,7 +11,6 @@ $(document).ready(function () {
 });
 
 function getSeekerResumes(seekerProfileId) {
-    // let seekerProfileIdResume = $('#seekerProfileIdResume').val();
     $.ajax ({
         url: "api/resumes/seeker/" + seekerProfileId,
         type: "POST",
