@@ -1,15 +1,15 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
-import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
-import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,13 +25,7 @@ import java.util.Set;
 public class SeekerController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private SeekerProfileService seekerProfileService;
-
-    @Autowired
-    private NewsService newsService;
 
     @Autowired
     private ChatWithTopicService chatWithTopicService;
@@ -81,6 +75,26 @@ public class SeekerController {
     public String getSeekerSubscriptionNews(@PathVariable Long seekerProfileId, Model model) {
         model.addAttribute("seekerProfileId", seekerProfileId);
         return "seeker_subscription_news";
+    }
+
+    @Value("${google.maps.api.key}")
+    private String googleMapsApiKey;
+
+    @RequestMapping("/resumes/{seekerProfileId}")
+    public String seekerResumesPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
+        if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
+            SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
+            model.addAttribute("resumesList", seekerProfile.getResumes());
+            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+            return "resumes";
+        } else {
+            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getId());
+            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
+            model.addAttribute("resumesList", seekerProfile.getResumes());
+            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+            return "resumes";
+        }
     }
 
     @RequestMapping("/chats/{seekerProfileId}")
