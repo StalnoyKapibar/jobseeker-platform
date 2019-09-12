@@ -132,19 +132,6 @@ public class VacancyService extends AbstractService<Vacancy> {
         return dao.getVacanciesSortByCity(city, limit, page);
     }
 
-    public Page<Vacancy> findVacanciesByTagsAndByPoint(String currentCity, Point point, Set<Tag> tags, int limit, int page) {
-        String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
-        return dao.getVacanciesByTagsAndSortByCity(city, tags, limit, page);
-    }
-
-    public Page<Vacancy> findVacanciesByTagsAndByPointAndByViews(String currentCity, Point point, Set<Tag> tags,
-                                                                 int limit,
-                                                                 int page,
-                                                                 HashMap<Vacancy, Long> numberOfViewsVacanciesByTag) {
-        String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
-        return dao.getVacanciesByTagsAndSortByCityAndByViews(city, tags, limit, page, numberOfViewsVacanciesByTag);
-    }
-
     public Page<Vacancy> getVacanciesSortedByCityTagsViews(long seekerId, String currentCity, Point point, int limit, int page) {
         String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
         return dao.getVacanciesSortedByCityTagsViews(seekerId, city, limit, page);

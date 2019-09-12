@@ -20,10 +20,6 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
             "select v from Vacancy v join v.city c join CityDistance cd on c=cd.to where cd.from.name=:city and v.state='ACCESS' order by cd.distance";
 
     //language=SQL
-    private final static String query_for_find_vacancies_by_tags_and_sorted_by_city =
-            "select v.id, max(cd.distance) as m from Vacancy v join v.tags t  join v.city c join CityDistance as cd on c=cd.to where cd.from.name=:city and v.state='ACCESS' and t in (:tags) group by (v.id) order by count (v.id) desc, m asc";
-
-    //language=SQL
     private final static String query_for_find_vacancies_by_tags =
             "select v.id, count(v.id) as c from Vacancy v join v.tags t where v.state='ACCESS' and t in (:tags) group by (v.id) order by c desc";
 
@@ -84,70 +80,6 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         return new VacancyPageDTO(vacancies, totalPages);
     }
 
-    public Page<Vacancy> getVacanciesByTagsAndSortByCity(String city, Set<Tag> tags, int limit, int page) {
-        page = (page == 0) ? page : --page;
-
-        Query query = (Query) entityManager.createQuery(query_for_find_vacancies_by_tags_and_sorted_by_city)
-                .setParameter("tags", tags).setParameter("city", city);
-        return getVacancies(query, tags, limit, page);
-    }
-
-    public Page<Vacancy> getVacanciesByTagsAndSortByCityAndByViews(String city, Set<Tag> tags, int limit, int page,
-                                                                   HashMap<Vacancy, Long> numberOfViewsVacanciesByTag) {
-        page = (page == 0) ? page : --page;
-
-        Query query = (Query) entityManager.createQuery(query_for_find_vacancies_by_tags_and_sorted_by_city)
-                .setParameter("tags", tags).setParameter("city", city);
-        return getVacanciesSortByViews(query, tags, limit, page, numberOfViewsVacanciesByTag);
-    }
-
-    private Page<Vacancy> getVacanciesSortByViews(Query query, Set<Tag> tags, int limit, int page,
-                                                  HashMap<Vacancy, Long> numberOfViewsVacanciesByTag) {
-        long totalElements = (long) entityManager
-                .createQuery("select count(distinct v) from Vacancy v join v.tags t where v.state='ACCESS' and t in (:tags)")
-                .setParameter("tags", tags).getSingleResult();
-
-        int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
-
-        List ids = query.setFirstResult(page * limit).setMaxResults(limit).getResultList();
-        List<Long> vacancyIds = new ArrayList<>();
-        for (Object vacancy : ids) {
-            vacancyIds.add((Long) ((Object[]) vacancy)[0]);
-        }
-
-        List<Vacancy> vacancyList = entityManager.createQuery("select v from Vacancy v where v.id in (:ids)").setParameter("ids", vacancyIds)
-                .setHint(QueryHints.FETCHGRAPH, entityManager.getEntityGraph("vacancy-all-nodes")).getResultList();
-
-        List<Vacancy> vacancies = new ArrayList<>();
-        for (Long id : vacancyIds) {
-            for (Vacancy v : vacancyList) {
-                if (v.getId().equals(id)) {
-                    vacancies.add(v);
-                }
-            }
-        }
-
-        vacancies.sort((vNext, vPrevious) -> {
-            if (vNext.getCity().equals(vPrevious.getCity())) {
-                if (numberOfViewsVacanciesByTag.containsKey(vNext)
-                        && numberOfViewsVacanciesByTag.containsKey(vPrevious)) {
-                    return numberOfViewsVacanciesByTag.get(vPrevious).compareTo(numberOfViewsVacanciesByTag.get(vNext));
-                } else if (!numberOfViewsVacanciesByTag.containsKey(vNext)
-                        && numberOfViewsVacanciesByTag.containsKey(vPrevious)) {
-                    return 1;
-                } else if (numberOfViewsVacanciesByTag.containsKey(vNext)
-                        && !numberOfViewsVacanciesByTag.containsKey(vPrevious)) {
-                    return -1;
-                } else {
-                    return 0;
-                }
-            } else {
-                return 0;
-            }
-        });
-        return new VacancyPageDTO(vacancies, totalPages);
-    }
-
     public Page<Vacancy> getVacanciesByTag(Set<Tag> tags, int limit, int page) {
         Query query = (Query) entityManager.createQuery(query_for_find_vacancies_by_tags)
                 .setParameter("tags", tags);
@@ -183,19 +115,15 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
 
     public Page<Vacancy> getVacanciesSortedByCityTagsViews(long seekerId, String city, int limit, int page) {
         page = (page == 0) ? page : --page;
-
         long totalElements = (Long) entityManager.createQuery("select count(v) from Vacancy v where v.state='ACCESS'")
                 .getSingleResult();
-
         int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
-
         Query query = (Query) entityManager.createNativeQuery("Call getSortedVacs(:seekerId, :city, :limitFrom, :limitTo)", Vacancy.class);
-
         List<Vacancy> vacancies = query
                 .setParameter("seekerId", seekerId)
                 .setParameter("city", city)
                 .setParameter("limitFrom", page * limit)
-                .setParameter("limitTo", page*limit+limit)
+                .setParameter("limitTo", page * limit + limit)
                 .getResultList();
         return new VacancyPageDTO(vacancies, totalPages);
     }

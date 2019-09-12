@@ -116,11 +116,6 @@ public class VacancyRestController {
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 SeekerProfile profile = (SeekerProfile) ((User) authentication.getPrincipal()).getProfile();
-//                Set<Tag> profileTags = profile.getTags();
-//                HashMap<Vacancy, Long> numberOfViewsVacanciesByTagForSeeker =
-//                        seekerHistoryService.getNumberOfViewsOffAllVacanciesByTagForSeeker(profile);
-//                return vacancyService.findVacanciesByTagsAndByPointAndByViews(city, point, profileTags, limit, page,
-//                        numberOfViewsVacanciesByTagForSeeker);
                 return vacancyService.getVacanciesSortedByCityTagsViews(profile.getId(),city,point,limit,page);
             }
         }
