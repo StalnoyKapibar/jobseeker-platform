@@ -15,11 +15,10 @@ $(document).ready(function () {
 });
 
 function printEmployerNews() {
-    var employerProfileId = $('#employerProfileId').val();
     var newsPageCount = $('#scrollEmployerNewsPageCount').val();
     $.ajax({
         type: 'get',
-        url: "/api/news/all_employer_news?employerProfileId=" + employerProfileId + "&newsPageCount=" + newsPageCount,
+        url: "/api/news/?newsPageCount=" + newsPageCount,
         contentType: 'application/json; charset=utf-8',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
@@ -41,9 +40,9 @@ function printEmployerNews() {
                     'class = "btn btn-link" onclick = "newsDescription(' + item.id + ')"' +
                     'value="' + item.description + '" data-toggle="modal"data-target="#viewDescriptionModal">Описание </button>' +
                     '</td>' +
-                    '<td>' + item.date + '</td>' +
+                    '<td>' + getFormatedDate(new Date(item.date)) + '</td>' +
                     '<td>' +
-                    '<button style="width: 120px" onclick="editNews(' + item.id + ',' + employerProfileId + ')" type="button"' +
+                    '<button style="width: 120px" onclick="editNews(' + item.id + ')" type="button"' +
                     'class="btn btn-primary" data-toggle="modal" data-target="#editNewsModal">Edit news </button>' +
                     '<button style="width: 120px;margin-left: 5px" onclick="deleteNews(' + item.id + ')" type="button"' +
                     'class="btn btn-primary"> Delete news </button>' +
@@ -99,7 +98,7 @@ function editNews(newsId) {
             $("#NMId").val(data.id);
             $("#NMHeadline").val(data.headline);
             $(".note-editable").text(data.description);
-            $("#NMAuthorId").val(data.author.id);
+            $("#NMAuthorId").val(data.author);
         },
         error: function (error) {
             console.log(error);
@@ -112,7 +111,7 @@ function editModalNews() {
     var newsId = $("#NMId").val();
     var newsHeadline = $("#NMHeadline").val();
     var newsDescription = $(".note-editable").text();
-    var employerProfileId = $("#NMAuthorId").val();
+
     $.ajax({
         type: 'post',
         url: "/api/news/editNews?newsId=" + newsId + "&newsHeadline=" + newsHeadline + "&newsDescription=" + newsDescription,
@@ -121,13 +120,21 @@ function editModalNews() {
             request.setRequestHeader(header, token);
         },
         success: function () {
-            location.href = '/employer/get_news/' + employerProfileId
+            location.href = '/employer/get_news';
         },
         error: function (error) {
             console.log(error);
             alert(error.toString());
         }
     })
+}
+
+//DD-MM-YYYY HH:mm
+function getFormatedDate(dateObject){
+    return ('0' + dateObject.getDate()).slice(-2) + '/'
+        + ('0' + (dateObject.getMonth()+1)).slice(-2) + '/'
+        + dateObject.getFullYear()+' '+('0' + dateObject.getHours()).slice(-2)+':'
+        +('0' + dateObject.getMinutes()).slice(-2);
 }
 
 function newsDescription(newsId) {
