@@ -53,7 +53,6 @@ public class EmployerController {
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
 
         model.addAttribute("employerProfile", employerProfile);
-
         Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
         model.addAttribute("vacancies", vacancies);
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
@@ -121,9 +120,8 @@ public class EmployerController {
         model.addAttribute("employerProfile", employerProfile);
         Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
         model.addAttribute("vacancies", vacancies);
-        List<Vacancy> trakedVacancies = vacancyService.getTrackedByEmployerProfileId(employerProfile.getId());
-        model.addAttribute("trakedvacancies", trakedVacancies);
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
         return "update_employer_profile";
     }
+
 }
