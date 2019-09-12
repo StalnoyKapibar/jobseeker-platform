@@ -255,6 +255,20 @@ function deleteSubscription(employerProfileId, seekerProfileId) {
     })
 }
 
-
-
-
+function removeTag(name) {
+    $.ajax({
+        type: 'post',
+        url: "/api/seekerprofiles/removeTag?tag=" + name,
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        success: function () {
+            location.reload();
+        },
+        error: function (error) {
+            console.log(error);
+            alert(error.toString());
+        }
+    })
+}

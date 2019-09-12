@@ -6,6 +6,7 @@ import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.service.impl.SubscriptionService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
@@ -14,10 +15,12 @@ import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/seekerprofiles")
@@ -76,7 +79,7 @@ public class SeekerProfileRestController {
 
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Vacancy vacancy = vacancyService.getById(vacancyId);
-        EmployerProfile employerProfile =  employerProfileService.getById(((Profile)vacancy.getCreatorProfile()).getId());
+        EmployerProfile employerProfile = employerProfileService.getById(((Profile) vacancy.getCreatorProfile()).getId());
         Subscription subscription = subscriptionService.findBySeekerAndEmployer(seekerProfile, employerProfile);
         subscriptionService.deleteSubscription(subscription);
         return new ResponseEntity(HttpStatus.OK);
@@ -89,7 +92,7 @@ public class SeekerProfileRestController {
 
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Vacancy vacancy = vacancyService.getById(vacancyId);
-        EmployerProfile employerProfile =  employerProfileService.getById(((Profile)vacancy.getCreatorProfile()).getId());
+        EmployerProfile employerProfile = employerProfileService.getById(((Profile) vacancy.getCreatorProfile()).getId());
         Set<Tag> tagSet = tagService.getTagsByStringNames(tags);
         Subscription subscription = new Subscription(employerProfile, seekerProfile, tagSet);
         seekerProfile.getSubscriptions().add(subscription);
@@ -105,6 +108,45 @@ public class SeekerProfileRestController {
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
         Subscription subscription = subscriptionService.findBySeekerAndEmployer(seekerProfile, employerProfile);
         subscriptionService.deleteSubscription(subscription);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/updateUserTags")
+    public ResponseEntity updateUserTags(@RequestParam("updatedTags") String[] updatedTags) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerUser.getId());
+
+        Set<String> tagsSet = new HashSet<>(Arrays.asList(updatedTags));
+        Set<Tag> tagsByStringNames = tagService.getTagsByStringNames(tagsSet);
+        Set<Tag> seekerProfileTags = seekerProfile.getTags();
+        seekerProfileTags.addAll(tagsByStringNames);
+        seekerProfile.setTags(seekerProfileTags);
+        seekerProfileService.update(seekerProfile);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/removeTag")
+    public ResponseEntity removeTag(@RequestParam("tag") String tag) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerUser.getId());
+
+        Set<Tag> seekerProfileTags = seekerProfile.getTags();
+        Iterator<Tag> iterator = seekerProfileTags.iterator();
+        while (iterator.hasNext()) {
+            Tag next = iterator.next();
+            if (next.getName().equals(tag)) {
+                iterator.remove();
+            }
+        }
+
+        seekerProfile.setTags(seekerProfileTags);
+        seekerProfileService.update(seekerProfile);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 }

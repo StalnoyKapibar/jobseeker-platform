@@ -38,6 +38,8 @@ import java.util.*;
 @Component
 public class InitData {
 
+    public static final String WEB_IMG_DIR = "src/main/resources/static/img";
+
     @Autowired
     private UserRoleService userRoleService;
 
@@ -347,7 +349,7 @@ public class InitData {
     private void initAdminProfile() {
         BufferedImage image = null;
         try {
-            File sourceImage = new File("src/main/resources/static/img/LOGO_001.jpg");
+            File sourceImage = new File(WEB_IMG_DIR + "/LOGO_001.jpg");
             image = ImageIO.read(sourceImage);
         } catch (IOException e) {
             e.printStackTrace();
@@ -363,8 +365,8 @@ public class InitData {
         EmployerProfile employerProfile;
 
         try {
-            URL url = new URL("https://wiki.godville.net/images/2/25/%D0%A0%D0%BE%D0%B3%D0%B0_%D0%B8_%D0%9A%D0%BE%D0%BF%D1%8B%D1%82%D0%B0_%28%D0%BB%D0%BE%D0%B3%D0%BE%29.png");
-            image = ImageIO.read(url);
+            File sourceImage = new File(WEB_IMG_DIR + "/roga-kopyta.png");
+            image = ImageIO.read(sourceImage);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -388,8 +390,8 @@ public class InitData {
         employerProfileService.add(employerProfile);
 
         try {
-            URL url = new URL("https://0oq.ru/reshebnik-onlajn/ru.onlinemschool.com/pictures/vector/points-to-vector.png");
-            image = ImageIO.read(url);
+            File sourceImage = new File(WEB_IMG_DIR + "/points-to-vector.png");
+            image = ImageIO.read(sourceImage);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -451,8 +453,8 @@ public class InitData {
         portfolios.add(portfolioService.getById(1L));
         portfolios.add(portfolioService.getById(2L));
         try {
-            URL url = new URL("https://zapravka-kartridzhej-spb.ru/wp-content/uploads/2016/10/spezialist-zapravka-kartridzhej-spb-10.png");
-            image = ImageIO.read(url);
+            File sourceImage = new File(WEB_IMG_DIR + "/spezialist-zapravka-kartridzhej-spb-10.png");
+            image = ImageIO.read(sourceImage);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -481,24 +483,29 @@ public class InitData {
         return tags;
     }
 
-    public void initChat() {
-
+    private void initChat() {
         Random rnd = new Random();
-
-        List<Profile> profileList = profileService.getAll();
+        List<SeekerProfile> profiles = seekerProfileService.getAll();
 
         for (long i = 1L; i < 6L; i++) {
             List<ChatMessage> messages = new ArrayList<>();
-            for (int k = 0; k < 5; k++) {
-                ChatMessage chatMessage = new ChatMessage(faker.gameOfThrones().quote(), profileList.get(rnd.nextInt(profileList.size())), new Date());
-                chatMessageService.add(chatMessage);
-                messages.add(chatMessage);
-            }
-
             Vacancy randomVacancy = vacancyService.getById(rnd.nextInt(30) + 1L);
             Profile chatCreator = getRandomProfileExceptWithId(randomVacancy.getCreatorProfile().getId());
+            Set<User> members = new HashSet<>();
+            SeekerProfile profile = profiles.get(rnd.nextInt(profiles.size()));
+            for (int k = 0; k < 5; k++) {
+                ChatMessage chatMessage = new ChatMessage(faker.gameOfThrones().quote(), profile, new Date());
+                ChatMessage chatMessage2 = new ChatMessage(faker.gameOfThrones().quote(), chatCreator, new Date());
+                chatMessageService.add(chatMessage);
+                chatMessageService.add(chatMessage2);
+                messages.add(chatMessage);
+                messages.add(chatMessage2);
+                members.add(seekerUserService.getByProfileId(profile.getId()));
+            }
+            List<User> chatMembers = new ArrayList<>(members);
+            chatMembers.add(employerUserService.getByProfileId(randomVacancy.getCreatorProfile().getId()));
 
-            Chat chat = new ChatWithTopicVacancy(chatCreator, randomVacancy);
+            Chat chat = new ChatWithTopicVacancy(chatCreator, chatMembers, randomVacancy);
             chat.setChatMessages(messages);
 
             chatService.add(chat);
@@ -540,11 +547,11 @@ public class InitData {
         cityService.initCity("Нижний Новгород", new Point(56.299846F, 43.904104F));
     }
 
-    private void initJobExperience(){
-        for (int i=0; i<20; i++) {
-            Date date= new Date();
+    private void initJobExperience() {
+        for (int i = 0; i < 20; i++) {
+            Date date = new Date();
             JobExperience jobExperience = new JobExperience(date,
-                    new Date(date.getTime()+(24*60*60*1000)),//+1 день
+                    new Date(date.getTime() + (24 * 60 * 60 * 1000)),//+1 день
                     faker.job().title(),
                     faker.job().position(),
                     faker.witcher().quote());

@@ -188,14 +188,14 @@ function searchResults() {
 }
 
 $(window).scroll(function () {
-    if ($(document).height() - $(window).height() === $(window).scrollTop()) {
+    if (Math.abs(($(document).height() - $(window).height()) - $(window).scrollTop()) < 50) {
         if (block = true) {
             if (page < total_pages) {
-                if (blockScroll==false) {
+                if (blockScroll == false) {
                     getSortedVac(point);
                 }
             } else if (page == total_pages) {
-                if (blockScroll==false) {
+                if (blockScroll == false) {
                     getSortedVac(point);
                     if (user_id != null) {
                         getViewedVacancies(user_id);
@@ -217,9 +217,9 @@ $(window).scroll(function () {
                 param.push(tag);
             });
             var pageCount = $('#scrollPageCount').val();
-            if (pageCount < total_pages-1){
+            if (pageCount < total_pages - 1) {
                 searchVac(pageCount, param)
-            } else if (pageCount == total_pages-1) {
+            } else if (pageCount == total_pages - 1) {
                 searchVac(pageCount, param);
                 if (user_id != null) {
                     getViewedVacancies(user_id);
@@ -277,7 +277,7 @@ function printVacancies(data) {
         $.each(value.tags, function (i, item) {
             if (seekerAuthority) {
                 var bool = check_seeker_tags(item);
-                if(bool==true){
+                if (bool == true) {
                     vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7><i class="fas fa-tag"></i></span>';
                 } else {
                     vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
@@ -288,14 +288,14 @@ function printVacancies(data) {
         });
         $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
             ' data-target="#vacancyModal" onclick="showVacancy(\'' + value.id + '\')">' +
-            '<div class="headLine"><span>' + value.headline + '</span>'+'   '+favVac+'</div>' +
+            '<div class="headLine"><span>' + value.headline + '</span>' + '   ' + favVac + '</div>' +
             '<div class="vacancyTags">' + vacancyTags + '</div>' +
             '<div class="companyData"><span>Компания: ' + value.creatorProfile + '</span><br><span>Город: ' + value.city + '</span></div>' +
             '<div class="vacancyDescription"><span>' + value.shortDescription + '</span></div>' +
             minSalary +
             '<div class="pull-right">' +
             '<span class="btn btn-outline-success btn-sm btnOnVacancyPage"' +
-            'onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span>'+'</div>' +
+            'onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span>' + '</div>' +
             '</li>');
 
         function check_seeker_tags(tag) {
@@ -352,16 +352,16 @@ function outFavorite(vacancyId, seekerProfileId) {
 }
 
 function getSeekerTags(user_id) {
-    var seeker_tags;
+    var tags = null;
     $.ajax({
         url: "/api/tags/seeker/" + user_id,
         type: "GET",
         async: false,
         success: function (data) {
-            seeker_tags = data;
+            tags = data;
         }
-    })
-    return seeker_tags;
+    });
+    return tags;
 }
 
 
@@ -392,7 +392,8 @@ function getCityByCoords(lat, lng) {
                     }
                 }
             }
-        }})
+        }
+    })
 }
 
 function getAllVacanciesByPoint(point) {
@@ -400,7 +401,7 @@ function getAllVacanciesByPoint(point) {
 }
 
 function getSortedVac(point) {
-    $.ajax ({
+    $.ajax({
         url: "api/vacancies/city/page/" + page + "?city=" + city,
         type: "POST",
         async: false,
@@ -435,7 +436,7 @@ function getViewedVacancies(user_id) {
                     '<li class="card border-success" style="margin: 10px; display: inline-block">' +
                     '<div class="card-header"><span>' + value.headline + '</span></div>' +
                     '<div class="card-body"><h6 style="color: #777777;">Компания:</h6><span>' + value.companyname + '</span><br/><br/><h6 style="color: #777777;">Зарплата:</h6>'
-                    +salaryFormat(value.salarymin, value.salarymax)+'</div>' +
+                    + salaryFormat(value.salarymin, value.salarymax) + '</div>' +
                     '<div class="card-footer">' +
                     '<span class="btn btn-outline-success btn-sm"' +
                     ' onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span></div></li>');
@@ -447,15 +448,12 @@ function getViewedVacancies(user_id) {
 function salaryFormat(salarymin, salarymax) {
     var salary = '';
     if (salarymin != 0 && salarymax != 0) {
-        return salary = '<span style="white-space: pre">от:  ' + salarymin + ' &#8381   до:  ' + salarymax +' &#8381</span>';
-    }
-    else if (salarymin == 0 && salarymax != 0) {
-        return salary = '<span style="white-space: pre">до:  ' + salarymax +' &#8381</span>';
-    }
-    else if (salarymin != 0 && salarymax == 0) {
+        return salary = '<span style="white-space: pre">от:  ' + salarymin + ' &#8381   до:  ' + salarymax + ' &#8381</span>';
+    } else if (salarymin == 0 && salarymax != 0) {
+        return salary = '<span style="white-space: pre">до:  ' + salarymax + ' &#8381</span>';
+    } else if (salarymin != 0 && salarymax == 0) {
         return salary = '<span style="white-space: pre">от:  ' + salarymin + ' &#8381</span>';
-    }
-    else if (salarymin == 0 && salarymax == 0) {
+    } else if (salarymin == 0 && salarymax == 0) {
         return salary = '<span style="white-space: pre">Зарплата не указана</span>';
     }
 }

@@ -1,8 +1,6 @@
 package com.jm.jobseekerplatform.model.users;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.UserRole;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +11,17 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = EmployerUser.class, name = "employer"),
+        @JsonSubTypes.Type(value = SeekerUser.class, name = "seeker"),
+        @JsonSubTypes.Type(value = AdminUser.class, name = "admin")
+})
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "users")
@@ -147,5 +155,25 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
 
     public void setConfirm(boolean confirm) {
         this.confirm = confirm;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User<?> user = (User<?>) o;
+        return enabled == user.enabled &&
+                confirm == user.confirm &&
+                Objects.equals(id, user.id) &&
+                Objects.equals(email, user.email) &&
+                Arrays.equals(password, user.password) &&
+                Objects.equals(date, user.date);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(id, email, date, enabled, confirm);
+        result = 31 * result + Arrays.hashCode(password);
+        return result;
     }
 }

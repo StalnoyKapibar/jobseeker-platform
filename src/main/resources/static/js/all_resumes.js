@@ -191,8 +191,16 @@ function showResume(id) {
                 str = "Зарплата не указана";
             }
             $("#VMSalary").text(str);
+
+            let chat='<button onclick="openChatByResume('+data.id+')">Связаться с сикером</button>'+
+                '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
+            $("#resumeModalFooter").html(chat);
         }
     });
+}
+
+function openChatByResume(resumeId) {
+    window.location.replace("http://localhost:7070/chat/resume/"+resumeId);
 }
 
 function searchByTags() {

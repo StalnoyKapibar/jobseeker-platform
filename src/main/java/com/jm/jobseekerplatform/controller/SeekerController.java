@@ -1,12 +1,13 @@
 package com.jm.jobseekerplatform.controller;
 
+import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
-import com.jm.jobseekerplatform.service.impl.NewsService;
+import com.jm.jobseekerplatform.service.impl.TagService;
+import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
-import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.security.RolesAllowed;
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -26,9 +27,19 @@ public class SeekerController {
     @Autowired
     private SeekerProfileService seekerProfileService;
 
+    @Autowired
+    private ChatWithTopicService chatWithTopicService;
+
+    @Autowired
+    private TagService tagService;
+
     @RequestMapping("/{seekerProfileId}")
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        Set<Tag> tags = seekerProfile.getTags();
+        List<Tag> notSelectedTags = tagService.getAll();
+        notSelectedTags.removeAll(tags);
+        model.addAttribute("notSelectedTags", notSelectedTags);
         model.addAttribute("seekerProfile", seekerProfile);
         model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
         return "seeker";
@@ -71,18 +82,25 @@ public class SeekerController {
 
     @RequestMapping("/resumes/{seekerProfileId}")
     public String seekerResumesPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
-       if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
-           SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-           model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
-           model.addAttribute("resumesList", seekerProfile.getResumes());
-           model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-           return "resumes";
-       } else {
-           SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getId());
-           model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
-           model.addAttribute("resumesList", seekerProfile.getResumes());
-           model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-           return "resumes";
-       }
+        if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
+            SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
+            model.addAttribute("resumesList", seekerProfile.getResumes());
+            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+            return "resumes";
+        } else {
+            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getId());
+            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
+            model.addAttribute("resumesList", seekerProfile.getResumes());
+            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+            return "resumes";
+        }
+    }
+
+    @RequestMapping("/chats/{seekerProfileId}")
+    public String EmployerPageChatsMy(@PathVariable Long seekerProfileId, Model model) {
+        model.addAttribute("seekerProfileId", seekerProfileId);
+        model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(seekerProfileId));
+        return "seeker_chats";
     }
 }

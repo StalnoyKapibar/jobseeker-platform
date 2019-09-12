@@ -78,7 +78,8 @@ $('#editSeekerForm').click(function (event) {
         'authority': userAuthority,
         'enabled': enabled,
         'confirm': confirm,
-        'profile': profile
+        'profile': profile,
+        'type': 'seeker'
     };
 
     $.ajax({

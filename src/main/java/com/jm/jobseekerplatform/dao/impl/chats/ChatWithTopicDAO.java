@@ -44,42 +44,60 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
     public <T extends ChatWithTopic> List<ChatInfoDetailWithTopicDTO> getAllChatsInfoDTOByProfileId(Long profileId, Class<T> ChatClass) {
 
         List<ChatInfoDetailWithTopicDTO> listOfChatInfoDetailWithTopicDTO =
-                entityManager.createQuery(
-                        "SELECT new com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO(" +
-                                "c, count (case " +
-                                "when (exists( " +
-                                "select m3 " +
-                                "from ChatMessage m3 " +
-                                "where (m3.id = m.id AND " +
-                                "m3 not in " +
-                                "( " +
-                                " select distinct m4 " +
-                                "from ChatMessage m4 " +
-                                "join m4.isReadByProfilesId irbpid " +
-                                "where (m4.id = m3.id " +
-                                " and irbpid = :profileId)" +
-
-                                ")" +
-                                "))" +
-                                ")" +
-                                " then 1 else null end), MAX(m) " +
-                                ") " +
-                                "FROM " + ChatClass.getName() + " c " +
-                                "LEFT JOIN c.chatMessages m " +
-                                "WHERE " +
-                                "(c in (select distinct c2 " +
-                                "from " + ChatClass.getName() + " c2 " +
-                                "LEFT JOIN c2.chatMessages m2 " +
-                                "where " +
-                                "(c2.creatorProfile.id = :profileId " + "OR " +
-                                "c2.topic.creatorProfile.id = :profileId " + "OR " +
-                                "m2.creatorProfile.id = :profileId) " +
-                                " )) " +
-
-                                "GROUP BY c.id " +
-                                "ORDER BY c.id", ChatInfoDetailWithTopicDTO.class)
+                entityManager.createQuery("SELECT new com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO(" +
+                        "e, count(case " +
+                        "when (exists(select m from ChatMessage m " +
+                        "where (m.id=chms.id and m not in " +
+                        "(select distinct m2 from ChatMessage m2 " +
+                        "join m2.isReadByProfilesId irbpid " +
+                        "where m2.id=m.id and irbpid=:profileId))))" +
+                        "then 1 else null end), max (chms))" +
+                        "FROM " + ChatClass.getName() + " e " +
+                        "join e.chatMembers cm " +
+                        "join e.chatMessages chms " +
+                        "join chms.isReadByProfilesId chid " +
+                        "WHERE cm.id = :profileId " +
+                        "group by e.id", ChatInfoDetailWithTopicDTO.class)
                         .setParameter("profileId", profileId).getResultList();
 
+//        Более сложный запрос, который делает то же самое
+//
+//        List<ChatInfoDetailWithTopicDTO> listOfChatInfoDetailWithTopicDTO =
+//                entityManager.createQuery(
+//                        "SELECT new com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO(" +
+//                                "c, count (case " +
+//                                "when (exists( " +
+//                                "select m3 " +
+//                                "from ChatMessage m3 " +
+//                                "where (m3.id = m.id AND " +
+//                                "m3 not in " +
+//                                "( " +
+//                                " select distinct m4 " +
+//                                "from ChatMessage m4 " +
+//                                "join m4.isReadByProfilesId irbpid " +
+//                                "where (m4.id = m3.id " +
+//                                " and irbpid = :profileId)" +
+//
+//                                ")" +
+//                                "))" +
+//                                ")" +
+//                                " then 1 else null end), MAX(m) " +
+//                                ") " +
+//                                "FROM " + ChatClass.getName() + " c " +
+//                                "LEFT JOIN c.chatMessages m " +
+//                                "WHERE " +
+//                                "(c in (select distinct c2 " +
+//                                "from " + ChatClass.getName() + " c2 " +
+//                                "LEFT JOIN c2.chatMessages m2 " +
+//                                "where " +
+//                                "(c2.creatorProfile.id = :profileId " + "OR " +
+//                                "c2.topic.creatorProfile.id = :profileId " + "OR " +
+//                                "m2.creatorProfile.id = :profileId) " +
+//                                " )) " +
+//
+//                                "GROUP BY c.id " +
+//                                "ORDER BY c.id", ChatInfoDetailWithTopicDTO.class)
+//                        .setParameter("profileId", profileId).getResultList();
 //        Более строгий запрос. Выбор последнего сообщения по дате, а не по id
 //        entityManager.createQuery("SELECT c, COUNT (DISTINCT m1), m2 FROM " + clazz.getName() + " c " +
 //                "JOIN c.chatMessages m1 " +
@@ -128,28 +146,6 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
     }
 
     /**
-     * Возвращает список чатов в которых указанный профиль является участником чата.
-     * Участник чата - это профиль, который написал в чат хотя бы одно сообщение
-     *
-     * @param participantProfileId id профиля автора сообщений
-     */
-    public <T extends ChatWithTopic> List<T> getAllChatsByParticipantProfileId(Long participantProfileId, Class<T> ChatClass) {
-
-        List<T> chats = entityManager.createQuery("SELECT DISTINCT c FROM " + ChatClass.getName() + " c JOIN c.chatMessages m WHERE m.creatorProfile.id = :participantProfileId", ChatClass).
-                setParameter("participantProfileId", participantProfileId)
-                .getResultList();
-
-        return chats;
-    }
-
-    public List<ChatWithTopic> getAllChatsByParticipantProfileId(Long participantProfileId) {
-
-        List<ChatWithTopic> chats = getAllChatsByParticipantProfileId(participantProfileId, clazz);
-
-        return chats;
-    }
-
-    /**
      * Возвращает список чатов в которых указанный профиль является создателем чата.
      *
      * @param chatCreatorProfileId id профиля создателя чата
@@ -189,6 +185,12 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
         return chats;
     }
 
+    /**
+     * Возвращает список чатов в которых указанный профиль является участником чата.
+     *
+     * @param profileId id профиля автора сообщений
+     */
+
     public <T extends ChatWithTopic> List<T> getAllChatsByMemberProfileId(Long profileId, Class<T> chatClass) {
         List<T> list;
         try {
@@ -206,45 +208,13 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
         return this.getAllChatsByMemberProfileId(profileId, ChatWithTopic.class);
     }
 
-    /**
-     * Возвращает список чатов в которых указанный профиль является:
-     * - создателем чата,
-     * - создателем темы чата,
-     * - участником чата.
-     * <p>
-     * Участник чата - это профиль, который написал в чат хотя бы одно сообщение
-     *
-     * @param profileId id профиля
-     */
-
-    public <T extends ChatWithTopic> List<T> getAllChatsByProfileId(Long profileId, Class<T> chatClass) {
-        List<T> chats = entityManager.createQuery("SELECT DISTINCT c FROM " + chatClass.getName() + " c " +
-                "LEFT JOIN c.chatMessages m " +
-                "WHERE c.creatorProfile.id = :profileId " +
-                "OR c.topic.creatorProfile.id = :profileId " +
-                "OR m.creatorProfile.id = :profileId", chatClass)
-                .setParameter("profileId", profileId)
-                .getResultList();
-
-        return chats;
-    }
-
-    public List<ChatWithTopic> getAllChatsByProfileId(Long profileId) {
-        List<ChatWithTopic> chats = getAllChatsByProfileId(profileId, clazz);
-
-        return chats;
-    }
-
-
     public <T extends ChatWithTopic> List<T> getAllUnreadChatsByProfileId(Long profileId, Class<T> chatClass) {
 
         List<T> listOfUnreadChats = entityManager.createQuery("SELECT DISTINCT c FROM " + chatClass.getName() + " c " +
-                "JOIN c.chatMessages m1 " +
-                "JOIN c.chatMessages m2 " +
-                "WHERE :profileId NOT MEMBER OF m1.isReadByProfilesId " +
-                "AND (c.creatorProfile.id = :profileId " +
-                "OR c.topic.creatorProfile.id = :profileId " +
-                "OR m2.creatorProfile.id = :profileId)", chatClass)
+                "JOIN c.chatMessages m " +
+                "JOIN c.chatMembers chMem " +
+                "WHERE :profileId NOT MEMBER OF m.isReadByProfilesId " +
+                "AND (chMem.id = :profileId)", chatClass)
                 .setParameter("profileId", profileId)
                 .getResultList();
 
@@ -261,12 +231,10 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
     public <T extends ChatWithTopic> long getCountOfUnreadChatsByProfileId(Long profileId, Class<T> ChatClass) {
 
         List<Long> countOfUnreadChats = entityManager.createQuery("SELECT COUNT (DISTINCT c) FROM " + ChatClass.getName() + " c " +
-                "JOIN c.chatMessages m1 " +
-                "JOIN c.chatMessages m2 " +
-                "WHERE :profileId NOT MEMBER OF m1.isReadByProfilesId " +
-                "AND (c.creatorProfile.id = :profileId " +
-                "OR c.topic.creatorProfile.id = :profileId " +
-                "OR m2.creatorProfile.id = :profileId)", Long.class)
+                "JOIN c.chatMessages m " +
+                "JOIN c.chatMembers chMem " +
+                "WHERE :profileId NOT MEMBER OF m.isReadByProfilesId " +
+                "AND (chMem.id = :profileId)", Long.class)
                 .setParameter("profileId", profileId)
                 .getResultList();
 
@@ -347,5 +315,13 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
         }
 
         return chat;
+    }
+
+    public ChatWithTopic getChatByMessageId(Long messageId) {
+        ChatWithTopic chatWithTopic = entityManager.createQuery("SELECT DISTINCT c FROM ChatWithTopic c " +
+                "JOIN c.chatMessages m where m.id= :messageId", ChatWithTopic.class)
+                .setParameter("messageId", messageId)
+                .getSingleResult();
+        return chatWithTopic;
     }
 }

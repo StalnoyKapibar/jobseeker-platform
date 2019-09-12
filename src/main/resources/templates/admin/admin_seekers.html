@@ -58,7 +58,7 @@
                 <tr th:each="seekerUser : ${seekerUsers}">
                     <td th:text="${seekerUser.id}"></td>
                     <td th:text="${seekerUser.email}"></td>
-                    <td th:text="${seekerUser.date}"></td>
+                    <td th:text="${#temporals.format(seekerUser.date, 'dd MMMM yyyy HH:mm')}"></td>
                     <td>
                         <button th:onclick="'editSeeker(\'' + ${seekerUser.id} + '\');'" type="button"
                                 class="btn btn-primary">Edit
