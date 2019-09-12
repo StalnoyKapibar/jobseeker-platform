@@ -40,7 +40,7 @@ function printEmployerNews() {
                     'class = "btn btn-link" onclick = "newsDescription(' + item.id + ')"' +
                     'value="' + item.description + '" data-toggle="modal"data-target="#viewDescriptionModal">Описание </button>' +
                     '</td>' +
-                    '<td>' + item.date + '</td>' +
+                    '<td>' + getFormatedDate(new Date(item.date)) + '</td>' +
                     '<td>' +
                     '<button style="width: 120px" onclick="editNews(' + item.id + ')" type="button"' +
                     'class="btn btn-primary" data-toggle="modal" data-target="#editNewsModal">Edit news </button>' +
@@ -127,6 +127,14 @@ function editModalNews() {
             alert(error.toString());
         }
     })
+}
+
+//DD-MM-YYYY HH:mm
+function getFormatedDate(dateObject){
+    return ('0' + dateObject.getDate()).slice(-2) + '/'
+        + ('0' + (dateObject.getMonth()+1)).slice(-2) + '/'
+        + dateObject.getFullYear()+' '+('0' + dateObject.getHours()).slice(-2)+':'
+        +('0' + dateObject.getMinutes()).slice(-2);
 }
 
 function newsDescription(newsId) {

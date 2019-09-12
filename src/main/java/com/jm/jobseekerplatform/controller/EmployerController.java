@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.Base64;
@@ -46,7 +46,7 @@ public class EmployerController {
     private String googleMapsApiKey;
 
 
-    @RequestMapping("/employer/{employerProfileId}")
+    @GetMapping("/employer/{employerProfileId}")
     public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {
         boolean isOwner = false;
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
@@ -92,21 +92,21 @@ public class EmployerController {
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-    @RequestMapping("/employer/get_news")
+    @GetMapping("/employer/get_news")
     public String getEmployerProfileNews(Model model, Authentication authentication) {
         model.addAttribute("employerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
         return "employer_all_news";
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-    @RequestMapping("/employer/get_resumes")
+    @GetMapping("/employer/get_resumes")
     public String getResumes(Model model, Authentication authentication) {
         model.addAttribute("employerProfileId", ((User) authentication.getPrincipal()).getId());
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "resume/all_resumes";
     }
 
-    @RequestMapping("/employer/chats/{employerProfileId}")
+    @GetMapping("/employer/chats/{employerProfileId}")
     public String EmployerPageChatsMy(@PathVariable Long employerProfileId, Model model) {
         model.addAttribute("employerProfileId", employerProfileId);
         model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(employerProfileId));

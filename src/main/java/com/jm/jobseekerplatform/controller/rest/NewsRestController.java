@@ -39,7 +39,7 @@ public class NewsRestController {
     private TagService tagService;
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @PostMapping("/add")
     public ResponseEntity addNews(@RequestBody News news,
                                   @RequestParam("tags") Set<String> tags,
                                   Authentication authentication) {
@@ -52,7 +52,7 @@ public class NewsRestController {
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
-    @RequestMapping(value = "/delete/{newsId}", method = RequestMethod.GET)
+    @GetMapping("/delete/{newsId}")
     public ResponseEntity deleteNews(@PathVariable("newsId") Long newsId) {
         newsService.deleteById(newsId);
         return new ResponseEntity(HttpStatus.OK);
@@ -60,14 +60,14 @@ public class NewsRestController {
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
-    @RequestMapping(value = "/{newsId}", method = RequestMethod.GET)
+    @GetMapping("/{newsId}")
     @ResponseBody
     public ResponseEntity<News> getNewsById(@PathVariable("newsId") Long newsId) {
         return new ResponseEntity<>(newsService.getById(newsId), HttpStatus.OK);
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping("/")
     @ResponseBody
     public ResponseEntity<List<News>> getAllNewsByEmployerProfileId(@RequestParam("newsPageCount") int newsPageCount,
                                                                     Authentication authentication) {
@@ -78,7 +78,7 @@ public class NewsRestController {
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/all_seeker_news", method = RequestMethod.GET)
+    @GetMapping("/all_seeker_news")
     @ResponseBody
     public ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
                                                                   @RequestParam("newsPageCount") int newsPageCount) {
@@ -92,7 +92,7 @@ public class NewsRestController {
     }
 
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
-    @RequestMapping(value = "/editNews", method = RequestMethod.POST)
+    @PostMapping("/editNews")
     public ResponseEntity editNews(@RequestParam("newsId") Long newsId,
                                    @RequestParam("newsHeadline") String newsHeadline,
                                    @RequestParam("newsDescription") String newsDescription) {
