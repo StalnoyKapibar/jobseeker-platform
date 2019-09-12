@@ -70,11 +70,11 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     }
 
     public Page<Vacancy> getVacanciesSortByCity(String city, int limit, int page) {
-        page = (page==0) ? page : --page;
+        page = (page == 0) ? page : --page;
 
         Query query = (Query) entityManager.createQuery(query_for_find_vacancies_sorted_by_city, Vacancy.class);
 
-        long totalElements = (Long)entityManager.createQuery("select count(v) from Vacancy v where v.state='ACCESS'")
+        long totalElements = (Long) entityManager.createQuery("select count(v) from Vacancy v where v.state='ACCESS'")
                 .setHint("org.hibernate.cacheable", true).getSingleResult();
 
         int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
@@ -85,7 +85,7 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     }
 
     public Page<Vacancy> getVacanciesByTagsAndSortByCity(String city, Set<Tag> tags, int limit, int page) {
-        page = (page==0) ? page : --page;
+        page = (page == 0) ? page : --page;
 
         Query query = (Query) entityManager.createQuery(query_for_find_vacancies_by_tags_and_sorted_by_city)
                 .setParameter("tags", tags).setParameter("city", city);
@@ -172,12 +172,31 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
 
         List<Vacancy> vacancies = new ArrayList<>();
         for (Long id : vacancyIds) {
-            for(Vacancy v : vacancyList) {
-                if(v.getId().equals(id)) {
+            for (Vacancy v : vacancyList) {
+                if (v.getId().equals(id)) {
                     vacancies.add(v);
                 }
             }
         }
+        return new VacancyPageDTO(vacancies, totalPages);
+    }
+
+    public Page<Vacancy> getVacanciesSortedByCityTagsViews(long seekerId, String city, int limit, int page) {
+        page = (page == 0) ? page : --page;
+
+        long totalElements = (Long) entityManager.createQuery("select count(v) from Vacancy v where v.state='ACCESS'")
+                .getSingleResult();
+
+        int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
+
+        Query query = (Query) entityManager.createNativeQuery("Call getSortedVacs(:seekerId, :city, :limitFrom, :limitTo)", Vacancy.class);
+
+        List<Vacancy> vacancies = query
+                .setParameter("seekerId", seekerId)
+                .setParameter("city", city)
+                .setParameter("limitFrom", page * limit)
+                .setParameter("limitTo", page*limit+limit)
+                .getResultList();
         return new VacancyPageDTO(vacancies, totalPages);
     }
 
@@ -193,7 +212,7 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
                 .setHint(QueryHints.FETCHGRAPH, entityManager.getEntityGraph("vacancy-all-nodes")).getResultList();
     }
 
-    public void updateVacancy(Vacancy vacancy){
+    public void updateVacancy(Vacancy vacancy) {
 
     }
 }
