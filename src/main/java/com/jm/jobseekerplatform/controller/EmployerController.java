@@ -68,7 +68,7 @@ public class EmployerController {
                 if (roles.contains("ROLE_SEEKER")) {
                     boolean isContain = false;
                     SeekerUser seekerUser = seekerUserService.getById(userId);
-                    if (employerProfile.getReviews().stream().anyMatch(reviews1 -> Objects.equals(reviews1.getSeekerProfile().getId(), seekerUser.getProfile().getId()))) {
+                    if (employerProfile.getReviews().stream().anyMatch(reviews1 -> Objects.equals(reviews1.getCreatorProfile().getId(), seekerUser.getProfile().getId()))) {
                         isContain = true;
                     }
                     model.addAttribute("seekerProfileId", seekerUser.getProfile().getId());
