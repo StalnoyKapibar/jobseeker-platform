@@ -35,4 +35,8 @@ public class ResumeService extends AbstractService<Resume> {
         return dao.getResumesSortByCity(city, limit, page);
     }
 
+    public void deleteByResumeId(Long id) {
+        dao.deleteResumeById(id);
+    }
+
 }

@@ -22,17 +22,18 @@
 </th:block>
 
 <th:block th:fragment="nav">
-    <nav class="navbar navbar-dark fixed-top bg-dark navbar-expand-md shadow p-0">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">JobSeeker</a>
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark d-flex flex-row justify-content-between p-0 m-0">
+        <div class="left-navbar d-flex flex-row">
+            <a class="navbar-brand text-light" href="#">JobSeeker</a>
+        </div>
+        <div class="right-navbar  d-flex flex-row ">
+            <ul class="navbar-nav d-flex flex-row  justify-content-between" >
+                <li class="nav-item">
+                    <a href="/logout" class="nav-link, text-light"> <span data-feather="log-out"></span></a>
+                </li>
+            </ul>
+        </div>
 
-        <ul class="navbar-nav ml-auto px-3">
-
-            <li class="nav-item text-nowrap">
-                <a class="nav-link" href="logout"><span data-feather="log-out"></span>
-                </a>
-            </li>
-
-        </ul>
     </nav>
 </th:block>
 

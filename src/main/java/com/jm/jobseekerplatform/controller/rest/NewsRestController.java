@@ -3,6 +3,7 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -36,44 +39,49 @@ public class NewsRestController {
     private TagService tagService;
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @PostMapping("/add")
     public ResponseEntity addNews(@RequestBody News news,
-                                  @RequestParam("employerProfileId") Long employerProfileId,
-                                  @RequestParam("tags") Set<String> tags) {
-        news.setAuthor(employerProfileService.getById(employerProfileId));
+                                  @RequestParam("tags") Set<String> tags,
+                                  Authentication authentication) {
+        news.setAuthor(employerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()));
         Set<Tag> tagSet = tagService.getTagsByStringNames(tags);
         news.setTags(tagSet);
         newsService.add(news);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/delete/{newsId}", method = RequestMethod.GET)
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
+    @GetMapping("/delete/{newsId}")
     public ResponseEntity deleteNews(@PathVariable("newsId") Long newsId) {
         newsService.deleteById(newsId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{newsId}", method = RequestMethod.GET)
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
+    @GetMapping("/{newsId}")
     @ResponseBody
     public ResponseEntity<News> getNewsById(@PathVariable("newsId") Long newsId) {
         return new ResponseEntity<>(newsService.getById(newsId), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/all_employer_news", method = RequestMethod.GET)
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @GetMapping("/")
     @ResponseBody
-    public ResponseEntity<List<News>> getAllNewsByEmployerProfileId(@RequestParam("employerProfileId") Long employerProfileId,
-                                                                    @RequestParam("newsPageCount") int newsPageCount) {
+    public ResponseEntity<List<News>> getAllNewsByEmployerProfileId(@RequestParam("newsPageCount") int newsPageCount,
+                                                                    Authentication authentication) {
         Sort sort = new Sort(Sort.Direction.DESC, "date");
+        Long employerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
         List<News> news = newsService.getAllByEmployerProfileId(employerProfileService.getById(employerProfileId),
                 PageRequest.of(newsPageCount, 10, sort)).getContent();
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/all_seeker_news", method = RequestMethod.GET)
+    @GetMapping("/all_seeker_news")
     @ResponseBody
     public ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
                                                                   @RequestParam("newsPageCount") int newsPageCount) {
-
         Set<Subscription> subscriptions = seekerProfileService.getById(seekerProfileId).getSubscriptions();
         if (subscriptions.size() == 0) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
@@ -83,7 +91,8 @@ public class NewsRestController {
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/editNews", method = RequestMethod.POST)
+    @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
+    @PostMapping("/editNews")
     public ResponseEntity editNews(@RequestParam("newsId") Long newsId,
                                    @RequestParam("newsHeadline") String newsHeadline,
                                    @RequestParam("newsDescription") String newsDescription) {
