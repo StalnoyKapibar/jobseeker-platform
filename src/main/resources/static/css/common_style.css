@@ -31,6 +31,11 @@
     --snackbar-background-color: #fff;
     --snackbar-color: #222;
 }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
     background-color: var(--bg-color);
@@ -38,39 +43,42 @@ body {
     height: calc(100%);
 }
 
-/*Navbar style*/
-.navbar {
-    background-color: var(--navbar-bg-color);
-}
-
-.navbar a {
-    color: white;
-    text-decoration: none;
-    margin-left: 30px;
-}
-
-.navbar li {
-    color: white;
-    margin-left: 15px;
-    margin-right: 15px;
-}
-
-.navbar a :hover {
-    color: lightgray;
-}
-
-.navbar .dropdown {
-    display: flex;
-}
-
-.navbar .dropdown-menu {
-    position: relative;
-    right: 0;
-}
-
 li {
     list-style-type: none;
 }
+
+/*Navbar style*/
+.navbar {
+    background-color: var(--navbar-bg-color);
+    width: 100vw;
+}
+.left-navbar{
+    padding-left: 5vw;
+}
+.right-navbar{
+    padding-right: 5vw;
+}
+.navbar-nav{
+    margin-left: 5vw;;
+}
+.dropdown{
+    margin-left: 5vw;
+    margin-right: 5vw;
+}
+.entry-form{
+    width: 330px;
+    top: 200%;
+}
+.loginHelp{
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.auth-user-data>ul>li:first-child{
+    margin-right:5vw;
+}
+
+
 
 /*Sidebar style*/
 .sidebar {
