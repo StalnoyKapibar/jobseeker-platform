@@ -57,10 +57,20 @@
                         </div>
                     </div>
 
-                    <div class="card-footer text-muted">
-                        <input type="text" class="form-control" id="companywebsite" placeholder="Название компании"
-                               th:value="${employerProfile.website}">
+                    <div class="row">
+                        <div class="col-9">
+                            <div class="card-footer text-muted">
+                                <input type="text" class="form-control" id="companywebsite" placeholder="Название компании"
+                                       th:value="${employerProfile.website}">
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <button type="button" class="btn btn-primary btn" th:onclick="'update('+${employerProfile.id}+')'">Сохранить изменения</button>
+                        </div>
+                        <div class="col-1">
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -89,45 +99,39 @@
                 </div>
             </div>
              -->
-            <div class="col-lg-11 empCard" id="empVacancies">
+        <div class="row">
+            <div id="empVacancies" class="col-lg-11 empCard">
                 <div class="card mb-3">
-                        <div class="card-body">
-                            <h5 align="center" class="card-header" >Все вакансии:</h5>
-                            <div class="list-group" id="allVacancies" style="height: 200px; overflow: auto;">
-                                <div th:each="vacancy: ${vacancies}">
-                                <li class="card border-success vac" style="margin: 5px"
-                                    th:id ="${vacancy.id}+'_li'"> <!--th:if="${vacancy.publicationPosition} == null" -->
-                                    <div class="input-group">
-                                        <div class="card-header" style="width: 80%"><span
-                                                th:text="${vacancy.headline}" th:data-id="${vacancy.id}"></span></div>
-                                        <a th:href="@{'/edit_vacancy/' + ${vacancy.id}}"  class="input-group-btn btn btn-primary go inline" style="width: 10%;">
-                                            <i class="fas fa-user-edit"></i>
-                                        </a>
-                                        <button class="input-group-btn btn btn-danger go inline" style="width: 10%;"
-                                                th:onclick="'show_delete_vacancy_alert('+${vacancy.id}+')'">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </div>
-                                </li>
+                    <div class="card-body">
+                        <h5 align="center" class="card-header" >Все вакансии:</h5>
+                        <div class="list-group" id="allVacancies" style="height: 200px; overflow: auto;">
+                            <div th:each="vacancy: ${vacancies}">
+                            <li class="card border-success vac"
+                                th:id ="${vacancy.id}+'_li'"> <!--th:if="${vacancy.publicationPosition} == null" -->
+                                <div class="input-group">
+                                    <div class="card-header" style="width: 80%"><span
+                                            th:text="${vacancy.headline}" th:data-id="${vacancy.id}"></span></div>
+                                    <a th:href="@{'/edit_vacancy/' + ${vacancy.id}}"  class="input-group-btn btn btn-primary go inline" style="width: 10%;">
+                                        <i class="fas fa-user-edit"></i>
+                                    </a>
+                                    <button class="input-group-btn btn btn-danger go inline" style="width: 10%;"
+                                            th:onclick="'show_delete_vacancy_alert('+${vacancy.id}+')'">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
                                 </div>
+                            </li>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-9">
-                </div>
-                <div class="col-2">
-                    <button type="button" class="btn btn-primary btn-lg" th:onclick="'update('+${employerProfile.id}+')'">Сохранить изменения</button>
-                </div>
-                <div class="col-1">
-                </div>
-            </div>
-
         </div>
 
+
+
+
+
+    </div>
             <!-- vacancyModal -->
 
 
@@ -154,7 +158,7 @@
             </div>
         </div>
 
-        </div>
+
     </div>
 </body>
 </html>
