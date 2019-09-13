@@ -26,7 +26,8 @@ public class ResumeRestController {
 
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
 	public @ResponseBody
-	ResponseEntity<Page<Resume>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
+	ResponseEntity<Page<Resume>> getSearchVacancies(@RequestBody Set<Tag> searchParam,
+													@RequestParam("pageCount") int pageCount) {
 		if (searchParam.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
@@ -35,7 +36,9 @@ public class ResumeRestController {
 	}
 
 	@RequestMapping(value = "/city/page/{page}", method = RequestMethod.POST)
-	public Page<Resume> getPageOfResumes(@RequestBody Point point, @RequestParam("city") String city, @PathVariable("page") int page) {
+	public Page<Resume> getPageOfResumes(@RequestBody Point point,
+										 @RequestParam("city") String city,
+										 @PathVariable("page") int page) {
 		int limit = 10;
 		if (city.equals("undefined")) {
 			Page<Resume> pageRezume = resumeService.getAllResumes(limit, page);
@@ -44,4 +47,5 @@ public class ResumeRestController {
 			return resumeService.findResumesByPoint(city, point, limit, page);
 		}
 	}
+
 }

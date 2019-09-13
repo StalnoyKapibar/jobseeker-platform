@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Set;
 
 @Service("resumeService")
@@ -22,7 +21,6 @@ public class ResumeService extends AbstractService<Resume> {
 
     @Autowired
     private CityService cityService;
-
 
     public Page<Resume> getAllResumes(int limit, int page) {
         return dao.getAllResumes(limit, page);
