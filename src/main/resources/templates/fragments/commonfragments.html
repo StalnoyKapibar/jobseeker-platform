@@ -23,7 +23,7 @@
 
 <body>
 <th:block th:fragment="sidebar">
-    <div class="sidebar">
+    <div class="sidebar sidebar-expanded col-2  d-md-block">
         <ul sec:authorize="!isAuthenticated()">
             <th:block th:replace="fragments/sidebar_by_authority :: not_authority_sidebar"></th:block>
         </ul>
@@ -41,6 +41,7 @@
 </th:block>
 
 <th:block th:fragment="nav">
+    <header>
     <nav class="navbar  navbar-expand-sm navbar-dark fixed-top d-flex flex-row justify-content-between p-0 m-0">
         <div class="left-navbar d-flex flex-row m-0">
             <a class="navbar-brand" href="#">JobSeeker</a>
@@ -53,11 +54,10 @@
                 </li>
             </ul>
         </div>
-        <!--</div>!-->
         <div class="right-navbar  d-flex flex-row ">
             <div class="custom-control custom-switch" >
                 <input type="checkbox" class="custom-control-input" id="switch-theme">
-                <label class="custom-control-label mt-2" for="switch-theme"></label>
+                <label class="custom-control-label mt-1" for="switch-theme"></label>
             </div>
             <div sec:authorize="isAuthenticated()" class="auth-user-data ">
                 <ul class="navbar-nav d-flex flex-row  justify-content-between" >
@@ -81,7 +81,7 @@
                 </ul>
             </div>
             <div class="dropdown" sec:authorize="!isAuthenticated()" >
-                <button class="btn btn-warning dropdown-toggle btn-sm text-light mt-1" type="button" id="navbardrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn btn-warning dropdown-toggle btn-sm text-light" type="button" id="navbardrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Войти
                 </button>
                 <div class="dropdown-menu  dropdown-menu-right p-3  entry-form" aria-labelledby="navbardrop">
@@ -106,6 +106,7 @@
             </div>
         </div>
     </nav>
+    </header>
 </th:block>
 
 <th:block th:fragment="rolsfunc">

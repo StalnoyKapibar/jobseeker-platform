@@ -51,6 +51,7 @@ li {
 .navbar {
     background-color: var(--navbar-bg-color);
     width: 100vw;
+    max-height: 35px;
 }
 .left-navbar{
     padding-left: 5vw;
@@ -82,16 +83,11 @@ li {
 
 /*Sidebar style*/
 .sidebar {
-    width: 15%;
-    background-color: var(--sidebar-bg-color);
-    height: 100%;
     position: fixed;
-    z-index: 1;
-    top: 50px;
+    top: 35px;
     left: 0;
-    overflow-x: hidden;
-    padding-top: 20px;
-    margin-top: 20px;
+    z-index: 100; /* Behind the navbar */
+    background-color: #F3F4F6;
 }
 
 .sidebar ul {
