@@ -14,11 +14,7 @@
     margin-left: 250px;
 }
 
-#ui-id-1 {
-    background: #FFCC33;
-    width: 40%;
 
-}
 
 .ui-menu-item-wrapper {
     border-bottom-width: 2px;
@@ -26,9 +22,10 @@
     border-bottom-color: white;
     font-family: 'Times New Roman', Times, serif; /* Гарнитура текста */
     font-size: 150%;
+    width: 40%;
 }
 
-#foo {visibility:hidden;}
+
 
 .span_for_tag {
     align-items: center;
@@ -68,4 +65,20 @@
 #btnTags {
     background-color: #b06f09;
 }
+
+.ui-menu-item {
+    border-bottom-width: 1px;
+    border-bottom-style: solid; /* Стиль линии внизу */
+    border-bottom-color: black;
+    border-left: black;
+    font-family: 'Times New Roman', Times, serif; /* Гарнитура текста */
+    font-size: 112%;
+    background: #b06f09; /* Цвет фона */
+    width: 40%;
+    margin-left: -30px;
+    margin-right: auto;
+    text-indent: 1.5em;
+
+}
+
 
