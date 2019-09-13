@@ -16,8 +16,12 @@ public class SeekerProfileService extends AbstractService<SeekerProfile> {
     @Autowired
     private SeekerProfileDAO dao;
 
-    public Set<SeekerProfile> getByTags(Set<Tag> tags, int limit) {
+    public List<SeekerProfile> getAllSeekersById(List<Long> id) {
+        return dao.getAllSeekersById(id);
+    }
 
+    public Set<SeekerProfile> getByTags(Set<Tag> tags, int limit) {
         return dao.getByTags(tags, limit);
     }
+
 }

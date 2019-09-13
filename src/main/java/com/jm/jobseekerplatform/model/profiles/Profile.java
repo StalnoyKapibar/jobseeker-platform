@@ -1,11 +1,8 @@
 package com.jm.jobseekerplatform.model.profiles;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.jm.jobseekerplatform.model.State;
 import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Base64;
@@ -39,7 +36,7 @@ public abstract class Profile implements Serializable {
         this.logo = logo;
     }
 
-    @JsonValue
+//    @JsonValue
     public Long getId() {
         return id;
     }
@@ -78,4 +75,5 @@ public abstract class Profile implements Serializable {
                 "id=" + id +
                 '}';
     }
+
 }
