@@ -111,6 +111,7 @@
                                 <div class="input-group">
                                     <div class="card-header" style="width: 80%"><span
                                             th:text="${vacancy.headline}" th:data-id="${vacancy.id}"></span></div>
+
                                     <a th:href="@{'/edit_vacancy/' + ${vacancy.id}}"  class="input-group-btn btn btn-primary go inline" style="width: 10%;">
                                         <i class="fas fa-user-edit"></i>
                                     </a>
@@ -118,6 +119,7 @@
                                             th:onclick="'show_delete_vacancy_alert('+${vacancy.id}+')'">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
+
                                 </div>
                             </li>
                             </div>
@@ -146,7 +148,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="h5">Вы действительно хотите удалить вакансию:</div>
+                        <div class="h5">НЕ РАБОТАЕТ! Нужно придумать механизм архивации вакансии. С ними слишком много всего связано. Вы действительно хотите удалить вакансию:</div>
                         <div id="vac_name_to_del" class="h4"></div>
                         <input type="hidden" id="del_vac_id">
                     </div>

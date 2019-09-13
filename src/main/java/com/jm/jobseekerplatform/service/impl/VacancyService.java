@@ -151,7 +151,4 @@ public class VacancyService extends AbstractService<Vacancy> {
         oldVacancy.setTags(tagService.matchTagsByName(vacancy.getTags()));
         return true;
     }
-    public List<Vacancy> getTrackedByEmployerProfileId(Long id){
-        return dao.getTrackedByEmployerProfileId(id);
-    }
 }
