@@ -38,6 +38,8 @@ import java.util.*;
 @Component
 public class InitData {
 
+    public static final String WEB_IMG_DIR = "src/main/resources/static/img";
+
     @Autowired
     private UserRoleService userRoleService;
 
@@ -347,7 +349,7 @@ public class InitData {
     private void initAdminProfile() {
         BufferedImage image = null;
         try {
-            File sourceImage = new File("src/main/resources/static/img/LOGO_001.jpg");
+            File sourceImage = new File(WEB_IMG_DIR + "/LOGO_001.jpg");
             image = ImageIO.read(sourceImage);
         } catch (IOException e) {
             e.printStackTrace();
@@ -363,8 +365,8 @@ public class InitData {
         EmployerProfile employerProfile;
 
         try {
-            URL url = new URL("https://wiki.godville.net/images/2/25/%D0%A0%D0%BE%D0%B3%D0%B0_%D0%B8_%D0%9A%D0%BE%D0%BF%D1%8B%D1%82%D0%B0_%28%D0%BB%D0%BE%D0%B3%D0%BE%29.png");
-            image = ImageIO.read(url);
+            File sourceImage = new File(WEB_IMG_DIR + "/roga-kopyta.png");
+            image = ImageIO.read(sourceImage);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -388,8 +390,8 @@ public class InitData {
         employerProfileService.add(employerProfile);
 
         try {
-            URL url = new URL("https://0oq.ru/reshebnik-onlajn/ru.onlinemschool.com/pictures/vector/points-to-vector.png");
-            image = ImageIO.read(url);
+            File sourceImage = new File(WEB_IMG_DIR + "/points-to-vector.png");
+            image = ImageIO.read(sourceImage);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -451,8 +453,8 @@ public class InitData {
         portfolios.add(portfolioService.getById(1L));
         portfolios.add(portfolioService.getById(2L));
         try {
-            URL url = new URL("https://zapravka-kartridzhej-spb.ru/wp-content/uploads/2016/10/spezialist-zapravka-kartridzhej-spb-10.png");
-            image = ImageIO.read(url);
+            File sourceImage = new File(WEB_IMG_DIR + "/spezialist-zapravka-kartridzhej-spb-10.png");
+            image = ImageIO.read(sourceImage);
         } catch (IOException e) {
             e.printStackTrace();
         }

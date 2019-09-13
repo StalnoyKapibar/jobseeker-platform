@@ -46,6 +46,10 @@ public class ResumeService extends AbstractService<Resume> {
         return dao.getResumesSortByCity(city, limit, page);
     }
 
+    public void deleteByResumeId(Long id) {
+        dao.deleteResumeById(id);
+    }
+
     public Page<Resume> getFilterQuery(Map<String, Object> map) {
 
         String query = "select r from Resume r ";

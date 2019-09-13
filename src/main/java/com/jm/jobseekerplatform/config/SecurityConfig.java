@@ -75,8 +75,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
                 .antMatchers("/registration").anonymous()
-                // домашняя страница, стили, js и список вакансий доступен всем и всегда
-                .antMatchers("/", "/api/tags/**", "/api/vacancies/**", "/css/*", "/js/*", "/vacancy/**").permitAll()
+                // домашняя страница, стили, js и список вакансий
+                .antMatchers("/", "/api/tags/**", "/api/vacancies/**", "/api/users/email/*", "/css/*",
+                        //регистрация пользователя(добавление),  подтверждение регистрации доступен всем и всегда
+                        "/api/users/add", "/confirm_reg/*", "/js/**", "/vacancy/**").permitAll()
                 // всё, что касается админа только для админа и емплоера
                 .antMatchers("/admin/**","api/resumes/**", "api/cities/**").access("hasAnyRole('ADMIN','EMPLOYER')").anyRequest().authenticated();
     }

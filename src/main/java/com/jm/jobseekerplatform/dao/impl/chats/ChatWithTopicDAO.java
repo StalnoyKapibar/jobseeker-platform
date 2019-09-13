@@ -46,7 +46,11 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
         List<ChatInfoDetailWithTopicDTO> listOfChatInfoDetailWithTopicDTO =
                 entityManager.createQuery("SELECT new com.jm.jobseekerplatform.dto.chatInfo.ChatInfoDetailWithTopicDTO(" +
                         "e, count(case " +
-                        "when (exists(select m from ChatMessage m where m not in chms))" +
+                        "when (exists(select m from ChatMessage m " +
+                        "where (m.id=chms.id and m not in " +
+                        "(select distinct m2 from ChatMessage m2 " +
+                        "join m2.isReadByProfilesId irbpid " +
+                        "where m2.id=m.id and irbpid=:profileId))))" +
                         "then 1 else null end), max (chms))" +
                         "FROM " + ChatClass.getName() + " e " +
                         "join e.chatMembers cm " +
@@ -311,5 +315,13 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
         }
 
         return chat;
+    }
+
+    public ChatWithTopic getChatByMessageId(Long messageId) {
+        ChatWithTopic chatWithTopic = entityManager.createQuery("SELECT DISTINCT c FROM ChatWithTopic c " +
+                "JOIN c.chatMessages m where m.id= :messageId", ChatWithTopic.class)
+                .setParameter("messageId", messageId)
+                .getSingleResult();
+        return chatWithTopic;
     }
 }
