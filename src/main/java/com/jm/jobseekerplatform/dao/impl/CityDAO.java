@@ -2,9 +2,11 @@ package com.jm.jobseekerplatform.dao.impl;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.City;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class CityDAO extends AbstractDAO<City> {
@@ -20,5 +22,10 @@ public class CityDAO extends AbstractDAO<City> {
 
         throw new RuntimeException("Several cities!");
 
+    }
+
+    public List<City> getAllCities() {
+        List<City> resultList = entityManager.createQuery("select c from City c", City.class).getResultList();
+        return resultList;
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -43,5 +44,10 @@ public class ResumeRestController {
         } else {
             return resumeService.findResumesByPoint(city, point, limit, page);
         }
+    }
+
+    @PostMapping("/getfilter")
+    public Page<Resume> getResumesWithFilter (@RequestBody Map<String, Object> map) {
+        return resumeService.getFilterQuery(map);
     }
 }

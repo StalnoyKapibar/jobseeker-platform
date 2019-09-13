@@ -56,4 +56,8 @@ public class CityService extends AbstractService<City> {
     public City getCityByName(String cityName){
         return cityDAO.findCityByName(cityName);
     }
+
+    public List<City> getAllCities() {
+        return cityDAO.getAllCities();
+    }
 }

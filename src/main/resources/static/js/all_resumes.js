@@ -4,6 +4,12 @@ var header = $("meta[name='_csrf_header']").attr("content");
 var page = 1;
 var total_pages;
 var city;
+var availableTags;
+var var2 = [];
+var availableCities;
+var CitiesNames = [];
+
+
 
 $(function () {
     getCurrentLocation(function () {
@@ -219,6 +225,7 @@ function searchByTags() {
     });
     let searchBox = $('#search_box').val();
     if (param.length === 0 && searchBox.length === 0) {
+        document.getElementById("filter").style.visibility = "hidden";
         $('#searchHeader').text('Задан пустой запрос');
     } else {
         let pageCount = 0;
@@ -279,5 +286,242 @@ function deleteButton(id) {
     $('#tagItem-' + id).remove();
     if ($('.listTags').length < 5) {
         $('#search_box').attr('readonly', false);
+    }
+}
+
+function openFilter() {
+    let openHeight = "450px";
+    let closeHeight = "0px";
+
+    let filter = $("#filter");
+
+
+    if (filter.height() == parseInt(closeHeight)) {
+        document.getElementById("filter").style.visibility = "visible";
+        filter.height(openHeight);
+
+
+    } else {
+        document.getElementById("filter").style.visibility = "hidden";
+        filter.height(closeHeight);
+    }
+}
+
+function doFilterInit() {
+
+    let result;
+    $('#getAllResumes').remove();
+    $('#searchList').remove();
+    $('#searchResult').append('<ul id="searchList" class="list-group"></ul>');
+
+    var salFrom = $('#weightFrom').val();
+    var salTo = $('#weightTo').val();
+    var city = $('#City').val();
+    var tagFls = $('#tagFls').val();
+
+    let filter = {};
+
+    if(salFrom.length !== 0) {
+        filter["salFrom"] = salFrom;
+    }
+    if(salTo.length !== 0) {
+        filter["salTo"] = salTo;
+    }
+
+    if(city.length !==0 ) {
+        filter["city"] = city;
+    }
+
+    let all_span_tags = document.getElementsByClassName("span_for_tag");
+    let all_span_tags_id =[];
+    let index;
+    for(index = 0; index < all_span_tags.length; index++){
+        all_span_tags_id[index] = all_span_tags[index].id;
+
+    }
+    if(all_span_tags.length != 0) {
+        if(tagFls.length !==0 ) {
+            if(isExistTag(tagFls)) {
+                let tmpid = findTagIdByValue(tagFls)
+                all_span_tags_id[all_span_tags_id.length] = tmpid;
+                filter["tagFls"] = all_span_tags_id;
+            } else {
+                deleteMessage();
+                createMessage(tagFls);
+                filter["tagFls"] = all_span_tags_id;
+            }
+        } else {
+            filter["tagFls"] = all_span_tags_id;
+        }
+    } else {
+        if(tagFls.length !==0 ) {
+            if(isExistTag(tagFls)) {
+                let tmpid = findTagIdByValue(tagFls)
+                all_span_tags_id[all_span_tags_id.length] = tmpid;
+                filter["tagFls"] = all_span_tags_id;
+            }
+        }
+    }
+
+
+    $.ajax({
+        url: 'api/resumes/getfilter',
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        async: false,
+        dataType: "json",
+        data: JSON.stringify(filter),
+        success: function (data) {
+            result = data;
+            total_pages = data.totalPages;
+            printResumes(result.content);
+
+        }
+    });
+
+
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    $.ajax({
+        url: '/api/tags/',
+        type: "GET",
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        async: false,
+        success: function (data) {
+            availableTags = data;
+            console.log(availableTags);
+
+            let i;
+            for(i = 0; i < availableTags.length; i++) {
+                var2.push(availableTags[i].name);
+            }
+            console.log(var2);
+        }
+    });
+});
+
+$( function() {
+
+    $( "#tagFls" ).autocomplete({
+        source: var2
+
+    });
+} );
+
+function doClear() {
+
+    let spans = document.getElementsByClassName("span_for_tag");
+    if(spans.length !=0) {
+        for (; spans.length !=0 ; ) {
+            spans[0].remove();
+        }
+    }
+    $('#weightFrom').val('');
+    $('#weightTo').val('');
+    $('#City').val('');
+    $('#tagFls').val('');
+    doFilterInit();
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    $.ajax({
+        url: 'api/cities/',
+        type: "GET",
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        async: false,
+        success: function (data) {
+            availableCities = data;
+            console.log(availableCities);
+
+        }
+    });
+});
+
+$( function() {
+
+    $( "#City" ).autocomplete({
+        source: unique(availableCities)
+
+    });
+} );
+
+function unique(arr) {
+    let result = [];
+
+    for (let str of arr) {
+        if (!result.includes(str)) {
+            result.push(str);
+        }
+    }
+
+    return result;
+}
+
+function tagToFilter() {
+
+    let tag = $('#tagFls').val();
+    if(!isExistTag(tag)) {
+        deleteMessage();
+        createMessage(tag);
+        $('#tagFls').val('');
+    } else {
+        deleteMessage();
+        var theDiv = document.getElementById("form_for_tags");
+        let span = document.createElement("span");
+        span.className = "span_for_tag";
+        span.id = findTagIdByValue(tag);
+        span.innerHTML = tag;
+
+        theDiv.appendChild(span);
+        $('#tagFls').val('');
+    }
+
+}
+
+
+
+function isExistTag (tagName) {
+    let i;
+    for(i = 0; i < var2.length; i++) {
+        if (tagName === var2[i]) {
+            return true;
+        }
+
+    }
+    return false;
+
+}
+
+function findTagIdByValue(tagName) {
+    let i;
+    for(i = 0; i < availableTags.length; i++) {
+        if (tagName === availableTags[i].name) {
+            return availableTags[i].id;
+        }
+    }
+    return false;
+
+}
+
+function createMessage(message) {
+    let theDiv = document.getElementById("wrong_message");
+    let mg = document.createElement("p");
+    mg.className = "wrong_message";
+    mg.innerHTML = "К сожалению по запросу " + message + " ничего не найдено";
+    theDiv.appendChild(mg);
+}
+
+function deleteMessage() {
+    let message = document.getElementsByClassName("wrong_message");
+    if(message.length !=0) {
+        message[0].remove();
     }
 }
