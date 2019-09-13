@@ -72,28 +72,36 @@ public class SeekerVacancyRecordDAO extends AbstractDAO<SeekerVacancyRecord> {
             vacanciesDTOList.add(dto);
         }
 
-        List<Vacancy> vacancyList = vacancyService.getAll();
-        HashMap<Long, Vacancy> vacancyHashMap = new HashMap<>();
-        for (Vacancy vacancy : vacancyList) {
-            vacancyHashMap.put(vacancy.getId(), vacancy);
-        }
+        ArrayList<Long> listId = new ArrayList<>();
+        vacanciesDTOList.forEach(x -> listId.add(x.getId()));
 
-        for (ViewedVacanciesDTO vacanciesDTO : vacanciesDTOList) {
-            Vacancy vacancy = vacancyHashMap.get(vacanciesDTO.getId());
-            Set<Tag> tagsVacancies = vacancy.getTags();
-            for (Tag tag : tagsVacancies) {
-                if (profileTags.contains(tag)) {
-                    if (numberOfViewsVacanciesByTag.containsKey(vacancy)) {
-                        Long aLong = numberOfViewsVacanciesByTag.get(vacancy);
-                        numberOfViewsVacanciesByTag.replace(vacancy, ++aLong);
-                        break;
-                    } else {
-                        numberOfViewsVacanciesByTag.put(vacancy, 1L);
-                        break;
+        if (!listId.isEmpty()) {
+            List<Vacancy> vacancyList = vacancyService.getEntitiesByIdArray(listId);
+            HashMap<Long, Vacancy> vacancyHashMap = new HashMap<>();
+            for (Vacancy vacancy : vacancyList) {
+                vacancyHashMap.put(vacancy.getId(), vacancy);
+            }
+
+            for (ViewedVacanciesDTO vacanciesDTO : vacanciesDTOList) {
+                Vacancy vacancy = vacancyHashMap.get(vacanciesDTO.getId());
+                Set<Tag> tagsVacancies = vacancy.getTags();
+                for (Tag tag : tagsVacancies) {
+                    if (profileTags.contains(tag)) {
+                        if (numberOfViewsVacanciesByTag.containsKey(vacancy)) {
+                            Long aLong = numberOfViewsVacanciesByTag.get(vacancy);
+                            numberOfViewsVacanciesByTag.replace(vacancy, ++aLong);
+                            break;
+                        } else {
+                            numberOfViewsVacanciesByTag.put(vacancy, 1L);
+                            break;
+                        }
                     }
                 }
             }
+            return numberOfViewsVacanciesByTag;
         }
-        return numberOfViewsVacanciesByTag;
+        else {
+            return numberOfViewsVacanciesByTag;
+        }
     }
 }
