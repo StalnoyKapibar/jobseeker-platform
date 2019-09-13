@@ -90,7 +90,7 @@ function update(id) {
             request.setRequestHeader(header, token);
         },
         success: function (profile) {
-            alert("Изменения успешно внесены")
+            window.location.href = 'seeker/' + id;
         },
         error: function (error) {
             console.log(error);

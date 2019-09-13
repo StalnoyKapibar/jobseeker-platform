@@ -26,7 +26,7 @@ public class SeekerProfileService extends AbstractService<SeekerProfile> {
         return dao.getByTags(tags, limit);
     }
     public void updatePhoto(long id, MultipartFile file){
-        SeekerUser seekerUser = seekerUserService.getById(id);
+        SeekerUser seekerUser = seekerUserService.getByProfileId(id);
         if (!file.isEmpty()) {
             try {
                 byte[] photo = file.getBytes();

@@ -7,7 +7,7 @@
 <head>
     <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <title>Employer's profile</title>
-    <script type="text/javascript" src="/js/update_emploer_profile.js"></script>
+    <script type="text/javascript" src="/js/update_employer_profile.js"></script>
     <script type="text/javascript" src="/js/star-rating.min.js"></script>
     <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey})}"
             async defer></script>
@@ -89,10 +89,10 @@
                 </div>
             </div>
              -->
-            <div class="col-lg-5 empCard" id="empVacancies">
+            <div class="col-lg-11 empCard" id="empVacancies">
                 <div class="card mb-3">
-                                <h5>Все вакансии:</h5>
                         <div class="card-body">
+                            <h5 align="center" class="card-header" >Все вакансии:</h5>
                             <div class="list-group" id="allVacancies" style="height: 200px; overflow: auto;">
                                 <div th:each="vacancy: ${vacancies}">
                                 <li class="card border-success vac" style="margin: 5px"
@@ -100,9 +100,9 @@
                                     <div class="input-group">
                                         <div class="card-header" style="width: 80%"><span
                                                 th:text="${vacancy.headline}" th:data-id="${vacancy.id}"></span></div>
-                                        <button class="input-group-btn btn btn-primary go inline" style="width: 10%;">
+                                        <a th:href="@{'/edit_vacancy/' + ${vacancy.id}}"  class="input-group-btn btn btn-primary go inline" style="width: 10%;">
                                             <i class="fas fa-user-edit"></i>
-                                        </button>
+                                        </a>
                                         <button class="input-group-btn btn btn-danger go inline" style="width: 10%;"
                                                 th:onclick="'show_delete_vacancy_alert('+${vacancy.id}+')'">
                                             <i class="fas fa-trash-alt"></i>
@@ -116,42 +116,20 @@
                 </div>
             </div>
         <div class="container-fluid">
-            <button type="button" class="btn btn-primary btn-lg" th:onclick="'update('+${employerProfile.id}+')'">Сохранить изменения</button>
+            <div class="row">
+                <div class="col-9">
+                </div>
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary btn-lg" th:onclick="'update('+${employerProfile.id}+')'">Сохранить изменения</button>
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+
         </div>
 
             <!-- vacancyModal -->
-            <div id="vacancyModal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h3><span id="VMHeadline"></span><br/></h3>
-                        </div>
-                        <div class="modal-body">
-                            <h6>Теги:</h6>
-                            <h6><span id="VMTags"></span></h6>
-                            <h6>Город:</h6>
-                            <h6><span id="VMCity"></span></h6>
-                            <span id="VMRemote"> (Удаленная работа)</span>
-                            <a data-toggle="collapse" data-target="#map_collapse"
-                               style="color: #3498DB; white-space: pre">Показать на карте <span
-                                    class="far fa-map"></span></a><br/>
-                            <div id="map_collapse" class="collapsed collapse">
-                                <div id="map" style="height: 300px"></div>
-                            </div>
-                            <br/>
-                            <h6>Адрес:</h6>
-                            <h6><span id="VMAddress"></span></h6><br/>
-                            <h6 style="white-space: pre; color: red">Зарплата: <span id="VMSalary"></span></h6><br/>
-                            <span>Подробное описание:</span><br/>
-                            <div class="well well-sm">
-                                <span id="VMDescription"></span>
-                            </div>
-                            <span id="VMId" hidden></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
         <!-- delete vacancy alert modal -->
         <div class="modal fade" id="del_vac_allert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -2,16 +2,6 @@ var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
 
 $( document ).ready(function() {
-    $("#trckVacancies, #allVacancies").sortable({
-        connectWith: "#trckVacancies, #allVacancies",
-        update: function() {
-            var vacancies = [];
-            $('#trckVacancies li').each(function () {
-                    vacancies.push({'position':$(this).index()+1, 'id':$(this).find('span').data('id')});
-            });
-            sessionStorage.setItem('vacancies', JSON.stringify(vacancies));
-        }
-    });
 
     $(".custom-file-input").on("change", function() {
         var fileName = $(this).val().split("\\").pop();
@@ -21,14 +11,12 @@ $( document ).ready(function() {
 });
 
 function update(id) {
-    var profile = {
-        'profile':
+    var profile =
             {'id':id,
             'companyname':document.getElementById("companyname").value,
             'site':document.getElementById("companywebsite").value,
             'description':document.getElementById("description").value,
-            },
-        'vacancies': JSON.parse(sessionStorage.getItem('vacancies'))};
+            };
     $.ajax({
         type: 'post',
         url: "/api/employerprofiles/update",
@@ -40,7 +28,7 @@ function update(id) {
             request.setRequestHeader(header, token);
         },
         success: function (profile) {
-            alert("Изменения успешно внесены")
+            window.location.href = 'employer/' + id;
         },
         error: function (error) {
             console.log(error);

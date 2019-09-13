@@ -7,6 +7,7 @@ import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
+import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -118,4 +119,14 @@ public class VacancyRestController {
         }
         return vacancyService.findVacanciesByPointWithLimitAndPaging(city, point, limit, page);
     }
+    @PostMapping("/delete")
+    @ResponseBody
+    public List<Vacancy> deleteVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
+        long id = vacancy.getId();
+        Vacancy delVacancy = vacancyService.getById(id);
+        vacancyService.delete(delVacancy);
+       // vacancyService.deleteById(id);
+        return vacancyService.getAll();
+    }
+
 }
