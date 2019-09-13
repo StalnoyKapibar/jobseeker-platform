@@ -3,9 +3,9 @@ package com.jm.jobseekerplatform.dao.impl;
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.dto.ResumePageDTO;
 import com.jm.jobseekerplatform.model.Resume;
-import com.jm.jobseekerplatform.model.SeekerTest;
+import com.jm.jobseekerplatform.model.SeekerShowName;
 import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.service.impl.SeekerTestService;
+import com.jm.jobseekerplatform.service.impl.SeekerShowNameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
@@ -18,7 +18,7 @@ import java.util.Set;
 public class ResumeDAO extends AbstractDAO<Resume> {
 
     @Autowired
-    private SeekerTestService seekerTestService;
+    private SeekerShowNameService seekerShowNameService;
 
     public Page<Resume> getAllResumes(int limit, int page) {
         page = (page == 0) ? page : --page;
@@ -33,9 +33,9 @@ public class ResumeDAO extends AbstractDAO<Resume> {
             Long x = Long.parseLong(stringId.replaceAll("\\D+","").trim());
             rez.add(x);
         }
-        List<SeekerTest> seeker = seekerTestService.getAllSeekerTestById(rez);
+        List<SeekerShowName> seeker = seekerShowNameService.getAllSeekerTestById(rez);
 
-//        for (SeekerTest st : seekerTest) {
+//        for (SeekerShowName st : seekerTest) {
 //		    System.out.println(" === " + st.getName() + " " + st.getPatronymic() + " " + st.getSurname());
 //	    }
         return new ResumePageDTO(resumes, totalPages, seeker);

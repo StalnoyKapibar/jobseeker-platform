@@ -1,14 +1,14 @@
 package com.jm.jobseekerplatform.dto;
 
 import com.jm.jobseekerplatform.model.Resume;
-import com.jm.jobseekerplatform.model.SeekerTest;
+import com.jm.jobseekerplatform.model.SeekerShowName;
 import org.springframework.data.domain.PageImpl;
 import java.util.List;
 
 public class ResumePageDTO extends PageImpl<Resume> {
 
     private int totalPages;
-    private List<SeekerTest> seeker;
+    private List<SeekerShowName> seeker;
 
     public ResumePageDTO(List<Resume> content) {
         super(content);
@@ -19,7 +19,7 @@ public class ResumePageDTO extends PageImpl<Resume> {
         this.totalPages = totalPages;
     }
 
-    public ResumePageDTO(List<Resume> content, int totalPages, List<SeekerTest> seeker) {
+    public ResumePageDTO(List<Resume> content, int totalPages, List<SeekerShowName> seeker) {
         super(content);
         this.totalPages = totalPages;
         this.seeker = seeker;
@@ -34,11 +34,11 @@ public class ResumePageDTO extends PageImpl<Resume> {
         this.totalPages = totalPages;
     }
 
-    public List<SeekerTest> getSeeker() {
+    public List<SeekerShowName> getSeeker() {
         return seeker;
     }
 
-    public void setSeeker(List<SeekerTest> seeker) {
+    public void setSeeker(List<SeekerShowName> seeker) {
         this.seeker = seeker;
     }
 }
