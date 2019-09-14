@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.model.profiles;
 
 import com.jm.jobseekerplatform.model.*;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -150,4 +149,5 @@ public class SeekerProfile extends Profile implements Serializable {
     public void setResumes(Set<Resume> resumes) {
         this.resumes = resumes;
     }
+
 }

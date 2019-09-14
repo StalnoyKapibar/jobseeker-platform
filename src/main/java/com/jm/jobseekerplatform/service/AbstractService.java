@@ -5,10 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
-public abstract class AbstractService <T extends Serializable> {
+public abstract class AbstractService<T extends Serializable> {
 
     @Autowired
     protected AbstractDAO<T> abstractDAO;
@@ -30,7 +31,7 @@ public abstract class AbstractService <T extends Serializable> {
     }
 
     public T getById(Long id) {
-        return  abstractDAO.getById(id);
+        return abstractDAO.getById(id);
     }
 
     public void delete(T entity) {
@@ -39,5 +40,9 @@ public abstract class AbstractService <T extends Serializable> {
 
     public void deleteById(Long id) {
         abstractDAO.deleteById(id);
+    }
+
+    public List<T> getEntitiesByIdArray(ArrayList<Long> listId) {
+        return abstractDAO.getEntitiesByIdArray(listId);
     }
 }

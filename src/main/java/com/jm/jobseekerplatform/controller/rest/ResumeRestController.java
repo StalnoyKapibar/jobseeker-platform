@@ -15,8 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 @RestController
@@ -34,44 +32,44 @@ public class ResumeRestController {
         return resumeService.getById(resumeId);
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public @ResponseBody
-    ResponseEntity<Page<Resume>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
-        if (searchParam.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        Page<Resume> page = resumeService.findAllByTags(searchParam, PageRequest.of(pageCount, 10));
-        return new ResponseEntity<>(page, HttpStatus.OK);
-    }
+	@RequestMapping(value = "/search", method = RequestMethod.POST)
+	public @ResponseBody
+	ResponseEntity<Page<Resume>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
+		if (searchParam.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		Page<Resume> page = resumeService.findAllByTags(searchParam, PageRequest.of(pageCount, 10));
+		return new ResponseEntity<>(page, HttpStatus.OK);
+	}
 
-    @RequestMapping(value = "/city/page/{page}", method = RequestMethod.POST)
-    public Page<Resume> getPageOfResumes(@RequestBody Point point, @RequestParam("city") String city, @PathVariable("page") int page) {
-        int limit = 10;
-        if (city.equals("undefined")) {
-            return resumeService.getAllResumes(limit, page);
-        } else {
-            return resumeService.findResumesByPoint(city, point, limit, page);
-        }
-    }
+	@RequestMapping(value = "/city/page/{page}", method = RequestMethod.POST)
+	public Page<Resume> getPageOfResumes(@RequestBody Point point, @RequestParam("city") String city, @PathVariable("page") int page) {
+		int limit = 10;
+		if (city.equals("undefined")) {
+			return resumeService.getAllResumes(limit, page);
+		} else {
+			return resumeService.findResumesByPoint(city, point, limit, page);
+		}
+	}
 
-    @RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
-    public Set<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, Authentication authentication) {
-        if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
-            return seekerProfileService.getById(seekerProfileId).getResumes();
-        } else {
-            return seekerProfileService.getById(((User) authentication.getPrincipal()).getId()).getResumes();
-        }
-    }
+	@RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
+	public Set<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, Authentication authentication) {
+		if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
+			return seekerProfileService.getById(seekerProfileId).getResumes();
+		} else {
+			return seekerProfileService.getById(((User) authentication.getPrincipal()).getId()).getResumes();
+		}
+	}
 
-    @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateSeekerUser(@RequestBody Resume resume) {
-        resumeService.update(resume);
-        return new ResponseEntity(HttpStatus.OK);
-    }
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity updateSeekerUser(@RequestBody Resume resume) {
+		resumeService.update(resume);
+		return new ResponseEntity(HttpStatus.OK);
+	}
 
-    @RequestMapping(value = "/delete/{resumeId}", method = RequestMethod.GET)
-    public ResponseEntity deleteResumeById(@PathVariable Long resumeId) {
-        resumeService.deleteByResumeId(resumeId);
-        return new ResponseEntity(HttpStatus.OK);
-    }
+	@RequestMapping(value = "/delete/{resumeId}", method = RequestMethod.GET)
+	public ResponseEntity deleteResumeById(@PathVariable Long resumeId) {
+		resumeService.deleteByResumeId(resumeId);
+		return new ResponseEntity(HttpStatus.OK);
+	}
 }

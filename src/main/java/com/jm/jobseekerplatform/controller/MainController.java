@@ -74,14 +74,13 @@ public class MainController {
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
-                    Long id = ((User) authentication.getPrincipal()).getId();
-                    SeekerProfile profile = seekerProfileService.getById(id);
+                    SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
+                    SeekerProfile profile = seekerUser.getProfile();
                     model.addAttribute("favoriteVacancies", profile.getFavoriteVacancy());
                     model.addAttribute("seekerProfileId", profile.getId());
                     model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-                    model.addAttribute("seekerAuthority", seekerUserService.getById(id).getAuthority());
+                    model.addAttribute("seekerAuthority", seekerUser.getAuthority());
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
-                    model.addAttribute("seekerAuthority", seekerUserService.getById(id).getAuthority());
                 } catch (NullPointerException e) {
                     model.addAttribute("googleMapsApiKey", googleMapsApiKey);
                     model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
