@@ -5,7 +5,9 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.SeekerHistoryService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class VacancyRestController {
 
     @Autowired
     private SeekerProfileService seekerProfileService;
+
+    @Autowired
+    private SeekerHistoryService seekerHistoryService;
 
     private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
@@ -111,9 +116,8 @@ public class VacancyRestController {
             }
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                Long seekerId = ((User) authentication.getPrincipal()).getId();
-                Set<Tag> tags = seekerProfileService.getById(seekerId).getTags();
-                return vacancyService.findVacanciesByTagsAndByPoint(city, point, tags, limit, page);
+                SeekerProfile profile = (SeekerProfile) ((User) authentication.getPrincipal()).getProfile();
+                return vacancyService.getVacanciesSortedByCityTagsViews(profile.getId(), city, point, limit, page);
             }
         }
         return vacancyService.findVacanciesByPointWithLimitAndPaging(city, point, limit, page);
