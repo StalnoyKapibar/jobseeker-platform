@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -117,13 +116,8 @@ public class VacancyRestController {
             }
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
-                SeekerProfile profile = seekerUser.getProfile();
-                Set<Tag> profileTags = profile.getTags();
-                HashMap<Vacancy, Long> numberOfViewsVacanciesByTagForSeeker =
-                        seekerHistoryService.getNumberOfViewsOffAllVacanciesByTagForSeeker(profile);
-                return vacancyService.findVacanciesByTagsAndByPointAndByViews(city, point, profileTags, limit, page,
-                        numberOfViewsVacanciesByTagForSeeker);
+                SeekerProfile profile = (SeekerProfile) ((User) authentication.getPrincipal()).getProfile();
+                return vacancyService.getVacanciesSortedByCityTagsViews(profile.getId(), city, point, limit, page);
             }
         }
         return vacancyService.findVacanciesByPointWithLimitAndPaging(city, point, limit, page);

@@ -1,18 +1,19 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
-import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
-import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -25,13 +26,7 @@ import java.util.Set;
 public class SeekerController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private SeekerProfileService seekerProfileService;
-
-    @Autowired
-    private NewsService newsService;
 
     @Autowired
     private ChatWithTopicService chatWithTopicService;
@@ -39,7 +34,7 @@ public class SeekerController {
     @Autowired
     private TagService tagService;
 
-    @RequestMapping("/{seekerProfileId}")
+    @GetMapping("/{seekerProfileId}")
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Set<Tag> tags = seekerProfile.getTags();
@@ -51,7 +46,7 @@ public class SeekerController {
         return "seeker";
     }
 
-    @RequestMapping("/meetings/{seekerProfileId}")
+    @GetMapping("/meetings/{seekerProfileId}")
     public String seekerMeetingsPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Long id = ((User) authentication.getPrincipal()).getId();
@@ -60,7 +55,7 @@ public class SeekerController {
         return "meetings";
     }
 
-    @RequestMapping("/vacancies/{seekerProfileId}")
+    @GetMapping("/vacancies/{seekerProfileId}")
     public String seekerFavoriteVacancies(@PathVariable Long seekerProfileId, Model model) {
         Set<Vacancy> favoriteVacancy = seekerProfileService.getById(seekerProfileId).getFavoriteVacancy();
         model.addAttribute("favoriteVacancy", favoriteVacancy);
@@ -68,7 +63,7 @@ public class SeekerController {
     }
 
     @RolesAllowed({"ROLE_SEEKER"})
-    @RequestMapping("/get_subscriptions/{seekerProfileId}")
+    @GetMapping("/get_subscriptions/{seekerProfileId}")
     public String getSeekerSubscriptions(@PathVariable Long seekerProfileId, Model model) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         model.addAttribute("seekerProfileSubscriptions", seekerProfile.getSubscriptions());
@@ -77,13 +72,33 @@ public class SeekerController {
     }
 
     @RolesAllowed({"ROLE_SEEKER"})
-    @RequestMapping("/get_subscription_news/{seekerProfileId}")
+    @GetMapping("/get_subscription_news/{seekerProfileId}")
     public String getSeekerSubscriptionNews(@PathVariable Long seekerProfileId, Model model) {
         model.addAttribute("seekerProfileId", seekerProfileId);
         return "seeker_subscription_news";
     }
 
-    @RequestMapping("/chats/{seekerProfileId}")
+    @Value("${google.maps.api.key}")
+    private String googleMapsApiKey;
+
+    @GetMapping("/resumes/{seekerProfileId}")
+    public String seekerResumesPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
+        if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
+            SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
+            model.addAttribute("resumesList", seekerProfile.getResumes());
+            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+            return "resumes";
+        } else {
+            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getId());
+            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
+            model.addAttribute("resumesList", seekerProfile.getResumes());
+            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+            return "resumes";
+        }
+    }
+
+    @GetMapping("/chats/{seekerProfileId}")
     public String EmployerPageChatsMy(@PathVariable Long seekerProfileId, Model model) {
         model.addAttribute("seekerProfileId", seekerProfileId);
         model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(seekerProfileId));

@@ -17,9 +17,8 @@
     <div class="row" style="padding-top: 30px">
         <div class="col-4" id="seekerPhoto">
             <form id="editPhotoForm" class="form-inline">
-                <img th:if="${photoimg != null}" id="sPhoto" th:src="@{'data:image/png;base64,' + ${photoimg}}" name="photo" alt=""
+                <img id="sPhoto" th:src="${photoimg != null} ? @{'data:image/png;base64,' + ${photoimg}} : '/img/default_photo_seeker.jpg'" name="photo" alt=""
                      style="width: 300px;height: 300px;">
-                <div th:if="${photoimg == null}" style="width: 300px;height: 300px; background: #808080"></div>
                 <br>
                 <div class="custom-file mt-4">
                     <div class="input-group">
