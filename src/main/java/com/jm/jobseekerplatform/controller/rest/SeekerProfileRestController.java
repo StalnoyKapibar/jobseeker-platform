@@ -116,7 +116,7 @@ public class SeekerProfileRestController {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
-        SeekerProfile seekerProfile = seekerProfileService.getById(seekerUser.getId());
+        SeekerProfile seekerProfile = seekerUser.getProfile();
 
         Set<String> tagsSet = new HashSet<>(Arrays.asList(updatedTags));
         Set<Tag> tagsByStringNames = tagService.getTagsByStringNames(tagsSet);
@@ -133,7 +133,7 @@ public class SeekerProfileRestController {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
-        SeekerProfile seekerProfile = seekerProfileService.getById(seekerUser.getId());
+        SeekerProfile seekerProfile = seekerUser.getProfile();
 
         Set<Tag> seekerProfileTags = seekerProfile.getTags();
         Iterator<Tag> iterator = seekerProfileTags.iterator();
