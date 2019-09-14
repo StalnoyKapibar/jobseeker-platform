@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.SeekerHistoryService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
@@ -116,7 +117,8 @@ public class VacancyRestController {
             }
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                SeekerProfile profile = (SeekerProfile) ((User) authentication.getPrincipal()).getProfile();
+                SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
+                SeekerProfile profile = seekerUser.getProfile();
                 Set<Tag> profileTags = profile.getTags();
                 HashMap<Vacancy, Long> numberOfViewsVacanciesByTagForSeeker =
                         seekerHistoryService.getNumberOfViewsOffAllVacanciesByTagForSeeker(profile);
