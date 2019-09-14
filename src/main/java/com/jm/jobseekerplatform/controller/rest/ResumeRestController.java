@@ -15,15 +15,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 @RestController
 @RequestMapping("api/resumes")
 public class ResumeRestController {
 
-	@Autowired
-	private ResumeService resumeService;
+    @Autowired
+    private ResumeService resumeService;
 
     @Autowired
     private SeekerProfileService seekerProfileService;
@@ -35,8 +34,7 @@ public class ResumeRestController {
 
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
 	public @ResponseBody
-	ResponseEntity<Page<Resume>> getSearchVacancies(@RequestBody Set<Tag> searchParam,
-													@RequestParam("pageCount") int pageCount) {
+	ResponseEntity<Page<Resume>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
 		if (searchParam.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
@@ -45,9 +43,7 @@ public class ResumeRestController {
 	}
 
 	@RequestMapping(value = "/city/page/{page}", method = RequestMethod.POST)
-	public Page<Resume> getPageOfResumes(@RequestBody Point point,
-										 @RequestParam("city") String city,
-										 @PathVariable("page") int page) {
+	public Page<Resume> getPageOfResumes(@RequestBody Point point, @RequestParam("city") String city, @PathVariable("page") int page) {
 		int limit = 10;
 		if (city.equals("undefined")) {
 			return resumeService.getAllResumes(limit, page);
@@ -55,6 +51,7 @@ public class ResumeRestController {
 			return resumeService.findResumesByPoint(city, point, limit, page);
 		}
 	}
+
 	@RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
 	public Set<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, Authentication authentication) {
 		if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {

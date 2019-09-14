@@ -6,6 +6,7 @@ import com.jm.jobseekerplatform.dto.ResumePageDTO;
 import com.jm.jobseekerplatform.model.Resume;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
@@ -29,8 +30,14 @@ public class ResumeDAO extends AbstractDAO<Resume> {
 
         List<Long> rez = new ArrayList<>();
         for (int i = 0; i < resumes.size(); i++) {
-            String stringId = String.valueOf(resumes.get(i).getCreatorProfile());
-            Long x = Long.parseLong(stringId.replaceAll("\\D+","").trim());
+// Этот код работает:
+//			String stringId = String.valueOf(resumes.get(i).getCreatorProfile().getId());
+//			Long x = Long.parseLong(stringId.replaceAll("\\D+","").trim());
+
+// Это не работает:
+			Long x = (Long) Hibernate.unproxy(resumes.get(i).getCreatorProfile().getId());
+
+
             rez.add(x);
         }
         List<SeekerProfile> seeker = seekerProfileDAO.getAllSeekersById(rez);
