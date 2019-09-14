@@ -123,6 +123,7 @@ public class SeekerProfileRestController {
         Set<Tag> seekerProfileTags = seekerProfile.getTags();
         seekerProfileTags.addAll(tagsByStringNames);
         seekerProfile.setTags(seekerProfileTags);
+
         seekerProfileService.update(seekerProfile);
 
         return new ResponseEntity(HttpStatus.OK);
@@ -136,13 +137,7 @@ public class SeekerProfileRestController {
         SeekerProfile seekerProfile = seekerUser.getProfile();
 
         Set<Tag> seekerProfileTags = seekerProfile.getTags();
-        Iterator<Tag> iterator = seekerProfileTags.iterator();
-        while (iterator.hasNext()) {
-            Tag next = iterator.next();
-            if (next.getName().equals(tag)) {
-                iterator.remove();
-            }
-        }
+        seekerProfileTags.removeIf(next -> next.getName().equals(tag));
 
         seekerProfile.setTags(seekerProfileTags);
         seekerProfileService.update(seekerProfile);
