@@ -78,6 +78,7 @@ public class EmployerController {
         }
 
         if (!employerProfile.getReviews().isEmpty()) {
+
             model.addAttribute("employerProfileReviews", employerProfile.getReviews());
             model.addAttribute("reviewStatus", true);
             model.addAttribute("averageRating", employerProfile.getAverageRating());

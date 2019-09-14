@@ -30,12 +30,6 @@
                            data-toggle="tab" href="#nav-home"
                            role="tab"
                            aria-controls="nav-home" aria-selected="true">Основная информация</a>
-                        <a th:unless="${reviewStatus}"
-                           style="background-color: var(--sidebar-bg-color);color: var(--text-color)"
-                           class="nav-item nav-link" id="nav-reviews-tab" data-toggle="tab"
-                           href="#nav-reviews"
-                           role="tab"
-                           aria-controls="nav-reviews" aria-selected="false">Отзывы</a>
                         <a th:if="${reviewStatus}"
                            style="background-color: var(--sidebar-bg-color);color: var(--text-color)"
                            class="nav-item nav-link" id="nav-reviews-tab" data-toggle="tab"
@@ -74,6 +68,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-lg-5 empCard">
                                     <div class="card mb-3">
                                         <h3 class="card-header"><span id="EPcompanyName"
@@ -94,6 +89,7 @@
                                             </div>
                                         </div>
 
+
                                         <div class="card-body">
                                             <p class="card-text"><span th:text="${employerProfile.description}"></span>
                                             </p>
@@ -112,17 +108,19 @@
                                                 </ul>
                                             </div>
                                         </div>
+
                                         <div class="card-footer text-muted">
                                             <a th:href="@{'http://' + ${employerProfile.website}}"
                                                th:text="${employerProfile.website}"></a>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-reviews" role="tabpanel" aria-labelledby="nav-reviews-tab">
-                        <div>
+<!--                        <div>-->
                             <div class="row" style="margin-top: 20px">
                                 <div class="col-sm-12">
                                     <div th:unless="${reviewStatus}">
@@ -189,7 +187,7 @@
                                                             <div class="row">
                                                                 <div class="col-sm-4">
                                                                     <img class="rounded-circle" id="seekerProfilePhoto"
-                                                                         th:src="@{'data:image/png;base64,' + ${review.seekerProfile.encoderPhoto}}"
+                                                                         th:src="@{'data:image/png;base64,' + ${review.creatorProfile.encoderPhoto}}"
                                                                          name="photo" alt=""
                                                                          style="height: 100px;width: 100px">
                                                                     <div th:id="'ratingReview_' + ${review.id}"
@@ -201,7 +199,7 @@
                                                                     </div>
                                                                     <div class="editCardReview"
                                                                          th:id="'editCardReview_' + ${review.id}"
-                                                                         th:if="${review.seekerProfile.id eq seekerProfileId and (T(java.lang.System).currentTimeMillis()-review.dateReviews.getTime()) < 604800000}">
+                                                                         th:if="${review.creatorProfile.id eq seekerProfileId and (T(java.lang.System).currentTimeMillis()-review.dateReviews.getTime()) < 604800000}">
                                                                         <i data-toggle="modal"
                                                                            data-target="#editReviewModal"
                                                                            title="редактитовать отзыв"
@@ -217,8 +215,7 @@
                                                                            th:onclick="'getComplainModal('+ ${review.id} +')'"></i>
                                                                     </div>
                                                                     <blockquote class="blockquote mb-0">
-                                                                        <p th:if="${review.reviews.length()>60}"
-                                                                           class="textReview">
+                                                                        <p th:if="${review.reviews.length()>60}" class="textReview">
                                                                             <span th:value="${review.reviews}"
                                                                                   th:text="${#strings.substring(review.reviews,0,60)} + ' ...'">
                                                                             </span>
@@ -238,8 +235,9 @@
                                                                         <footer class="blockquote-footer seekerReviewName">
                                                                             <cite title="На страницу соискателя">
                                                                                 <a class="btn btn-link"
-                                                                                   th:href="@{'/seeker/' + ${review.seekerProfile.id}}"
-                                                                                   th:text="${review.seekerProfile.name}">
+                                                                                   th:text="${review.creatorProfile.id}"
+                                                                                   th:href="@{'/seeker/' + ${review.creatorProfile.id}}">
+
                                                                                 </a>
                                                                             </cite>
                                                                         </footer>
@@ -283,8 +281,8 @@
                                             </th:block>
                                         </div>
                                     </div>
-
                                 </div>
+
                             </div>
                         </div>
                     </div>
