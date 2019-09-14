@@ -31,7 +31,10 @@ public class SeekerVacancyRecordDAO extends AbstractDAO<SeekerVacancyRecord> {
 
 
     public List<ViewedVacanciesDTO> getViewedVacanciesBySeeker(Long seekerId) {
-        List<ViewedVacanciesDTO> listVacancies = new ArrayList();
+        List<ViewedVacanciesDTO> 
+          
+          
+          acancies = new ArrayList();
         List vacancies = entityManager
                 .createNativeQuery(query_for_get_viewed_vacancies)
                 .setParameter("id", seekerId).getResultList();
