@@ -106,11 +106,16 @@ public class InitData {
     @Autowired
     private JobExperienceService jobExperienceService;
 
+    @Autowired
+    private StoredProcedureService storedProcedureService;
+
     private Faker faker = new Faker(new Locale("ru"));
 
     private Random rnd = new Random();
 
     public void initData() {
+        storedProcedureService.createSortVacancyProcedure();
+
         initCities();
         initTags();
         initUserRoles();
