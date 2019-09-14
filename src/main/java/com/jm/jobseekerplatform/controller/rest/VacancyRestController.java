@@ -1,9 +1,11 @@
 package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.dto.VacancyPageDTO;
-import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.Point;
+import com.jm.jobseekerplatform.model.State;
+import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
-import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
@@ -14,6 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -31,7 +35,7 @@ public class VacancyRestController {
     @Autowired
     private SeekerProfileService seekerProfileService;
 
-    private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
+    private GrantedAuthority roleSeeker = new SimpleGrantedAuthority("ROLE_SEEKER");
 
     @RequestMapping("/")
     public List<Vacancy> getAll() {

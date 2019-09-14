@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
@@ -11,6 +10,7 @@ import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -83,7 +83,7 @@ public class SeekerController {
 
     @GetMapping("/resumes/{seekerProfileId}")
     public String seekerResumesPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
-        if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
             SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
             model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
             model.addAttribute("resumesList", seekerProfile.getResumes());

@@ -3,7 +3,6 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.Point;
 import com.jm.jobseekerplatform.model.Resume;
 import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.ResumeService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
@@ -14,9 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 @RestController
@@ -56,7 +55,7 @@ public class ResumeRestController {
 
     @RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
     public Set<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, Authentication authentication) {
-        if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
             return seekerProfileService.getById(seekerProfileId).getResumes();
         } else {
             return seekerProfileService.getById(((User) authentication.getPrincipal()).getId()).getResumes();

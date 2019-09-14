@@ -41,9 +41,6 @@ public class InitData {
     public static final String WEB_IMG_DIR = "src/main/resources/static/img";
 
     @Autowired
-    private UserRoleService userRoleService;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
@@ -113,7 +110,6 @@ public class InitData {
     public void initData() {
         initCities();
         initTags();
-        initUserRoles();
         initPortfolio();
 
         initAdminProfile();
@@ -242,59 +238,48 @@ public class InitData {
         employerProfileService.update(employerProfileSix);
     }
 
-    public void initUserRoles() {
-        userRoleService.add(new UserRole("ROLE_ADMIN"));
-        userRoleService.add(new UserRole("ROLE_EMPLOYER"));
-        userRoleService.add(new UserRole("ROLE_SEEKER"));
-    }
-
     public void initUsers() {
-        UserRole role;
         User user;
         EmployerUser employerUser;
         SeekerUser seekerUser;
 
-        role = userRoleService.findByAuthority("ROLE_ADMIN");
-        user = new AdminUser("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), role, adminProfileService.getById(1L));
+        user = new AdminUser("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), adminProfileService.getById(1L));
         user.setConfirm(true);
         userService.add(user);
 
-        role = userRoleService.findByAuthority("ROLE_EMPLOYER");
-        employerUser = new EmployerUser("employer@mail.ru", userService.encodePassword("employer".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(2L));
+        employerUser = new EmployerUser("employer@mail.ru", userService.encodePassword("employer".toCharArray()), LocalDateTime.now(), employerProfileService.getById(2L));
         employerUser.setConfirm(true);
         employerUserService.add(employerUser);
 
-        employerUser = new EmployerUser("employer2@mail.ru", userService.encodePassword("employer2".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(3L));
+        employerUser = new EmployerUser("employer2@mail.ru", userService.encodePassword("employer2".toCharArray()), LocalDateTime.now(), employerProfileService.getById(3L));
         employerUser.setConfirm(true);
         employerUserService.add(employerUser);
 
-        employerUser = new EmployerUser("employer3@mail.ru", userService.encodePassword("employer3".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(4L));
+        employerUser = new EmployerUser("employer3@mail.ru", userService.encodePassword("employer3".toCharArray()), LocalDateTime.now(), employerProfileService.getById(4L));
         employerUser.setConfirm(true);
         employerUserService.add(employerUser);
 
-        employerUser = new EmployerUser("employer4@mail.ru", userService.encodePassword("employer4".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(5L));
+        employerUser = new EmployerUser("employer4@mail.ru", userService.encodePassword("employer4".toCharArray()), LocalDateTime.now(), employerProfileService.getById(5L));
         employerUser.setConfirm(true);
         employerUserService.add(employerUser);
 
-        employerUser = new EmployerUser("employer5@mail.ru", userService.encodePassword("employer5".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(6L));
+        employerUser = new EmployerUser("employer5@mail.ru", userService.encodePassword("employer5".toCharArray()), LocalDateTime.now(), employerProfileService.getById(6L));
         employerUser.setConfirm(true);
         employerUserService.add(employerUser);
 
-        employerUser = new EmployerUser("employer6@mail.ru", userService.encodePassword("employer6".toCharArray()), LocalDateTime.now(), role, employerProfileService.getById(7L));
+        employerUser = new EmployerUser("employer6@mail.ru", userService.encodePassword("employer6".toCharArray()), LocalDateTime.now(), employerProfileService.getById(7L));
         employerUser.setConfirm(true);
         employerUserService.add(employerUser);
 
-        role = userRoleService.findByAuthority("ROLE_SEEKER");
-
-        seekerUser = new SeekerUser("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(8L));
+        seekerUser = new SeekerUser("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), seekerProfileService.getById(8L));
         seekerUser.setConfirm(true);
         seekerUserService.add(seekerUser);
 
-        seekerUser = new SeekerUser("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(9L));
+        seekerUser = new SeekerUser("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.now(), seekerProfileService.getById(9L));
         seekerUser.setConfirm(true);
         seekerUserService.add(seekerUser);
 
-        seekerUser = new SeekerUser("seeker3@mail.ru", userService.encodePassword("seeker3".toCharArray()), LocalDateTime.now(), role, seekerProfileService.getById(10L));
+        seekerUser = new SeekerUser("seeker3@mail.ru", userService.encodePassword("seeker3".toCharArray()), LocalDateTime.now(), seekerProfileService.getById(10L));
         seekerUser.setConfirm(true);
         seekerUserService.add(seekerUser);
     }
