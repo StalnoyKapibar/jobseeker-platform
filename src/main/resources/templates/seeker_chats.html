@@ -7,9 +7,21 @@
     <title>Seeker Chats</title>
     <script type="text/javascript" th:src="@{/js/seeker_chats.js}"></script>
     <script type="text/javascript" th:src="@{/js/date_status_format.js}"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
 <div layout:fragment="content">
+    <!-- Sidebar -->
+    <div class="w3-sidebar w3-bar-block w3-card" style="width:17%;right:0;">
+        <h3 class="w3-bar-item">Menu</h3>
+        <a href="#" class="w3-bar-item w3-button"><b>Чаты по вакансиям</b></a>
+        <a href="#" class="w3-bar-item w3-button"><b>Чаты по резюме</b></a>
+        <a href="#" class="w3-bar-item w3-button">Link 3</a>
+    </div>
+
+    <!-- Page Content -->
+    <div style="margin-right:17%">
+
     <div class="container-fluid">
         <div class="row" style="height: 40px"></div>
         <div class="row">
@@ -39,6 +51,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 </body>
 </html>
