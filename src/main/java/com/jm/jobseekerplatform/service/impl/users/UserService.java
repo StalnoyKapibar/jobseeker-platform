@@ -2,6 +2,8 @@ package com.jm.jobseekerplatform.service.impl.users;
 
 import com.jm.jobseekerplatform.dao.impl.users.UserDAO;
 import com.jm.jobseekerplatform.model.UserRole;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.tokens.PasswordResetToken;
 import com.jm.jobseekerplatform.model.tokens.VerificationToken;
 import com.jm.jobseekerplatform.model.users.AdminUser;
@@ -11,6 +13,8 @@ import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
 import com.jm.jobseekerplatform.service.impl.MailService;
 import com.jm.jobseekerplatform.service.impl.UserRoleService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.tokens.PasswordResetTokenService;
 import com.jm.jobseekerplatform.service.impl.tokens.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +39,12 @@ public class UserService extends AbstractService<User> {
 
     @Autowired
     private UserRoleService userRoleService;
+
+    @Autowired
+    private SeekerProfileService seekerProfileService;
+
+    @Autowired
+    private EmployerProfileService employerProfileService;
 
     @Autowired
     private VerificationTokenService verificationTokenService;
@@ -94,9 +104,13 @@ public class UserService extends AbstractService<User> {
         User userNew = null;
 
         if (userRole.equals(roleSeeker)) {
-            userNew = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            SeekerProfile seekerProfile = new SeekerProfile();
+            seekerProfileService.add(seekerProfile);
+            userNew = new SeekerUser(userEmail, userPass, LocalDateTime.now(), userRole, seekerProfile);
         } else if (userRole.equals(roleEmployer)) {
-            userNew = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, null);
+            EmployerProfile employerProfile = new EmployerProfile();
+            employerProfileService.add(employerProfile);
+            userNew = new EmployerUser(userEmail, userPass, LocalDateTime.now(), userRole, employerProfile);
         }
 
         add(userNew);

@@ -126,7 +126,7 @@ public class VacancyService extends AbstractService<Vacancy> {
         dao.add(vacancy);
     }
 
-    public Page<Vacancy> findVacanciesByPoint(String currentCity, Point point, int limit, int page) {
+    public Page<Vacancy> findVacanciesByPointWithLimitAndPaging(String currentCity, Point point, int limit, int page) {
         String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
         return dao.getVacanciesSortByCity(city, limit, page);
     }
@@ -148,7 +148,6 @@ public class VacancyService extends AbstractService<Vacancy> {
         oldVacancy.setRemote(vacancy.getRemote());
         oldVacancy.setShortDescription(vacancy.getShortDescription());
         oldVacancy.setTags(tagService.matchTagsByName(vacancy.getTags()));
-        System.out.println(vacancy);
         return true;
     }
 }

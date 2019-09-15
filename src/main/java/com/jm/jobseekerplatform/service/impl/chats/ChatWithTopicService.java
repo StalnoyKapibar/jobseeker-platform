@@ -41,14 +41,6 @@ public class ChatWithTopicService extends AbstractService<ChatWithTopic> {
         return chatWithTopicDAO.getAllChatsInfoDTOByProfileId(profileId);
     }
 
-    public <T extends ChatWithTopic> List<T> getAllByParticipantProfileId(Long participantProfileId, Class<T> chatClass) {
-        return chatWithTopicDAO.getAllChatsByParticipantProfileId(participantProfileId, chatClass);
-    }
-
-    public List<ChatWithTopic> getAllByParticipantProfileId(Long participantProfileId) {
-        return chatWithTopicDAO.getAllChatsByParticipantProfileId(participantProfileId);
-    }
-
     public <T extends ChatWithTopic> List<T> getAllByChatCreatorProfileId(Long chatCreatorProfileId, Class<T> chatClass) {
         return chatWithTopicDAO.getAllChatsByChatCreatorProfileId(chatCreatorProfileId, chatClass);
     }
@@ -63,14 +55,6 @@ public class ChatWithTopicService extends AbstractService<ChatWithTopic> {
 
     public List<ChatWithTopic> getAllChatsByTopicCreatorProfileId(Long topicCreatorProfileId) {
         return chatWithTopicDAO.getAllChatsByTopicCreatorProfileId(topicCreatorProfileId);
-    }
-
-    public <T extends ChatWithTopic> List<T> getAllChatsByProfileId(Long profileId, Class<T> chatClass) {
-        return chatWithTopicDAO.getAllChatsByProfileId(profileId, chatClass);
-    }
-
-    public List<ChatWithTopic> getAllChatsByProfileId(Long profileId) {
-        return chatWithTopicDAO.getAllChatsByProfileId(profileId);
     }
 
     public <T extends ChatWithTopic> List<T> getAllUnreadChatsByProfileId(Long profileId, Class<T> chatClass) {
@@ -105,5 +89,8 @@ public class ChatWithTopicService extends AbstractService<ChatWithTopic> {
         return chatWithTopicDAO.getAllChatsByMemberProfileId(profileId);
     }
 
+    public ChatWithTopic getChatByMessageId(Long messageId) {
+        return chatWithTopicDAO.getChatByMessageId(messageId);
+    }
 
 }

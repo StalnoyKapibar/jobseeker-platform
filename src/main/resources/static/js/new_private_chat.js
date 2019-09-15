@@ -152,7 +152,7 @@ function sendMessage() {
 function updateChatReadStatusOnServer(lastReadMessage, readerProfileId) {
     var sendData = {
         chatId: currentChatId,
-        lastReadMessageId: lastReadMessage.id,
+        messageId: lastReadMessage.id,
         readerProfileId: readerProfileId
     };
 
@@ -173,7 +173,7 @@ function updateChatReadStatusOnServer(lastReadMessage, readerProfileId) {
 function updateMessageReadStatusOnServer(message, readerProfileId) {
     var sendData = {
         chatId: currentChatId,
-        lastReadMessageId: message.id,
+        messageId: message.id,
         readerProfileId: readerProfileId
     };
 
