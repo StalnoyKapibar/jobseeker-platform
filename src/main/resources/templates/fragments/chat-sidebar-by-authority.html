@@ -8,7 +8,8 @@
 
 <th:block th:fragment="seeker_chat_sidebar">
     <div class="w3-sidebar w3-bar-block w3-card" style="width:17%;right:0;">
-        <h4 class="w3-bar-item">Мои чаты</h4>
+        <h4 class="w3-bar-item">
+            <a th:href="@{/seeker/chats/{id}(id=${seekerProfileId})}">Мои чаты</a></h4>
         <span><b>&nbsp;Чаты по вакансиям</b></span>
         <th:block th:each="chat : ${chats}">
             <div th:if="${chat.topic.getTypeName()=='Вакансия'}">
@@ -28,7 +29,8 @@
 
 <th:block th:fragment="employer_chat_sidebar">
     <div class="w3-sidebar w3-bar-block w3-card" style="width:17%;right:0;">
-        <h4 class="w3-bar-item">Мои чаты</h4>
+        <h4 class="w3-bar-item">
+            <a th:href="@{/employer/chats/{id}(id=${employerProfileId})}">Мои чаты</a></h4>
         <span><b>&nbsp;Чаты по вакансиям</b></span>
         <th:block th:each="chat : ${chats}">
             <div th:if="${chat.topic.getTypeName()=='Вакансия'}">
