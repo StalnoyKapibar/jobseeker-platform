@@ -27,7 +27,7 @@ function showCompanies(companies) {
             companyTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
         });
 
-        $('#companiesList').append('<li class="list-group-item clearfix" id="more'+ value.id +'" style="max-height: 90px" data-toggle="modal"' +
+        $('#companiesList').append('<li class="list-group-item clearfix" id="more'+ value.id +'" style="max-height: 95px" data-toggle="modal"' +
             '<div class="headLine"><span>' + value.companyName + ' </span></div>' +
             '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + companyTags + '</div>' +
             '<div class="companyData" id="textStyle'+ value.id +'" style="white-space: nowrap; ' +
