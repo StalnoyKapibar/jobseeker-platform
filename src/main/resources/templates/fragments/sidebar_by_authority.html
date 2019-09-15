@@ -12,7 +12,7 @@
 <th:block th:fragment="seeker_sidebar">
     <li><a th:href="@{/seeker/get_subscription_news/{id}(id=${seekerProfileId})}"><span>Новости</span></a></li>
     <li><a href="#"><span>Все вакансии</span></a></li>
-    <li><a href="#"><span>Все компании</span></a></li>
+    <li><a th:href="@{/seeker/companies}"><span>Все компании</span></a></li>
     <li><a th:href="@{/seeker/get_subscriptions/{id}(id=${seekerProfileId})}"><span>Мои подписки</span></a></li>
     <li><a class="font-color" href="#">Мои чаты<span id="count_not_read_messages"></span></a></li>
     <li><a th:href="@{/seeker/meetings/{id}(id=${seekerProfileId})}"><span>Мои встречи</span></a></li>
