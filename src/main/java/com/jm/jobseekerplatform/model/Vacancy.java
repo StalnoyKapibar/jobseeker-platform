@@ -41,6 +41,9 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     @Column(name = "salarymax")
     private Integer salaryMax;
 
+    @Column(name = "creationdate")
+    private Date creationDate;
+
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Tag> tags;
 
@@ -65,7 +68,7 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     public Vacancy() {
     }
 
-    public Vacancy(EmployerProfile employerProfile, String headline, City city, Boolean remote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags, Point coordinates) {
+    public Vacancy(EmployerProfile employerProfile, String headline, City city, Boolean remote, String shortDescription, String description, Integer salaryMin, Integer salaryMax, Set<Tag> tags, Point coordinates, Date creationDate) {
         super(employerProfile, headline);
         this.city = city;
         this.remote = remote;
@@ -76,6 +79,7 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
         this.tags = tags;
         this.coordinates = coordinates;
         state = State.NO_ACCESS;
+        this.creationDate = creationDate;
     }
 
     public String getDescription() {
@@ -174,6 +178,14 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
 
     public void setEmployerProfile(EmployerProfile employerProfile) {
         this.employerProfile = employerProfile;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     @Override

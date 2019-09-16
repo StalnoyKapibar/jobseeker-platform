@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -77,6 +78,7 @@ public class VacancyRestController {
         if (vacancyService.validateVacancy(vacancy)) {
             EmployerProfile employerProfile = ((EmployerUser) authentication.getPrincipal()).getProfile();
             vacancy.setCreatorProfile(employerProfile);
+            vacancy.setCreationDate(new Date(System.currentTimeMillis()));
             vacancyService.addNewVacancyFromRest(vacancy);
             return true;
         } else {
