@@ -181,10 +181,7 @@
                         <a href="/logout" class="nav-link text-light"
                            sec:authorize="isAuthenticated()">Logout <i
                                 class="fas fa-sign-out-alt text-light ml-2"></i></a>
-
-
                     </li>
-
 
                 </ul>
                 <ul class="navbar-nav   d-none d-lg-flex  ml-auto"
@@ -225,7 +222,7 @@
                             <input name="_csrf" type="hidden" th:value="${_csrf.token}"/>
                             <div class="form-group d-flex flex-column m-0">
                                 <button type="submit" class="btn btn-warning mx-auto text-light">Войти</button>
-                                <a href="/login" class=" loginHelp">Проблемы со входом?</a>
+                                <a href="/login" class=" text-light loginHelp">Проблемы со входом?</a>
                             </div>
                         </form>
                     </div>
