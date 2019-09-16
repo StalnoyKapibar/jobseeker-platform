@@ -27,7 +27,7 @@ import java.util.Objects;
 public abstract class User<T extends Profile> implements Serializable, UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "email", nullable = false, unique = true)

@@ -26,10 +26,6 @@ public class EmployerReviews extends CreatedBySeekerProfileBase implements Seria
     @Column(name = "review_dislike")
     private int dislike;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "seekerProfile")
-    private SeekerProfile seekerProfile;
-
     public EmployerReviews() {
     }
 
@@ -38,13 +34,8 @@ public class EmployerReviews extends CreatedBySeekerProfileBase implements Seria
         this.reviews = reviews;
         this.dateReviews = dateReviews;
         this.evaluation = evaluation;
-        this.seekerProfile = seekerProfile;
     }
 
-    @Override
-    public String getHeadline() {
-        return this.seekerProfile.getFullName();
-    }
 
     @Override
     public String getTypeName() {
@@ -107,15 +98,6 @@ public class EmployerReviews extends CreatedBySeekerProfileBase implements Seria
         --this.dislike;
     }
 
-    public SeekerProfile getSeekerProfile() {
-        return seekerProfile;
-    }
-
-    public void setSeekerProfile(SeekerProfile seekerProfile) {
-        this.seekerProfile = seekerProfile;
-    }
-
-
     @Override
     public String toString() {
         return "EmployerReviews{" +
@@ -125,7 +107,6 @@ public class EmployerReviews extends CreatedBySeekerProfileBase implements Seria
                 ", evaluation=" + evaluation +
                 ", like=" + like +
                 ", dislike=" + dislike +
-                ", seekerProfile=" + seekerProfile +
                 '}';
     }
 
