@@ -143,7 +143,11 @@ li {
     -o-transition: width.25s ease-out;
     transition: width .25s ease-out;
 }
-
+/* LoginPage style*/
+#loginForm{
+    width: 25vmax;
+    margin-top: 5vw;
+}
 
 .main-block {
    /* height: 135%;
