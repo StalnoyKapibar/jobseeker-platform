@@ -6,15 +6,19 @@
     <link rel="stylesheet" href="/css/loader.css">
 </head>
 <body style="background-color: var(--bg-color)">
-<th:block th:replace="fragments/commonfragments :: nav"></th:block>
-<div class="container-fluid">
-    <div class="row">
+<div class="toggled p-0 m-0" id="wrapper">
+    <div class="row w-100" style="position: relative;">
+        <th:block th:replace="fragments/commonfragments :: nav"></th:block>
         <th:block th:replace="fragments/commonfragments :: sidebar"></th:block>
-        <div class="main-block chromeFix" layout:fragment="content"></div>
+        <!--<div class="main-block chromeFix" id="main-content" layout:fragment="content"></div>!-->
+        <div class="main-block chromeFix" id="main-content" layout:fragment="content"></div>
     </div>
 </div>
-
 <script>
+    $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
     let loader = document.createElement("div");
     loader.className = "loader";
     loader.style = "visibility: visible";
