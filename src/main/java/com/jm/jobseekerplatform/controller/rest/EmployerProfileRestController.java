@@ -42,7 +42,7 @@ public class EmployerProfileRestController {
     }
 
     @RequestMapping(value = "/companies", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody ResponseEntity<List<EmployerProfile>> getCompanies() {
+    public ResponseEntity<List<EmployerProfile>> getCompanies() {
         return ResponseEntity.ok(employerProfileService.getAll());
     }
 }

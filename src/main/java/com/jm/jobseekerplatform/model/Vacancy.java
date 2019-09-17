@@ -60,7 +60,7 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vacancy")
     private Set<Meeting> meetings;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_profile_id", insertable = false, updatable = false)
     @JsonIgnore
     private EmployerProfile employerProfile;

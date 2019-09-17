@@ -34,7 +34,6 @@ public class EmployerProfile extends Profile implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employerProfile")
     private Set<Vacancy> vacancies;
 
-
     public EmployerProfile() {
     }
 
@@ -59,7 +58,6 @@ public class EmployerProfile extends Profile implements Serializable {
         return companyName;
     }
 
-//    @JsonValue
     @Override
     public Long getId() {
         return super.getId();
