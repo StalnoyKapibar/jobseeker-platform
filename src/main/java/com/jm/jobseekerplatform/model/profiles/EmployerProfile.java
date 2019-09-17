@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.model.profiles;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.jm.jobseekerplatform.model.EmployerReviews;
+import com.jm.jobseekerplatform.model.Vacancy;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,6 +30,10 @@ public class EmployerProfile extends Profile implements Serializable {
     @Column(name = "expiry_block")
     private Date expiryBlock;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "creator_profile_id")
+    private Set<Vacancy> vacancies;
+
     public EmployerProfile() {
     }
 
@@ -54,7 +58,6 @@ public class EmployerProfile extends Profile implements Serializable {
         return companyName;
     }
 
-    @JsonValue
     @Override
     public Long getId() {
         return super.getId();
@@ -114,5 +117,13 @@ public class EmployerProfile extends Profile implements Serializable {
 
     public void setExpiryBlock(Date expiryBlock) {
         this.expiryBlock = expiryBlock;
+    }
+
+    public Set<Vacancy> getVacancies() {
+        return vacancies;
+    }
+
+    public void setVacancies(Set<Vacancy> vacancies) {
+        this.vacancies = vacancies;
     }
 }

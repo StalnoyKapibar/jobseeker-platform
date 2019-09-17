@@ -54,13 +54,6 @@ public class ResumeRestController {
 
 	@RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
 	public Page<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, Authentication authentication) {
-//		if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
-//			return seekerProfileService.getById(seekerProfileId).getResumes();
-//		} else {
-//			return seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()).getResumes();
-//		}
-
-
 		if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
 			Set<Resume> resumeSet = seekerProfileService.getById(seekerProfileId).getResumes();
 			return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
@@ -68,9 +61,6 @@ public class ResumeRestController {
 			Set<Resume> resumeSet = seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()).getResumes();
 			return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
 		}
-
-
-
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
