@@ -1,5 +1,7 @@
 package com.jm.jobseekerplatform.dto;
 
+import java.util.List;
+
 public class ViewedVacanciesDTO {
 
     private Long id;

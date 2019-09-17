@@ -147,7 +147,6 @@ public class MainController {
         return "index";
     }
 
-
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/new_vacancy", method = RequestMethod.GET)
     public String new_vacancyPage(Model model,  Authentication authentication) {

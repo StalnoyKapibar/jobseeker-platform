@@ -7,11 +7,13 @@ import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Transactional
 public class SeekerVacancyRecordDAO extends AbstractDAO<SeekerVacancyRecord> {
 
     @Autowired
@@ -35,15 +37,15 @@ public class SeekerVacancyRecordDAO extends AbstractDAO<SeekerVacancyRecord> {
                 .createNativeQuery(query_for_get_viewed_vacancies)
                 .setParameter("id", seekerId).getResultList();
 
+        ViewedVacanciesDTO dto = new ViewedVacanciesDTO();
         for (Object vacancy : vacancies) {
-            ViewedVacanciesDTO dto = new ViewedVacanciesDTO();
             dto.setId(Long.parseLong(((Object[]) vacancy)[0].toString()));
             dto.setHeadline((String) ((Object[]) vacancy)[1]);
             dto.setSalarymin(Integer.parseInt(((Object[]) vacancy)[2].toString()));
             dto.setSalarymax(Integer.parseInt(((Object[]) vacancy)[3].toString()));
             dto.setCompanyname((String) ((Object[]) vacancy)[4]);
-            vacancies.add(dto);
         }
+        vacancies.add(dto);
         return vacancies;
     }
 
@@ -56,16 +58,16 @@ public class SeekerVacancyRecordDAO extends AbstractDAO<SeekerVacancyRecord> {
                 " left join profile p on v.creator_profile_id=p.id")
                 .setParameter("id", profileId).getResultList();
 
+        ViewedVacanciesDTO dto = new ViewedVacanciesDTO();
         for (Object vacancy : vacs) {
-            ViewedVacanciesDTO dto = new ViewedVacanciesDTO();
             dto.setId(Long.parseLong(((Object[]) vacancy)[0].toString()));
             dto.setHeadline((String) ((Object[]) vacancy)[1]);
             dto.setSalarymin(Integer.parseInt(((Object[]) vacancy)[2].toString()));
             dto.setSalarymax(Integer.parseInt(((Object[]) vacancy)[3].toString()));
             dto.setCompanyname((String) ((Object[]) vacancy)[4]);
             dto.setViews(Integer.parseInt(((Object[]) vacancy)[5].toString()));
-            vacanciesDTOList.add(dto);
         }
+        vacanciesDTOList.add(dto);
         return vacanciesDTOList;
     }
 }
