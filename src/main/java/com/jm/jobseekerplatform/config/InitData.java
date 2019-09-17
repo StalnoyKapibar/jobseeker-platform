@@ -343,7 +343,8 @@ public class InitData {
                     Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), //salaryMin
                     Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), //salaryMax
                     randomTags(0L),
-                    point);
+                    point,
+                    new Date(System.currentTimeMillis()));
 
             vacancy.setState(State.ACCESS);
             vacancyService.add(vacancy);
