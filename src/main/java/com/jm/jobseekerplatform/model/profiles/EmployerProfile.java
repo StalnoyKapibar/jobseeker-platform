@@ -30,7 +30,8 @@ public class EmployerProfile extends Profile implements Serializable {
     @Column(name = "expiry_block")
     private Date expiryBlock;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employerProfile")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "creator_profile_id")
     private Set<Vacancy> vacancies;
 
     public EmployerProfile() {

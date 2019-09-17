@@ -1,6 +1,5 @@
 package com.jm.jobseekerplatform.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jm.jobseekerplatform.model.createdByProfile.CreatedByEmployerProfileBase;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -59,11 +58,6 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vacancy")
     private Set<Meeting> meetings;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "creator_profile_id", insertable = false, updatable = false)
-    @JsonIgnore
-    private EmployerProfile employerProfile;
 
     public Vacancy() {
     }
@@ -138,8 +132,6 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
         this.state = state;
     }
 
-
-
     public String getShortDescription() {
         return shortDescription;
     }
@@ -170,14 +162,6 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
 
     public void setMeetings(Set<Meeting> meetings) {
         this.meetings = meetings;
-    }
-
-    public EmployerProfile getEmployerProfile() {
-        return employerProfile;
-    }
-
-    public void setEmployerProfile(EmployerProfile employerProfile) {
-        this.employerProfile = employerProfile;
     }
 
     public Date getCreationDate() {
