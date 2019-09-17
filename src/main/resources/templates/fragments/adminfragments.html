@@ -22,9 +22,9 @@
 </th:block>
 
 <th:block th:fragment="nav">
-    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark d-flex flex-row justify-content-between p-0 m-0">
+    <!--<nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark d-flex flex-row justify-content-between p-0 m-0">
         <div class="left-navbar d-flex flex-row">
-            <a class="navbar-brand text-light" href="#">JobSeeker</a>
+            <a class="navbar-brand text-light" href="/">JobSeeker</a>
         </div>
         <div class="right-navbar  d-flex flex-row ">
             <ul class="navbar-nav d-flex flex-row  justify-content-between" >
@@ -34,63 +34,83 @@
             </ul>
         </div>
 
-    </nav>
+    </nav>!-->
+    <!-- Header -->
+    <header id="nav-header">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top m-0 p-0">
+            <div class="container-fluid   p-0 d-flex flex-row justify-content-start">
+                <button class="btn d-inline" id="menu-toggle"><span
+                        class="navbar-toggler-icon my-toggler"></span></button>
+                <a href="/" class="navbar-brand d-inline ml-auto ml-lg-5 mr-lg-0">JobSeeker</a>
+                <ul class="navbar-nav  ml-auto">
+                    <li class="nav-item">
+                        <a href="/logout" class="nav-link text-light">Logout <i class="fas fa-sign-out-alt ml-2"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- End Header-->
 </th:block>
 
 <th:block th:fragment="sidebar">
-        <div class="sidebar-sticky">
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'admin' ? 'active' : ''}" href="/admin">
+    <!-- Sidebar -->
+    <div class=" sidebar fixed-top" id="sidebar-wrapper">
+        <div class="text-dark pt-5">
+            <ul class="navbar-nav">
+                <li class="nav-item text-center mt-3 ">
+                    <a class="nav-link text-dark" th:classappend="${side == 'admin' ? 'active' : ''}" href="/admin">
                         <span data-feather="home"></span>
-                        Главная <!--<span class="sr-only">(current)</span>-->
+                        Главная
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'empl' ? 'active' : ''}" href="/admin/employers">
+                <li class="nav-item text-center mt-3 ">
+                    <a class="nav-link text-dark" th:classappend="${side == 'empl' ? 'active' : ''}" href="/admin/employers">
                         <span data-feather="user"></span>
                         Работодатели
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'seek' ? 'active' : ''}" href="/admin/seekers">
+                <li class="nav-item text-center mt-3 ">
+                    <a class="nav-link text-dark" th:classappend="${side == 'seek' ? 'active' : ''}" href="/admin/seekers">
                         <span data-feather="user"></span>
                         Соискатели
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'vac' ? 'active' : ''}" href="/admin/vacancies">
+                <li class="nav-item text-center mt-3">
+                    <a class="nav-link text-dark" th:classappend="${side == 'vac' ? 'active' : ''}" href="/admin/vacancies">
                         <span data-feather="layers"></span>
                         Вакансии
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'add' ? 'active' : ''}" href="/admin/addUser">
+                <li class="nav-item text-center mt-3">
+                    <a class="nav-link text-dark" th:classappend="${side == 'add' ? 'active' : ''}" href="/admin/addUser">
                         <span data-feather="user-plus"></span>
                         Добавить Пользователя
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'chatsMy' ? 'active' : ''}" href="/admin/chats/my" style="display: inline; padding-right: 0;">
+                <li class="nav-item text-center mt-3">
+                    <a class="nav-link text-dark" th:classappend="${side == 'chatsMy' ? 'active' : ''}" href="/admin/chats/my" style="display: inline; padding-right: 0;">
                         <span data-feather="message-circle"></span>
                         Мои чаты
                     </a>
                     <a class="nav-link" href="" id="count_not_read_chats" style="display: inline; padding-left: 0"></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'chatsAll' ? 'active' : ''}" href="/admin/chats/all">
+                <li class="nav-item text-center mt-3">
+                    <a class="nav-link text-dark" th:classappend="${side == 'chatsAll' ? 'active' : ''}" href="/admin/chats/all">
                         <span data-feather="message-circle"></span>
                         Все чаты
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'tag' ? 'active' : ''}" href="/admin/tags">
+                <li class="nav-item text-center mt-3">
+                    <a class="nav-link text-dark" th:classappend="${side == 'tag' ? 'active' : ''}" href="/admin/tags">
                         <span data-feather="tag"></span>
                         Теги
                     </a>
                 </li>
             </ul>
         </div>
+    </div>
+    <!-- End Sidebar-->
 </th:block>
 
 <th:block th:fragment="scripts">

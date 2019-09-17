@@ -7,17 +7,18 @@
 </head>
 
 <body>
-
+<div class="container-fluid toggled" id="wrapper">
+    <div class="row w-100">
+        <!-- Header -->
 <th:block th:replace="fragments/adminfragments :: nav"></th:block>
-
-<div class="container-fluid">
-    <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+        <!-- End Header-->
+    </div>
+    <div class="row w-100">
+        <!-- Sidebar -->
             <th:block th:replace="fragments/adminfragments :: sidebar"></th:block>
-        </nav>
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main_admin_page">
-            <div class="container-fluid" layout:fragment="content"></div>
-        </main>
+        <!-- End Sidebar-->
+        <div class="main-block chromeFix" id="main_admin_page" role="main" layout:fragment="content"></div>
+
     </div>
 </div>
 
@@ -26,7 +27,12 @@
 <script type="text/javascript" src="/js/admin/admin_sidebar.js"></script>
 
 <th:block layout:fragment="content-script"></th:block>
-
+<script>
+    $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+</script>
 </body>
 
 </html>
