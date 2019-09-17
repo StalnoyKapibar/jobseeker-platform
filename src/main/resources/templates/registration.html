@@ -10,10 +10,12 @@
         #success_message {
             display: none;
         }
+
         #ups_message {
             display: none;
         }
-        #recovery_message{
+
+        #recovery_message {
             display: none;
         }
     </style>
@@ -22,17 +24,14 @@
 <body>
 <div layout:fragment="content">
     <div class="container">
-        <br>
-        <form class="card bg-light" style="margin-left: 20%; margin-right: 20%" id="contact_form"
+        <form class="card  mx-auto" id="contact_form"
               onchange="alertForm()">
             <div class="card-header" align="center">
-                <legend align="center">
-                    <h2><b>Регистрация</b></h2>
-                </legend>
+                <h2>Регистрация</h2>
+
             </div>
-            <div class="row">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-10">
+            <div class="row d-flex justify-content-center">
+                <div class="w-50">
                     <!-- Form Name -->
                     <div class="card-body">
                         <div class="form-group">
@@ -109,8 +108,8 @@
                         </div>
                         <div class="form-group">
                             <div class="alert alert-danger" role="alert" id="recovery_message">
-                                      Вы уже зарегистрированы в нашей базе
-                                 <i class="fas fa-registered"></i>
+                                Вы уже зарегистрированы в нашей базе
+                                <i class="fas fa-registered"></i>
                                 <hr>
                                 перейти на <a href="/login"> страницу входа</a>
                                 или <a href="/recovery"> востановить пароль</a>
