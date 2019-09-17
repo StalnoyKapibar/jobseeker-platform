@@ -57,7 +57,7 @@ public class ResumeRestController {
 		if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
 			return seekerProfileService.getById(seekerProfileId).getResumes();
 		} else {
-			return seekerProfileService.getById(((User) authentication.getPrincipal()).getId()).getResumes();
+			return seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()).getResumes();
 		}
 	}
 

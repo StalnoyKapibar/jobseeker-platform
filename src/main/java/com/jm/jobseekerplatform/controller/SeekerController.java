@@ -90,13 +90,13 @@ public class SeekerController {
     public String seekerResumesPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
         if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
             SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
+            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
             model.addAttribute("resumesList", seekerProfile.getResumes());
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
             return "resumes";
         } else {
-            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getId());
-            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getId());
+            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId());
+            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
             model.addAttribute("resumesList", seekerProfile.getResumes());
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
             return "resumes";
