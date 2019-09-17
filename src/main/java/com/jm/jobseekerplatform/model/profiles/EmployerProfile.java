@@ -1,6 +1,5 @@
 package com.jm.jobseekerplatform.model.profiles;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.jm.jobseekerplatform.model.EmployerReviews;
 import com.jm.jobseekerplatform.model.Vacancy;
 
