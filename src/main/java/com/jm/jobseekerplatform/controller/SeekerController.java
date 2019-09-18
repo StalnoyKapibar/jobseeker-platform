@@ -9,6 +9,8 @@ import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -27,6 +29,8 @@ import java.util.Set;
 @RequestMapping("/seeker")
 public class SeekerController {
 
+    private static final Logger logger = LoggerFactory.getLogger(SeekerController.class);
+
     @Autowired
     private SeekerProfileService seekerProfileService;
 
@@ -40,7 +44,7 @@ public class SeekerController {
     private EmployerProfileService employerProfileService;
 
     @GetMapping("/{seekerProfileId}")
-    public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
+    public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Set<Tag> tags = seekerProfile.getTags();
         List<Tag> notSelectedTags = tagService.getAll();
@@ -48,6 +52,11 @@ public class SeekerController {
         model.addAttribute("notSelectedTags", notSelectedTags);
         model.addAttribute("seekerProfile", seekerProfile);
         model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
+        Long loggedProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
+        logger.debug("Logged user profile id: {}", loggedProfileId);
+        boolean isProfileOwner = seekerProfileId.equals(loggedProfileId);
+        logger.debug("Is profile owner: {}", isProfileOwner);
+        model.addAttribute("isProfileOwner", isProfileOwner);
         return "seeker";
     }
 
