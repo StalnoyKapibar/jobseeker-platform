@@ -5,7 +5,6 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
-import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.SeekerHistoryService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -78,6 +78,7 @@ public class VacancyRestController {
         if (vacancyService.validateVacancy(vacancy)) {
             EmployerProfile employerProfile = ((EmployerUser) authentication.getPrincipal()).getProfile();
             vacancy.setCreatorProfile(employerProfile);
+            vacancy.setCreationDate(new Date(System.currentTimeMillis()));
             vacancyService.addNewVacancyFromRest(vacancy);
             return true;
         } else {

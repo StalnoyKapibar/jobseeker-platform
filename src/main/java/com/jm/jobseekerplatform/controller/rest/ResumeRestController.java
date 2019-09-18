@@ -54,13 +54,13 @@ public class ResumeRestController {
     }
 
     @RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
-    public Set<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, Authentication authentication) {
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
-            return seekerProfileService.getById(seekerProfileId).getResumes();
-        } else {
-            return seekerProfileService.getById(((User) authentication.getPrincipal()).getId()).getResumes();
-        }
-    }
+	public Set<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, Authentication authentication) {
+		if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
+			return seekerProfileService.getById(seekerProfileId).getResumes();
+		} else {
+			return seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()).getResumes();
+		}
+	}
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateSeekerUser(@RequestBody Resume resume) {
