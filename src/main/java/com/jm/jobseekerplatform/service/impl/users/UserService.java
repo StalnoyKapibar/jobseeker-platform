@@ -120,7 +120,7 @@ public class UserService extends AbstractService<User> {
                 new VerificationToken(token, registeredUser, verificationTokenService.calculateExpiryDate());
         verificationTokenService.add(verificationToken);
 
-        //mailService.sendVerificationEmail(userEmail, token);
+        mailService.sendVerificationEmail(userEmail, token);
     }
 
     public boolean recoveryPassRequest(String email) {
