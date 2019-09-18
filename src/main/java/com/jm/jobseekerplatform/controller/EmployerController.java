@@ -1,13 +1,18 @@
 package com.jm.jobseekerplatform.controller;
 
+import com.jm.jobseekerplatform.dto.SeekerReviewDTO;
+import com.jm.jobseekerplatform.model.EmployerReviews;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.Base64;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -29,6 +32,9 @@ public class EmployerController {
 
     @Autowired
     private EmployerProfileService employerProfileService;
+
+    @Autowired
+    private SeekerProfileService seekerProfileService;
 
     @Autowired
     private EmployerUserService employerUserService;
@@ -79,9 +85,30 @@ public class EmployerController {
 
         if (!employerProfile.getReviews().isEmpty()) {
 
-            model.addAttribute("employerProfileReviews", employerProfile.getReviews());
+
+            Set<SeekerReviewDTO> review = new HashSet<>();
+            Set<EmployerReviews> employerReviews = employerProfile.getReviews();
+            SeekerProfile seeker;
+            Long id;
+            Profile p;
+            for(EmployerReviews rev : employerReviews) {
+                p = rev.getCreatorProfile();
+                id = p.getId();
+                seeker = seekerProfileService.getById(id);
+                review.add(new SeekerReviewDTO(rev, seeker));
+//                review.add(new SeekerReviewDTO(rev, seekerProfileService.getById(rev.getCreatorProfile().getId())));
+            }
+
+            model.addAttribute("employerProfileReviews", review);
             model.addAttribute("reviewStatus", true);
             model.addAttribute("averageRating", employerProfile.getAverageRating());
+
+
+
+
+
+
+
         } else {
             model.addAttribute("reviewStatus", false);
         }
