@@ -3,6 +3,7 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,5 +36,10 @@ public class EmployerProfileRestController {
         if (periodInDays > 0 && periodInDays < 15){
             employerProfileService.blockTemporary(employerProfile, periodInDays);
         }
+    }
+
+    @RequestMapping(value = "/companies", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<EmployerProfile>> getCompanies() {
+        return ResponseEntity.ok(employerProfileService.getAll());
     }
 }
