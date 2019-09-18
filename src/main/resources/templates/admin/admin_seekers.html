@@ -49,6 +49,7 @@
                 <thead align="center">
                 <tr>
                     <th>Id</th>
+                    <th>Enabled</th>
                     <th>Email</th>
                     <th>Last Visit</th>
                     <th>Action</th>
@@ -57,6 +58,14 @@
                 <tbody align="center">
                 <tr th:each="seekerUser : ${seekerUsers}">
                     <td th:text="${seekerUser.id}"></td>
+                    <td><div class="custom-control custom-switch" th:if="${seekerUser.confirm}">
+                        <input type="checkbox" class="custom-control-input chkbx_enabled"
+                               th:attr="data-id=${seekerUser.id}"
+                               th:checked="${seekerUser.enabled}?'true':'false'"
+                               th:id="'chkbx_enabled_'+${seekerUser.id}">
+                        <label class="custom-control-label" th:for="'chkbx_enabled_'+${seekerUser.id}"/>
+                    </div><div class="alert alert-danger" style="margin-bottom : 0;" th:if="${!seekerUser.confirm}">
+                        <b>Не подтвержден</b></div></td>
                     <td th:text="${seekerUser.email}"></td>
                     <td th:text="${#temporals.format(seekerUser.date, 'dd MMMM yyyy HH:mm')}"></td>
                     <td>
@@ -73,6 +82,20 @@
                 </tbody>
             </table>
         </div>
+        <!-- Modal -->
+        <div class="modal fade" id="alert_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header alert alert-success" style="margin-bottom : 0;">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Операция выполнена!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Modal -->
     </div>
 
     <nav aria-label="Pagination" th:if="${seekerUsers.totalPages gt 0}">

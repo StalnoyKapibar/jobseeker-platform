@@ -4,9 +4,11 @@ import com.jm.jobseekerplatform.service.impl.MailService;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RestController
@@ -22,6 +24,17 @@ public class UserRestController {
     @GetMapping
     public List<User> getAllUsers() {
         return userService.getAll();
+    }
+
+
+    @RolesAllowed({"ROLE_ADMIN"})
+    @GetMapping("/enabled/{id}/{enabled}")
+    public ResponseEntity enabledUser(@PathVariable("id") Long id,
+                                      @PathVariable boolean enabled) {
+        User user = userService.getById(id);
+        user.setEnabled(enabled);
+        userService.update(user);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/add")

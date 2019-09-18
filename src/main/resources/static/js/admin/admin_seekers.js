@@ -14,6 +14,17 @@ $(document).ready(function () {
             param.prop('selected', true);
         }
     });
+
+    $('input.chkbx_enabled').change(function(){
+        var id = $(this).data("id");
+        if(id === "undefined"){
+            return;
+        }
+        var url = '/api/users/enabled/'+ id +'/'+(this.checked ? 'true' : 'false');
+        $.get(url, null, function(){
+            $('#alert_modal').modal('show');
+        });
+    });
 });
 
 $("#viewBy, #sorBy").change(function () {
