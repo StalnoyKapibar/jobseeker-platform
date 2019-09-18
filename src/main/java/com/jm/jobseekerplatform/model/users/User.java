@@ -93,15 +93,6 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
         return Arrays.asList(getAuthority());
     }
 
-    public boolean hasRole(String role){
-        for(GrantedAuthority grantedAuthority : getAuthorities()){
-            if(role.equals(grantedAuthority.getAuthority())){
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
