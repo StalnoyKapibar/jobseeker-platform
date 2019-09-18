@@ -9,6 +9,7 @@ import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -38,6 +39,9 @@ public class SeekerController {
 
     @Autowired
     private EmployerProfileService employerProfileService;
+
+    @Autowired
+    SeekerUserService seekerUserService;
 
     @GetMapping("/{seekerProfileId}")
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
@@ -88,19 +92,17 @@ public class SeekerController {
 
     @GetMapping("/resumes/{seekerProfileId}")
     public String seekerResumesPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
+        Long currentUserId = ((User)authentication.getPrincipal()).getId();
+        SeekerProfile currentProfile = seekerUserService.getById(currentUserId).getProfile();
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
             SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
             model.addAttribute("resumesList", seekerProfile.getResumes());
-            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-            return "resumes";
         } else {
-            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId());
-            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
-            model.addAttribute("resumesList", seekerProfile.getResumes());
-            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-            return "resumes";
+            model.addAttribute("resumesList", currentProfile.getResumes());
         }
+        model.addAttribute("seekerProfileId", currentProfile.getId());
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+        return "resumes";
     }
 
     @GetMapping("/chats/{seekerProfileId}")

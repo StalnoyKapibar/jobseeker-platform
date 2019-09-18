@@ -92,7 +92,8 @@ public class MainController {
             }
 
             if (authentication.getAuthorities().contains(roleEmployer)) {
-                Profile profile = ((User) authentication.getPrincipal()).getProfile();
+                Long currentUserId = ((User)authentication.getPrincipal()).getId();
+                Profile profile = userService.getById(currentUserId).getProfile();
                 model.addAttribute("employerProfileId", profile.getId());
             }
         }
@@ -178,7 +179,8 @@ public class MainController {
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/add_news", method = RequestMethod.GET)
     public String addNewsPage(Model model, Authentication authentication) {
-        model.addAttribute("employerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
+        Long currentUserId = ((User)authentication.getPrincipal()).getId();
+        model.addAttribute("employerProfileId", employerUserService.getById(currentUserId).getProfile().getId());
         return "add_news";
     }
 

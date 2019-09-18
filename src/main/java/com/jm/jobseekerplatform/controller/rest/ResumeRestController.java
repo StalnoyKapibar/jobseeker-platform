@@ -3,9 +3,11 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.Point;
 import com.jm.jobseekerplatform.model.Resume;
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.ResumeService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +29,9 @@ public class ResumeRestController {
 
     @Autowired
     private SeekerProfileService seekerProfileService;
+
+    @Autowired
+    private SeekerUserService seekerUserService;
 
     @RequestMapping("/getbyid/{resumeId}")
     public Resume getResumeById(@PathVariable Long resumeId) {
@@ -58,7 +63,9 @@ public class ResumeRestController {
 		if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
 			return seekerProfileService.getById(seekerProfileId).getResumes();
 		} else {
-			return seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()).getResumes();
+            Long currentUserId = ((User)authentication.getPrincipal()).getId();
+            SeekerProfile currentProfile = seekerUserService.getById(currentUserId).getProfile();
+			return currentProfile.getResumes();
 		}
 	}
 

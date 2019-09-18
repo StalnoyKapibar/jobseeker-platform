@@ -3,11 +3,14 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -38,12 +41,17 @@ public class NewsRestController {
     @Autowired
     private TagService tagService;
 
+    @Autowired
+    private EmployerUserService employerUserService;
+
     @RolesAllowed({"ROLE_EMPLOYER"})
     @PostMapping("/add")
     public ResponseEntity addNews(@RequestBody News news,
                                   @RequestParam("tags") Set<String> tags,
                                   Authentication authentication) {
-        news.setAuthor(employerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()));
+        Long currentUserId = ((User)authentication.getPrincipal()).getId();
+        EmployerProfile currentProfile = employerUserService.getById(currentUserId).getProfile();
+        news.setAuthor(currentProfile);
         Set<Tag> tagSet = tagService.getTagsByStringNames(tags);
         news.setTags(tagSet);
         newsService.add(news);
@@ -72,7 +80,9 @@ public class NewsRestController {
     public ResponseEntity<List<News>> getAllNewsByEmployerProfileId(@RequestParam("newsPageCount") int newsPageCount,
                                                                     Authentication authentication) {
         Sort sort = new Sort(Sort.Direction.DESC, "date");
-        Long employerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
+        Long currentUserId = ((User)authentication.getPrincipal()).getId();
+        EmployerProfile currentProfile = employerUserService.getById(currentUserId).getProfile();
+        Long employerProfileId = currentProfile.getId();
         List<News> news = newsService.getAllByEmployerProfileId(employerProfileService.getById(employerProfileId),
                 PageRequest.of(newsPageCount, 10, sort)).getContent();
         return new ResponseEntity<>(news, HttpStatus.OK);

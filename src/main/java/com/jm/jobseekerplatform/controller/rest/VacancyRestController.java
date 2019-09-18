@@ -9,6 +9,8 @@ import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.SeekerHistoryService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,6 +40,12 @@ public class VacancyRestController {
     private GrantedAuthority roleSeeker = new SimpleGrantedAuthority("ROLE_SEEKER");
     @Autowired
     private SeekerHistoryService seekerHistoryService;
+
+    @Autowired
+    private EmployerUserService employerUserService;
+
+    @Autowired
+    private SeekerUserService seekerUserService;
 
     @RequestMapping("/")
     public List<Vacancy> getAll() {
@@ -76,7 +84,8 @@ public class VacancyRestController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public boolean addVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
         if (vacancyService.validateVacancy(vacancy)) {
-            EmployerProfile employerProfile = ((EmployerUser) authentication.getPrincipal()).getProfile();
+            Long currentUserId = ((User)authentication.getPrincipal()).getId();
+            EmployerProfile employerProfile = employerUserService.getById(currentUserId).getProfile();
             vacancy.setCreatorProfile(employerProfile);
             vacancy.setCreationDate(new Date(System.currentTimeMillis()));
             vacancyService.addNewVacancyFromRest(vacancy);
@@ -89,7 +98,9 @@ public class VacancyRestController {
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public boolean updateVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
-        if (vacancyService.validateVacancy(vacancy) & (vacancyService.getById(vacancy.getId()).getCreatorProfile().getId().equals(((EmployerUser) authentication.getPrincipal()).getProfile().getId()))) {
+        Long currentUserId = ((User)authentication.getPrincipal()).getId();
+        EmployerProfile currentProfile = employerUserService.getById(currentUserId).getProfile();
+        if (vacancyService.validateVacancy(vacancy) & (vacancyService.getById(vacancy.getId()).getCreatorProfile().getId().equals(currentProfile.getId()))) {
             return vacancyService.updateVacancy(vacancy);
         }
         return false;
@@ -118,7 +129,8 @@ public class VacancyRestController {
             }
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                SeekerProfile profile = (SeekerProfile) ((User) authentication.getPrincipal()).getProfile();
+                Long currentUserId = ((User)authentication.getPrincipal()).getId();
+                SeekerProfile profile = seekerUserService.getById(currentUserId).getProfile();
                 return vacancyService.getVacanciesSortedByCityTagsViews(profile.getId(), city, point, limit, page);
             }
         }
