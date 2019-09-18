@@ -45,8 +45,6 @@ $('#editSeekerForm').click(function (event) {
     var email = $('#editSeeker').find("input[name='email']").val();
     var password = $('#editSeeker').find("input[name='password']").val();
     var date = $('#editSeeker').find("input[name='date']").val();
-    var authorityId = $('#editSeeker').find("input[name='authorityId']").val();
-    var authority = $('#editSeeker').find("input[name='authority']").val();
     var enabled = $('#editSeeker').find("input[name='enabled']").val();
     var confirm = $('#editSeeker').find("input[name='confirm']").val();
 
@@ -56,11 +54,6 @@ $('#editSeekerForm').click(function (event) {
     var surname = $('#editSeeker').find("input[name='surname']").val();
     var description = $('#editSeeker').find("input[name='description']").val();
     //var photo = $('#seekerPhoto img').attr('validator');
-
-    var userAuthority = {
-        'id': authorityId,
-        'authority': authority
-    };
 
     var profile = {
         'id': profId,
@@ -75,7 +68,6 @@ $('#editSeekerForm').click(function (event) {
         'email': email,
         'password': password,
         'date': date,
-        'authority': userAuthority,
         'enabled': enabled,
         'confirm': confirm,
         'profile': profile,
