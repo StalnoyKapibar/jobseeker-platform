@@ -87,7 +87,6 @@ li {
     top: 35px;
     left: 0;
     z-index: 100; /* Behind the navbar */
-    background-color: #222;
 }
 
 .sidebar ul {
