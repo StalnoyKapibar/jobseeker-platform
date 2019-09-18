@@ -3,10 +3,12 @@ package com.jm.jobseekerplatform.controller;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +35,9 @@ public class SeekerController {
 
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private EmployerProfileService employerProfileService;
 
     @GetMapping("/{seekerProfileId}")
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
@@ -106,6 +111,14 @@ public class SeekerController {
         model.addAttribute("seekerProfileId", seekerProfileId);
         model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(seekerProfileId));
         return "seeker_chats";
+    }
+
+    @GetMapping("/companies")
+    public String getCompaniesList(Model model) {
+        List<EmployerProfile> employerprofiles = employerProfileService.getAll();
+        model.addAttribute("companiesList", employerprofiles);
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+        return "companies";
     }
 
 }
