@@ -117,6 +117,20 @@ function uploadLogo() {
     });
 }
 
+function logoPreview(input) {
+    if (input.files && input.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            $('#eLogo').attr('src', e.target.result);
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("#customFile").change(function(){
+    logoPreview(this);
+});
+
 function deleteEmployer(id) {
     $.ajax({
         url: '/api/employer/delete/' + id,
