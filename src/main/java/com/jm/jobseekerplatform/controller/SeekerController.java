@@ -29,8 +29,6 @@ import java.util.Set;
 @RequestMapping("/seeker")
 public class SeekerController {
 
-    private static final Logger logger = LoggerFactory.getLogger(SeekerController.class);
-
     @Autowired
     private SeekerProfileService seekerProfileService;
 
@@ -53,10 +51,7 @@ public class SeekerController {
         model.addAttribute("seekerProfile", seekerProfile);
         model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
         Long loggedProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
-        logger.debug("Logged user profile id: {}", loggedProfileId);
-        boolean isProfileOwner = seekerProfileId.equals(loggedProfileId);
-        logger.debug("Is profile owner: {}", isProfileOwner);
-        model.addAttribute("isProfileOwner", isProfileOwner);
+        model.addAttribute("isProfileOwner", seekerProfileId.equals(loggedProfileId));
         return "seeker";
     }
 
