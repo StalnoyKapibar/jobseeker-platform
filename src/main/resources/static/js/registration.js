@@ -74,7 +74,6 @@ function addUser() {
     var newUser = {
         'email': userEmail,
         'password': userPass,
-        'authority': role,
         'type': type
     };
 
