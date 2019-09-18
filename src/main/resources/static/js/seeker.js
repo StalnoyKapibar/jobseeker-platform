@@ -137,7 +137,7 @@ function inviteFriend(id, friend) {
         type: "GET",
         async: false,
         success: function () {
-            alert("Ваше приглашение было отправленно");
+            alert("Ваше приглашение было отправлено");
             $('#inviteFriendModal').modal('hide');
         }
     })
