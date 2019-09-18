@@ -52,7 +52,7 @@ public class ResumeRestController {
         }
     }
 
-    @RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
 	public Page<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, Authentication authentication) {
 		if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
 			Set<Resume> resumeSet = seekerProfileService.getById(seekerProfileId).getResumes();
