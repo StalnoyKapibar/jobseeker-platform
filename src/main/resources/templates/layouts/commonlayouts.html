@@ -19,30 +19,30 @@
     loader.className = "loader";
     loader.style = "visibility: visible";
 
-        let circle1 = document.createElement("div");
-        circle1.className = "circle";
-        let circle2 = document.createElement("div");
-        circle2.className = "circle";
+    let circle1 = document.createElement("div");
+    circle1.className = "circle";
+    let circle2 = document.createElement("div");
+    circle2.className = "circle";
 
-        let face1 = document.createElement("div");
-        face1.className = "face face1";
-        let face2 = document.createElement("div");
-        face2.className = "face face2";
+    let face1 = document.createElement("div");
+    face1.className = "face face1";
+    let face2 = document.createElement("div");
+    face2.className = "face face2";
 
-        face1.appendChild(circle1);
-        face2.appendChild(circle2);
-        loader.appendChild(face1);
-        loader.appendChild(face2);
+    face1.appendChild(circle1);
+    face2.appendChild(circle2);
+    loader.appendChild(face1);
+    loader.appendChild(face2);
 
-        document.body.appendChild(loader);
+    document.body.appendChild(loader);
 
-        window.addEventListener("load", function () {
-            loader.style = "visibility: hidden";
-        }, false);
+    window.addEventListener("load", function () {
+        loader.style = "visibility: hidden";
+    }, false);
 
-        window.addEventListener("unload", function () {
-            loader.style = "visibility: visible";
-        }, false);
+    window.addEventListener("unload", function () {
+        loader.style = "visibility: visible";
+    }, false);
 
     window.onbeforeunload = function () {
         loader.style = "visibility: visible";
@@ -54,24 +54,26 @@
             let btnTags = document.getElementsByClassName("btn btn-success btn-sm badge badge-pill text-dark active");
             let tags = [];
 
-            for (let tag of btnTags) {
-                tags.push(tag.textContent.toString());
-            }
-            $.ajax({
-                type: 'post',
-                url: "/api/seekerprofiles/updateUserTags?updatedTags=" + tags,
-                contentType: 'application/json; charset=utf-8',
-                beforeSend: function (request) {
-                    request.setRequestHeader(header, token);
-                },
-                success: function () {
-                    location.reload();
-                },
-                error: function (error) {
-                    console.log(error);
-                    alert(error.toString());
+            if (btnTags.length !== 0) {
+                for (let tag of btnTags) {
+                    tags.push(tag.textContent.toString());
                 }
-            })
+                $.ajax({
+                    type: 'post',
+                    url: "/api/seekerprofiles/updateUserTags?updatedTags=" + tags,
+                    contentType: 'application/json; charset=utf-8',
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    success: function () {
+                        location.reload();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        alert(error.toString());
+                    }
+                })
+            }
         })
     });
 </script>
