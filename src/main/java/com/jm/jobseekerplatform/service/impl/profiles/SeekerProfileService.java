@@ -22,16 +22,16 @@ public class SeekerProfileService extends AbstractService<SeekerProfile> {
     private SeekerUserService seekerUserService;
 
     public Set<SeekerProfile> getByTags(Set<Tag> tags, int limit) {
-
         return dao.getByTags(tags, limit);
     }
+
     public void updatePhoto(long id, MultipartFile file){
         SeekerUser seekerUser = seekerUserService.getByProfileId(id);
         if (!file.isEmpty()) {
             try {
                 byte[] photo = file.getBytes();
                 seekerUser.getProfile().setLogo(photo);
-                this.update(seekerUser.getProfile());
+                update(seekerUser.getProfile());
             } catch (Exception e) {
                 e.printStackTrace();
             }

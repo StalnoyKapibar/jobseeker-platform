@@ -85,13 +85,13 @@ public class SeekerController {
     }
 
     @RequestMapping("/chats/{seekerProfileId}")
-    public String EmployerPageChatsMy(@PathVariable Long seekerProfileId, Model model) {
+    public String employerPageChatsMy(@PathVariable Long seekerProfileId, Model model) {
         model.addAttribute("seekerProfileId", seekerProfileId);
         model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(seekerProfileId));
         return "seeker_chats";
     }
     @RequestMapping("/update/{seekerProfileId}")
-    public String UpdateSeekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
+    public String updateSeekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         model.addAttribute("seekerProfile", seekerProfile);
         model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());

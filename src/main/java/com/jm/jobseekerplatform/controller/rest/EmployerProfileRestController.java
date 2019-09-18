@@ -45,8 +45,8 @@ public class EmployerProfileRestController {
             employerProfileService.blockTemporary(employerProfile, periodInDays);
         }
     }
+
     @PostMapping("/update")
-    @ResponseBody
     public EmployerProfile getSearchUserProfiles(@RequestBody String jsonReq) throws JSONException {
         JSONObject jsonProfile = new JSONObject(jsonReq);
         EmployerProfile updatedProfile = employerProfileService.getById(jsonProfile.getLong("id"));
@@ -56,6 +56,7 @@ public class EmployerProfileRestController {
         employerProfileService.update(updatedProfile);
         return updatedProfile;
     }
+
     @RequestMapping(value = "/update_image", method = RequestMethod.POST)
     public String updateImage(@RequestParam(value = "id") long id,
                               @RequestParam(value = "image") MultipartFile img) {

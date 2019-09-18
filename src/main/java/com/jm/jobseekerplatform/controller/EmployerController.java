@@ -117,7 +117,7 @@ public class EmployerController {
     @RequestMapping("/employer/update/{employerProfileId}")
     public String getEmployerProfileUpdatePage(@PathVariable Long employerProfileId, Model model,  Authentication authentication) {
         Long userId = ((User) authentication.getPrincipal()).getId();
-        if(employerUserService.getByProfileId(employerProfileId).getId().equals(userId)){
+        if (employerUserService.getByProfileId(employerProfileId).getId().equals(userId)) {
             EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
             model.addAttribute("employerProfile", employerProfile);
             Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());

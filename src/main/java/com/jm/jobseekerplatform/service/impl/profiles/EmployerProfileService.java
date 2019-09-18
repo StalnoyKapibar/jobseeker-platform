@@ -65,7 +65,7 @@ public class EmployerProfileService extends AbstractService<EmployerProfile> {
             try {
                 byte[] photo = file.getBytes();
                 employerUser.getProfile().setLogo(photo);
-                this.update(employerUser.getProfile());
+                update(employerUser.getProfile());
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -141,24 +141,16 @@ public class SeekerProfileRestController {
         Authentication authentication = context.getAuthentication();
         SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerUser.getId());
-
+        
         Set<Tag> seekerProfileTags = seekerProfile.getTags();
-        Iterator<Tag> iterator = seekerProfileTags.iterator();
-        while (iterator.hasNext()) {
-            Tag next = iterator.next();
-            if (next.getName().equals(tag)) {
-                iterator.remove();
-            }
-        }
-
+        seekerProfileTags.removeIf(next -> next.getName().equals(tag));
         seekerProfile.setTags(seekerProfileTags);
         seekerProfileService.update(seekerProfile);
-
         return new ResponseEntity(HttpStatus.OK);
     }
+
     @PostMapping("/update")
-    @ResponseBody
-    public SeekerProfile updateSeekerProfie (@RequestBody SeekerProfile seekerProfile) {
+    public SeekerProfile updateSeekerProfie(@RequestBody SeekerProfile seekerProfile) {
         SeekerProfile updatedProfile = seekerProfileService.getById(seekerProfile.getId());
         updatedProfile.setName(seekerProfile.getName());
         updatedProfile.setSurname(seekerProfile.getSurname());
@@ -174,7 +166,6 @@ public class SeekerProfileRestController {
                               @RequestParam(value = "image") MultipartFile img) {
         seekerProfileService.updatePhoto(id,img);
         return seekerProfileService.getById(id).getEncoderPhoto();
-        //return new ResponseEntity<>(seekerUser.getProfile(), HttpStatus.OK);
     }
 
 
