@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
@@ -13,6 +12,7 @@ import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +40,7 @@ public class SeekerController {
     private EmployerProfileService employerProfileService;
 
     @GetMapping("/{seekerProfileId}")
-    public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
+    public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Set<Tag> tags = seekerProfile.getTags();
         List<Tag> notSelectedTags = tagService.getAll();
@@ -48,13 +48,15 @@ public class SeekerController {
         model.addAttribute("notSelectedTags", notSelectedTags);
         model.addAttribute("seekerProfile", seekerProfile);
         model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
+        Long loggedProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
+        model.addAttribute("isProfileOwner", seekerProfileId.equals(loggedProfileId));
         return "seeker";
     }
 
     @GetMapping("/meetings/{seekerProfileId}")
     public String seekerMeetingsPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        Long id = ((User) authentication.getPrincipal()).getId();
+        Long id = ((User) authentication.getPrincipal()).getProfile().getId();
         model.addAttribute("isOwner", seekerProfileId.equals(id));
         model.addAttribute("seekerProfile", seekerProfile);
         return "meetings";
@@ -88,14 +90,17 @@ public class SeekerController {
 
     @GetMapping("/resumes/{seekerProfileId}")
     public String seekerResumesPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
-        if (authentication.getAuthorities().contains(new UserRole("ROLE_EMPLOYER"))) {
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
             SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
             model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
             model.addAttribute("resumesList", seekerProfile.getResumes());
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
             return "resumes";
         } else {
-            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId());
+            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication
+                    .getPrincipal())
+                    .getProfile()
+                    .getId());
             model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
             model.addAttribute("resumesList", seekerProfile.getResumes());
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
@@ -117,4 +122,5 @@ public class SeekerController {
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "companies";
     }
+
 }

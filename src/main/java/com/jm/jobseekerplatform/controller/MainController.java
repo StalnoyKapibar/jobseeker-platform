@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.Subscription;
-import com.jm.jobseekerplatform.model.UserRole;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
@@ -22,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +33,8 @@ import javax.annotation.security.RolesAllowed;
 import java.util.Base64;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+
 
 @Controller
 public class MainController {
@@ -60,8 +62,8 @@ public class MainController {
     @Autowired
     private EmployerProfileService employerProfileService;
 
-    private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
-    private UserRole roleEmployer = new UserRole("ROLE_EMPLOYER");
+    private GrantedAuthority roleSeeker = new SimpleGrantedAuthority("ROLE_SEEKER");
+    private GrantedAuthority roleEmployer = new SimpleGrantedAuthority("ROLE_EMPLOYER");
 
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
@@ -146,7 +148,6 @@ public class MainController {
         }
         return "index";
     }
-
 
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/new_vacancy", method = RequestMethod.GET)

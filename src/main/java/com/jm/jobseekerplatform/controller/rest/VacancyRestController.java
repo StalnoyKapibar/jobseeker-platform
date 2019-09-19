@@ -15,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -33,10 +35,9 @@ public class VacancyRestController {
     @Autowired
     private SeekerProfileService seekerProfileService;
 
+    private GrantedAuthority roleSeeker = new SimpleGrantedAuthority("ROLE_SEEKER");
     @Autowired
     private SeekerHistoryService seekerHistoryService;
-
-    private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
 
     @RequestMapping("/")
     public List<Vacancy> getAll() {

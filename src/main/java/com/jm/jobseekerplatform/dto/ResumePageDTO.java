@@ -25,6 +25,11 @@ public class ResumePageDTO extends PageImpl<Resume> {
         this.seeker = seeker;
     }
 
+	public ResumePageDTO(List<Resume> resumeList, List<SeekerProfile> seeker) {
+		super(resumeList);
+		this.seeker = seeker;
+	}
+
     @Override
     public int getTotalPages() {
         return totalPages;
