@@ -126,6 +126,7 @@ function getSortedResumes(point) {
         }
     })
 }
+
 var fio;
 function printResumes(data) {
     $.each(data.content, function (key, value) {
