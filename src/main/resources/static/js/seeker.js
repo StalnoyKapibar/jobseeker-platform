@@ -272,3 +272,30 @@ function removeTag(name) {
         }
     })
 }
+
+$(document).on('show.bs.modal', '#selectionTagsModal', function () {
+    $('#btnSuccess').click(function () {
+        let btnTags = $(`.btn.btn-success.btn-sm.badge.badge-pill.text-dark.active`);
+        let tags = [];
+        if (btnTags.length !== 0) {
+            for (let tag of btnTags) {
+                tags.push(tag.textContent.toString());
+            }
+            $.ajax({
+                type: 'post',
+                url: "/api/seekerprofiles/updateUserTags?updatedTags=" + tags,
+                contentType: 'application/json; charset=utf-8',
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                success: function () {
+                    location.reload();
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert(error.toString());
+                }
+            })
+        }
+    })
+});
