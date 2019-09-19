@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Set;
 
 @RestController
@@ -74,5 +75,5 @@ public class ResumeRestController {
         resumeService.deleteByResumeId(resumeId);
         return new ResponseEntity(HttpStatus.OK);
     }
-
+  
 }
