@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.*;
 
 @RestController
@@ -111,7 +112,8 @@ public class SeekerProfileRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/updateUserTags")
+    @RolesAllowed("ROLE_SEEKER")
+    @PostMapping(value = "/updateUserTags")
     public ResponseEntity updateUserTags(@RequestParam("updatedTags") String[] updatedTags) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
@@ -129,7 +131,8 @@ public class SeekerProfileRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/removeTag")
+    @RolesAllowed("ROLE_SEEKER")
+    @PostMapping(value = "/removeTag")
     public ResponseEntity removeTag(@RequestParam("tag") String tag) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
