@@ -50,7 +50,7 @@ public class City implements Serializable {
         return point;
     }
 
-    public void setpoint(Point centerPoint) {
+    public void setPoint(Point centerPoint) {
         this.point = centerPoint;
     }
 

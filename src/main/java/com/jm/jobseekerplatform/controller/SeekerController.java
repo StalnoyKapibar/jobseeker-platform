@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.Set;
@@ -39,7 +40,7 @@ public class SeekerController {
     private EmployerProfileService employerProfileService;
 
     @GetMapping("/{seekerProfileId}")
-    public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
+    public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Set<Tag> tags = seekerProfile.getTags();
         List<Tag> notSelectedTags = tagService.getAll();
@@ -47,6 +48,8 @@ public class SeekerController {
         model.addAttribute("notSelectedTags", notSelectedTags);
         model.addAttribute("seekerProfile", seekerProfile);
         model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
+        Long loggedProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
+        model.addAttribute("isProfileOwner", seekerProfileId.equals(loggedProfileId));
         return "seeker";
     }
 
