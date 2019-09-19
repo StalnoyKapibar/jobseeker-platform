@@ -34,7 +34,7 @@ public class SeekerVacancyRecordDAO extends AbstractDAO<SeekerVacancyRecord> {
         List vacancies = entityManager
                 .createNativeQuery(query_for_get_viewed_vacancies)
                 .setParameter("id", seekerId).getResultList();
-
+        List<ViewedVacanciesDTO> vacanciesDTOList = new ArrayList<>();
         for (Object vacancy : vacancies) {
             ViewedVacanciesDTO dto = new ViewedVacanciesDTO();
             dto.setId(Long.parseLong(((Object[]) vacancy)[0].toString()));
@@ -42,9 +42,9 @@ public class SeekerVacancyRecordDAO extends AbstractDAO<SeekerVacancyRecord> {
             dto.setSalarymin(Integer.parseInt(((Object[]) vacancy)[2].toString()));
             dto.setSalarymax(Integer.parseInt(((Object[]) vacancy)[3].toString()));
             dto.setCompanyname((String) ((Object[]) vacancy)[4]);
-            vacancies.add(dto);
+            vacanciesDTOList.add(dto);
         }
-        return vacancies;
+        return vacanciesDTOList;
     }
 
     public List<ViewedVacanciesDTO> getNumberOfViewsOffAllVacanciesByTagForSeeker(SeekerProfile seekerProfile) {
