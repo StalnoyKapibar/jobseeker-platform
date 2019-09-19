@@ -20,7 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.Set;
@@ -58,7 +57,7 @@ public class SeekerController {
     @GetMapping("/meetings/{seekerProfileId}")
     public String seekerMeetingsPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        Long id = ((User) authentication.getPrincipal()).getId();
+        Long id = ((User) authentication.getPrincipal()).getProfile().getId();
         model.addAttribute("isOwner", seekerProfileId.equals(id));
         model.addAttribute("seekerProfile", seekerProfile);
         return "meetings";
@@ -99,7 +98,10 @@ public class SeekerController {
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
             return "resumes";
         } else {
-            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId());
+            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication
+                    .getPrincipal())
+                    .getProfile()
+                    .getId());
             model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
             model.addAttribute("resumesList", seekerProfile.getResumes());
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
@@ -121,4 +123,5 @@ public class SeekerController {
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "companies";
     }
+
 }
