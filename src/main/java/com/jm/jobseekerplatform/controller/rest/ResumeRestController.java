@@ -75,4 +75,5 @@ public class ResumeRestController {
         resumeService.deleteByResumeId(resumeId);
         return new ResponseEntity(HttpStatus.OK);
     }
+  
 }
