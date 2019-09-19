@@ -17,4 +17,5 @@ public class JobseekerPlatformApplication {
     public InitData initialData() {
         return new InitData();
     }
+
 }
