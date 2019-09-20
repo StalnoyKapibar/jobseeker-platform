@@ -30,6 +30,16 @@ public class ResumeDAO extends AbstractDAO<Resume> {
         return new ResumePageDTO(resumes, totalPages, seeker);
     }
 
+    public Page<Resume> getResumeByFilter(String q, int limit, int page, String qCount) {
+        page = (page == 0) ? page : --page;
+        Query query = entityManager.createQuery(q, Resume.class);
+        long totalElements = (long) entityManager.createQuery(qCount).getSingleResult();
+        int totalPages = getTotalPages(totalElements, limit);
+        List<Resume> resumes = query.setFirstResult(page * limit).setMaxResults(limit).getResultList();
+
+        return new ResumePageDTO(resumes, totalPages);
+    }
+
     public Page<Resume> getResumesByTag(Set<Tag> tags, int limit, int page) {
         Query query = entityManager.createQuery("select r from Resume r join r.tags t where t in (:tags) group by (r.id)", Resume.class)
                 .setParameter("tags", tags);
