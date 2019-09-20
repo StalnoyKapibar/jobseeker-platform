@@ -1,7 +1,9 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.service.impl.MailService;
 import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,19 +23,43 @@ public class UserRestController {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private ProfileService profileService;
+
     @GetMapping
     public List<User> getAllUsers() {
         return userService.getAll();
     }
 
+    @RolesAllowed({"ROLE_ADMIN"})
+    @GetMapping("/block/{id}/{periodInDays}")
+    public ResponseEntity blockUser(@PathVariable("id") Long id,
+                                      @PathVariable Integer periodInDays) {
+        User user = userService.getById(id);
+        user.setEnabled(false);
+        userService.update(user);
+
+        Profile profile = user.getProfile();
+        if (periodInDays == 0){
+            profileService.blockPermanently(profile);
+        }
+        if (periodInDays > 0 && periodInDays < 15){
+            profileService.blockTemporary(profile, periodInDays);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
     @RolesAllowed({"ROLE_ADMIN"})
-    @GetMapping("/enabled/{id}/{enabled}")
-    public ResponseEntity enabledUser(@PathVariable("id") Long id,
-                                      @PathVariable boolean enabled) {
+    @GetMapping("/unblock/{id}")
+    public ResponseEntity unblockUser(@PathVariable("id") Long id) {
         User user = userService.getById(id);
-        user.setEnabled(enabled);
+        user.setEnabled(true);
         userService.update(user);
+
+        Profile profile = user.getProfile();
+        profileService.unblock(profile);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 

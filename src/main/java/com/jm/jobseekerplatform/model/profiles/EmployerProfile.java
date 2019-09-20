@@ -27,9 +27,6 @@ public class EmployerProfile extends Profile implements Serializable {
     @JoinColumn(name = "employer_id")
     private Set<EmployerReviews> reviews;
 
-    @Column(name = "expiry_block")
-    private Date expiryBlock;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_profile_id")
     private Set<Vacancy> vacancies;
@@ -109,14 +106,6 @@ public class EmployerProfile extends Profile implements Serializable {
             return 0d;
         }
 
-    }
-
-    public Date getExpiryBlock() {
-        return expiryBlock;
-    }
-
-    public void setExpiryBlock(Date expiryBlock) {
-        this.expiryBlock = expiryBlock;
     }
 
     public Set<Vacancy> getVacancies() {

@@ -50,7 +50,7 @@
                 <thead align="center">
                 <tr>
                     <th>Id</th>
-                    <th>Enabled</th>
+                    <th>Block</th>
                     <th>Email</th>
                     <th>Last Visit</th>
                     <th>Action</th>
@@ -59,14 +59,11 @@
                 <tbody align="center">
                 <tr th:each="employerUser : ${employerUsers}">
                     <td th:text="${employerUser.id}"></td>
-                    <td><div class="custom-control custom-switch" th:if="${employerUser.confirm}">
-                        <input type="checkbox" class="custom-control-input chkbx_enabled"
-                               th:attr="data-id=${employerUser.id}"
-                               th:checked="${employerUser.enabled}?'true':'false'"
-                               th:id="'chkbx_enabled_'+${employerUser.id}">
-                        <label class="custom-control-label" th:for="'chkbx_enabled_'+${employerUser.id}"/>
-                    </div><div class="alert alert-danger" style="margin-bottom : 0;" th:if="${!employerUser.confirm}">
-                        <b>Не подтвержден</b></div></td>
+                    <td>
+                        <div th:if="${employerUser.confirm}" th:insert="fragments/adminfragments :: admin_user_button(user=${employerUser})"></div>
+                        <div class="alert alert-danger" style="margin-bottom : 0;" th:if="${!employerUser.confirm}">
+                        Не подтвержден<sup><b title="Пользователь не завершил регистрацию.&#13; Не подтвержден по электронной почте"> (?) </b></sup></div>
+                    </td>
                     <td th:text="${employerUser.email}"></td>
                     <td th:text="${#temporals.format(employerUser.date, 'dd MMMM yyyy HH:mm')}"></td>
                     <td>
@@ -84,18 +81,7 @@
             </table>
         </div>
         <!-- Modal -->
-        <div class="modal fade" id="alert_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header alert alert-success" style="margin-bottom : 0;">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">Операция выполнена!</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div th:replace="fragments/adminfragments :: admin_modal_success_operation_window"></div>
         <!-- /Modal -->
     </div>
 
@@ -125,6 +111,7 @@
     </nav>
 </div>
 <div class="container-fluid" layout:fragment="content-script">
+    <script src="/js/admin.js"></script>
     <script src="/js/admin/admin_employers.js"></script>
 </div>
 </body>
