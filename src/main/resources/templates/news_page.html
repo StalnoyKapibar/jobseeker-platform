@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>News</title>
+    <script type="text/javascript" src="/js/read_news.js"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <input type="hidden" th:value="${newsId}" id="newsId">
+    <div class="container"></div>
+</div>
+</body>
+</html>
