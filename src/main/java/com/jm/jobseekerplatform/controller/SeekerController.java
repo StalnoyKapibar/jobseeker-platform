@@ -52,6 +52,8 @@ public class SeekerController {
         model.addAttribute("notSelectedTags", notSelectedTags);
         model.addAttribute("seekerProfile", seekerProfile);
         model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
+        Long loggedProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
+        model.addAttribute("isProfileOwner", seekerProfileId.equals(loggedProfileId));
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             model.addAttribute("seekerUser", seekerUserService.getByProfileId(seekerProfileId));
         }
@@ -61,7 +63,7 @@ public class SeekerController {
     @GetMapping("/meetings/{seekerProfileId}")
     public String seekerMeetingsPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        Long id = ((User) authentication.getPrincipal()).getId();
+        Long id = ((User) authentication.getPrincipal()).getProfile().getId();
         model.addAttribute("isOwner", seekerProfileId.equals(id));
         model.addAttribute("seekerProfile", seekerProfile);
         return "meetings";
@@ -102,7 +104,10 @@ public class SeekerController {
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
             return "resumes";
         } else {
-            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId());
+            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication
+                    .getPrincipal())
+                    .getProfile()
+                    .getId());
             model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
             model.addAttribute("resumesList", seekerProfile.getResumes());
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
@@ -124,4 +129,5 @@ public class SeekerController {
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "companies";
     }
+
 }

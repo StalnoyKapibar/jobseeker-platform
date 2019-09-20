@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.model.chats;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -27,6 +28,7 @@ public class ChatMessage implements Serializable, Comparable<ChatMessage> {
     private Profile creatorProfile;
 
     @Column(name = "date")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Europe/Moscow")
     private Date date;
 
     @ElementCollection

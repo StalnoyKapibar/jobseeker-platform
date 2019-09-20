@@ -42,7 +42,6 @@ public class TagRestController {
     @RolesAllowed({"ROLE_SEEKER", "ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Boolean> deleteById(@PathVariable Long id) {
-
         tagService.deleteById(id);
         return ResponseEntity.ok(true);
     }

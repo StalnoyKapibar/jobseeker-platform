@@ -27,8 +27,8 @@
                         <h6>
                             <span th:each="tag : ${seekerProfile.tags}" th:text="${tag.name} + ' '"
                                   class="badge badge-pill badge-success btnClick text-dark"
-                                  onclick="removeTag(this.innerHTML)"></span>
-                            <span class="fa fa-plus badge-pill badge-success btnClick text-dark"
+                                  th:onclick="${isProfileOwner} ? 'removeTag(this.innerHTML)'"></span>
+                            <span th:if="${isProfileOwner}" class="fa fa-plus badge-pill badge-success btnClick text-dark"
                                   data-toggle="modal" data-target="#selectionTagsModal">Add</span>
                         </h6>
                     </div>
@@ -51,7 +51,7 @@
                             <span th:text="${seekerProfile.description}"></span>
                         </div><br>
                         <!-- кнопка приглашения -->
-                        <button type="button" th:onclick="'showInviteModal('+${seekerProfile.id}+')'" class="btn btn-warning">
+                        <button th:if="${isProfileOwner}" type="button" th:onclick="'showInviteModal('+${seekerProfile.id}+')'" class="btn btn-warning">
                         <i class="fas fa-user-plus"></i>InviteFriend</button>
                         <button class="btn btn-success" th:onclick="'window.location.href = \'' + @{/seeker/vacancies/{id}(id=${seekerProfile.id})} + '\''">Избранное</button>
                         <button class="btn btn-primary" th:onclick="'window.location.href = \'' + @{/seeker/resumes/{id}(id=${seekerProfile.id})} + '\''">Все резюме</button>
