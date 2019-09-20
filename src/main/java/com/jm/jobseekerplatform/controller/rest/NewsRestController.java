@@ -66,6 +66,13 @@ public class NewsRestController {
         return new ResponseEntity<>(newsService.getById(newsId), HttpStatus.OK);
     }
 
+
+    @GetMapping("/read_news")
+    @ResponseBody
+    public ResponseEntity<News> readNewsById(@RequestParam("newsId") Long newsId) {
+        return new ResponseEntity<>(newsService.getById(newsId), HttpStatus.OK);
+    }
+
     @RolesAllowed({"ROLE_EMPLOYER"})
     @GetMapping("/")
     @ResponseBody

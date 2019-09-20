@@ -85,6 +85,12 @@ public class SeekerController {
         return "seeker_subscription_news";
     }
 
+    @RolesAllowed({"ROLE_SEEKER"})
+    @GetMapping("/get_subscription_news/{seekerProfileId}/news/{newsId}")
+    public String getSeekerSubscriptionNewsById(@PathVariable Long seekerProfileId, @PathVariable Long newsId,  Model model) {
+        model.addAttribute("newsId", newsId);
+        return "news_page";
+    }
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
 

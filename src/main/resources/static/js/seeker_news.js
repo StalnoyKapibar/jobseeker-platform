@@ -42,18 +42,13 @@ function printSeekerNews() {
                 if (numberOfViews == null) {
                     numberOfViews = 0;
                 }
-                if (item.description.length > 150) {
-                    description = item.description.substr(0, 150) +
-                        '<span><button id="readMoreButton_' + item.id + '" value="' + item.description + '" onclick="getFullDescription(' + item.id + ')" class="btn btn-link">... Читать полностью' +
-                        '</button></span>';
-                } else {
                     description = item.description;
-                }
                 cardHTML += '<div class="card newsCard empCard" id="newsCard_' + item.id + '" style="margin-top: 10px">' +
                     '<div class="card-body">' +
                     '<h4 class="card-title seekerNewsHeadLine">' + item.headline + '</h4>' +
                     '<p class="card-text newsDescription" id="description_' + item.id + '"><span id="newsDescription_' + item.id + '">' + description + '</span></p>' +
                     '<p class="card-text seekerNewsDate">' + 'от: ' + day + '.' + month + '.' + date.getFullYear() + '</p>' +
+                    '<a href="/seeker/get_subscription_news/' + seekerProfileId +  '/news/' + item.id + '" class="card-link">' + "Читать полностью" + '</a>' +
                     '<a href="/employer/' + item.author.id + '" class="card-link">' + item.author.companyName + '</a>' +
                     // tags
                     '<div class="newsTags">' + newsTags + '</div>' +
