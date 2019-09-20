@@ -293,7 +293,6 @@ $(document).on('show.bs.modal', '#selectionTagsModal', function () {
                 },
                 error: function (error) {
                     console.log(error);
-                    alert(error.toString());
                 }
             })
         }
