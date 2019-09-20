@@ -27,6 +27,7 @@ function printSeekerNews() {
             }
             var cardHTML = '';
             $.each(data, function (i, item) {
+                /*Hidden data and tags*/
                 var date = new Date(item.date.toString());
                 var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
                 var month = date.getMonth() + 1;
@@ -43,9 +44,9 @@ function printSeekerNews() {
                     numberOfViews = 0;
                 }
                 if (item.description.length > 150) {
-                    description = item.description.substr(0, 150) +
-                        '<span><button id="readMoreButton_' + item.id + '" value="' + item.description + '" onclick="getFullDescription(' + item.id + ')" class="btn btn-link">... Читать полностью' +
-                        '</button></span>';
+                    description = item.description.substr(0, 150) /*+
+                        /'<span><button id="readMoreButton_' + item.id + '" value="' + item.description + '" onclick="getFullDescription(' + item.id + ')" class="btn btn-link">... Читать полностью' +
+                        '</button></span>'*/;
                 } else {
                     description = item.description;
                 }
@@ -53,6 +54,7 @@ function printSeekerNews() {
                     '<div class="card-body">' +
                     '<h4 class="card-title seekerNewsHeadLine">' + item.headline + '</h4>' +
                     '<p class="card-text newsDescription" id="description_' + item.id + '"><span id="newsDescription_' + item.id + '">' + description + '</span></p>' +
+                    '<a href="/seeker/get_subscription_news/' + seekerProfileId + '/news/' + item.id + '" class="card-link">' + "Читать полностью" + '</a>' +
                     '<p class="card-text seekerNewsDate">' + 'от: ' + day + '.' + month + '.' + date.getFullYear() + '</p>' +
                     '<a href="/employer/' + item.author.id + '" class="card-link">' + item.author.companyName + '</a>' +
                     // tags
@@ -122,6 +124,5 @@ function hideComments(id) {
     $('#comments_' + id).append('<span id="viewComments_' + id + '" onclick="printComments(' + id + ')"><i class="far fa-comments"></i>23</span>');
     $('#comments_' + id).attr('class', 'comments');
 }
-
 //**********************************************************************************************************************
 

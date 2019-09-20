@@ -58,13 +58,13 @@ public class NewsRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RolesAllowed({"ROLE_EMPLOYER"})
+    /*@RolesAllowed({"ROLE_EMPLOYER"})
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
     @GetMapping("/{newsId}")
     @ResponseBody
     public ResponseEntity<News> getNewsById(@PathVariable("newsId") Long newsId) {
         return new ResponseEntity<>(newsService.getById(newsId), HttpStatus.OK);
-    }
+    }*/
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @GetMapping("/")
@@ -90,6 +90,15 @@ public class NewsRestController {
         List<News> news = newsService.getAllBySubscription(subscriptions, PageRequest.of(newsPageCount, 10, sort)).getContent();
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
+
+    /* Show news on news_page*/
+    @GetMapping("/get_news")
+    @ResponseBody
+    public ResponseEntity<News> readNewsById(@RequestParam("readNewsId") Long newsId) {
+        News news = newsService.getById(newsId);
+        return new ResponseEntity<>(news,HttpStatus.OK);
+    }
+
 
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
     @PostMapping("/editNews")
