@@ -43,7 +43,7 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     @Column(name = "creationdate")
     private Date creationDate;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "vacancies")
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Tag> tags;
 
     @OneToOne(fetch = FetchType.LAZY)

@@ -17,7 +17,7 @@ public class Resume extends CreatedByProfileBase<SeekerProfile> implements Seria
     @Column(name = "headline", nullable = false)
     private String headline;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "resumes")
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Tag> tags;
 
     @Column(name = "salarymin")

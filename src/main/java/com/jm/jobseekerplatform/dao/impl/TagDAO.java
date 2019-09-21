@@ -43,6 +43,22 @@ public class TagDAO extends AbstractDAO<Tag> {
                 .getResultList();
     }
 
+    @Transactional
+    public void deleteById(Long id) {
+
+        List<String> queries = new ArrayList<>();
+        queries.add("DELETE FROM vacancies_tags WHERE tags_id = :id");
+        queries.add("DELETE FROM profile_tags WHERE tags_id = :id");
+        queries.add("DELETE FROM tags WHERE id = :id");
+
+        queries.forEach(
+                query -> entityManager
+                .createNativeQuery(query)
+                .setParameter("id", id)
+                .executeUpdate()
+        );
+    }
+
     public List<Tag> getTagsByNames(Set<String> tagsName) {
 
         List<Tag> findedTags = entityManager

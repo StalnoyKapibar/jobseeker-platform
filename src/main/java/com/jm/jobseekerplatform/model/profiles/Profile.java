@@ -1,13 +1,10 @@
 package com.jm.jobseekerplatform.model.profiles;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.jm.jobseekerplatform.model.State;
-import com.jm.jobseekerplatform.model.Tag;
 import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Base64;
-import java.util.Set;
 
 /**
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
@@ -29,9 +26,6 @@ public abstract class Profile implements Serializable {
     @Type(type = "image")
     private byte[] logo;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "profiles")
-    private Set<Tag> tags;
-
     public Profile() {
         this.state = State.NO_ACCESS;
     }
@@ -41,7 +35,6 @@ public abstract class Profile implements Serializable {
         this.logo = logo;
     }
 
-//    @JsonValue
     public Long getId() {
         return id;
     }
@@ -72,14 +65,6 @@ public abstract class Profile implements Serializable {
 
     public void setLogo(byte[] logo) {
         this.logo = logo;
-    }
-
-    public Set<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
     }
 
     @Override

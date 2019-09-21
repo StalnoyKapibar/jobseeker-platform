@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 

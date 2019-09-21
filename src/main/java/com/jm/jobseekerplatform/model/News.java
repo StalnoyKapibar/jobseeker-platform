@@ -31,7 +31,10 @@ public class News implements Serializable {
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "news")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "news_tags",
+            joinColumns = @JoinColumn(name = "news_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
     public News() {
