@@ -4,8 +4,9 @@ $(document).ready(function () {
         type: 'get',
         url: "/api/news/read_news?newsId=" + $newsId,
         contentType: 'application/json; charset=utf-8',
-        success: function (data) {
-            console.log(data)
+        success: function (news) {
+            $('#newsHeadline').text(news.headline);
+            $('#newsDescription').text(news.description);
         }
     })
 });
