@@ -36,7 +36,7 @@ public class SeekerUserRestController {
     @RequestMapping(value = "/editPhoto", method = RequestMethod.POST)
     public ResponseEntity<SeekerProfile> updateSeekerPhoto(@RequestParam(value = "file", required = false) MultipartFile file,
                                                            @RequestParam("seekerUserId") Long seekerUserId) {
-        seekerProfileService.updatePhoto(seekerUserId,file);
+        seekerProfileService.updatePhoto(seekerUserId, file);
         SeekerUser seekerUser = seekerUserService.getById(seekerUserId);
         return new ResponseEntity<>(seekerUser.getProfile(), HttpStatus.OK);
     }

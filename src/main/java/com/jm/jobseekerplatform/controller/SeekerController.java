@@ -90,6 +90,7 @@ public class SeekerController {
         model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(seekerProfileId));
         return "seeker_chats";
     }
+
     @RequestMapping("/update/{seekerProfileId}")
     public String updateSeekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);

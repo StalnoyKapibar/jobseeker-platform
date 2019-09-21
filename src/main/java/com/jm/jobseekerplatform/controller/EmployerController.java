@@ -117,15 +117,15 @@ public class EmployerController {
     @RequestMapping("/employer/update/{employerProfileId}")
     public String getEmployerProfileUpdatePage(@PathVariable Long employerProfileId, Model model,  Authentication authentication) {
         Long userId = ((User) authentication.getPrincipal()).getId();
-        if (employerUserService.getByProfileId(employerProfileId).getId().equals(userId)) {
-            EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
+        EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
+        if (employerProfile.getId().equals(userId)) {
             model.addAttribute("employerProfile", employerProfile);
             Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
             model.addAttribute("vacancies", vacancies);
             model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
             return "update_employer_profile";
         } else {
-            model.addAttribute("status","403");
+            model.addAttribute("status", "403");
             return "error";
         }
     }

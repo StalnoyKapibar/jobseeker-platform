@@ -60,7 +60,7 @@ public class EmployerProfileRestController {
     @RequestMapping(value = "/update_image", method = RequestMethod.POST)
     public String updateImage(@RequestParam(value = "id") long id,
                               @RequestParam(value = "image") MultipartFile img) {
-        employerProfileService.updatePhoto(id,img);
+        employerProfileService.updatePhoto(id, img);
         return employerProfileService.getById(id).getEncoderPhoto();
     }
 

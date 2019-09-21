@@ -164,7 +164,7 @@ public class SeekerProfileRestController {
     @RequestMapping(value = "/update_image", method = RequestMethod.POST)
     public String updateImage(@RequestParam(value = "id") long id,
                               @RequestParam(value = "image") MultipartFile img) {
-        seekerProfileService.updatePhoto(id,img);
+        seekerProfileService.updatePhoto(id, img);
         return seekerProfileService.getById(id).getEncoderPhoto();
     }
 

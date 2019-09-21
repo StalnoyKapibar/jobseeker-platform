@@ -141,6 +141,7 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     public void updateVacancy(Vacancy vacancy){
 
     }
+
     public List<Vacancy> getTrackedByEmployerProfileId(Long id) {
         List<Vacancy> vacancies = new ArrayList<>();
         Query query = entityManager.unwrap(Session.class)

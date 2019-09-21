@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.Set;
+
 @Service("seekerProfileService")
 @Transactional
 public class SeekerProfileService extends AbstractService<SeekerProfile> {
@@ -25,7 +25,7 @@ public class SeekerProfileService extends AbstractService<SeekerProfile> {
         return dao.getByTags(tags, limit);
     }
 
-    public void updatePhoto(long id, MultipartFile file){
+    public void updatePhoto(long id, MultipartFile file) {
         SeekerUser seekerUser = seekerUserService.getByProfileId(id);
         if (!file.isEmpty()) {
             try {

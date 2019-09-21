@@ -59,7 +59,8 @@ public class EmployerProfileService extends AbstractService<EmployerProfile> {
     public int deleteExpiryBlockEmployerProfiles() {
         return dao.deleteExpiryBlockEmployerProfiles();
     }
-    public void updatePhoto(long id, MultipartFile file){
+
+    public void updatePhoto(long id, MultipartFile file) {
         EmployerUser employerUser = employerUserService.getByProfileId(id);
         if (!file.isEmpty()) {
             try {

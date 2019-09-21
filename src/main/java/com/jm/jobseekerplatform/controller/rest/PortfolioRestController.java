@@ -18,8 +18,10 @@ public class PortfolioRestController {
 
     @Autowired
     private PortfolioService portfolioService;
+
     @Autowired
     private SeekerProfileService seekerProfileService;
+
     @RequestMapping("/")
     public List<Portfolio> getAllEmployerProfiles() {
         List<Portfolio> portfolios = portfolioService.getAll();
@@ -27,14 +29,14 @@ public class PortfolioRestController {
     }
 
     @RequestMapping("/{portfolioId}")
-    public Portfolio getPorfolioById(@PathVariable Long portfolioId){
+    public Portfolio getPorfolioById(@PathVariable Long portfolioId) {
         Portfolio portfolio = portfolioService.getById(portfolioId);
         return portfolio;
     }
+
     @RequestMapping("/add/{id}")
-    @ResponseBody
     public Set<Portfolio> addPortfolio(@PathVariable("id") Long profileId,
-                                       @RequestBody Portfolio newPortfolio){
+                                       @RequestBody Portfolio newPortfolio) {
         portfolioService.add(newPortfolio);
         SeekerProfile updatedProfile = seekerProfileService.getById(profileId);
         Set<Portfolio> newPortfolioSet = updatedProfile.getPortfolios();
@@ -42,7 +44,6 @@ public class PortfolioRestController {
         updatedProfile.setPortfolios(newPortfolioSet);
         seekerProfileService.update(updatedProfile);
         return updatedProfile.getPortfolios();
-
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
@@ -57,8 +58,7 @@ public class PortfolioRestController {
     }
 
     @RequestMapping("/update")
-    @ResponseBody
-    public Portfolio updatePortfolio(@RequestBody Portfolio portfolio){
+    public Portfolio updatePortfolio(@RequestBody Portfolio portfolio) {
         Portfolio updatedPortfolio = portfolioService.getById(portfolio.getId());
         updatedPortfolio.setProjectName(portfolio.getProjectName());
         updatedPortfolio.setDescription(portfolio.getDescription());
