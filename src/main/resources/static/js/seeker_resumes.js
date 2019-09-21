@@ -30,7 +30,8 @@ function seekerResumes(resumeList) {
             minSalary = '<div class="salary"><span>Зарплата от: ' + value.salaryMin + ' руб.</span></div>';
         }
         $.each(value.tags, function (i, item) {
-            resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
+            resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark"' +
+            'style="white-space: pre"><h7>' + item.name + '</h7></span>';
         });
         $.each(resumeList.seeker, function (i, item) {
             fio = item.fullName;
