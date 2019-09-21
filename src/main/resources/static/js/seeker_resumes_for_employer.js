@@ -23,7 +23,7 @@ function getSeekerResumes(seekerProfileId) {
 
 
 function seekerResumes(resumeList) {
-    $.each(resumeList, function (key, value) {
+    $.each(resumeList.content, function (key, value) {
         let minSalary = '';
         let resumeTags = "";
         if (value.salaryMin) {
@@ -32,13 +32,18 @@ function seekerResumes(resumeList) {
         $.each(value.tags, function (i, item) {
             resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
         });
-        $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
-            ' data-target="#resumeModal" onclick="showChosenResumeForEmployer(\'' + value.id + '\')">' +
+        $.each(resumeList.seeker, function (i, item) {
+            fio = item.fullName;
+        });
+        $('#searchList').append('<li class="list-group-item clearfix">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
-            '<div class="companyData"><span>Сикер: ' + value.creatorProfile + '</span><br><span>Город: ' + value.city + '</span></div>' +
+            '<div class="companyData"><span>Сикер: ' + fio + '</span><br><span>Город: ' + value.city + '</span></div>' +
             '<br>' +
             minSalary +
+            '<div class="text-right">' +
+            '<span class="btn btn-outline-info btn-sm btnShowResume" data-toggle="modal"' +
+            ' data-target="#resumeModal" onclick="showChosenResumeForEmployer(\'' + value.id + '\')">Подробнее</span>' +
             '</li>');
     });
 }
