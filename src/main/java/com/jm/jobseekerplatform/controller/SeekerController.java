@@ -9,6 +9,7 @@ import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -26,6 +27,9 @@ import java.util.Set;
 @Controller
 @RequestMapping("/seeker")
 public class SeekerController {
+
+    @Autowired
+    private SeekerUserService seekerUserService;
 
     @Autowired
     private SeekerProfileService seekerProfileService;
@@ -50,6 +54,9 @@ public class SeekerController {
         model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
         Long loggedProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
         model.addAttribute("isProfileOwner", seekerProfileId.equals(loggedProfileId));
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            model.addAttribute("seekerUser", seekerUserService.getByProfileId(seekerProfileId));
+        }
         return "seeker";
     }
 
