@@ -84,10 +84,8 @@ public class EmployerController {
         }
 
         if (!employerProfile.getReviews().isEmpty()) {
-
             Set<EmployerReviews> reviews = employerProfile.getReviews();
-            reviews.forEach(item->item.setCreatorProfile((SeekerProfile) Hibernate.unproxy(item.getCreatorProfile())));
-
+            reviews.forEach(item -> item.setCreatorProfile((SeekerProfile) Hibernate.unproxy(item.getCreatorProfile())));
             model.addAttribute("employerProfileReviews", reviews);
             model.addAttribute("reviewStatus", true);
             model.addAttribute("averageRating", employerProfile.getAverageRating());
