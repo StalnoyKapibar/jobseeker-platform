@@ -2,15 +2,16 @@ let header = $("meta[name='_csrf_header']").attr("content");
 let token = $("meta[name='_csrf']").attr("content");
 
 $(document).ready(function () {
-    getSeekerResumes();
+    let url = window.location.pathname;
+    let seekerProfileId = url.substring(url.lastIndexOf('/') + 1);
+    getSeekerResumes(seekerProfileId);
 });
 
-function getSeekerResumes() {
+function getSeekerResumes(seekerProfileId) {
     $.ajax ({
-        url: "api/resumes/seeker",
+        url: "api/resumes/seeker/" + seekerProfileId,
         type: "POST",
         async: false,
-        dataType: 'json',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
@@ -20,8 +21,9 @@ function getSeekerResumes() {
     })
 }
 
+
 function seekerResumes(resumeList) {
-    $.each(resumeList, function (key, value) {
+    $.each(resumeList.content, function (key, value) {
         let minSalary = '';
         let resumeTags = "";
         if (value.salaryMin) {
@@ -34,8 +36,7 @@ function seekerResumes(resumeList) {
         $('#searchList').append('<li class="list-group-item clearfix">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
-            '<div class="companyData"><span>Сикер: ' + value.creatorProfile + '</span>' +
-            '<br><span>Город: ' + value.city + '</span></div>' +
+            '<div class="companyData"><span>Сикер: ' + resumeList.seeker[key].fullName + '</span><br><span>Город: ' + value.city + '</span></div>' +
             '<br>' +
             minSalary +
             '<div class="text-right">' +
@@ -103,7 +104,7 @@ function deleteSeekerResumeById(seekerProfileIdResume) {
             request.setRequestHeader(header, token);
         },
         success: function () {
-            location.href = "/seeker/resumes"
+            location.href = "/seeker/resumes/" + seekerProfileIdResume
         },
         error: function (error) {
             console.log(error);
