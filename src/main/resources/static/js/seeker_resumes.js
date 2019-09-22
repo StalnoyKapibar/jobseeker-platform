@@ -21,7 +21,7 @@ function getSeekerResumes() {
 
 
 function seekerResumes(resumeList) {
-    $.each(resumeList, function (key, value) {
+    $.each(resumeList.content, function (key, value) {
         let minSalary = '';
         let resumeTags = "";
         if (value.salaryMin) {
@@ -29,12 +29,13 @@ function seekerResumes(resumeList) {
         }
         $.each(value.tags, function (i, item) {
             resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark"' +
-            'style="white-space: pre"><h7>' + item.name + '</h7></span>';
+                'style="white-space: pre"><h7>' + item.name + '</h7></span>';
         });
+
         $('#searchList').append('<li class="list-group-item clearfix">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
-            '<div class="companyData"><span>Сикер: ' + value.creatorProfile + '</span><br>' +
+            '<div class="companyData"><span>Сикер: ' + resumeList.seeker.fullName + '</span><br>' +
             '<span>Город: ' + value.city + '</span></div>' +
             '<br>' +
             minSalary +
@@ -95,6 +96,7 @@ function showChosenResume(id) {
 }
 
 function deleteSeekerResumeById(seekerProfileIdResume) {
+
     $.ajax({
         url: '/api/resumes/delete/' + seekerProfileIdResume,
         type: 'GET',
@@ -103,7 +105,7 @@ function deleteSeekerResumeById(seekerProfileIdResume) {
             request.setRequestHeader(header, token);
         },
         success: function () {
-            location.href = "/seeker/resumes/" + seekerProfileIdResume
+            location.href = "/seeker/resumes"
         },
         error: function (error) {
             console.log(error);
