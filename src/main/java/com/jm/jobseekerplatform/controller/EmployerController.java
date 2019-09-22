@@ -24,7 +24,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import javax.annotation.security.RolesAllowed;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -58,7 +57,6 @@ public class EmployerController {
     public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {
         boolean isOwner = false;
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
-
         model.addAttribute("employerProfile", employerProfile);
 
         Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
@@ -99,14 +97,11 @@ public class EmployerController {
                 id = p.getId();
                 seeker = seekerProfileService.getById(id);
                 review.add(new SeekerReviewDTO(rev, seeker));
-            }
+         }
 
             model.addAttribute("employerProfileReviews", review);
-
-            Set<EmployerReviews> reviews = employerProfile.getReviews();
             employerReviews.forEach(item -> item.setCreatorProfile((SeekerProfile) Hibernate.unproxy(item.getCreatorProfile())));
             model.addAttribute("employerProfileReviews", employerReviews);
-          
             model.addAttribute("reviewStatus", true);
             model.addAttribute("averageRating", employerProfile.getAverageRating());
 
