@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -54,18 +55,18 @@ public class ResumeRestController {
     }
 
     @RolesAllowed({"ROLE_SEEKER"})
-	@RequestMapping(value = "/seeker", method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<Set<Resume>> getSeekerResumesPage(Authentication authentication) {
+    @RequestMapping(value = "/seeker", method = RequestMethod.POST, produces = "application/json")
+    public Page<Resume> getSeekerResumesPage(Authentication authentication) {
         Set<Resume> resumeSet = seekerProfileService.getById(((User) authentication.getPrincipal())
                 .getProfile().getId()).getResumes();
-        return ResponseEntity.ok(resumeSet);
-	}
+        return seekerProfileService.getPageSeekerResumesById(resumeSet, (((User) authentication.getPrincipal()).getProfile().getId()));
+    }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
-    public ResponseEntity<Set<Resume>> getSeekerResumesPageForEmployer(@PathVariable Long seekerProfileId) {
+    public Page<Resume> getSeekerResumesPageForEmployer(@PathVariable Long seekerProfileId) {
         Set<Resume> resumeSet = seekerProfileService.getById(seekerProfileId).getResumes();
-        return ResponseEntity.ok(resumeSet);
+        return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -79,4 +80,5 @@ public class ResumeRestController {
         resumeService.deleteByResumeId(resumeId);
         return new ResponseEntity(HttpStatus.OK);
     }
+  
 }

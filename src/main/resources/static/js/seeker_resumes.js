@@ -28,20 +28,17 @@ function seekerResumes(resumeList) {
             minSalary = '<div class="salary"><span>Зарплата от: ' + value.salaryMin + ' руб.</span></div>';
         }
         $.each(value.tags, function (i, item) {
-            resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark"' +
-                'style="white-space: pre"><h7>' + item.name + '</h7></span>';
+            resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
         });
 
-        $('#searchList').append('<li class="list-group-item clearfix">' +
+        $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
+            ' data-target="#resumeModal" onclick="showChosenResume(\'' + value.id + '\')">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
-            '<div class="companyData"><span>Сикер: ' + resumeList.seeker.fullName + '</span><br>' +
-            '<span>Город: ' + value.city + '</span></div>' +
+            '<div class="companyData"><span>Сикер: ' + resumeList.seeker[0].fullName + '</span><br><span>Город: ' + value.city + '</span></div>' +
             '<br>' +
             minSalary +
-            '<div class="text-right">' +
-            '<span class="btn btn-outline-info btn-sm btnShowResume" data-toggle="modal"' +
-            ' data-target="#resumeModal" onclick="showChosenResume(\'' + value.id + '\')">Подробнее</span>' +
+            '<div class="pull-right">' +
             '<span class="btn btn-outline-secondary btn-sm btnEditResume"' +
             'onclick="#">Редактировать</span>' +
             '<span class="btn btn-outline-danger btn-sm btnDeleteResume"' +
