@@ -14,7 +14,6 @@ $(document).ready(function () {
             param.prop('selected', true);
         }
     });
-
 });
 
 $("#viewBy, #sorBy").change(function () {
@@ -30,7 +29,6 @@ $(function () {
         return href + '&size=' + size + '&direction=' + direction;
     });
 });
-
 function editEmployer(id) {
     location.href = '/admin/employer/' + id
 }
@@ -44,8 +42,6 @@ $('#editEmployerForm').click(function (event) {
     var email = $('#editEmployer').find("input[name='email']").val();
     var password = $('#editEmployer').find("input[name='password']").val();
     var date = $('#editEmployer').find("input[name='date']").val();
-    var authorityId = $('#editEmployer').find("input[name='authorityId']").val();
-    var authority = $('#editEmployer').find("input[name='authority']").val();
     var enabled = $('#editEmployer').find("input[name='enabled']").val();
     var confirm = $('#editEmployer').find("input[name='confirm']").val();
 
@@ -54,12 +50,6 @@ $('#editEmployerForm').click(function (event) {
     var companyName = $('#editEmployer').find("input[name='companyName']").val();
     var website = $('#editEmployer').find("input[name='website']").val();
     var description = $('#editEmployer').find("input[name='description']").val();
-
-    var userAuthority = {
-        'id': authorityId,
-        'authority': authority
-    };
-
 
     var profile = {
         'id': profId,
@@ -73,7 +63,6 @@ $('#editEmployerForm').click(function (event) {
         'email': email,
         'password': password,
         'date': date,
-        'authority': userAuthority,
         'enabled': enabled,
         'confirm': confirm,
         'profile': profile,
@@ -125,6 +114,20 @@ function uploadLogo() {
         }
     });
 }
+
+function logoPreview(input) {
+    if (input.files && input.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            $('#eLogo').attr('src', e.target.result);
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("#customFile").change(function(){
+    logoPreview(this);
+});
 
 function deleteEmployer(id) {
     $.ajax({

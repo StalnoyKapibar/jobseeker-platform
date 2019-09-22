@@ -1,7 +1,8 @@
 package com.jm.jobseekerplatform.model.users;
 
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
-import com.jm.jobseekerplatform.model.UserRole;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.Entity;
 import java.time.LocalDateTime;
@@ -11,7 +12,12 @@ public class EmployerUser extends User<EmployerProfile> {
     public EmployerUser() {
     }
 
-    public EmployerUser(String email, char[] password, LocalDateTime date, UserRole authority, EmployerProfile profile) {
-        super(email, password, date, authority, profile);
+    public EmployerUser(String email, char[] password, LocalDateTime date, EmployerProfile profile) {
+        super(email, password, date, profile);
+    }
+
+    @Override
+    public GrantedAuthority getAuthority(){
+        return new SimpleGrantedAuthority("ROLE_EMPLOYER");
     }
 }

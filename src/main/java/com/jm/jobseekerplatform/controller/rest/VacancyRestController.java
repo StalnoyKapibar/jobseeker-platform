@@ -6,6 +6,7 @@ import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.SeekerHistoryService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +35,9 @@ public class VacancyRestController {
     @Autowired
     private SeekerProfileService seekerProfileService;
 
-    private UserRole roleSeeker = new UserRole("ROLE_SEEKER");
+    private GrantedAuthority roleSeeker = new SimpleGrantedAuthority("ROLE_SEEKER");
+    @Autowired
+    private SeekerHistoryService seekerHistoryService;
 
     @RequestMapping("/")
     public List<Vacancy> getAll() {
@@ -72,6 +78,7 @@ public class VacancyRestController {
         if (vacancyService.validateVacancy(vacancy)) {
             EmployerProfile employerProfile = ((EmployerUser) authentication.getPrincipal()).getProfile();
             vacancy.setCreatorProfile(employerProfile);
+            vacancy.setCreationDate(new Date(System.currentTimeMillis()));
             vacancyService.addNewVacancyFromRest(vacancy);
             return true;
         } else {
@@ -111,9 +118,8 @@ public class VacancyRestController {
             }
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                Long seekerId = ((User) authentication.getPrincipal()).getId();
-                Set<Tag> tags = seekerProfileService.getById(seekerId).getTags();
-                return vacancyService.findVacanciesByTagsAndByPoint(city, point, tags, limit, page);
+                SeekerProfile profile = (SeekerProfile) ((User) authentication.getPrincipal()).getProfile();
+                return vacancyService.getVacanciesSortedByCityTagsViews(profile.getId(), city, point, limit, page);
             }
         }
         return vacancyService.findVacanciesByPointWithLimitAndPaging(city, point, limit, page);

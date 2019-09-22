@@ -50,6 +50,7 @@
                 <thead align="center">
                 <tr>
                     <th>Id</th>
+                    <th>Block</th>
                     <th>Email</th>
                     <th>Last Visit</th>
                     <th>Action</th>
@@ -58,6 +59,11 @@
                 <tbody align="center">
                 <tr th:each="employerUser : ${employerUsers}">
                     <td th:text="${employerUser.id}"></td>
+                    <td>
+                        <div th:if="${employerUser.confirm}" th:insert="fragments/adminfragments :: admin_user_button(user=${employerUser})"></div>
+                        <div class="alert alert-danger" style="margin-bottom : 0;" th:if="${!employerUser.confirm}">
+                        Не подтвержден<sup><b title="Пользователь не завершил регистрацию.&#13; Не подтвержден по электронной почте"> (?) </b></sup></div>
+                    </td>
                     <td th:text="${employerUser.email}"></td>
                     <td th:text="${#temporals.format(employerUser.date, 'dd MMMM yyyy HH:mm')}"></td>
                     <td>
@@ -74,6 +80,9 @@
                 </tbody>
             </table>
         </div>
+        <!-- Modal -->
+        <div th:replace="fragments/adminfragments :: admin_modal_success_operation_window"></div>
+        <!-- /Modal -->
     </div>
 
     <nav aria-label="Pagination" th:if="${employerUsers.totalPages gt 0}">
@@ -101,8 +110,8 @@
         </ul>
     </nav>
 </div>
-
 <div class="container-fluid" layout:fragment="content-script">
+    <script src="/js/admin.js"></script>
     <script src="/js/admin/admin_employers.js"></script>
 </div>
 </body>

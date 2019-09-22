@@ -13,7 +13,6 @@ import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.EmployerReviewsService;
-import com.jm.jobseekerplatform.service.impl.UserRoleService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatService;
@@ -43,9 +42,6 @@ public class ChatRestController {
 
     @Autowired
     VacancyService vacancyService;
-
-    @Autowired
-    UserRoleService userRoleService;
 
     @Autowired
     ChatMessageService chatMessageService;

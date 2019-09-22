@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.*;
 
 @RestController
@@ -111,38 +112,35 @@ public class SeekerProfileRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/updateUserTags")
+    @RolesAllowed("ROLE_SEEKER")
+    @PostMapping(value = "/updateUserTags")
     public ResponseEntity updateUserTags(@RequestParam("updatedTags") String[] updatedTags) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
-        SeekerProfile seekerProfile = seekerProfileService.getById(seekerUser.getId());
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerUser.getProfile().getId());
 
         Set<String> tagsSet = new HashSet<>(Arrays.asList(updatedTags));
         Set<Tag> tagsByStringNames = tagService.getTagsByStringNames(tagsSet);
         Set<Tag> seekerProfileTags = seekerProfile.getTags();
         seekerProfileTags.addAll(tagsByStringNames);
         seekerProfile.setTags(seekerProfileTags);
+
         seekerProfileService.update(seekerProfile);
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/removeTag")
+    @RolesAllowed("ROLE_SEEKER")
+    @PostMapping(value = "/removeTag")
     public ResponseEntity removeTag(@RequestParam("tag") String tag) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
-        SeekerProfile seekerProfile = seekerProfileService.getById(seekerUser.getId());
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerUser.getProfile().getId());
 
         Set<Tag> seekerProfileTags = seekerProfile.getTags();
-        Iterator<Tag> iterator = seekerProfileTags.iterator();
-        while (iterator.hasNext()) {
-            Tag next = iterator.next();
-            if (next.getName().equals(tag)) {
-                iterator.remove();
-            }
-        }
+        seekerProfileTags.removeIf(next -> next.getName().equals(tag));
 
         seekerProfile.setTags(seekerProfileTags);
         seekerProfileService.update(seekerProfile);

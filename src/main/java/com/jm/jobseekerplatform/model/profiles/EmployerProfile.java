@@ -1,13 +1,12 @@
 package com.jm.jobseekerplatform.model.profiles;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.jm.jobseekerplatform.model.EmployerReviews;
+import com.jm.jobseekerplatform.model.Vacancy;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,8 +26,9 @@ public class EmployerProfile extends Profile implements Serializable {
     @JoinColumn(name = "employer_id")
     private Set<EmployerReviews> reviews;
 
-    @Column(name = "expiry_block")
-    private Date expiryBlock;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "creator_profile_id")
+    private Set<Vacancy> vacancies;
 
     public EmployerProfile() {
     }
@@ -54,7 +54,6 @@ public class EmployerProfile extends Profile implements Serializable {
         return companyName;
     }
 
-    @JsonValue
     @Override
     public Long getId() {
         return super.getId();
@@ -108,11 +107,11 @@ public class EmployerProfile extends Profile implements Serializable {
 
     }
 
-    public Date getExpiryBlock() {
-        return expiryBlock;
+    public Set<Vacancy> getVacancies() {
+        return vacancies;
     }
 
-    public void setExpiryBlock(Date expiryBlock) {
-        this.expiryBlock = expiryBlock;
+    public void setVacancies(Set<Vacancy> vacancies) {
+        this.vacancies = vacancies;
     }
 }

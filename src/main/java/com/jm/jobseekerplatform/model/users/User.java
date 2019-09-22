@@ -2,7 +2,6 @@ package com.jm.jobseekerplatform.model.users;
 
 import com.fasterxml.jackson.annotation.*;
 import com.jm.jobseekerplatform.model.profiles.Profile;
-import com.jm.jobseekerplatform.model.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -28,7 +27,7 @@ import java.util.Objects;
 public abstract class User<T extends Profile> implements Serializable, UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -43,9 +42,6 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
     @OneToOne(fetch = FetchType.EAGER, targetEntity = Profile.class)
     private T profile;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private UserRole authority;
-
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
@@ -55,15 +51,16 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
     public User() {
     }
 
-    public User(String email, char[] password, LocalDateTime date, UserRole authority, T profile) {
+    public User(String email, char[] password, LocalDateTime date, T profile) {
         this.email = email;
         this.password = password;
         this.date = date;
-        this.authority = authority;
         this.enabled = true;
         this.confirm = false;
         this.profile = profile;
     }
+
+    public abstract GrantedAuthority getAuthority();
 
     public Long getId() {
         return id;
@@ -93,11 +90,7 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(authority);
-    }
-
-    public UserRole getAuthority() {
-        return authority;
+        return Arrays.asList(getAuthority());
     }
 
     public void setEnabled(boolean enabled) {

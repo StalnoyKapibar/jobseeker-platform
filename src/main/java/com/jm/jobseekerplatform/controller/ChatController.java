@@ -111,14 +111,18 @@ public class ChatController {
         model.addAttribute("profileId", user.getProfile().getId());
         if (user.getAuthority().toString().equals("ROLE_EMPLOYER")) {
             model.addAttribute("employerProfileId", user.getProfile().getId());
+            model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId( user.getProfile().getId()));
         } else if (user.getAuthority().toString().equals("ROLE_SEEKER")) {
             model.addAttribute("seekerProfileId", user.getProfile().getId());
+            model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId( user.getProfile().getId()));
         } else {
             model.addAttribute("adminProfileId", user.getProfile().getId());
+            model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId( user.getProfile().getId()));
         }
         if (chat instanceof ChatWithTopic) {
             ChatWithTopic chatWithTopic = (ChatWithTopic) chat;
             model.addAttribute("chatWithTopic", chatWithTopic);
+
         }
         return "chats/private_chat";
     }

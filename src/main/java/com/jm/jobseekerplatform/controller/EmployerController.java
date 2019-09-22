@@ -15,13 +15,15 @@ import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.*;
@@ -52,7 +54,7 @@ public class EmployerController {
     private String googleMapsApiKey;
 
 
-    @RequestMapping("/employer/{employerProfileId}")
+    @GetMapping("/employer/{employerProfileId}")
     public String employerProfilePage(@PathVariable Long employerProfileId, Model model, Authentication authentication) {
         boolean isOwner = false;
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
@@ -70,11 +72,13 @@ public class EmployerController {
                 EmployerUser employerUser = employerUserService.getById(userId);
                 isOwner = employerUser.getProfile().getId().equals(employerProfileId);
             }
-            if (roles.contains("ROLE_SEEKER") | roles.contains("ROLE_ADMIN")) {
+            if (roles.contains("ROLE_SEEKER") || roles.contains("ROLE_ADMIN")) {
                 if (roles.contains("ROLE_SEEKER")) {
                     boolean isContain = false;
                     SeekerUser seekerUser = seekerUserService.getById(userId);
-                    if (employerProfile.getReviews().stream().anyMatch(reviews1 -> Objects.equals(reviews1.getCreatorProfile().getId(), seekerUser.getProfile().getId()))) {
+                    if (employerProfile.getReviews().stream().anyMatch(reviews1 -> Objects.equals(
+                            ((SeekerProfile)Hibernate.unproxy(reviews1.getCreatorProfile())).getId(),
+                            seekerUser.getProfile().getId()))) {
                         isContain = true;
                     }
                     model.addAttribute("seekerProfileId", seekerUser.getProfile().getId());
@@ -84,7 +88,6 @@ public class EmployerController {
         }
 
         if (!employerProfile.getReviews().isEmpty()) {
-
 
             Set<SeekerReviewDTO> review = new HashSet<>();
             Set<EmployerReviews> employerReviews = employerProfile.getReviews();
@@ -96,21 +99,23 @@ public class EmployerController {
                 id = p.getId();
                 seeker = seekerProfileService.getById(id);
                 review.add(new SeekerReviewDTO(rev, seeker));
-//                review.add(new SeekerReviewDTO(rev, seekerProfileService.getById(rev.getCreatorProfile().getId())));
             }
 
             model.addAttribute("employerProfileReviews", review);
+
+            Set<EmployerReviews> reviews = employerProfile.getReviews();
+            employerReviews.forEach(item -> item.setCreatorProfile((SeekerProfile) Hibernate.unproxy(item.getCreatorProfile())));
+            model.addAttribute("employerProfileReviews", employerReviews);
+          
             model.addAttribute("reviewStatus", true);
             model.addAttribute("averageRating", employerProfile.getAverageRating());
 
-
-
-
-
-
-
         } else {
             model.addAttribute("reviewStatus", false);
+        }
+
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            model.addAttribute("employerUser", employerUserService.getByProfileId(employerProfileId));
         }
 
         model.addAttribute("isOwner", isOwner);
@@ -120,21 +125,21 @@ public class EmployerController {
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-    @RequestMapping("/employer/get_news/{employerProfileId}")
-    public String getEmployerProfileNews(@PathVariable Long employerProfileId, Model model) {
-        model.addAttribute("employerProfileId", employerProfileId);
+    @GetMapping("/employer/get_news")
+    public String getEmployerProfileNews(Model model, Authentication authentication) {
+        model.addAttribute("employerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
         return "employer_all_news";
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-    @RequestMapping("/employer/get_resumes")
+    @GetMapping("/employer/get_resumes")
     public String getResumes(Model model, Authentication authentication) {
         model.addAttribute("employerProfileId", ((User) authentication.getPrincipal()).getId());
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "resume/all_resumes";
     }
 
-    @RequestMapping("/employer/chats/{employerProfileId}")
+    @GetMapping("/employer/chats/{employerProfileId}")
     public String EmployerPageChatsMy(@PathVariable Long employerProfileId, Model model) {
         model.addAttribute("employerProfileId", employerProfileId);
         model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(employerProfileId));

@@ -6,10 +6,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository("abstractDAO")
-public abstract class AbstractDAO<T extends Serializable>  {
+public abstract class AbstractDAO<T extends Serializable> {
 
     protected Class<T> clazz;
 
@@ -47,5 +49,11 @@ public abstract class AbstractDAO<T extends Serializable>  {
     public void deleteById(Long id) {
         T entity = getById(id);
         delete(entity);
+    }
+
+    public List<T> getEntitiesByIdArray(ArrayList<Long> listId) {
+        return entityManager.createQuery("SELECT entity FROM "
+                + clazz.getName() +
+                " entity where entity.id in (:ids)", clazz).setParameter("ids", listId).getResultList();
     }
 }

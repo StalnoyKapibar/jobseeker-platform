@@ -3,12 +3,17 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.Point;
 import com.jm.jobseekerplatform.model.Resume;
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.ResumeService;
+import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -19,6 +24,9 @@ public class ResumeRestController {
 
     @Autowired
     private ResumeService resumeService;
+
+    @Autowired
+    private SeekerProfileService seekerProfileService;
 
     @RequestMapping("/getbyid/{resumeId}")
     public Resume getResumeById(@PathVariable Long resumeId) {
@@ -44,4 +52,28 @@ public class ResumeRestController {
             return resumeService.findResumesByPoint(city, point, limit, page);
         }
     }
+
+	@RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
+	public Page<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, Authentication authentication) {
+		if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
+			Set<Resume> resumeSet = seekerProfileService.getById(seekerProfileId).getResumes();
+			return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
+		} else {
+			Set<Resume> resumeSet = seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()).getResumes();
+			return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
+		}
+	}
+
+    @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateSeekerUser(@RequestBody Resume resume) {
+        resumeService.update(resume);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/delete/{resumeId}", method = RequestMethod.GET)
+    public ResponseEntity deleteResumeById(@PathVariable Long resumeId) {
+        resumeService.deleteByResumeId(resumeId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+  
 }
