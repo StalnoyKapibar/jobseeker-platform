@@ -19,7 +19,6 @@ function getSeekerResumes() {
     })
 }
 
-
 function seekerResumes(resumeList) {
     $.each(resumeList.content, function (key, value) {
         let minSalary = '';
@@ -30,7 +29,6 @@ function seekerResumes(resumeList) {
         $.each(value.tags, function (i, item) {
             resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
         });
-
         $('#searchList').append('<li class="list-group-item clearfix">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
@@ -94,7 +92,6 @@ function showChosenResume(id) {
 }
 
 function deleteSeekerResumeById(seekerProfileIdResume) {
-
     $.ajax({
         url: '/api/resumes/delete/' + seekerProfileIdResume,
         type: 'GET',
