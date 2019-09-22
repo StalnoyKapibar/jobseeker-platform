@@ -13,9 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.Set;
 
 @RestController
@@ -53,16 +53,20 @@ public class ResumeRestController {
         }
     }
 
-	@RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
-	public Page<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, Authentication authentication) {
-		if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
-			Set<Resume> resumeSet = seekerProfileService.getById(seekerProfileId).getResumes();
-			return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
-		} else {
-			Set<Resume> resumeSet = seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()).getResumes();
-			return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
-		}
+    @RolesAllowed({"ROLE_SEEKER"})
+	@RequestMapping(value = "/seeker", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Set<Resume>> getSeekerResumesPage(Authentication authentication) {
+        Set<Resume> resumeSet = seekerProfileService.getById(((User) authentication.getPrincipal())
+                .getProfile().getId()).getResumes();
+        return ResponseEntity.ok(resumeSet);
 	}
+
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
+    public ResponseEntity<Set<Resume>> getSeekerResumesPageForEmployer(@PathVariable Long seekerProfileId) {
+        Set<Resume> resumeSet = seekerProfileService.getById(seekerProfileId).getResumes();
+        return ResponseEntity.ok(resumeSet);
+    }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateSeekerUser(@RequestBody Resume resume) {
@@ -75,5 +79,4 @@ public class ResumeRestController {
         resumeService.deleteByResumeId(resumeId);
         return new ResponseEntity(HttpStatus.OK);
     }
-  
 }

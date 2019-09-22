@@ -9,6 +9,7 @@ import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -26,6 +27,9 @@ import java.util.Set;
 @Controller
 @RequestMapping("/seeker")
 public class SeekerController {
+
+    @Autowired
+    private SeekerUserService seekerUserService;
 
     @Autowired
     private SeekerProfileService seekerProfileService;
@@ -50,6 +54,9 @@ public class SeekerController {
         model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
         Long loggedProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
         model.addAttribute("isProfileOwner", seekerProfileId.equals(loggedProfileId));
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            model.addAttribute("seekerUser", seekerUserService.getByProfileId(seekerProfileId));
+        }
         return "seeker";
     }
 
@@ -88,24 +95,28 @@ public class SeekerController {
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
 
+    @RolesAllowed({"ROLE_EMPLOYER"})
     @GetMapping("/resumes/{seekerProfileId}")
-    public String seekerResumesPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
-            SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
-            model.addAttribute("resumesList", seekerProfile.getResumes());
-            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-            return "resumes";
-        } else {
-            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication
-                    .getPrincipal())
-                    .getProfile()
-                    .getId());
-            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
-            model.addAttribute("resumesList", seekerProfile.getResumes());
-            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-            return "resumes";
-        }
+    public String seekerResumesPageForEmployer(@PathVariable Long seekerProfileId, Model model,
+                                               Authentication authentication) {
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
+        model.addAttribute("resumesList", seekerProfile.getResumes());
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+        return "resumes";
+    }
+
+    @RolesAllowed({"ROLE_SEEKER"})
+    @GetMapping("/resumes")
+    public String seekerResumesPage(Model model, Authentication authentication) {
+        SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication
+                .getPrincipal())
+                .getProfile()
+                .getId());
+        model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
+        model.addAttribute("resumesList", seekerProfile.getResumes());
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+        return "resumes";
     }
 
     @GetMapping("/chats/{seekerProfileId}")

@@ -2,16 +2,15 @@ let header = $("meta[name='_csrf_header']").attr("content");
 let token = $("meta[name='_csrf']").attr("content");
 
 $(document).ready(function () {
-    let url = window.location.pathname;
-    let seekerProfileId = url.substring(url.lastIndexOf('/') + 1);
-    getSeekerResumes(seekerProfileId);
+    getSeekerResumes();
 });
 
-function getSeekerResumes(seekerProfileId) {
+function getSeekerResumes() {
     $.ajax ({
-        url: "api/resumes/seeker/" + seekerProfileId,
+        url: "api/resumes/seeker",
         type: "POST",
         async: false,
+        dataType: 'json',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
@@ -21,9 +20,8 @@ function getSeekerResumes(seekerProfileId) {
     })
 }
 
-
 function seekerResumes(resumeList) {
-    $.each(resumeList.content, function (key, value) {
+    $.each(resumeList, function (key, value) {
         let minSalary = '';
         let resumeTags = "";
         if (value.salaryMin) {
@@ -36,7 +34,8 @@ function seekerResumes(resumeList) {
         $('#searchList').append('<li class="list-group-item clearfix">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
-            '<div class="companyData"><span>Сикер: ' + resumeList.seeker[key].fullName + '</span><br><span>Город: ' + value.city + '</span></div>' +
+            '<div class="companyData"><span>Сикер: ' + value.creatorProfile + '</span>' +
+            '<br><span>Город: ' + value.city + '</span></div>' +
             '<br>' +
             minSalary +
             '<div class="text-right">' +
@@ -104,7 +103,7 @@ function deleteSeekerResumeById(seekerProfileIdResume) {
             request.setRequestHeader(header, token);
         },
         success: function () {
-            location.href = "/seeker/resumes/" + seekerProfileIdResume
+            location.href = "/seeker/resumes"
         },
         error: function (error) {
             console.log(error);
