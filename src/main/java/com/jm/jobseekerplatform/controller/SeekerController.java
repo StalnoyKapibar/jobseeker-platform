@@ -60,11 +60,10 @@ public class SeekerController {
         return "seeker";
     }
 
-    @GetMapping("/meetings/{seekerProfileId}")
-    public String seekerMeetingsPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
-        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        Long id = ((User) authentication.getPrincipal()).getProfile().getId();
-        model.addAttribute("isOwner", seekerProfileId.equals(id));
+    @GetMapping("/meetings")
+    public String seekerMeetingsPage(Model model, Authentication authentication) {
+        SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal())
+                .getProfile().getId());
         model.addAttribute("seekerProfile", seekerProfile);
         return "meetings";
     }
@@ -77,18 +76,21 @@ public class SeekerController {
     }
 
     @RolesAllowed({"ROLE_SEEKER"})
-    @GetMapping("/get_subscriptions/{seekerProfileId}")
-    public String getSeekerSubscriptions(@PathVariable Long seekerProfileId, Model model) {
-        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+    @GetMapping("/get_subscriptions")
+    public String getSeekerSubscriptions(Model model, Authentication authentication) {
+        SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication
+                .getPrincipal())
+                .getProfile()
+                .getId());
         model.addAttribute("seekerProfileSubscriptions", seekerProfile.getSubscriptions());
-        model.addAttribute("seekerProfileId", seekerProfileId);
+        model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
         return "seeker_subscriptions";
     }
 
     @RolesAllowed({"ROLE_SEEKER"})
-    @GetMapping("/get_subscription_news/{seekerProfileId}")
-    public String getSeekerSubscriptionNews(@PathVariable Long seekerProfileId, Model model) {
-        model.addAttribute("seekerProfileId", seekerProfileId);
+    @GetMapping("/get_subscription_news")
+    public String getSeekerSubscriptionNews(Model model, Authentication authentication) {
+        model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
         return "seeker_subscription_news";
     }
 
@@ -119,10 +121,11 @@ public class SeekerController {
         return "resumes";
     }
 
-    @GetMapping("/chats/{seekerProfileId}")
-    public String EmployerPageChatsMy(@PathVariable Long seekerProfileId, Model model) {
-        model.addAttribute("seekerProfileId", seekerProfileId);
-        model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(seekerProfileId));
+    @GetMapping("/chats")
+    public String EmployerPageChatsMy(Model model, Authentication authentication) {
+        model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
+        model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(((User) authentication
+                .getPrincipal()).getProfile().getId()));
         return "seeker_chats";
     }
 
