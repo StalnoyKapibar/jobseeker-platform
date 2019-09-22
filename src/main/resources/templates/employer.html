@@ -120,7 +120,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-reviews" role="tabpanel" aria-labelledby="nav-reviews-tab">
-<!--                        <div>-->
+                        <div>
                             <div class="row" style="margin-top: 20px">
                                 <div class="col-sm-12">
                                     <div th:unless="${reviewStatus}">
@@ -208,11 +208,15 @@
                                                                     </div>
                                                                     <div class="employerComplaint"
                                                                          sec:authorize="hasRole('ROLE_EMPLOYER')">
+<!--                                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">-->
+<!--                                                                            Запустить модальное окно-->
+<!--                                                                        </button>-->
                                                                         <i class="fas fa-ban"
                                                                            title="пожаловаться администратору"
                                                                            data-toggle="modal"
-                                                                           data-target="#complainModal"
+                                                                           data-target="#complainModal1"
                                                                            th:onclick="'getComplainModal('+ ${review.employerReviews.id} +')'"></i>
+
                                                                     </div>
                                                                     <blockquote class="blockquote mb-0">
                                                                         <p th:if="${review.employerReviews.reviews.length()>60}" class="textReview">
@@ -403,39 +407,59 @@
         </div>
     </div>
 
-    <!-- Complain Review Modal -->
-    <div class="modal fade" id="complainModal">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Жалоба</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+ Complain Review Modal
+<div class="modal fade" id="complainModal1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Жалоба</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body" align="center">
+                <div class="control-label">Описание</div>
+                <div class="form-group">
+                    <input type="hidden" name="RMReviewId" id="RMReviewId">
+                    <textarea rows="10" class="form-control" name="RMComplain"
+                              id="RMComplain"></textarea>
                 </div>
-
-                <!-- Modal body -->
-                <div class="modal-body" align="center">
-                    <div class="control-label">Описание</div>
-                    <div class="form-group">
-                        <input type="hidden" name="RMReviewId" id="RMReviewId">
-                        <textarea rows="10" class="form-control" name="RMComplain"
-                                  id="RMComplain"></textarea>
-                    </div>
-                </div>
-
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" onclick="addComplainReview()">Отправить
-                    </button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="addComplainReview()">Отправить
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- vacancyModal -->
+<!-- Modal -->
+<!--<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--    <div class="modal-dialog" role="document">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <div class="form-group">-->
+<!--                    <input type="hidden" name="RMReviewId" id="RMReviewId">-->
+<!--                    <textarea rows="10" class="form-control" name="RMComplain" id="RMComplain"></textarea>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+<!--                <button type="button" class="btn btn-primary">Save changes</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!-- vacancyModal -->
     <div id="vacancyModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
