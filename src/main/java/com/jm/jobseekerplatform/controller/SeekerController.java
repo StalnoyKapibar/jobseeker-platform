@@ -137,4 +137,11 @@ public class SeekerController {
         return "companies";
     }
 
+    @RequestMapping("/update/{seekerProfileId}")
+    public String updateSeekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        model.addAttribute("seekerProfile", seekerProfile);
+        model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
+        return "update_seeker_profile";
+    }
 }
