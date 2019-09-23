@@ -92,20 +92,8 @@ public class EmployerController {
         }
 
         if (!employerProfile.getReviews().isEmpty()) {
-
-            Set<SeekerReviewDTO> review = new HashSet<>();
             Set<EmployerReviews> employerReviews = employerProfile.getReviews();
             employerReviews.forEach(item -> item.setCreatorProfile((SeekerProfile) Hibernate.unproxy(item.getCreatorProfile())));
-            SeekerProfile seeker;
-            Long id;
-            Profile p;
-            for(EmployerReviews rev : employerReviews) {
-                p = rev.getCreatorProfile();
-                id = p.getId();
-                seeker = seekerProfileService.getById(id);
-                review.add(new SeekerReviewDTO(rev, seeker));
-            }
-            model.addAttribute("review", review);
             model.addAttribute("employerProfileReviews", employerReviews);
             model.addAttribute("reviewStatus", true);
             model.addAttribute("averageRating", employerProfile.getAverageRating());
