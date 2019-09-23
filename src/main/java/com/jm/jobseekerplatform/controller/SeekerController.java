@@ -63,7 +63,7 @@ public class SeekerController {
     @GetMapping("/meetings/{seekerProfileId}")
     public String seekerMeetingsPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        Long id = ((User) authentication.getPrincipal()).getProfile().getId();
+        Long id = seekerProfileService.getCurrentProfile(authentication).getId();
         model.addAttribute("isOwner", seekerProfileId.equals(id));
         model.addAttribute("seekerProfile", seekerProfile);
         return "meetings";

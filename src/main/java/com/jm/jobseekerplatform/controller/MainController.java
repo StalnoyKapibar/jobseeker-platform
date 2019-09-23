@@ -77,7 +77,7 @@ public class MainController {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
                     SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
-                    SeekerProfile profile = seekerUser.getProfile();
+                    SeekerProfile profile = seekerProfileService.getCurrentProfile(authentication);
                     model.addAttribute("favoriteVacancies", profile.getFavoriteVacancy());
                     model.addAttribute("seekerProfileId", profile.getId());
                     model.addAttribute("googleMapsApiKey", googleMapsApiKey);
@@ -92,7 +92,7 @@ public class MainController {
             }
 
             if (authentication.getAuthorities().contains(roleEmployer)) {
-                Profile profile = ((User) authentication.getPrincipal()).getProfile();
+                Profile profile = employerProfileService.getCurrentProfile(authentication);
                 model.addAttribute("employerProfileId", profile.getId());
             }
         }
@@ -152,9 +152,8 @@ public class MainController {
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/new_vacancy", method = RequestMethod.GET)
     public String new_vacancyPage(Model model,  Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-        model.addAttribute("employerProfileId", user.getProfile().getId());
+        model.addAttribute("employerProfileId", employerProfileService.getCurrentProfile(authentication).getId());
         return "/vacancy/new_vacancy";
     }
 
@@ -177,7 +176,7 @@ public class MainController {
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/add_news", method = RequestMethod.GET)
     public String addNewsPage(Model model, Authentication authentication) {
-        model.addAttribute("employerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
+        model.addAttribute("employerProfileId", employerProfileService.getCurrentProfile(authentication).getId());
         return "add_news";
     }
 
