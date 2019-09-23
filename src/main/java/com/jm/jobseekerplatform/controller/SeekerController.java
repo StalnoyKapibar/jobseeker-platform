@@ -19,8 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import javax.annotation.security.RolesAllowed;
+import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 
@@ -130,4 +130,12 @@ public class SeekerController {
         return "companies";
     }
 
+
+    @RequestMapping("/update/{seekerProfileId}")
+    public String updateSeekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        model.addAttribute("seekerProfile", seekerProfile);
+        model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
+        return "update_seeker_profile";
+    }
 }
