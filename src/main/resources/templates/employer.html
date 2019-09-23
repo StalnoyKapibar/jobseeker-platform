@@ -92,32 +92,14 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
                                         <div class="card-body">
                                             <p class="card-text"><span th:text="${employerProfile.description}"></span>
                                             </p>
-                                            <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
-                                                <span id="EPId" th:text="${employerProfile.id}" hidden></span>
-                                                <button class="btn btn-danger dropdown-toggle" type="button"
-                                                        data-toggle="dropdown">
-                                                    Блокировать<span
-                                                        class="caret"></span></button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a onclick="blockEmployerProfile(1)">На сутки</a></li>
-                                                    <li><a onclick="blockEmployerProfile(3)">На 3 дня</a></li>
-                                                    <li><a onclick="blockEmployerProfile(7)">На 7 дней</a></li>
-                                                    <li><a onclick="blockEmployerProfile(14)">На 14 дней</a></li>
-                                                    <li><a onclick="blockEmployerProfile(0)">Бессрочно</a></li>
-                                                </ul>
-                                            </div>
                                         </div>
-
                                         <div class="card-footer text-muted">
                                             <a th:href="@{'http://' + ${employerProfile.website}}"
                                                th:text="${employerProfile.website}"></a>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
