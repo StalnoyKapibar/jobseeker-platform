@@ -10,12 +10,13 @@
 <body>
 <div layout:fragment="content">
     <div class="container">
-        <div class="row ">
-            <div class="mx-auto d-flex flex-column">
-                <img src="http://www.ifes-ras.ru/images/stories/pics/news.png" class="card-img-top img img-fluid w-50 mx-auto">
-                <div class="card-body w-100">
+        <div class="row w-100">
+            <div class="d-flex flex-column w-100">
+                <img src="http://www.ifes-ras.ru/images/stories/pics/news.png" class="card-img-top img img-fluid mx-auto" style="height: 30vmin;
+     width:  15vmax;">
+                <div class="card-body w-100 mx-auto p-5">
                     <h5 class="card-title text-center" id="newsHeadline"></h5>
-                    <p class="card-text text-center" id="newsDescription"></p>
+                    <p class="card-text text-center" id="newsDescription" style=" word-wrap: break-word;"></p>
                 </div>
             </div>
         </div>
