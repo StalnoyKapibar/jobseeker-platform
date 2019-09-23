@@ -14,7 +14,6 @@ $(document).ready(function () {
             param.prop('selected', true);
         }
     });
-
 });
 
 $("#viewBy, #sorBy").change(function () {
@@ -30,7 +29,6 @@ $(function () {
         return href + '&size=' + size + '&direction=' + direction;
     });
 });
-
 function editEmployer(id) {
     location.href = '/admin/employer/' + id
 }

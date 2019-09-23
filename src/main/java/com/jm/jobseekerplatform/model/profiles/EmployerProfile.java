@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,9 +25,6 @@ public class EmployerProfile extends Profile implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "employer_id")
     private Set<EmployerReviews> reviews;
-
-    @Column(name = "expiry_block")
-    private Date expiryBlock;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_profile_id")
@@ -109,14 +105,6 @@ public class EmployerProfile extends Profile implements Serializable {
             return 0d;
         }
 
-    }
-
-    public Date getExpiryBlock() {
-        return expiryBlock;
-    }
-
-    public void setExpiryBlock(Date expiryBlock) {
-        this.expiryBlock = expiryBlock;
     }
 
     public Set<Vacancy> getVacancies() {

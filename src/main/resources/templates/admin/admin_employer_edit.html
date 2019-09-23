@@ -18,7 +18,7 @@
         <div class="col-4" id="employerLogo">
             <form id="editLogoForm" class="form-inline">
                 <img id="eLogo" th:src="${photoimg != null} ? @{'data:image/png;base64,' + ${photoimg}} : '/img/default_photo_employer.png'" name="logo" alt=""
-                     style="width: 300px;height: 300px;">
+                     style="width: 300px;height: 300px; object-fit: scale-down">
                 <br>
                 <div class="custom-file mt-4">
                     <div class="input-group">
