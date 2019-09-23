@@ -15,6 +15,7 @@ import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -90,6 +91,7 @@ public class EmployerController {
 
             Set<SeekerReviewDTO> review = new HashSet<>();
             Set<EmployerReviews> employerReviews = employerProfile.getReviews();
+            employerReviews.forEach(item -> item.setCreatorProfile((SeekerProfile) Hibernate.unproxy(item.getCreatorProfile())));
             SeekerProfile seeker;
             Long id;
             Profile p;
@@ -106,7 +108,6 @@ public class EmployerController {
         } else {
             model.addAttribute("reviewStatus", false);
         }
-
         model.addAttribute("isOwner", isOwner);
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
 
