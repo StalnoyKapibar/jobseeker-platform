@@ -111,7 +111,6 @@ function getAllResumesByPoint(point) {
     getSortedResumes(point);
 }
 
-
 function getSortedResumes(point) {
     $.ajax ({
         url: "api/resumes/city/page/" + page + "?city=" + city,
@@ -279,7 +278,6 @@ function searchByTags() {
     }
 }
 
-
 function addTag(id, name) {
     $('#searchButtons').append('<span class="listTags" id="tagItem-' + id + '"><span style="margin:0 5px 5px 0;" class="badge badge-pill badge-success tagButton" id="searchButton-' + id + '" onclick="deleteButton(\'' + id + '\')">' + name + '</span>' +
         '<input class="tagIdH" id="tagId-' + id + '" type="hidden" value="' + id + '"></span>');
@@ -387,8 +385,6 @@ function doFilterInit() {
 
         }
     });
-
-
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -421,7 +417,6 @@ $( function() {
 } );
 
 function doClear() {
-
     let spans = document.getElementsByClassName("span_for_tag");
     if(spans.length !=0) {
         for (; spans.length !=0 ; ) {
@@ -489,8 +484,6 @@ function tagToFilter() {
         $('#tagFls').val('');
     }
 }
-
-
 
 function isExistTag (tagName) {
     let i;
