@@ -17,6 +17,7 @@ import com.jm.jobseekerplatform.service.impl.tokens.VerificationTokenService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -179,6 +180,7 @@ public class MainController {
     @RequestMapping(value = "/vacancy/{vacancyId}", method = RequestMethod.GET)
     public String viewVacancy(@PathVariable Long vacancyId, Model model, Authentication authentication) {
         Vacancy vacancy = vacancyService.getById(vacancyId);
+        EmployerProfile creatorProfile = (EmployerProfile) Hibernate.unproxy(vacancy.getCreatorProfile());
         if (authentication != null) {
             boolean isContain;
             boolean isSubscribe;
@@ -186,7 +188,7 @@ public class MainController {
             Long id = ((User) authentication.getPrincipal()).getId();
             Profile profile = userService.getById(id).getProfile();
             if (profile instanceof SeekerProfile) {
-                Subscription subscription = subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, vacancy.getCreatorProfile());
+                Subscription subscription = subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, creatorProfile);
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
                 isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(subscription);
                 hasResponded = vacancy.getMeetings()
@@ -200,8 +202,8 @@ public class MainController {
         }
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("vacancyFromServer", vacancy);
-        model.addAttribute("EmployerProfileFromServer", vacancy.getCreatorProfile());
-        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getCreatorProfile().getLogo()));
+        model.addAttribute("EmployerProfileFromServer", creatorProfile);
+        model.addAttribute("logoimg", Base64.getEncoder().encodeToString(creatorProfile.getLogo()));
 
         return "/vacancy/vacancy";
     }
