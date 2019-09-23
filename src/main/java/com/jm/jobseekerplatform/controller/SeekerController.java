@@ -99,20 +99,14 @@ public class SeekerController {
     public String seekerResumesPage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
             SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
             model.addAttribute("resumesList", seekerProfile.getResumes());
-            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-            return "resumes";
         } else {
-            SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication
-                    .getPrincipal())
-                    .getProfile()
-                    .getId());
-            model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
+            SeekerProfile seekerProfile = seekerProfileService.getCurrentProfile(authentication);
             model.addAttribute("resumesList", seekerProfile.getResumes());
-            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-            return "resumes";
         }
+        model.addAttribute("seekerProfileId", seekerProfileService.getCurrentProfile(authentication).getId());
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+        return "resumes";
     }
 
     @GetMapping("/chats/{seekerProfileId}")
