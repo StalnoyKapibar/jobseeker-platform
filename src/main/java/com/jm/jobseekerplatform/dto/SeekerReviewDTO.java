@@ -12,7 +12,7 @@ public class SeekerReviewDTO {
 
     public SeekerReviewDTO(EmployerReviews employerReviews, SeekerProfile seekerProfile) {
         this.employerReviews = employerReviews;
-        this. seekerProfile = seekerProfile;
+        this.seekerProfile = seekerProfile;
     }
 
     public EmployerReviews getEmployerReviews() {
