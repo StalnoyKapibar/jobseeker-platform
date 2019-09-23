@@ -105,14 +105,14 @@ public class EmployerController {
     @RolesAllowed({"ROLE_EMPLOYER"})
     @GetMapping("/employer/get_news")
     public String getEmployerProfileNews(Model model, Authentication authentication) {
-        model.addAttribute("employerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
+        model.addAttribute("employerProfileId", employerProfileService.getCurrentProfile(authentication).getId());
         return "employer_all_news";
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @GetMapping("/employer/get_resumes")
     public String getResumes(Model model, Authentication authentication) {
-        model.addAttribute("employerProfileId", ((User) authentication.getPrincipal()).getId());
+        model.addAttribute("employerProfileId", employerProfileService.getCurrentProfile(authentication).getId());
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "resume/all_resumes";
     }
