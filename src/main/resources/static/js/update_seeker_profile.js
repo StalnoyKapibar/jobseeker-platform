@@ -133,7 +133,7 @@ function fillPortfolios(portfolios) {
     $('#portfolio_list').empty();
 
     for(var i = 0; i<portfolios.length; i++){
-        $('#portfolio_list').append('<a class="list-group-item list-group-item-action" href="#" ' +
+        $('#portfolio_list').append('<a style="color: var(--text-color)" class="list-group-item list-group-item-action" href="#" ' +
             'data-toggle="modal" data-target="#portfolioModal" onclick="show_portfolio(' + portfolios[i].id + ')">' + portfolios[i].projectName + '</a>')
     }
     $('#add_portf_name_input').val('');
