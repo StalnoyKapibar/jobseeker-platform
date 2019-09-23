@@ -52,7 +52,7 @@ public class SeekerController {
         model.addAttribute("notSelectedTags", notSelectedTags);
         model.addAttribute("seekerProfile", seekerProfile);
         model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
-        Long loggedProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
+        Long loggedProfileId = seekerProfileService.getCurrentProfile(authentication).getId();
         model.addAttribute("isProfileOwner", seekerProfileId.equals(loggedProfileId));
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             model.addAttribute("seekerUser", seekerUserService.getByProfileId(seekerProfileId));
@@ -132,10 +132,15 @@ public class SeekerController {
 
 
     @RequestMapping("/update/{seekerProfileId}")
-    public String updateSeekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
-        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        model.addAttribute("seekerProfile", seekerProfile);
-        model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
-        return "update_seeker_profile";
+    public String updateSeekerProfilePage(@PathVariable Long seekerProfileId, Model model, Authentication auth) {
+        if (seekerProfileService.getCurrentProfile(auth).getId().equals(seekerProfileId)) {
+            SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+            model.addAttribute("seekerProfile", seekerProfile);
+            model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
+            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+            return "update_seeker_profile";
+        }
+        model.addAttribute("status", "403");
+        return "error";
     }
 }
