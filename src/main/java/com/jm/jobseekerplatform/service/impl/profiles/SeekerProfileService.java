@@ -6,11 +6,14 @@ import com.jm.jobseekerplatform.model.Resume;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.hibernate.Hibernate;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,5 +66,11 @@ public class SeekerProfileService extends AbstractService<SeekerProfile> {
                 e.printStackTrace();
             }
         }
+    }
+
+    public SeekerProfile getCurrentProfile(Authentication auth) {
+        Long currentUserId = ((User)auth.getPrincipal()).getId();
+        SeekerProfile currentProfile = seekerUserService.getById(currentUserId).getProfile();
+        return currentProfile;
     }
 }

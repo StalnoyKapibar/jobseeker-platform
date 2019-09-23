@@ -3,11 +3,15 @@ package com.jm.jobseekerplatform.service.impl.profiles;
 import com.jm.jobseekerplatform.dao.impl.profiles.EmployerProfileDAO;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.State;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,5 +45,10 @@ public class EmployerProfileService extends AbstractService<EmployerProfile> {
                 e.printStackTrace();
             }
         }
+    }
+    public EmployerProfile getCurrentProfile(Authentication auth) {
+        Long currentUserId = ((User)auth.getPrincipal()).getId();
+        EmployerProfile currentProfile = employerUserService.getById(currentUserId).getProfile();
+        return currentProfile;
     }
 }
