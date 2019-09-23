@@ -21,7 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
+import org.springframework.web.bind.annotation.RequestMapping;
 import javax.annotation.security.RolesAllowed;
 import java.util.Base64;
 import java.util.Objects;
@@ -56,7 +56,6 @@ public class EmployerController {
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
 
         model.addAttribute("employerProfile", employerProfile);
-
         Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
         model.addAttribute("vacancies", vacancies);
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
@@ -124,4 +123,22 @@ public class EmployerController {
         model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(employerProfileId));
         return "employer_chats_my";
     }
+
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @RequestMapping("/employer/update/{employerProfileId}")
+    public String getEmployerProfileUpdatePage(@PathVariable Long employerProfileId, Model model,  Authentication authentication) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
+        if (employerProfile.getId().equals(userId)) {
+            model.addAttribute("employerProfile", employerProfile);
+            Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
+            model.addAttribute("vacancies", vacancies);
+            model.addAttribute("logoimg", Base64.getEncoder().encodeToString(employerProfile.getLogo()));
+            return "update_employer_profile";
+        } else {
+            model.addAttribute("status", "403");
+            return "error";
+        }
+    }
+
 }

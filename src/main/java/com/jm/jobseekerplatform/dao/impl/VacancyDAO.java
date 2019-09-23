@@ -4,6 +4,7 @@ import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.dto.VacancyPageDTO;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
+import org.hibernate.Session;
 import org.hibernate.annotations.QueryHints;
 import org.hibernate.query.Query;
 import org.springframework.data.domain.Page;
@@ -142,6 +143,16 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
 
     public void updateVacancy(Vacancy vacancy) {
 
+    }
+
+    public List<Vacancy> getTrackedByEmployerProfileId(Long id) {
+        List<Vacancy> vacancies = new ArrayList<>();
+        Query query = entityManager.unwrap(Session.class)
+                .createSQLQuery("SELECT * FROM (SELECT * FROM vacancies where publication_position IS NOT NULL ORDER BY publication_position)as t where employer_profile_id = :id")
+                .addEntity(Vacancy.class)
+                .setParameter("id", id);
+        vacancies.addAll(query.getResultList());
+        return vacancies;
     }
 }
 
