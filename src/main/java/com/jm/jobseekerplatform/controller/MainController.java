@@ -157,18 +157,14 @@ public class MainController {
         return "/vacancy/new_vacancy";
     }
 
-    @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
+    @RolesAllowed({"ROLE_EMPLOYER"})
     @RequestMapping(value = "/edit_vacancy/{vacancyId}", method = RequestMethod.GET)
     public String edit_vacancyPage(@PathVariable("vacancyId") Long vacancyId, Authentication authentication, Model model) {
-        Long userId = ((User) authentication.getPrincipal()).getId();
-        EmployerProfile employerProfile = employerProfileService.getById(userId);
+        EmployerProfile employerProfile = employerProfileService.getCurrentProfile(authentication);
         model.addAttribute("employer", employerProfile);
-        String employerName = ((User) authentication.getPrincipal()).getUsername();
-
         if (vacancyService.getById(vacancyId).getCreatorProfile().getId() == employerProfile.getId()) {
             model.addAttribute("vacancy", vacancyService.getById(vacancyId));
         }
-
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "/vacancy/edit_vacancy";
     }

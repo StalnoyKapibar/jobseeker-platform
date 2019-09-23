@@ -127,9 +127,9 @@ public class EmployerController {
     @RolesAllowed({"ROLE_EMPLOYER"})
     @RequestMapping("/employer/update/{employerProfileId}")
     public String getEmployerProfileUpdatePage(@PathVariable Long employerProfileId, Model model,  Authentication authentication) {
-        Long userId = ((User) authentication.getPrincipal()).getId();
+        Long currentProfileId = employerProfileService.getCurrentProfile(authentication).getId();
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
-        if (employerProfile.getId().equals(userId)) {
+        if (employerProfile.getId().equals(currentProfileId)) {
             model.addAttribute("employerProfile", employerProfile);
             Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
             model.addAttribute("vacancies", vacancies);
