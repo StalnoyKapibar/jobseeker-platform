@@ -31,7 +31,7 @@ public class ResumeDAO extends AbstractDAO<Resume> {
         return new ResumePageDTO(resumes, totalPages, seeker);
     }
 
-    public Page<Resume> getPagableResumesWithFilterByQueryParamsMapAndPageAndLimit(Map<String, Object> queryParamsMap,
+    public Page<Resume> getPagableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(Map<String, Object> queryParamsMap,
                                                                                    int pageNumber, int pageSize) {
         String query = "select r from Resume r ";
         String queryCount = "select count(distinct r)  from Resume r ";
