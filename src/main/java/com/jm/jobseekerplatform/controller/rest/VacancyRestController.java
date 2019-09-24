@@ -41,6 +41,9 @@ public class VacancyRestController {
     @Autowired
     private SeekerHistoryService seekerHistoryService;
 
+    @Autowired
+    private EmployerProfileService employerProfileService;
+
     @RequestMapping("/")
     public List<Vacancy> getAll() {
         return vacancyService.getAll();
@@ -78,7 +81,7 @@ public class VacancyRestController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public boolean addVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
         if (vacancyService.validateVacancy(vacancy)) {
-            EmployerProfile employerProfile = ((EmployerUser) authentication.getPrincipal()).getProfile();
+            EmployerProfile employerProfile = employerProfileService.getCurrentProfile(authentication);
             vacancy.setCreatorProfile(employerProfile);
             vacancy.setCreationDate(new Date(System.currentTimeMillis()));
             vacancyService.addNewVacancyFromRest(vacancy);
@@ -91,7 +94,8 @@ public class VacancyRestController {
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public boolean updateVacancy(@RequestBody Vacancy vacancy, Authentication authentication) {
-        if (vacancyService.validateVacancy(vacancy) & (vacancyService.getById(vacancy.getId()).getCreatorProfile().getId().equals(((EmployerUser) authentication.getPrincipal()).getProfile().getId()))) {
+        EmployerProfile currentProfile = employerProfileService.getCurrentProfile(authentication);
+        if (vacancyService.validateVacancy(vacancy) & (vacancyService.getById(vacancy.getId()).getCreatorProfile().getId().equals(currentProfile.getId()))) {
             return vacancyService.updateVacancy(vacancy);
         }
         return false;
@@ -120,7 +124,7 @@ public class VacancyRestController {
             }
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
-                SeekerProfile profile = (SeekerProfile) ((User) authentication.getPrincipal()).getProfile();
+                SeekerProfile profile = seekerProfileService.getCurrentProfile(authentication);
                 return vacancyService.getVacanciesSortedByCityTagsViews(profile.getId(), city, point, limit, page);
             }
         }
