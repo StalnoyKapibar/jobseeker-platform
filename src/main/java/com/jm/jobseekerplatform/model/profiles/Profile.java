@@ -1,11 +1,11 @@
 package com.jm.jobseekerplatform.model.profiles;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.jm.jobseekerplatform.model.State;
 import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Base64;
+import java.util.Date;
 
 /**
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
@@ -27,6 +27,9 @@ public abstract class Profile implements Serializable {
     @Type(type = "image")
     private byte[] logo;
 
+    @Column(name = "expiry_block")
+    private Date expiryBlock;
+
     public Profile() {
         this.state = State.NO_ACCESS;
     }
@@ -36,7 +39,6 @@ public abstract class Profile implements Serializable {
         this.logo = logo;
     }
 
-//    @JsonValue
     public Long getId() {
         return id;
     }
@@ -56,6 +58,14 @@ public abstract class Profile implements Serializable {
     public abstract String getFullName();
 
     public abstract String getTypeName();
+
+    public Date getExpiryBlock() {
+        return expiryBlock;
+    }
+
+    public void setExpiryBlock(Date expiryBlock) {
+        this.expiryBlock = expiryBlock;
+    }
 
     public String getEncoderPhoto() {
         return Base64.getEncoder().encodeToString(this.getLogo());

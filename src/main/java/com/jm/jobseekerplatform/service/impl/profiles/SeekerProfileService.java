@@ -5,13 +5,19 @@ import com.jm.jobseekerplatform.dto.ResumePageDTO;
 import com.jm.jobseekerplatform.model.Resume;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.hibernate.Hibernate;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Service("seekerProfileService")
 @Transactional
@@ -19,6 +25,9 @@ public class SeekerProfileService extends AbstractService<SeekerProfile> {
 
     @Autowired
     private SeekerProfileDAO dao;
+
+    @Autowired
+    private SeekerUserService seekerUserService;
 
     public List<SeekerProfile> getAllSeekersById(List<Resume> resumes) {
 		List<Long> rez = new ArrayList<>();
@@ -42,4 +51,17 @@ public class SeekerProfileService extends AbstractService<SeekerProfile> {
 		return new ResumePageDTO(resumeList, seekerProfile);
 	}
 
+
+    public void updatePhoto(long id, MultipartFile file) {
+        SeekerUser seekerUser = seekerUserService.getByProfileId(id);
+        if (!file.isEmpty()) {
+            try {
+                byte[] photo = file.getBytes();
+                seekerUser.getProfile().setLogo(photo);
+                update(seekerUser.getProfile());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

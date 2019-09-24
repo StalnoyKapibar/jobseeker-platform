@@ -7,6 +7,7 @@
 <head>
     <meta name="apiKey" th:content="${googleMapsApiKey}"/>
     <title>Employer's profile</title>
+    <script type="text/javascript" src="/js/admin.js" sec:authorize="hasRole('ROLE_ADMIN')"></script>
     <script type="text/javascript" src="/js/employer.js"></script>
     <script type="text/javascript" src="/js/star-rating.min.js"></script>
     <script th:src="@{https://maps.googleapis.com/maps/api/js(key=${googleMapsApiKey})}"
@@ -76,9 +77,12 @@
                                 </div>
                                 <div class="col-lg-5 empCard">
                                     <div class="card mb-3">
-                                        <h3 class="card-header"><span id="EPcompanyName"
+                                        <div class="card-header">
+                                        <h3><span id="EPcompanyName"
                                                                       th:text="${employerProfile.companyName}"></span>
                                         </h3>
+                                            <div sec:authorize="hasRole('ROLE_ADMIN')" th:insert="fragments/adminfragments :: admin_user_button(user=${employerUser})"></div>
+                                        </div>
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-lg-6" style="position: relative">
@@ -97,20 +101,6 @@
                                         <div class="card-body">
                                             <p class="card-text"><span th:text="${employerProfile.description}"></span>
                                             </p>
-                                            <div class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
-                                                <span id="EPId" th:text="${employerProfile.id}" hidden></span>
-                                                <button class="btn btn-danger dropdown-toggle" type="button"
-                                                        data-toggle="dropdown">
-                                                    Блокировать<span
-                                                        class="caret"></span></button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a onclick="blockEmployerProfile(1)">На сутки</a></li>
-                                                    <li><a onclick="blockEmployerProfile(3)">На 3 дня</a></li>
-                                                    <li><a onclick="blockEmployerProfile(7)">На 7 дней</a></li>
-                                                    <li><a onclick="blockEmployerProfile(14)">На 14 дней</a></li>
-                                                    <li><a onclick="blockEmployerProfile(0)">Бессрочно</a></li>
-                                                </ul>
-                                            </div>
                                         </div>
                                         <div class="card-footer text-muted">
                                             <a th:href="@{'http://' + ${employerProfile.website}}"
@@ -189,7 +179,7 @@
                                                             <div class="row">
                                                                 <div class="col-sm-4">
                                                                     <img class="rounded-circle" id="seekerProfilePhoto"
-                                                                         th:src="@{'data:image/png;base64,' + ${review.seekerProfile.encoderPhoto}}"
+                                                                         th:src="@{'data:image/png;base64,' + ${review.creatorProfile.encoderPhoto}}"
                                                                          name="photo" alt=""
                                                                          style="height: 100px;width: 100px">
                                                                     <div th:id="'ratingReview_' + ${review.id}"
@@ -201,7 +191,7 @@
                                                                     </div>
                                                                     <div class="editCardReview"
                                                                          th:id="'editCardReview_' + ${review.id}"
-                                                                         th:if="${review.seekerProfile.id eq seekerProfileId and (T(java.lang.System).currentTimeMillis()-review.dateReviews.getTime()) < 604800000}">
+                                                                         th:if="${review.creatorProfile.id eq seekerProfileId and (T(java.lang.System).currentTimeMillis()-review.dateReviews.getTime()) < 604800000}">
                                                                         <i data-toggle="modal"
                                                                            data-target="#editReviewModal"
                                                                            title="редактитовать отзыв"
@@ -238,8 +228,8 @@
                                                                         <footer class="blockquote-footer seekerReviewName">
                                                                             <cite title="На страницу соискателя">
                                                                                 <a class="btn btn-link"
-                                                                                   th:href="@{'/seeker/' + ${review.seekerProfile.id}}"
-                                                                                   th:text="${review.seekerProfile.name}">
+                                                                                   th:href="@{'/seeker/' + ${review.creatorProfile.id}}"
+                                                                                   th:text="${review.creatorProfile.name}">
                                                                                 </a>
                                                                             </cite>
                                                                         </footer>
@@ -490,6 +480,9 @@
             </div>
         </div>
     </div>
+
+    <div sec:authorize="hasRole('ROLE_ADMIN')" th:replace="fragments/adminfragments :: admin_modal_success_operation_window"></div>
+
 </div>
 
 </body>
