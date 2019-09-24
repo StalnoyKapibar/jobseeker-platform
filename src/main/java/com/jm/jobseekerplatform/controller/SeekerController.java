@@ -11,6 +11,7 @@ import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -153,7 +154,10 @@ public class SeekerController {
     public String getSingleResume(@PathVariable Long resumeId,
                                   @PathVariable Long seekerProfileId,
                                   Model model, Authentication authentication) {
-        if (((User) authentication.getPrincipal()).getProfile().getId().equals(seekerProfileId) &&
+        SeekerProfile seekerProfile = (SeekerProfile) Hibernate.unproxy(seekerProfileService.
+                                                                getById(((User) authentication.getPrincipal())
+                                                                .getProfile().getId()));
+        if (seekerProfile.getId().equals(seekerProfileId) &&
                 seekerProfileService.getById(seekerProfileId).getId()
                         .equals(resumeService.getById(resumeId).getCreatorProfile().getId())){
             model.addAttribute("resumeID", resumeId);
@@ -172,7 +176,9 @@ public class SeekerController {
     @RolesAllowed({"ROLE_SEEKER"})
     @RequestMapping(value = "/resumes/edit/{resumeId}")
     public String editResume(@PathVariable("resumeId") Long resumeId, Authentication authentication, Model model) {
-        SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getId());
+        SeekerProfile seekerProfile = (SeekerProfile) Hibernate.unproxy(seekerProfileService.
+                                                                getById(((User) authentication.getPrincipal())
+                                                                .getProfile().getId()));
         if (resumeService.getById(resumeId).getCreatorProfile().getId() == seekerProfile.getId()) {
             model.addAttribute("oldResume", resumeService.getById(resumeId));
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);

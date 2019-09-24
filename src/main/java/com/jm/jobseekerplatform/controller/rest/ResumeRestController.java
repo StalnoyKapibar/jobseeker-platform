@@ -1,12 +1,15 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.JobExperience;
+import com.jm.jobseekerplatform.model.Point;
+import com.jm.jobseekerplatform.model.Resume;
+import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
-import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.JobExperienceService;
 import com.jm.jobseekerplatform.service.impl.ResumeService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.security.RolesAllowed;
 import java.util.Map;
 import java.util.Set;
@@ -99,7 +103,9 @@ public class ResumeRestController {
     public boolean addResume(@RequestBody Resume resume,
                              Authentication authentication) {
         if (resumeService.validateResume(resume)) {
-            SeekerProfile seekerProfile = ((SeekerUser) authentication.getPrincipal()).getProfile();
+            SeekerProfile seekerProfile = (SeekerProfile) Hibernate.unproxy(seekerProfileService
+                                                                    .getById(((User) authentication.getPrincipal())
+                                                                    .getProfile().getId()));
             resume.setCreatorProfile(seekerProfile);
             Set<JobExperience> validatedExperiences = jobExperienceService
                                                         .validateJobExperiences(resume.getJobExperiences());
@@ -119,7 +125,9 @@ public class ResumeRestController {
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public boolean updateResume(@RequestBody Resume resume, Authentication authentication) {
         if (resumeService.validateResume(resume)) {
-            SeekerProfile seekerProfile = ((SeekerUser) authentication.getPrincipal()).getProfile();
+            SeekerProfile seekerProfile = (SeekerProfile) Hibernate.unproxy(seekerProfileService
+                                                                    .getById(((User) authentication.getPrincipal())
+                                                                    .getProfile().getId()));
             Set<JobExperience> validatedExperiences = jobExperienceService
                                                         .validateJobExperiences(resume.getJobExperiences());
             resume.setJobExperiences(validatedExperiences);
