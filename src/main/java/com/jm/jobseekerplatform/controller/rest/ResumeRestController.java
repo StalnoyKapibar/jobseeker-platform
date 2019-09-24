@@ -59,9 +59,9 @@ public class ResumeRestController {
 			Set<Resume> resumeSet = seekerProfileService.getById(seekerProfileId).getResumes();
 			return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
 		} else {
-			Set<Resume> resumeSet = seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()).getResumes();
-			return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
-		}
+            Set<Resume> resumeSet = seekerProfileService.getCurrentProfile(authentication).getResumes();
+            return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
+        }
 	}
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
