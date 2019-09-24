@@ -8,6 +8,7 @@ import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,12 +29,18 @@ public class AdminController {
 
     @Autowired
     private EmployerUserService employerUserService;
+
     @Autowired
     private SeekerUserService seekerUserService;
+
     @Autowired
     private VacancyService vacancyService;
+
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("/admin")
     public String adminPage() {
@@ -57,11 +64,9 @@ public class AdminController {
 
     @RequestMapping("/admin/chats/my")
     public String adminPageChatsMy(Authentication authentication, Model model) {
-
-        User user = (User) (authentication.getPrincipal());
-
+        Long userId = ((User) (authentication.getPrincipal())).getId();
+        User user = userService.getById(userId);
         model.addAttribute("profileId", user.getProfile().getId());
-
         return "admin/admin_chats_my";
     }
 

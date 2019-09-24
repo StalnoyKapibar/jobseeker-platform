@@ -61,8 +61,8 @@ public class ChatController {
 
     @RequestMapping("/chat/{chatId}")
     public String getChatById(@PathVariable("chatId") Long chatId, Authentication authentication, Model model) {
-        User user = (User) authentication.getPrincipal();
-        Long currentProfileId = user.getProfile().getId();
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        Long currentProfileId = userService.getById(userId).getProfile().getId();
         ChatWithTopic chatWithTopic = chatWithTopicService.getById(chatId);
 
         model.addAttribute("profileId", currentProfileId);
@@ -76,7 +76,8 @@ public class ChatController {
 
     @RequestMapping("/chat/seeker-vacancy-employer/{chatId}")
     public String getChatSeekerVacancyEmployerById(@PathVariable("chatId") Long chatId, Authentication authentication, Model model) {
-        User user = (User) authentication.getPrincipal();
+        Long userId = ((User) (authentication.getPrincipal())).getId();
+        User user = userService.getById(userId);
         Long currentProfileId = user.getProfile().getId();
         ChatWithTopic chatWithTopic = chatWithTopicService.getById(chatId);
 
@@ -106,7 +107,8 @@ public class ChatController {
     public String getPrivateChatById(@PathVariable("chatId") Long chatId, Model model,
                                      Authentication authentication, HttpServletResponse httpServletResponse) throws IOException {
         Chat chat = chatService.getById(chatId);
-        User user = (User) authentication.getPrincipal();
+        Long userId = ((User) (authentication.getPrincipal())).getId();
+        User user = userService.getById(userId);
         ChatAccessHandler.isContainInChatMembers(chat, userService.findByEmail(user.getUsername()), httpServletResponse);
         model.addAttribute("profileId", user.getProfile().getId());
         if (user.getAuthority().toString().equals("ROLE_EMPLOYER")) {
@@ -130,15 +132,12 @@ public class ChatController {
     @RequestMapping("/chat/vacancy/{vacancyId:\\d+}")
     public String getChatByVacancyAndAuthenticatedUser(@PathVariable("vacancyId") Long vacancyId,
                                                        Authentication authentication, Model model) {
-
-        User authenticatedUser = ((User) authentication.getPrincipal());
+        Long userId = ((User) (authentication.getPrincipal())).getId();
+        User authenticatedUser = userService.getById(userId);
         Profile authenticatedProfile = authenticatedUser.getProfile();
-
         //ChatWithTopicVacancy chat = chatWithTopicVacancyService.getByTopicIdAndCreatorProfileId(vacancyId, authenticatedProfile.getId());
         //ChatWithTopic<Vacancy> chat = chatWithTopicService.getByTopicIdCreatorProfileIdTopicType(vacancyId, authenticatedProfile.getId(), Vacancy.class);
-        ChatWithTopic<Vacancy> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType(vacancyId, authenticatedProfile.getId(), ChatWithTopicVacancy.class);
-
-        if (chat == null) {
+        ChatWithTopic<Vacancy> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType(vacancyId, authenticatedProfile.getId(), ChatWithTopicVacancy.class);        if (chat == null) {
             Vacancy vacancy = vacancyService.getById(vacancyId);
             EmployerProfile employerProfile = vacancy.getCreatorProfile();
             List<User> chatMembers = new ArrayList<>();
@@ -147,14 +146,14 @@ public class ChatController {
             chat = new ChatWithTopicVacancy(authenticatedProfile, chatMembers, vacancy);
             chatWithTopicService.add(chat);
         }
-
         return "redirect:/chat/" + chat.getId();
     }
 
     @RequestMapping("chat/resume/{resumeId}")
     public String getChatByResumeAndAuthenticatedUser(@PathVariable("resumeId") Long resumeId,
                                                       Authentication authentication) {
-        User authenticatedUser = (User) authentication.getPrincipal();
+        Long userId = ((User) (authentication.getPrincipal())).getId();
+        User authenticatedUser = userService.getById(userId);
         Profile authenticatedProfile = authenticatedUser.getProfile();
 
         ChatWithTopic<Resume> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType(resumeId, authenticatedProfile.getId(), ChatWithTopicResume.class);
