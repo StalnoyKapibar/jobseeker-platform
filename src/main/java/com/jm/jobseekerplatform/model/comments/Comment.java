@@ -17,7 +17,6 @@ public class Comment {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "seeker_id")
     @ManyToOne
     private SeekerProfile seekerProfile;
 
