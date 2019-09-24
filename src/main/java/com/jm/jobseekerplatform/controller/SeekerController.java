@@ -5,7 +5,6 @@ import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
-import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.ResumeService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
@@ -21,8 +20,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+<<<<<<< HEAD
+
+=======
+import org.springframework.web.bind.annotation.RequestMethod;
+>>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
 import javax.annotation.security.RolesAllowed;
-import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 
@@ -44,14 +47,19 @@ public class SeekerController {
 
     @Autowired
     private ResumeService resumeService;
+<<<<<<< HEAD
 
-    @Value("${google.maps.api.key}")
-    private String googleMapsApiKey;
-
-    @RequestMapping("/{seekerProfileId}")
-    public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
     @Autowired
     private EmployerProfileService employerProfileService;
+
+=======
+  
+    @Autowired
+    private EmployerProfileService employerProfileService;
+  
+>>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
+    @Value("${google.maps.api.key}")
+    private String googleMapsApiKey;
 
     @GetMapping("/{seekerProfileId}")
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
@@ -104,20 +112,7 @@ public class SeekerController {
         return "seeker_subscription_news";
     }
 
-    @Value("${google.maps.api.key}")
-    private String googleMapsApiKey;
-
-    @RolesAllowed({"ROLE_EMPLOYER"})
-    @GetMapping("/resumes/{seekerProfileId}")
-    public String seekerResumesPageForEmployer(@PathVariable Long seekerProfileId, Model model,
-                                               Authentication authentication) {
-        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
-        model.addAttribute("resumesList", seekerProfile.getResumes());
-        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-        return "resumes";
-    }
-
+<<<<<<< HEAD
     @RolesAllowed({"ROLE_SEEKER"})
     @GetMapping("/resumes")
     public String seekerResumesPage(Model model, Authentication authentication) {
@@ -125,6 +120,19 @@ public class SeekerController {
                 .getPrincipal())
                 .getProfile()
                 .getId());
+        model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
+        model.addAttribute("resumesList", seekerProfile.getResumes());
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+        return "resumes";
+    }
+
+    @RolesAllowed({"ROLE_EMPLOYER"})
+=======
+>>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
+    @GetMapping("/resumes/{seekerProfileId}")
+    public String seekerResumesPageForEmployer(@PathVariable Long seekerProfileId, Model model,
+                                               Authentication authentication) {
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
         model.addAttribute("resumesList", seekerProfile.getResumes());
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
@@ -139,6 +147,7 @@ public class SeekerController {
         return "seeker_chats";
     }
 
+<<<<<<< HEAD
     @GetMapping("/companies")
     public String getCompaniesList(Model model) {
         List<EmployerProfile> employerprofiles = employerProfileService.getAll();
@@ -154,16 +163,17 @@ public class SeekerController {
         model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
         return "update_seeker_profile";
     }
-}
 
+=======
+>>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
     @RolesAllowed({"ROLE_SEEKER"})
     @RequestMapping("/resumes/{seekerProfileId}/{resumeId}")
     public String getSingleResume(@PathVariable Long resumeId,
                                   @PathVariable Long seekerProfileId,
                                   Model model, Authentication authentication) {
-        if (((User) authentication.getPrincipal()).getProfile().getId() == seekerProfileId &&
-                seekerProfileService.getById(seekerProfileId).getId() ==
-                        resumeService.getById(resumeId).getCreatorProfile().getId()) {
+        if (((User) authentication.getPrincipal()).getProfile().getId().equals(seekerProfileId) &&
+                seekerProfileService.getById(seekerProfileId).getId()
+                        .equals(resumeService.getById(resumeId).getCreatorProfile().getId())){
             model.addAttribute("resumeID", resumeId);
             model.addAttribute("userRole", ((User) authentication.getPrincipal()).getAuthority());
         }
@@ -178,13 +188,33 @@ public class SeekerController {
     }
 
     @RolesAllowed({"ROLE_SEEKER"})
-    @RequestMapping(value = "/resumes/edit/{resumeId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/resumes/edit/{resumeId}")
     public String editResume(@PathVariable("resumeId") Long resumeId, Authentication authentication, Model model) {
         SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getId());
-        if (resumeService.getById(resumeId).getCreatorProfile().getId() == seekerProfile.getId()) {
+        if (resumeService.getById(resumeId).getCreatorProfile().getId().equals(seekerProfile.getId())) {
             model.addAttribute("oldResume", resumeService.getById(resumeId));
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         }
         return "resume/edit_resume";
     }
+<<<<<<< HEAD
 }
+=======
+
+    @RequestMapping("/update/{seekerProfileId}")
+    public String updateSeekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        model.addAttribute("seekerProfile", seekerProfile);
+        model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
+        return "update_seeker_profile";
+    }
+
+    @GetMapping("/companies")
+    public String getCompaniesList(Model model) {
+        List<EmployerProfile> employerprofiles = employerProfileService.getAll();
+        model.addAttribute("companiesList", employerprofiles);
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+        return "companies";
+    }
+}
+>>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e

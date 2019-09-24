@@ -39,7 +39,7 @@ function seekerResumes(resumeList) {
             '<span class="btn btn-outline-info btn-sm btnShowResume" data-toggle="modal"' +
             ' data-target="#resumeModal" onclick="showChosenResume(\'' + value.id + '\')">Подробнее</span>' +
             '<span class="btn btn-outline-secondary btn-sm btnEditResume"' +
-            'onclick="#">Редактировать</span>' +
+            'onclick=resumePage(\'' + value.id + '\')>На страницу резюме</span>' +
             '<span class="btn btn-outline-danger btn-sm btnDeleteResume"' +
             'onclick="deleteSeekerResumeById(\'' + value.id + '\')">Удалить резюме</span>'
             + '</div>' +
@@ -107,4 +107,8 @@ function deleteSeekerResumeById(seekerProfileIdResume) {
             alert(error.toString());
         }
     });
+}
+
+function resumePage(resumeId) {
+    location.href = "/seeker/resumes/edit/" + resumeId;
 }

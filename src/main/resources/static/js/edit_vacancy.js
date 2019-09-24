@@ -269,7 +269,6 @@ $(document).ready(function () {
         let name = searchTag.val();
         $("#v_tagsWell").append("<span class='label label-success' id='v_tagLabel_" +
             tagId + "' onclick='deleteTag(" + tagId + ",\"" + name + "\")'>" + name + "</span>");
-
         searchTag.val(""); // clear filter after adding tag
         tags_search(); // refresh visible tags with empty filter
     }

@@ -242,6 +242,7 @@ function validateAndPreview() {
             position = $("#v_newPosition").val();
             responsibilities = $("#v_newResponsibilities").val();
         }
+
         jobExperiences[0] = {
             'id': experienceId,
             'companyName': companyName,
@@ -261,8 +262,29 @@ function validateAndPreview() {
             'tags': tags,
             'coordinates': point
         };
+        let jobHead = "Предыдущий опыт работы: <br>";
+        let jobExp = "";
+        let jobPer = "";
+        if (jobExperiences[0].companyName === "") {
+            jobExp += '<span>Нет опыта</span> <br>';
+        } else {
+            $.each(jobExperiences, function (key, value) {
+                jobPer += 'Время работы: <br>';
+                jobExp += '<span>Место работы: ' + value.companyName + '</span><br>';
+                jobExp += '<span>Должность: ' + value.position + '</span><br>';
+                jobExp += '<span>Выполняемые задачи: ' + value.responsibilities + '</span><br>';
+                let viewFirstDay = new Date(value.firstWorkDay);
+                jobPer += '<span>' + viewFirstDay.toLocaleDateString() + '</span> - ';
+                let viewLastDay = new Date(value.lastWorkDay);
+                jobPer += '<span>' + viewLastDay.toLocaleDateString() + '</span><br>';
+                return key > 2;
+            });
+        }
         $("#VMHeadline").text(resume.headline);
         $("#VMCity").text(resume.city.name);
+        $("#VMJobHead").html(jobHead);
+        $("#VMJobPer").html(jobPer);
+        $("#VMJobExp").html(jobExp);
         let str = "Зарплата: ";
         if (resume.salaryMin != null) {
             str = str + "от " + resume.salaryMin + " рублей ";

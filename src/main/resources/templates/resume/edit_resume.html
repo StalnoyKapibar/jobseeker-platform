@@ -30,7 +30,6 @@
             padding-left: 10%;
         }
 
-
         /*Эти стили нужны для корректной работы формы автозаполнения*/
 
         .pac-container {
@@ -61,7 +60,6 @@
     <script type="text/javascript" src="js/map.js"></script>
 </head>
 <body>
-
 <div layout:fragment="content">
     <div class="container-fluid" id="resume_container">
         <div class="row">
@@ -385,12 +383,17 @@
                     <h3><span id="VMHeadline"></span><br/></h3>
                     <span id="VMCity"></span>
                     <span id="VMAddress"></span>
+                    <br>
                     <a data-toggle="collapse" data-target="#map_collapse"> Показать на карте</a>
                     <div id="map_collapse" class="collapsed collapse">
                         <div id="map" style="height: 300px"></div>
                     </div>
                     <br/>
                     <span id="VMSalary"></span><br/>
+                    <br>
+                    <span id="VMJobHead"></span>
+                    <span id="VMJobPer"></span>
+                    <span id="VMJobExp"></span>
                     <span id="VMId" hidden></span>
                 </div>
                 <div class="modal-footer">
