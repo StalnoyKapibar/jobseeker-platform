@@ -243,7 +243,13 @@ $(document).ready(function () {
                 async: false,
                 success: function (data) {
                     $.each(data, function (key, value) {
-                        $("#tagsWell").append("<span class='label label-success' value='" + value.name + "' id='tagLabel_" + value.id + "' onclick='addTag(" + value.id + ",\"" + value.name + "\")'>" + value.name + "</span>");
+                        let val = document.getElementById('v_tagLabel_' + value.id + '');
+                        if (val === null) {
+                            $("#tagsWell").append("<span class='label label-success' " +
+                                "value='" + value.name + "' id='tagLabel_" + value.id + "' " +
+                                "onclick='addTag(" + value.id + ",\"" + value.name + "\")'>" +
+                                value.name + "</span>");
+                        }
                     });
                     flagTag = true;
                 }
@@ -252,7 +258,8 @@ $(document).ready(function () {
     }
 
     function addTag(id, name) {
-        $("#v_tagsWell").append("<span class='label label-success' id='v_tagLabel_" + id + "' onclick='deleteTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
+        $("#v_tagsWell").append("<span class='label label-success' id='v_tagLabel_" +
+            id + "' onclick='deleteTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
         $("#tagLabel_" + id).remove();
     }
 
@@ -260,14 +267,16 @@ $(document).ready(function () {
         tagId--;
         let searchTag = $("#search_tags");
         let name = searchTag.val();
-        $("#v_tagsWell").append("<span class='label label-success' id='v_tagLabel_" + tagId + "' onclick='deleteTag(" + tagId + ",\"" + name + "\")'>" + name + "</span>");
+        $("#v_tagsWell").append("<span class='label label-success' id='v_tagLabel_" +
+            tagId + "' onclick='deleteTag(" + tagId + ",\"" + name + "\")'>" + name + "</span>");
 
         searchTag.val(""); // clear filter after adding tag
         tags_search(); // refresh visible tags with empty filter
     }
 
     function deleteTag(id, name) {
-        $("#tagsWell").append("<span class='label label-success' value='" + name + "'id='tagLabel_" + id + "' onclick='addTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
+        $("#tagsWell").append("<span class='label label-success' value='" +
+            name + "'id='tagLabel_" + id + "' onclick='addTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
         $("#v_tagLabel_" + id).remove();
     }
 
@@ -285,7 +294,8 @@ $(document).ready(function () {
             },
             success: function (data) {
                 $("#vacancy_container").empty();
-                $("#vacancy_container").append("<div class='alert alert-success' role='alert'>Вакансия обновлена!<br/>Вы также можете <a href='/user'>посмотреть свой профиль</a></div>");
+                $("#vacancy_container").append("<div class='alert alert-success' role='alert'>" +
+                    "Вакансия обновлена!<br/>Вы также можете <a href='/user'>посмотреть свой профиль</a></div>");
             },
             error: function (error) {
                 console.log(error);
