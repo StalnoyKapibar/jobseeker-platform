@@ -21,4 +21,8 @@ public class CityDAO extends AbstractDAO<City> {
         throw new RuntimeException("Several cities!");
 
     }
+    public List<City> getAllCities() {
+        List<City> resultList = entityManager.createQuery("select c from City c", City.class).getResultList();
+        return resultList;
+    }
 }

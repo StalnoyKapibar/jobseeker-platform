@@ -1,7 +1,12 @@
 package com.jm.jobseekerplatform.service.impl;
 
+import com.jm.jobseekerplatform.dao.impl.CityDAO;
 import com.jm.jobseekerplatform.dao.impl.ResumeDAO;
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.dao.impl.TagDAO;
+import com.jm.jobseekerplatform.model.Point;
+import com.jm.jobseekerplatform.model.Resume;
+import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 @Service("resumeService")
 @Transactional
@@ -30,6 +38,12 @@ public class ResumeService extends AbstractService<Resume> {
 
     private Pattern pattern;
     private Matcher matcher;
+
+    @Autowired
+    private CityDAO cityDAO;
+
+    @Autowired
+    private TagDAO tagDAO;
 
     public Page<Resume> getAllResumes(int limit, int page) {
         return dao.getAllResumes(limit, page);
@@ -86,4 +100,9 @@ public class ResumeService extends AbstractService<Resume> {
     public void deleteByResumeId(Long id) {
         dao.deleteResumeById(id);
     }
+
+    public Page<Resume> getPagableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(Map<String, Object> queryParamsMap,
+                                                                                   int pageNumber, int pageSize) {
+        return dao.getPagableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(queryParamsMap, pageNumber, pageSize);
+ }
 }
