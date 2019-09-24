@@ -20,6 +20,12 @@ function getSeekerResumes() {
 }
 
 function seekerResumes(resumeList) {
+    $('#searchList').append('<div class="form-group" align="center">' +
+        '<label class="col-md-1 control-label"></label>' +
+        '<div class="col-md-4" style="display: flex; justify-content:'+
+        ' center;"><br> <button id="editButton" type="button"' +
+        'class="btn btn-warning" onclick="newResumePage()" style="width: 150px;"> Новое резюме'+
+        '<i class="fas fa-paper-plane "></i> </button> </div> </div>');
     $.each(resumeList.content, function (key, value) {
         let minSalary = '';
         let resumeTags = "";
@@ -111,4 +117,8 @@ function deleteSeekerResumeById(seekerProfileIdResume) {
 
 function resumePage(resumeId) {
     location.href = "/seeker/resumes/edit/" + resumeId;
+}
+
+function newResumePage() {
+    location.href = "/seeker/resumes/new";
 }

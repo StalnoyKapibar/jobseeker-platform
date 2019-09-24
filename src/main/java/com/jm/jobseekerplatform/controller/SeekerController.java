@@ -173,7 +173,7 @@ public class SeekerController {
     @RequestMapping(value = "/resumes/edit/{resumeId}")
     public String editResume(@PathVariable("resumeId") Long resumeId, Authentication authentication, Model model) {
         SeekerProfile seekerProfile = seekerProfileService.getById(((User) authentication.getPrincipal()).getId());
-        if (resumeService.getById(resumeId).getCreatorProfile().getId().equals(seekerProfile.getId())) {
+        if (resumeService.getById(resumeId).getCreatorProfile().getId() == seekerProfile.getId()) {
             model.addAttribute("oldResume", resumeService.getById(resumeId));
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         }
