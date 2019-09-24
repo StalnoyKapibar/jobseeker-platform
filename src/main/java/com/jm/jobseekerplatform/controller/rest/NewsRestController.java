@@ -51,7 +51,7 @@ public class NewsRestController {
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-    @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
+    @PreAuthorize("@employerProfileService.getCurrentProfile(authentication).id.equals(@newsService.getById(#newsId).author.id)")
     @GetMapping("/delete/{newsId}")
     public ResponseEntity deleteNews(@PathVariable("newsId") Long newsId) {
         newsService.deleteById(newsId);
@@ -59,7 +59,7 @@ public class NewsRestController {
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-    @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
+    @PreAuthorize("@employerProfileService.getCurrentProfile(authentication).id.equals(@newsService.getById(#newsId).author.id)")
     @GetMapping("/{newsId}")
     @ResponseBody
     public ResponseEntity<News> getNewsById(@PathVariable("newsId") Long newsId) {
@@ -91,7 +91,7 @@ public class NewsRestController {
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
 
-    @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
+    @PreAuthorize("@employerProfileService.getCurrentProfile(authentication).id.equals(@newsService.getById(#newsId).author.id)")
     @PostMapping("/editNews")
     public ResponseEntity editNews(@RequestParam("newsId") Long newsId,
                                    @RequestParam("newsHeadline") String newsHeadline,
