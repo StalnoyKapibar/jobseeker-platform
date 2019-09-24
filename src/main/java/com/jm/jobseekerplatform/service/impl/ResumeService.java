@@ -27,11 +27,7 @@ public class ResumeService extends AbstractService<Resume> {
 
     @Autowired
     private CityService cityService;
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
     private Pattern pattern;
     private Matcher matcher;
 
@@ -48,13 +44,6 @@ public class ResumeService extends AbstractService<Resume> {
         return dao.getResumesSortByCity(city, limit, page);
     }
 
-<<<<<<< HEAD
-    public void deleteByResumeId(Long id) {
-        dao.deleteResumeById(id);
-    }
-
-=======
->>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
     public void addResume(Resume resume) {
         Point point = resume.getCoordinates();
         pointService.add(point);
@@ -93,11 +82,8 @@ public class ResumeService extends AbstractService<Resume> {
         isCorrect &= resume.getTags().size() > 0;
         return isCorrect;
     }
-<<<<<<< HEAD
-=======
 
     public void deleteByResumeId(Long id) {
         dao.deleteResumeById(id);
     }
->>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
 }

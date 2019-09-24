@@ -1,24 +1,10 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-<<<<<<< HEAD
-import com.jm.jobseekerplatform.model.JobExperience;
-import com.jm.jobseekerplatform.model.Point;
-import com.jm.jobseekerplatform.model.Resume;
-import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.JobExperienceService;
-=======
-import com.jm.jobseekerplatform.model.*;
-import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
-import com.jm.jobseekerplatform.model.users.SeekerUser;
-import com.jm.jobseekerplatform.service.impl.*;
-import com.jm.jobseekerplatform.model.Point;
-import com.jm.jobseekerplatform.model.Resume;
-import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.users.User;
->>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
 import com.jm.jobseekerplatform.service.impl.ResumeService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-<<<<<<< HEAD
-=======
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
->>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.RolesAllowed;
 import java.util.Set;
@@ -66,7 +48,8 @@ public class ResumeRestController {
     }
 
     @RequestMapping(value = "/city/page/{page}", method = RequestMethod.POST)
-    public Page<Resume> getPageOfResumes(@RequestBody Point point, @RequestParam("city") String city,
+    public Page<Resume> getPageOfResumes(@RequestBody Point point,
+                                         @RequestParam("city") String city,
                                          @PathVariable("page") int page) {
         int limit = 10;
         if (city.equals("undefined")) {
@@ -76,7 +59,6 @@ public class ResumeRestController {
         }
     }
 
-<<<<<<< HEAD
     @RolesAllowed({"ROLE_SEEKER"})
     @RequestMapping(value = "/seeker", method = RequestMethod.POST, produces = "application/json")
     public Page<Resume> getSeekerResumesPage(Authentication authentication) {
@@ -105,8 +87,6 @@ public class ResumeRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-=======
->>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
     @RolesAllowed("ROLE_SEEKER")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public boolean addResume(@RequestBody Resume resume,
@@ -143,30 +123,4 @@ public class ResumeRestController {
         }
         return false;
     }
-<<<<<<< HEAD
-=======
-
-	@RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
-	public Page<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, Authentication authentication) {
-		if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
-			Set<Resume> resumeSet = seekerProfileService.getById(seekerProfileId).getResumes();
-			return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
-		} else {
-			Set<Resume> resumeSet = seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()).getResumes();
-			return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
-		}
-	}
-
-    @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateSeekerUser(@RequestBody Resume resume) {
-        resumeService.update(resume);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/delete/{resumeId}", method = RequestMethod.GET)
-    public ResponseEntity deleteResumeById(@PathVariable Long resumeId) {
-        resumeService.deleteByResumeId(resumeId);
-        return new ResponseEntity(HttpStatus.OK);
-    }
->>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
 }

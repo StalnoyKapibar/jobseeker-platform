@@ -20,11 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-<<<<<<< HEAD
-
-=======
 import org.springframework.web.bind.annotation.RequestMethod;
->>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
 import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.Set;
@@ -47,17 +43,10 @@ public class SeekerController {
 
     @Autowired
     private ResumeService resumeService;
-<<<<<<< HEAD
 
     @Autowired
     private EmployerProfileService employerProfileService;
 
-=======
-  
-    @Autowired
-    private EmployerProfileService employerProfileService;
-  
->>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
 
@@ -112,7 +101,6 @@ public class SeekerController {
         return "seeker_subscription_news";
     }
 
-<<<<<<< HEAD
     @RolesAllowed({"ROLE_SEEKER"})
     @GetMapping("/resumes")
     public String seekerResumesPage(Model model, Authentication authentication) {
@@ -127,8 +115,6 @@ public class SeekerController {
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-=======
->>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
     @GetMapping("/resumes/{seekerProfileId}")
     public String seekerResumesPageForEmployer(@PathVariable Long seekerProfileId, Model model,
                                                Authentication authentication) {
@@ -147,7 +133,6 @@ public class SeekerController {
         return "seeker_chats";
     }
 
-<<<<<<< HEAD
     @GetMapping("/companies")
     public String getCompaniesList(Model model) {
         List<EmployerProfile> employerprofiles = employerProfileService.getAll();
@@ -164,8 +149,6 @@ public class SeekerController {
         return "update_seeker_profile";
     }
 
-=======
->>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
     @RolesAllowed({"ROLE_SEEKER"})
     @RequestMapping("/resumes/{seekerProfileId}/{resumeId}")
     public String getSingleResume(@PathVariable Long resumeId,
@@ -197,24 +180,4 @@ public class SeekerController {
         }
         return "resume/edit_resume";
     }
-<<<<<<< HEAD
 }
-=======
-
-    @RequestMapping("/update/{seekerProfileId}")
-    public String updateSeekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
-        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        model.addAttribute("seekerProfile", seekerProfile);
-        model.addAttribute("photoimg", seekerProfile.getEncoderPhoto());
-        return "update_seeker_profile";
-    }
-
-    @GetMapping("/companies")
-    public String getCompaniesList(Model model) {
-        List<EmployerProfile> employerprofiles = employerProfileService.getAll();
-        model.addAttribute("companiesList", employerprofiles);
-        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-        return "companies";
-    }
-}
->>>>>>> 9b8f7c280e65c4218053c002d48a758e51c19e0e
