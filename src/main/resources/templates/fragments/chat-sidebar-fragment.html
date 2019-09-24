@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<th:block th:fragment="head">
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</th:block>
+</body>
+<th:block th:fragment="chat-sidebar">
+    <div class="w3-sidebar w3-bar-block w3-card" style="width:17%;right:0;">
+        <ul sec:authorize="hasRole('ROLE_SEEKER')">
+            <th:block th:replace="fragments/chat-sidebar-by-authority :: seeker_chat_sidebar"></th:block>
+        </ul>
+        <ul sec:authorize="hasRole('ROLE_EMPLOYER')">
+            <th:block th:replace="fragments/chat-sidebar-by-authority:: employer_chat_sidebar"></th:block>
+        </ul>
+    </div>
+</th:block>
+</html>

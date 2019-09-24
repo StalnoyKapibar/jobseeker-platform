@@ -4,11 +4,16 @@ import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.Tag;
 import org.springframework.stereotype.Repository;
-
 import java.util.*;
 
 @Repository("seekerProfileDAO")
 public class SeekerProfileDAO extends AbstractDAO<SeekerProfile> {
+
+    public List<SeekerProfile> getAllSeekersById(List<Long> id) {
+        return entityManager.createQuery("from SeekerProfile where id IN (:paramId)")
+				.setParameter("paramId", id)
+				.getResultList();
+    }
 
     public Set<SeekerProfile> getByTags(Set<Tag> tags, int limit) {
         Set<SeekerProfile> seekerProfiles = new HashSet<>();
@@ -18,4 +23,5 @@ public class SeekerProfileDAO extends AbstractDAO<SeekerProfile> {
                 .getResultList());
         return seekerProfiles;
     }
+
 }

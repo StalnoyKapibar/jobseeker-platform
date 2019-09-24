@@ -17,8 +17,9 @@
     <div class="row" style="padding-top: 30px">
         <div class="col-4" id="seekerPhoto">
             <form id="editPhotoForm" class="form-inline">
-                <img id="sPhoto" th:src="@{'data:image/png;base64,' + ${photoimg}}" name="photo" alt=""
-                     style="height: 300px;width: 300px;"><br>
+                <img id="sPhoto" th:src="${photoimg != null} ? @{'data:image/png;base64,' + ${photoimg}} : '/img/default_photo_seeker.jpg'" name="photo" alt=""
+                     style="width: 300px;height: 300px;">
+                <br>
                 <div class="custom-file mt-4">
                     <div class="input-group">
                         <div class="row">
@@ -46,23 +47,16 @@
                 </div>
                 <div class="form-group">
                     <label>Seeker email : </label><input class="form-control" type="text"
-                                                         th:value="${seekerUser.email}" name="email">
+                                                         th:value="${seekerUser.email}" name="email" readonly>
                 </div>
                 <div class="form-group">
                     <label>Seeker last visit : </label><input class="form-control" type="text"
-                                                              th:value="${seekerUser.date}" name="date"
-                                                              readonly>
+                                                              th:value="${#temporals.format(seekerUser.date, 'dd MMMM yyyy HH:mm')}"
+                                                                readonly>
+                    <input class="form-control" type="hidden" th:value="${seekerUser.date}" name="date">
                 </div>
                 <div class="form-group">
                     <input class="form-control" type="hidden" th:value="${seekerUser.password}" name="password">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="hidden" th:value="${seekerUser.authority.id}"
-                           name="authorityId">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="hidden" th:value="${seekerUser.authority.authority}"
-                           name="authority">
                 </div>
                 <div class="form-group">
                     <input class="form-control" type="hidden" th:value="${seekerUser.confirm}" name="confirm">

@@ -79,7 +79,7 @@ public class ReviewsRestController {
         try {
             EmployerProfile employerProfile = employerProfileService.getById(((Number) map.get("employerProfiles_id")).longValue());
             Set<EmployerReviews> reviewsSet = employerProfile.getReviews();
-            EmployerReviews reviews = reviewsSet.stream().filter(employerReviews -> employerReviews.getSeekerProfile().getId() == ((Number) map.get("seekerProfiles_id")).longValue()).findFirst().orElse(null);
+            EmployerReviews reviews = reviewsSet.stream().filter(employerReviews -> employerReviews.getCreatorProfile().getId() == ((Number) map.get("seekerProfiles_id")).longValue()).findFirst().orElse(null);
             if (reviews != null) return new ResponseEntity<>(reviews, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -102,11 +102,11 @@ public class ReviewsRestController {
                                        @RequestParam("seekerProfileId") Long seekerProfileId,
                                        @RequestParam("employerProfileId") Long employerProfileId) {
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
-        if (employerProfile.getReviews().stream().anyMatch(reviews1 -> Objects.equals(reviews1.getSeekerProfile().getId(), seekerProfileId))) {
+        if (employerProfile.getReviews().stream().anyMatch(reviews1 -> Objects.equals(reviews1.getCreatorProfile().getId(), seekerProfileId))) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        reviews.setSeekerProfile(seekerProfile);
+        reviews.setCreatorProfile(seekerProfile);
         reviews.setCreatorProfile(seekerProfile);
         reviews.setHeadline(seekerProfile.getFullName());
         employerReviewsService.add(reviews);
@@ -118,7 +118,7 @@ public class ReviewsRestController {
     @PostMapping("/update")
     public ResponseEntity updateReview(@RequestBody EmployerReviews reviews,
                                        @RequestParam("seekerProfileId") Long seekerProfileId) {
-        reviews.setSeekerProfile(seekerProfileService.getById(seekerProfileId));
+        reviews.setCreatorProfile(seekerProfileService.getById(seekerProfileId));
         reviews.setCreatorProfile(seekerProfileService.getById(seekerProfileId));
         employerReviewsService.update(reviews);
         return new ResponseEntity<>(HttpStatus.OK);

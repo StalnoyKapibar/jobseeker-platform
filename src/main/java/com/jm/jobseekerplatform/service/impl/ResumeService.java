@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,7 +27,7 @@ public class ResumeService extends AbstractService<Resume> {
 
     @Autowired
     private CityService cityService;
-
+  
     private Pattern pattern;
     private Matcher matcher;
 
@@ -82,5 +81,9 @@ public class ResumeService extends AbstractService<Resume> {
         isCorrect &= matcher.matches();
         isCorrect &= resume.getTags().size() > 0;
         return isCorrect;
+    }
+
+    public void deleteByResumeId(Long id) {
+        dao.deleteResumeById(id);
     }
 }
