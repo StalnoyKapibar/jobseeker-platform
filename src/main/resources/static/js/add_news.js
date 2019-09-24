@@ -146,7 +146,7 @@ function validateAndPreview() {
 
     $.ajax({
         method: "post",
-        url: "/api/news/add?employerProfileId=" + employerProfileId + "&tags=" + tags,
+        url: "/api/news/add?tags=" + tags,
         contentType: "application/json; charset=utf-8",
         beforeSend: function (request) {
             request.setRequestHeader(header, token);

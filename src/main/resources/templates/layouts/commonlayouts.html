@@ -13,11 +13,11 @@
         <div class="main-block chromeFix" layout:fragment="content"></div>
     </div>
 </div>
-</body>
+
 <script>
     let loader = document.createElement("div");
     loader.className = "loader";
-    loader.style = "visibility: visivle";
+    loader.style = "visibility: visible";
 
     let circle1 = document.createElement("div");
     circle1.className = "circle";
@@ -48,31 +48,6 @@
         loader.style = "visibility: visible";
         return null;
     };
-
-    $('#selectionTagsModal').on('show.bs.modal', function (event) {
-        $('#btnSuccess').click(function () {
-            let btnTags = document.getElementsByClassName("btn btn-success btn-sm badge badge-pill text-dark active");
-            let tags = [];
-
-            for (let tag of btnTags) {
-                tags.push(tag.textContent.toString());
-            }
-            $.ajax({
-                type: 'post',
-                url: "/api/seekerprofiles/updateUserTags?updatedTags=" + tags,
-                contentType: 'application/json; charset=utf-8',
-                beforeSend: function (request) {
-                    request.setRequestHeader(header, token);
-                },
-                success: function () {
-                    location.reload();
-                },
-                error: function (error) {
-                    console.log(error);
-                    alert(error.toString());
-                }
-            })
-        })
-    });
 </script>
+</body>
 </html>

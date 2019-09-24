@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -131,10 +133,11 @@ public class VacancyService extends AbstractService<Vacancy> {
         return dao.getVacanciesSortByCity(city, limit, page);
     }
 
-    public Page<Vacancy> findVacanciesByTagsAndByPoint(String currentCity, Point point, Set<Tag> tags, int limit, int page) {
+    public Page<Vacancy> getVacanciesSortedByCityTagsViews(long seekerId, String currentCity, Point point, int limit, int page) {
         String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
-        return dao.getVacanciesByTagsAndSortByCity(city, tags, limit, page);
+        return dao.getVacanciesSortedByCityTagsViews(seekerId, city, limit, page);
     }
+
     public boolean updateVacancy(Vacancy vacancy){
         Vacancy oldVacancy= getById(vacancy.getId());
         oldVacancy.setHeadline(vacancy.getHeadline());

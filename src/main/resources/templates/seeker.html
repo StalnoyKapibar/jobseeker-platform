@@ -1,88 +1,86 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layouts/commonlayouts}"
       lang="en">
 <head>
     <title>SeekerProfile</title>
     <script type="text/javascript" src="/js/seeker.js"></script>
+    <script type="text/javascript" src="/js/admin.js" sec:authorize="hasRole('ROLE_ADMIN')"></script>
 </head>
 <body>
-<div id="sProfileDiv" layout:fragment="content">
+<div id="sProfileDiv"  layout:fragment="content">
     <div class="row">
         <div class="col-sm-1"></div>
         <div class="col-sm-8">
-            <div class="container-fluid" style="margin-left: 15%;margin-right: 15%">
-                <div class="card mb-3 empCard" style="margin-top: 40px">
-                    <div class="card-header"><h4>Профиль</h4></div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-5">
-                                <h6>Имя:<span th:text="${seekerProfile.name}"></span></h6><br/>
-                                <h6>Теги:</h6>
-                                <h6>
-                                    <span th:each="tag : ${seekerProfile.tags}" th:text="${tag.name} + ' '"
-                                          class="badge badge-pill badge-success btnClick text-dark"
-                                          onclick="removeTag(this.innerHTML)"></span>
-                                    <span class="fa fa-plus badge-pill badge-success btnClick text-dark"
-                                          data-toggle="modal" data-target="#selectionTagsModal"> Add</span>
-                                </h6>
-                            </div>
-                            <div class="col-sm-5" align="right">
-                                <img th:src="@{'data:image/png;base64,' + ${photoimg}}" class="img-rounded" alt="Photo">
-                            </div>
+    <div class="container-fluid" style="margin-left: 15%;margin-right: 15%">
+        <div class="card mb-3 empCard" style="margin-top: 40px">
+            <div class="card-header"><h4 style="float:left">Профиль</h4>
+                <div style="text-align:right" sec:authorize="hasRole('ROLE_ADMIN')" th:insert="fragments/adminfragments :: admin_user_button(user=${seekerUser})"></div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <h6>Имя:<span th:text="${seekerProfile.name}"></span></h6><br/>
+                        <h6>Теги:</h6>
+                        <h6>
+                            <span th:each="tag : ${seekerProfile.tags}" th:text="${tag.name} + ' '"
+                                  class="badge badge-pill badge-success btnClick text-dark"
+                                  th:onclick="${isProfileOwner} ? 'removeTag(this.innerHTML)'"></span>
+                            <span th:if="${isProfileOwner}" class="fa fa-plus badge-pill badge-success btnClick text-dark"
+                                  data-toggle="modal" data-target="#selectionTagsModal">Add</span>
+                        </h6>
+                    </div>
+                    <div class="col-sm-5" align="right">
+                        <img th:src="@{'data:image/png;base64,' + ${photoimg}}" class="img-rounded" alt="Photo">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-11">
+                        <span>Мои проекты:</span><br/>
+                        <div class="list-group">
+                            <a th:each="portfolio, index: ${seekerProfile.portfolios}" class="list-group-item"
+                               th:text="${portfolio.projectName}" data-toggle="modal"
+                               data-target="#portfolioModal"
+                               th:onclick="'showPortfolio('+${portfolio.id}+')'"></a>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-11">
-                                <span>Мои проекты:</span><br/>
-                                <div class="list-group">
-                                    <a th:each="portfolio, index: ${seekerProfile.portfolios}" class="list-group-item"
-                                       th:text="${portfolio.projectName}" data-toggle="modal"
-                                       data-target="#portfolioModal"
-                                       th:onclick="'showPortfolio('+${portfolio.id}+')'"></a>
-                                </div>
-                                <br/>
-                                <span>Обо мне:</span><br/>
-                                <div class="well well-sm" style="background-color: var(--card-bg-color)">
-                                    <span th:text="${seekerProfile.description}"></span>
-                                </div>
-                                <br>
-                                <!-- кнопка приглашения -->
-                                <button type="button" th:onclick="'showInviteModal('+${seekerProfile.id}+')'"
-                                        class="btn btn-warning">
-                                    <i class="fas fa-user-plus"></i>InviteFriend
-                                </button>
-                                <button class="btn btn-success"
-                                        th:onclick="'window.location.href = \'' + @{/seeker/vacancies/{id}(id=${seekerProfile.id})} + '\''">
-                                    Избранное
-                                </button>
-                            </div>
-                        </div>
+                        <br/>
+                        <span>Обо мне:</span><br/>
+                        <div class="well well-sm" style="background-color: var(--card-bg-color)">
+                            <span th:text="${seekerProfile.description}"></span>
+                        </div><br>
+                        <!-- кнопка приглашения -->
+                        <button th:if="${isProfileOwner}" type="button" th:onclick="'showInviteModal('+${seekerProfile.id}+')'" class="btn btn-warning">
+                        <i class="fas fa-user-plus"></i>InviteFriend</button>
+                        <button class="btn btn-success" th:onclick="'window.location.href = \'' + @{/seeker/vacancies/{id}(id=${seekerProfile.id})} + '\''">Избранное</button>
+                        <button class="btn btn-primary" th:onclick="'window.location.href = \'' + @{/seeker/resumes/{id}(id=${seekerProfile.id})} + '\''">Все резюме</button>
                     </div>
                 </div>
             </div>
-            <!-- Modal -->
-            <div id="portfolioModal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2 class="modal-title"><span id="PMHeadline"></span></h2>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <h4><a id="PMlink"></a></h4>
-                            <div class="well well-sm">
-                                <span id="PMDescription"></span>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div id="portfolioModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title"><span id="PMHeadline"></span></h2>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h4><a id="PMlink"></a></h4>
+                    <div class="well well-sm">
+                        <span id="PMDescription"></span>
                     </div>
-
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
+        </div>
+    </div>
         </div>
     </div>
     <!-- модальное окно приглашения -->
@@ -95,8 +93,6 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body text-center edit-form">
-
-
                     <label for="seekerProfile-input-add">Seeker</label>
                     <input id="seekerProfile-input-add" class="form-control"
                            type="text"
@@ -106,7 +102,6 @@
                     <input id="friend-input-add" class="form-control"
                            type="text" placeholder="Введите Email друга"
                            name="friend"/>
-
                 </div>
                 <div class="modal-footer">
                     <button type="submit" onclick="inviteFriend(document.getElementById('seekerProfile-input-add').value,
@@ -117,10 +112,8 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
-
         </div>
     </div>
-
     <!--    модальное окно выбора тегов-->
     <div class="modal fade" id="selectionTagsModal" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -145,7 +138,7 @@
             </div>
         </div>
     </div>
+    <div sec:authorize="hasRole('ROLE_ADMIN')" th:replace="fragments/adminfragments :: admin_modal_success_operation_window"></div>
 </div>
-
 </body>
 </html>

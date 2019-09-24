@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
-<th:block th:fragment="head">
+ <th:block th:fragment="head">
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <base href="/"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
-          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -20,12 +15,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="/js/switch_theme.js" type="text/javascript"></script>
     <script type="text/javascript" src="/js/chats/new_message_popup.js"></script>
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link href="/css/common_style.css" rel="stylesheet">
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
 </th:block>
 
+<body>
 <th:block th:fragment="sidebar">
-    <div class="sidebar">
+    <div class="sidebar sidebar-expanded col-2  d-md-block">
         <ul sec:authorize="!isAuthenticated()">
             <th:block th:replace="fragments/sidebar_by_authority :: not_authority_sidebar"></th:block>
         </ul>
@@ -43,68 +41,72 @@
 </th:block>
 
 <th:block th:fragment="nav">
-    <nav class="navbar navbar-expand-sm navbar-dark fixed-top">
-        <a class="navbar-brand" href="/">JobSeeker</a>
-        <ul class="navbar-nav mr-auto">
-            <li sec:authorize="hasRole('ROLE_EMPLOYER')">
-                <a href="/new_vacancy"><span>Добавить вакансию</span></a>
-            </li>
-            <li sec:authorize="hasRole('ROLE_EMPLOYER')">
-                <a href="/add_news"><span>Добавить новость</span></a>
-            </li>
-        </ul>
-        <ul class="navbar-nav ml-auto">
-            <li class="custom-control custom-switch">
+    <header>
+    <nav class="navbar  navbar-expand-sm navbar-dark fixed-top d-flex flex-row justify-content-between p-0 m-0">
+        <div class="left-navbar d-flex flex-row m-0">
+            <a class="navbar-brand" href="#">JobSeeker</a>
+            <ul class="navbar-nav d-flex flex-row justify-content-between">
+                <li class="nav-item " sec:authorize="hasRole('ROLE_EMPLOYER')">
+                    <a class="nav-link text-light" href="/new_vacancy">Добавить вакансию</a>
+                </li>
+                <li class="nav-item " sec:authorize="hasRole('ROLE_EMPLOYER')">
+                    <a class="nav-link text-light" href="/add_news">Добавить новость</a>
+                </li>
+            </ul>
+        </div>
+        <div class="right-navbar  d-flex flex-row ">
+            <div class="custom-control custom-switch" >
                 <input type="checkbox" class="custom-control-input" id="switch-theme">
-                <label class="custom-control-label" for="switch-theme"></label>
-            </li>
-            <li sec:authorize="!isAuthenticated()" class="nav-item dropdown">
-                <a class="nav-link btn btn-warning dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                    Войти
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" style="background-color: var(--sidebar-bg-color);">
-                    <div class="container" style="width: 330px">
-                        <form class="form-signin" method="post" action="/login">
-                            <p>
-                                <label for="j_username" class="sr-only">Логин:</label>
-                                <input type="text" id="j_username" name="j_username" class="form-control"
-                                       placeholder="User" required autofocus>
-                            </p>
-                            <p>
-                                <label for="j_password" class="sr-only">Пароль:</label>
-                                <input type="password" id="j_password" name="j_password" class="form-control"
-                                       placeholder="Password" required>
-                            </p>
-                            <input name="_csrf" type="hidden" th:value="${_csrf.token}"/>
-                            <button class="btn btn-md btn-warning btn-block" type="submit"
-                                >Войти
-                            </button>
-                        </form>
-                        <a href="/login" th:align="right" style="color:#7295b1;">Проблемы со входом?</a>
-                    </div>
-                </div>
-            </li>
-        <ul sec:authorize="isAuthenticated()" class="navbar-nav ml-auto">
-            <li sec:authorize="hasRole('ROLE_SEEKER')" class="nav-item">
-                <i class="far fa-user"></i>
-                <a href="/user"><span sec:authentication="name"></span></a>
+                <label class="custom-control-label mt-1" for="switch-theme"></label>
+            </div>
+            <div sec:authorize="isAuthenticated()" class="auth-user-data ">
+                <ul class="navbar-nav d-flex flex-row  justify-content-between" >
+                    <li class="nav-item d-flex flex-row" sec:authorize="hasRole('ROLE_SEEKER')"  >
+                        <i class="far fa-user text-light align-middle nav-link m-1"></i>
+                        <a href="/user" class="nav-link text-light" sec:authentication="name"></a>
+                    </li>
+                    <li class="nav-item  d-flex flex-row" sec:authorize="hasRole('ROLE_EMPLOYER')"  >
+                        <i class="far fa-user text-light align-middle nav-link m-1"></i>
+                        <a href="/user" class="nav-link text-light" sec:authentication="name"></a>
+                    </li>
 
-            </li>
-            <li sec:authorize="hasRole('ROLE_EMPLOYER')" class="nav-item">
-                <i class="far fa-user"></i>
-                <a href="/user"><span sec:authentication="name"></span></a>
-            </li>
-            <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
-                <i class="far fa-user"></i>
-                <a href="/user"><span>Admin</span></a>
-            </li>
-            <li class="nav-item">
-                <a href="/logout"><span>Logout</span></a>
-                <i class="fas fa-sign-out-alt"></i>
-            </li>
-        </ul>
-        </ul>
+                    <li class="nav-item  d-flex flex-row" sec:authorize="hasRole('ROLE_ADMIN')"  >
+                        <i class="far fa-user text-light align-middle nav-link m-1"></i>
+                        <a href="/user" class="nav-link text-light" >Admin</a>
+                    </li>
+                    <li class="nav-item d-flex flex-row ">
+                        <a href="/logout" class="nav-link, text-light">Logout <i class="fas fa-sign-out-alt  m-1 nav-link text-light"></i></a>
+
+                    </li>
+                </ul>
+            </div>
+            <div class="dropdown" sec:authorize="!isAuthenticated()" >
+                <button class="btn btn-warning dropdown-toggle btn-sm text-light" type="button" id="navbardrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Войти
+                </button>
+                <div class="dropdown-menu  dropdown-menu-right p-3  entry-form" aria-labelledby="navbardrop">
+                    <form class="form-signin " method="post" action="/login">
+                        <div class="form-group">
+                            <label for="j_username" class="sr-only">Логин:</label>
+                            <input type="text" id="j_username" name="j_username" class="form-control"
+                                   placeholder="User" required autofocus>
+                        </div>
+                        <div class="form-group">
+                            <label for="j_password" class="sr-only">Пароль:</label>
+                            <input type="password" id="j_password" name="j_password" class="form-control"
+                                   placeholder="Password" required>
+                        </div>
+                        <input name="_csrf" type="hidden" th:value="${_csrf.token}"/>
+                        <div class="form-group d-flex flex-column m-0" >
+                            <button type="submit" class="btn btn-warning">Войти</button>
+                            <a href="/login" class=" loginHelp">Проблемы со входом?</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </nav>
+    </header>
 </th:block>
 
 <th:block th:fragment="rolsfunc">

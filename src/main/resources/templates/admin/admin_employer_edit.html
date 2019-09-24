@@ -17,8 +17,9 @@
     <div class="row" style="padding-top: 30px">
         <div class="col-4" id="employerLogo">
             <form id="editLogoForm" class="form-inline">
-                <img id="eLogo" th:src="@{'data:image/png;base64,' + ${photoimg}}" name="logo" alt=""
-                     style="width: 300px;height: 300px;"><br>
+                <img id="eLogo" th:src="${photoimg != null} ? @{'data:image/png;base64,' + ${photoimg}} : '/img/default_photo_employer.png'" name="logo" alt=""
+                     style="width: 300px;height: 300px; object-fit: scale-down">
+                <br>
                 <div class="custom-file mt-4">
                     <div class="input-group">
                         <div class="row">
@@ -50,20 +51,13 @@
                 </div>
                 <div class="form-group">
                     <label>Employer last visit : </label><input class="form-control" type="text"
-                                                                th:value="${employerUser.date}" name="date"
+                                                                th:value="${#temporals.format(employerUser.date, 'dd MMMM yyyy HH:mm')}"
                                                                 readonly>
+                    <input class="form-control" type="hidden" th:value="${employerUser.date}" name="date">
                 </div>
                 <div class="form-group">
                     <input class="form-control" type="hidden" th:value="${employerUser.password}"
                            name="password">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="hidden" th:value="${employerUser.authority.id}"
-                           name="authorityId">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="hidden" th:value="${employerUser.authority.authority}"
-                           name="authority">
                 </div>
                 <div class="form-group">
                     <input class="form-control" type="hidden" th:value="${employerUser.confirm}" name="confirm">

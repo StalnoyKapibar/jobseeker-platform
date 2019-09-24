@@ -28,13 +28,13 @@ public class CityService extends AbstractService<City> {
         if (city!=null) {
             return city;
         } else {
-            Map<Float, City> sortedCity = new TreeMap<>();
+            TreeMap<Float, City> sortedCity = new TreeMap<>();
             List<City> cityList = cityDAO.getAll();
             for (City c : cityList) {
                 float distance = pointService.getDistance(currentPoint, c.getPoint());
                 sortedCity.put(distance, c);
             }
-            return ((TreeMap<Float, City>) sortedCity).firstEntry().getValue();
+            return sortedCity.size() > 0 ? sortedCity.firstEntry().getValue() : new City(); // or null?
         }
     }
 

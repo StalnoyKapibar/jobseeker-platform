@@ -14,6 +14,7 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <div th:insert="fragments/chat-sidebar-fragment.html"></div>
     <div class="container-fluid" style="margin-left: 20px ; width: 660px">
         <h3 class="text-center mt-5">Тема чата: <span
                 th:text="${chatWithTopic.topic.typeName +' ' + chatWithTopic.topic.headline + ' от ' + chatWithTopic.topic.getCreatorProfile().getFullName()}"></span>
@@ -38,7 +39,6 @@
             </div>
         </div>
     </div>
-
 </div>
 </body>
 </html>

@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.model.profiles;
 
 import com.jm.jobseekerplatform.model.*;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -27,7 +26,7 @@ public class SeekerProfile extends Profile implements Serializable {
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Portfolio> portfolios;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER )
     private Set<Vacancy> favoriteVacancy;
 
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "seekerProfile")
@@ -150,4 +149,5 @@ public class SeekerProfile extends Profile implements Serializable {
     public void setResumes(Set<Resume> resumes) {
         this.resumes = resumes;
     }
+
 }

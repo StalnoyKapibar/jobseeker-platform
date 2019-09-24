@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,6 +42,10 @@ public class ResumeService extends AbstractService<Resume> {
     public Page<Resume> findResumesByPoint(String currentCity, Point point, int limit, int page) {
         String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
         return dao.getResumesSortByCity(city, limit, page);
+    }
+
+    public void deleteByResumeId(Long id) {
+        dao.deleteResumeById(id);
     }
 
     public void addResume(Resume resume) {

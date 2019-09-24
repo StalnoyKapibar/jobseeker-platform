@@ -3,7 +3,6 @@ package com.jm.jobseekerplatform.model.chats;
 import com.jm.jobseekerplatform.model.EmployerReviews;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.users.User;
-
 import javax.persistence.Entity;
 import java.util.List;
 

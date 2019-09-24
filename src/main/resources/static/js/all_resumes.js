@@ -121,33 +121,43 @@ function getSortedResumes(point) {
         },
         success: function (resumes) {
             total_pages = resumes.totalPages;
-            printResumes(resumes.content);
+            printResumes(resumes);
             page++;
         }
     })
 }
 
+var fio;
 function printResumes(data) {
-    $.each(data, function (key, value) {
+    $.each(data.content, function (key, value) {
         let minSalary = '';
         let resumeTags = "";
+
         if (value.salaryMin) {
             minSalary = '<div class="salary"><span>Зарплата от: ' + value.salaryMin + ' руб.</span></div>';
         }
         $.each(value.tags, function (i, item) {
             resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
         });
+
+        $.each(data.seeker, function (i, item) {
+            if (item.id === value.creatorProfile) {
+                fio = item.fullName;
+                return false;
+            }
+        });
+
         $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
-            ' data-target="#resumeModal" onclick="showResume(\'' + value.id + '\')">' +
+            'data-target="#resumeModal" onclick="showResume(\'' + value.id + '\')">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
-            '<div class="companyData"><span>Сикер: ' + value.creatorProfile + '</span><br><span>Город: ' + value.city + '</span></div>' +
+            '<div class="companyData"><span>Сикер: ' + fio + '</span><br><span>Город: ' + value.city + '</span></div>' +
             '<br>' +
             minSalary +
             '<div class="pull-right">' +
             '<span class="btn btn-outline-success btn-sm btnOnResumePage"' +
             'onclick="window.location.href =\'/seeker/' + value.creatorProfile + '\';event.stopPropagation();">На страницу сикера</span>' + '</div>' +
-            '</li>');
+        '</li>');
     });
 }
 

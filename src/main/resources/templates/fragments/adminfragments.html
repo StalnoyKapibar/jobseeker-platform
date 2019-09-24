@@ -15,6 +15,7 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Панель администратора</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/c5edb0b5a3.js"></script>
@@ -22,17 +23,18 @@
 </th:block>
 
 <th:block th:fragment="nav">
-    <nav class="navbar navbar-dark fixed-top bg-dark navbar-expand-md shadow p-0">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">JobSeeker</a>
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark d-flex flex-row justify-content-between p-0 m-0">
+        <div class="left-navbar d-flex flex-row">
+            <a class="navbar-brand text-light" href="#">JobSeeker</a>
+        </div>
+        <div class="right-navbar  d-flex flex-row ">
+            <ul class="navbar-nav d-flex flex-row  justify-content-between" >
+                <li class="nav-item">
+                    <a href="/logout" class="nav-link, text-light"> <span data-feather="log-out"></span></a>
+                </li>
+            </ul>
+        </div>
 
-        <ul class="navbar-nav ml-auto px-3">
-
-            <li class="nav-item text-nowrap">
-                <a class="nav-link" href="logout"><span data-feather="log-out"></span>
-                </a>
-            </li>
-
-        </ul>
     </nav>
 </th:block>
 
@@ -99,6 +101,46 @@
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+</th:block>
+
+<th:block th:fragment="admin_user_button(user)">
+<div th:id="userBlockId+${user.id}">
+    <button
+            class="btn btn-success user_unblock adminEnableUserBtn"
+            th:style="${user.enabled} ? 'display:none' : ''"
+            th:attr="data-id=${user.id}"
+    >Разблокировать</button>
+    <div class="dropdown user_block" style="margin:0;" th:styleappend="${!user.enabled} ? 'display:none;' : ''">
+        <button class="btn btn-danger dropdown-toggle" type="button"
+                data-toggle="dropdown">
+            Блокировать<span
+                class="caret"></span></button>
+        <div class="dropdown-menu">
+            <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=1">На сутки</a>
+            <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=3">На 3 дня</a>
+            <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=7">На 7 дней</a>
+            <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=14">На 14 дней</a>
+            <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=0">Бессрочно</a>
+        </div>
+    </div>
+</div>
+</th:block>
+
+<th:block th:fragment="admin_modal_success_operation_window">
+<div class="modal fade" id="alert_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <!-- Admin Operation Modal -->
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header alert alert-success" style="margin-bottom : 0; background-color: #d4edda">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Операция выполнена!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- /Admin Operation Modal -->
+</div>
 </th:block>
 
 </body>
