@@ -87,11 +87,11 @@ public class ResumeService extends AbstractService<Resume> {
         if (resume.getHeadline().isEmpty() || resume.getCity().getName().isEmpty()) {
             throw new IllegalArgumentException("Some fields are empty");
         }
-        patternHeadline = Pattern.compile(headline_pattern);
-        patternCity = Pattern.compile(city_pattern);
-        matcher = patternHeadline.matcher(resume.getHeadline());
+        pattern = Pattern.compile(headline_pattern);
+        matcher = pattern.matcher(resume.getHeadline());
         isCorrect = matcher.matches();
-        matcher = patternCity.matcher(resume.getCity().getName());
+        pattern = Pattern.compile(city_pattern);
+        matcher = pattern.matcher(resume.getCity().getName());
         isCorrect &= matcher.matches();
         isCorrect &= resume.getTags().size() > 0;
         return isCorrect;
