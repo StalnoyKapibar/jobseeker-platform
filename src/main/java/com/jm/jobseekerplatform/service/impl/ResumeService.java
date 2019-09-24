@@ -90,8 +90,8 @@ public class ResumeService extends AbstractService<Resume> {
         pattern = Pattern.compile(headline_pattern);
         pattern = Pattern.compile(city_pattern);
         matcher = pattern.matcher(resume.getHeadline());
-        matcher = pattern.matcher(resume.getCity().getName());
         isCorrect = matcher.matches();
+        matcher = pattern.matcher(resume.getCity().getName());
         isCorrect &= matcher.matches();
         isCorrect &= resume.getTags().size() > 0;
         return isCorrect;
