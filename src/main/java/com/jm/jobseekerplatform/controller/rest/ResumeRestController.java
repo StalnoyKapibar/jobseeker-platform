@@ -56,8 +56,8 @@ public class ResumeRestController {
     }
 
     @PostMapping("/getfilter")
-    public Page<Resume> getResumesWithFilter (@RequestBody Map<String, Object> map) {
-        return resumeService.getFilterQuery(map);
+    public Page<Resume> getResumesWithFilter (@RequestBody Map<String, Object> map, @RequestParam("page") int page) {
+        return resumeService.getResumeByFilter(map, page, 10);
     }
 
 	@RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)

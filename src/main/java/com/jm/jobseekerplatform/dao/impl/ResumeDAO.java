@@ -31,7 +31,7 @@ public class ResumeDAO extends AbstractDAO<Resume> {
         return new ResumePageDTO(resumes, totalPages, seeker);
     }
 
-    public Page<Resume> getResumeByFilter(Map<String, Object> map, int limit, int page) {
+    public Page<Resume> getResumeByFilter(Map<String, Object> map, int page, int limit) {
         String query = "select r from Resume r ";
         String queryCount = "select count(distinct r)  from Resume r ";
         StringBuilder whereQuery = new StringBuilder(query);
@@ -46,19 +46,19 @@ public class ResumeDAO extends AbstractDAO<Resume> {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             switch (entry.getKey()) {
                 case "city":
-                    whereQuery.append(" AND r.city.name = '"+entry.getValue()+"'");
-                    whereQueryCount.append(" AND r.city.name = '"+entry.getValue()+"'");
+                    whereQuery.append(" AND r.city.name = '" + entry.getValue() + "'");
+                    whereQueryCount.append(" AND r.city.name = '" + entry.getValue() + "'");
                     break;
                 case "salFrom":
-                    whereQuery.append(" AND r.salaryMin >= '"+entry.getValue()+"'");
-                    whereQueryCount.append(" AND r.salaryMin >= '"+entry.getValue()+"'");
+                    whereQuery.append(" AND r.salaryMin >= '" + entry.getValue() + "'");
+                    whereQueryCount.append(" AND r.salaryMin >= '" + entry.getValue() + "'");
                     break;
                 case "salTo":
-                    whereQuery.append(" AND r.salaryMax <= '"+entry.getValue()+"'");
-                    whereQueryCount.append(" AND r.salaryMax <= '"+entry.getValue()+"'");
+                    whereQuery.append(" AND r.salaryMax <= '" + entry.getValue() + "'");
+                    whereQueryCount.append(" AND r.salaryMax <= '" + entry.getValue() + "'");
                     break;
                 case "tagFls":
-                    String tagsForQuery ="";
+                    String tagsForQuery = "";
                     List<Long> tags = (List<Long>)entry.getValue();
                     if (tags.size() == 1) {
                         tagsForQuery = String.valueOf(tags.get(0));
@@ -72,8 +72,8 @@ public class ResumeDAO extends AbstractDAO<Resume> {
                             }
                         }
                     }
-                    whereQuery.append(" AND t in ("+tagsForQuery+") group by (r.id)");
-                    whereQueryCount.append(" AND t in ("+tagsForQuery+") group by (r.id)");
+                    whereQuery.append(" AND t in (" + tagsForQuery + ") group by (r.id)");
+                    whereQueryCount.append(" AND t in (" + tagsForQuery + ") group by (r.id)");
             }
         }
         page = (page == 0) ? page : --page;
@@ -81,7 +81,6 @@ public class ResumeDAO extends AbstractDAO<Resume> {
         long totalElements = (long) entityManager.createQuery(whereQueryCount.toString()).getSingleResult();
         int totalPages = getTotalPages(totalElements, limit);
         List<Resume> resumes = queryToHql.setFirstResult(page * limit).setMaxResults(limit).getResultList();
-
         return new ResumePageDTO(resumes, totalPages);
     }
 

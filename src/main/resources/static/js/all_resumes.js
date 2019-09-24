@@ -7,6 +7,7 @@ var city;
 var availableTags;
 var var2 = [];
 var availableCities;
+var isFilter;
 
 
 $(function () {
@@ -68,10 +69,16 @@ $(function () {
 
 $(window).scroll(function () {
     if ($(document).height() - $(window).height() === $(window).scrollTop()) {
-        if (page < total_pages) {
-            getSortedResumes(point);
-        } else if (page === total_pages) {
-            getSortedResumes(point);
+        if (isFilter) {
+            if (page < total_pages) {
+                doFilter();
+            }
+        } else {
+            if (page < total_pages) {
+                getSortedResumes(point);
+            } else if (page === total_pages) {
+                getSortedResumes(point);
+            }
         }
     }
 });
@@ -279,7 +286,9 @@ function searchByTags() {
 }
 
 function addTag(id, name) {
-    $('#searchButtons').append('<span class="listTags" id="tagItem-' + id + '"><span style="margin:0 5px 5px 0;" class="badge badge-pill badge-success tagButton" id="searchButton-' + id + '" onclick="deleteButton(\'' + id + '\')">' + name + '</span>' +
+    $('#searchButtons').append('<span class="listTags" id="tagItem-' + id + '">' +
+        '<span style="margin:0 5px 5px 0;" class="badge badge-pill badge-success tagButton" id="searchButton-' +
+        id + '" onclick="deleteButton(\'' + id + '\')">' + name + '</span>' +
         '<input class="tagIdH" id="tagId-' + id + '" type="hidden" value="' + id + '"></span>');
     $('#search_box').val('');
     $('#search_advice_wrapper').fadeOut(350).html('');
@@ -303,15 +312,20 @@ function openFilter() {
 
 
     if (filter.height() == parseInt(closeHeight)) {
+        isFilter = true;
         document.getElementById("filter").style.visibility = "visible";
         filter.height(openHeight);
     } else {
+        isFilter = false;
         document.getElementById("filter").style.visibility = "hidden";
         filter.height(closeHeight);
     }
 }
-
 function doFilterInit() {
+    page = 1;
+    doFilter();
+}
+function doFilter() {
 
     let result;
     $('#getAllResumes').remove();
@@ -367,9 +381,8 @@ function doFilterInit() {
         }
     }
 
-
     $.ajax({
-        url: 'api/resumes/getfilter',
+        url: "api/resumes/getfilter?page=" + page,
         type: "POST",
         contentType: "application/json; charset=utf-8",
         beforeSend: function (request) {
@@ -379,10 +392,9 @@ function doFilterInit() {
         dataType: "json",
         data: JSON.stringify(filter),
         success: function (data) {
-            result = data;
+            printResumes(data);
             total_pages = data.totalPages;
-            printResumes(result);
-
+            page++;
         }
     });
 }

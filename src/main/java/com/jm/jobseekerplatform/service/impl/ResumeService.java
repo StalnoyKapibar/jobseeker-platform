@@ -48,8 +48,8 @@ public class ResumeService extends AbstractService<Resume> {
         dao.deleteResumeById(id);
     }
 
-    public Page<Resume> getFilterQuery(Map<String, Object> map) {
-        return dao.getResumeByFilter(map,10,0);
+    public Page<Resume> getResumeByFilter(Map<String, Object> map, int page, int limit) {
+        return dao.getResumeByFilter(map, page, limit);
  }
 
 }
