@@ -31,7 +31,7 @@ public class ResumeDAO extends AbstractDAO<Resume> {
         return new ResumePageDTO(resumes, totalPages, seeker);
     }
 
-    public Page<Resume> getResumeByFilter(Map<String, Object> map, int page, int limit) {
+    public Page<Resume> getPagableResumesWithFilterByTagsAndCitiesAndSalaries(Map<String, Object> map, int page, int limit) {
         String query = "select r from Resume r ";
         String queryCount = "select count(distinct r)  from Resume r ";
         StringBuilder whereQuery = new StringBuilder(query);
@@ -59,7 +59,7 @@ public class ResumeDAO extends AbstractDAO<Resume> {
                     break;
                 case "tagFls":
                     String tagsForQuery = "";
-                    List<Long> tags = (List<Long>)entry.getValue();
+                    List<Long> tags = (List<Long>) entry.getValue();
                     if (tags.size() == 1) {
                         tagsForQuery = String.valueOf(tags.get(0));
                     } else {

@@ -15,9 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import javax.annotation.security.RolesAllowed;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -65,6 +64,10 @@ public class ResumeRestController {
         return seekerProfileService.getPageSeekerResumesById(resumeSet, (((User) authentication
                 .getPrincipal()).getProfile().getId()));
     }
+    @PostMapping("/getfilter")
+    public Page<Resume> getPagableResumesWithFilterByTagsAndCitiesAndSalaries (@RequestBody Map<String, Object> map, @RequestParam("page") int page) {
+        return resumeService.getPagableResumesWithFilterByTagsAndCitiesAndSalaries(map, page, 10);
+    }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
@@ -72,21 +75,6 @@ public class ResumeRestController {
         Set<Resume> resumeSet = seekerProfileService.getById(seekerProfileId).getResumes();
         return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
     }
-    @PostMapping("/getfilter")
-    public Page<Resume> getResumesWithFilter (@RequestBody Map<String, Object> map, @RequestParam("page") int page) {
-        return resumeService.getResumeByFilter(map, page, 10);
-    }
-
-	@RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
-	public Page<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, Authentication authentication) {
-		if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
-			Set<Resume> resumeSet = seekerProfileService.getById(seekerProfileId).getResumes();
-			return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
-		} else {
-			Set<Resume> resumeSet = seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()).getResumes();
-			return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
-		}
-	}
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateSeekerUser(@RequestBody Resume resume) {
