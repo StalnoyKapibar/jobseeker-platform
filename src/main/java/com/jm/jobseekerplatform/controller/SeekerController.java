@@ -1,10 +1,12 @@
 package com.jm.jobseekerplatform.controller;
 
+import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
@@ -38,6 +40,9 @@ public class SeekerController {
 
     @Autowired
     private EmployerProfileService employerProfileService;
+
+    @Autowired
+    private NewsService newsService;
 
     @GetMapping("/{seekerProfileId}")
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
@@ -86,11 +91,15 @@ public class SeekerController {
     }
 
     @RolesAllowed({"ROLE_SEEKER"})
-    @GetMapping("/get_subscription_news/{seekerProfileId}/news/{newsId}")
-    public String getSeekerSubscriptionNewsById(@PathVariable Long seekerProfileId, @PathVariable Long newsId,  Model model) {
-        model.addAttribute("newsId", newsId);
+    @GetMapping("/news/{newsId}")
+    public String getSeekerSubscriptionNewsById(@PathVariable Long newsId, Model model) {
+        News currentNews = newsService.getById(newsId);
+        model.addAttribute("headline", currentNews.getHeadline());
+        model.addAttribute("description", currentNews.getDescription());
         return "news_page";
     }
+
+
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
 

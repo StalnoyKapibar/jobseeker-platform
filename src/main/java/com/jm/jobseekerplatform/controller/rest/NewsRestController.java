@@ -58,7 +58,7 @@ public class NewsRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RolesAllowed({"ROLE_EMPLOYER"})
+    //@RolesAllowed({"ROLE_EMPLOYER"})
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
     @GetMapping("/{newsId}")
     @ResponseBody
@@ -67,11 +67,11 @@ public class NewsRestController {
     }
 
 
-    @GetMapping("/read_news")
+    /*@GetMapping("/read_news")
     @ResponseBody
     public ResponseEntity<News> readNewsById(@RequestParam("newsId") Long newsId) {
         return new ResponseEntity<>(newsService.getById(newsId), HttpStatus.OK);
-    }
+    }*/
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @GetMapping("/")
