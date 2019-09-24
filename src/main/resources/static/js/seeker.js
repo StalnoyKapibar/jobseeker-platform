@@ -4,7 +4,7 @@ var header = $("meta[name='_csrf_header']").attr("content");
 
 $(function () {
     $('#search_box').bind("input keyup click", function () {
-        if (this.value == '') {
+        if (this.value === '') {
             $("#search_advice_wrapper").remove();
             $(".search_area").append('<div id="search_advice_wrapper"></div>')
         }
@@ -20,7 +20,7 @@ $(function () {
                 data: JSON.stringify(param),
                 success: function (data) {
                     $("#search_advice_wrapper").html("").show();
-                    if (data.length == 0) {
+                    if (data.length === 0) {
                         $('#search_advice_wrapper').append('<div class="advice_variant"> По запросу "' + param + '" ничего не найдено</div>');
                     } else {
                         $.each(data, function (key, value) {
@@ -135,7 +135,6 @@ function inviteFriend(id, friend) {
     $.ajax({
         url: "/api/users/inviteFriend/" + id + "/" + friend,
         type: "GET",
-        async: false,
         success: function () {
             alert("Ваше приглашение было отправленно");
             $('#inviteFriendModal').modal('hide');
@@ -146,8 +145,11 @@ function inviteFriend(id, friend) {
 function inFavorite(vacancyId, seekerProfileId) {
     $.ajax({
         type: 'post',
-        url: "/api/seekerprofiles/inFavoriteVacancy?vacancyId=" + vacancyId + "&seekerProfileId=" + seekerProfileId,
-        contentType: 'application/json; charset=utf-8',
+        url: "/api/seekerprofiles/inFavoriteVacancy",
+        // data: "seekerProfileId=" + seekerProfileId + "&vacancyId=" + vacancyId,
+        data: JSON.stringify({ seekerProfileId: seekerProfileId, vacancyId: vacancyId }),
+        // contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        contentType: "application/json;charset=utf-8",
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
@@ -166,8 +168,11 @@ function inFavorite(vacancyId, seekerProfileId) {
 function outFavorite(vacancyId, seekerProfileId) {
     $.ajax({
         type: 'post',
-        url: "/api/seekerprofiles/outFavoriteVacancy?vacancyId=" + vacancyId + "&seekerProfileId=" + seekerProfileId,
-        contentType: 'application/json; charset=utf-8',
+        url: "/api/seekerprofiles/outFavoriteVacancy",
+        // data: "seekerProfileId=" + seekerProfileId + "&vacancyId=" + vacancyId,
+        data: JSON.stringify({ seekerProfileId: seekerProfileId, vacancyId: vacancyId }),
+        // contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        contentType: "application/json;charset=utf-8",
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
@@ -195,8 +200,9 @@ function toSubscribe(vacancyId, seekerProfileId) {
 
         $.ajax({
             type: 'post',
-            url: "/api/seekerprofiles/toSubscribe?vacancyId=" + vacancyId + "&seekerProfileId=" + seekerProfileId + "&tags=" + tags,
-            contentType: 'application/json; charset=utf-8',
+            url: "/api/seekerprofiles/toSubscribe",
+            data: "vacancyId=" + vacancyId + "&seekerProfileId=" + seekerProfileId + "&tags=" + tags,
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
             beforeSend: function (request) {
                 request.setRequestHeader(header, token);
             },
@@ -220,8 +226,9 @@ function toSubscribe(vacancyId, seekerProfileId) {
 function unSubscribe(vacancyId, seekerProfileId) {
     $.ajax({
         type: 'post',
-        url: "/api/seekerprofiles/unSubscribe?vacancyId=" + vacancyId + "&seekerProfileId=" + seekerProfileId,
-        contentType: 'application/json; charset=utf-8',
+        url: "/api/seekerprofiles/unSubscribe",
+        data: "vacancyId=" + vacancyId + "&seekerProfileId=" + seekerProfileId,
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
@@ -239,9 +246,10 @@ function unSubscribe(vacancyId, seekerProfileId) {
 
 function deleteSubscription(employerProfileId, seekerProfileId) {
     $.ajax({
-        type: 'get',
-        url: "/api/seekerprofiles/deleteSubscription?employerProfileId=" + employerProfileId + "&seekerProfileId=" + seekerProfileId,
-        contentType: 'application/json; charset=utf-8',
+        type: 'post',
+        url: "/api/seekerprofiles/deleteSubscription",
+        data: "employerProfileId=" + employerProfileId + "&seekerProfileId=" + seekerProfileId,
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
@@ -258,8 +266,9 @@ function deleteSubscription(employerProfileId, seekerProfileId) {
 function removeTag(name) {
     $.ajax({
         type: 'post',
-        url: "/api/seekerprofiles/removeTag?tag=" + name,
-        contentType: 'application/json; charset=utf-8',
+        url: "/api/seekerprofiles/removeTag",
+        data: "tag=" + name,
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },

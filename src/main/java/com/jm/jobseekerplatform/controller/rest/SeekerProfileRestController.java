@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
@@ -20,11 +21,16 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/seekerprofiles")
 public class SeekerProfileRestController {
+
+//    private static final Logger logger = LoggerFactory.getLogger(SeekerProfileRestController.class);
 
     @Autowired
     private SeekerProfileService seekerProfileService;
@@ -51,10 +57,11 @@ public class SeekerProfileRestController {
         return seekerProfileService.getById(seekerProfileId);
     }
 
-    @RequestMapping(value = "/outFavoriteVacancy", method = RequestMethod.POST)
-    public ResponseEntity outFavoriteVacancy(@RequestParam("vacancyId") Long vacancyId,
-                                             @RequestParam("seekerProfileId") Long seekerProfileId) {
-
+    @PostMapping(value = "/outFavoriteVacancy")
+//    public ResponseEntity outFavoriteVacancy(@RequestParam Long vacancyId, @RequestParam Long seekerProfileId) {
+    public ResponseEntity outFavoriteVacancy(@RequestBody JsonNode jsonNode) {
+        Long seekerProfileId = jsonNode.get("seekerProfileId").asLong();
+        Long vacancyId = jsonNode.get("vacancyId").asLong();
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Vacancy vacancy = vacancyService.getById(vacancyId);
         seekerProfile.getFavoriteVacancy().remove(vacancy);
@@ -62,10 +69,11 @@ public class SeekerProfileRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/inFavoriteVacancy", method = RequestMethod.POST)
-    public ResponseEntity inFavoriteVacancy(@RequestParam("vacancyId") Long vacancyId,
-                                            @RequestParam("seekerProfileId") Long seekerProfileId) {
-
+    @PostMapping(value = "/inFavoriteVacancy")
+//    public ResponseEntity inFavoriteVacancy(@RequestParam Long vacancyId, @RequestParam Long seekerProfileId) {
+    public ResponseEntity inFavoriteVacancy(@RequestBody JsonNode jsonNode) {
+        Long seekerProfileId = jsonNode.get("seekerProfileId").asLong();
+        Long vacancyId = jsonNode.get("vacancyId").asLong();
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Vacancy vacancy = vacancyService.getById(vacancyId);
         seekerProfile.getFavoriteVacancy().add(vacancy);
@@ -73,10 +81,8 @@ public class SeekerProfileRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/unSubscribe", method = RequestMethod.POST)
-    public ResponseEntity unSubscribeCompany(@RequestParam("vacancyId") Long vacancyId,
-                                             @RequestParam("seekerProfileId") Long seekerProfileId) {
-
+    @PostMapping(value = "/unSubscribe")
+    public ResponseEntity unSubscribeCompany(@RequestParam Long vacancyId, @RequestParam Long seekerProfileId) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Vacancy vacancy = vacancyService.getById(vacancyId);
         EmployerProfile employerProfile = employerProfileService.getById(((Profile) vacancy.getCreatorProfile()).getId());
@@ -85,11 +91,9 @@ public class SeekerProfileRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/toSubscribe", method = RequestMethod.POST)
-    public ResponseEntity toSubscribeCompany(@RequestParam("vacancyId") Long vacancyId,
-                                             @RequestParam("seekerProfileId") Long seekerProfileId,
-                                             @RequestParam("tags") Set<String> tags) {
-
+    @PostMapping(value = "/toSubscribe")
+    public ResponseEntity toSubscribeCompany(@RequestParam Long vacancyId, @RequestParam Long seekerProfileId,
+                                             @RequestParam Set<String> tags) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Vacancy vacancy = vacancyService.getById(vacancyId);
         EmployerProfile employerProfile = employerProfileService.getById(((Profile) vacancy.getCreatorProfile()).getId());
@@ -100,10 +104,8 @@ public class SeekerProfileRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/deleteSubscription")
-    public ResponseEntity deleteSubscription(@RequestParam("employerProfileId") Long employerProfileId,
-                                             @RequestParam("seekerProfileId") Long seekerProfileId) {
-
+    @PostMapping(value = "/deleteSubscription")
+    public ResponseEntity deleteSubscription(@RequestParam Long employerProfileId, @RequestParam Long seekerProfileId) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
         Subscription subscription = subscriptionService.findBySeekerAndEmployer(seekerProfile, employerProfile);
@@ -111,8 +113,8 @@ public class SeekerProfileRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/updateUserTags")
-    public ResponseEntity updateUserTags(@RequestParam("updatedTags") String[] updatedTags) {
+    @PostMapping(value = "/updateUserTags")
+    public ResponseEntity updateUserTags(@RequestParam String[] updatedTags) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
@@ -129,8 +131,8 @@ public class SeekerProfileRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/removeTag")
-    public ResponseEntity removeTag(@RequestParam("tag") String tag) {
+    @PostMapping(value = "/removeTag")
+    public ResponseEntity removeTag(@RequestParam String tag) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
@@ -144,4 +146,5 @@ public class SeekerProfileRestController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
+
 }
