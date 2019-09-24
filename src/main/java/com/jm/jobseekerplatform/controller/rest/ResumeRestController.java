@@ -66,7 +66,7 @@ public class ResumeRestController {
     }
     @PostMapping("/getfilter")
     public Page<Resume> getPagableResumesWithFilterByTagsAndCitiesAndSalaries (@RequestBody Map<String, Object> map, @RequestParam("page") int page) {
-        return resumeService.getPagableResumesWithFilterByTagsAndCitiesAndSalaries(map, page, 10);
+        return resumeService.getPagableResumesWithFilterByQueryParamsMapAndPageAndLimit(map, page, 10);
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})

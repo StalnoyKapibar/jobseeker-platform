@@ -48,8 +48,8 @@ public class ResumeService extends AbstractService<Resume> {
         dao.deleteResumeById(id);
     }
 
-    public Page<Resume> getPagableResumesWithFilterByTagsAndCitiesAndSalaries(Map<String, Object> map, int page, int limit) {
-        return dao.getPagableResumesWithFilterByTagsAndCitiesAndSalaries(map, page, limit);
+    public Page<Resume> getPagableResumesWithFilterByQueryParamsMapAndPageAndLimit(Map<String, Object> map, int page, int limit) {
+        return dao.getPagableResumesWithFilterByQueryParamsMapAndPageAndLimit(map, page, limit);
  }
 
 }
