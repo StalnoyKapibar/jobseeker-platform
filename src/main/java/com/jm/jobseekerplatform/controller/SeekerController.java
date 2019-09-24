@@ -94,6 +94,7 @@ public class SeekerController {
     @GetMapping("/news/{newsId}")
     public String getSeekerSubscriptionNewsById(@PathVariable Long newsId, Model model) {
         News currentNews = newsService.getById(newsId);
+        model.addAttribute("newsId", currentNews.getId());
         model.addAttribute("headline", currentNews.getHeadline());
         model.addAttribute("description", currentNews.getDescription());
         return "news_page";

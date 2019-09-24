@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.model.comments;
 
 
+import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 
 import javax.persistence.*;
@@ -18,15 +19,15 @@ public class Comment {
     private String text;
 
     @ManyToOne
-    private SeekerProfile seekerProfile;
+    private Profile profile;
 
     public Comment(){
 
     }
 
-    public Comment(String text, SeekerProfile seekerProfile) {
+    public Comment(String text, Profile profile) {
         this.text = text;
-        this.seekerProfile = seekerProfile;
+        this.profile = profile;
     }
 
     public Long getId() {
@@ -45,11 +46,11 @@ public class Comment {
         this.text = text;
     }
 
-    public SeekerProfile getSeekerProfile() {
-        return seekerProfile;
+    public Profile getSeekerProfile() {
+        return profile;
     }
 
-    public void setSeekerProfile(SeekerProfile seekerProfile) {
-        this.seekerProfile = seekerProfile;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 }

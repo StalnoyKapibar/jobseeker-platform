@@ -66,8 +66,8 @@ function printSeekerNews() {
             $('#seekerNewsLine').append(cardHTML);
         },
         error: function (error) {
-            console.log(error);
-            alert(error.toString());
+            /*console.log(error);
+            alert(error.toString());*/
         }
     })
 }
