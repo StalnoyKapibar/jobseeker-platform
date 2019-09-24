@@ -31,19 +31,20 @@ public class ResumeDAO extends AbstractDAO<Resume> {
         return new ResumePageDTO(resumes, totalPages, seeker);
     }
 
-    public Page<Resume> getPagableResumesWithFilterByQueryParamsMapAndPageAndLimit(Map<String, Object> map, int page, int limit) {
+    public Page<Resume> getPagableResumesWithFilterByQueryParamsMapAndPageAndLimit(Map<String, Object> queryParamsMap,
+                                                                                   int pageNumber, int pageSize) {
         String query = "select r from Resume r ";
         String queryCount = "select count(distinct r)  from Resume r ";
         StringBuilder whereQuery = new StringBuilder(query);
         StringBuilder whereQueryCount = new StringBuilder(queryCount);
-        if (map.containsKey("tagFls")) {
+        if (queryParamsMap.containsKey("tagFls")) {
             whereQuery.append("join r.tags t WHERE r.id <> 0");
             whereQueryCount.append("join r.tags t WHERE r.id <> 0");
         } else {
             whereQuery.append("WHERE r.id <> 0");
             whereQueryCount.append("WHERE r.id <> 0");
         }
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
+        for (Map.Entry<String, Object> entry : queryParamsMap.entrySet()) {
             switch (entry.getKey()) {
                 case "city":
                     whereQuery.append(" AND r.city.name = '" + entry.getValue() + "'");
@@ -76,11 +77,11 @@ public class ResumeDAO extends AbstractDAO<Resume> {
                     whereQueryCount.append(" AND t in (" + tagsForQuery + ") group by (r.id)");
             }
         }
-        page = (page == 0) ? page : --page;
+        pageNumber = (pageNumber == 0) ? pageNumber : --pageNumber;
         Query queryToHql = entityManager.createQuery(whereQuery.toString(), Resume.class);
         long totalElements = (long) entityManager.createQuery(whereQueryCount.toString()).getSingleResult();
-        int totalPages = getTotalPages(totalElements, limit);
-        List<Resume> resumes = queryToHql.setFirstResult(page * limit).setMaxResults(limit).getResultList();
+        int totalPages = getTotalPages(totalElements, pageSize);
+        List<Resume> resumes = queryToHql.setFirstResult(pageNumber * pageSize).setMaxResults(pageSize).getResultList();
         return new ResumePageDTO(resumes, totalPages);
     }
 

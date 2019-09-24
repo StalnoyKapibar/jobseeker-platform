@@ -65,8 +65,10 @@ public class ResumeRestController {
                 .getPrincipal()).getProfile().getId()));
     }
     @PostMapping("/getfilter")
-    public Page<Resume> getPagableResumesWithFilterByTagsAndCitiesAndSalaries (@RequestBody Map<String, Object> map, @RequestParam("page") int page) {
-        return resumeService.getPagableResumesWithFilterByQueryParamsMapAndPageAndLimit(map, page, 10);
+    public Page<Resume> getPagableResumesWithFilterByQueryParamsMapAndPageAndLimit (@RequestBody Map<String, Object> queryParamsMap,
+                                                                                    @RequestParam("page") int pageNumber) {
+        int pageSize = 10;
+        return resumeService.getPagableResumesWithFilterByQueryParamsMapAndPageAndLimit(queryParamsMap, pageNumber, pageSize);
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
