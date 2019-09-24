@@ -13,9 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.Set;
 
 @RestController
@@ -35,7 +35,8 @@ public class ResumeRestController {
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<Page<Resume>> getSearchVacancies(@RequestBody Set<Tag> searchParam, @RequestParam("pageCount") int pageCount) {
+    ResponseEntity<Page<Resume>> getSearchVacancies(@RequestBody Set<Tag> searchParam,
+                                                    @RequestParam("pageCount") int pageCount) {
         if (searchParam.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -44,7 +45,8 @@ public class ResumeRestController {
     }
 
     @RequestMapping(value = "/city/page/{page}", method = RequestMethod.POST)
-    public Page<Resume> getPageOfResumes(@RequestBody Point point, @RequestParam("city") String city, @PathVariable("page") int page) {
+    public Page<Resume> getPageOfResumes(@RequestBody Point point, @RequestParam("city") String city,
+                                         @PathVariable("page") int page) {
         int limit = 10;
         if (city.equals("undefined")) {
             return resumeService.getAllResumes(limit, page);
@@ -53,16 +55,21 @@ public class ResumeRestController {
         }
     }
 
-	@RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
-	public Page<Resume> getSeekerResumesPage(@PathVariable Long seekerProfileId, Authentication authentication) {
-		if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYER"))) {
-			Set<Resume> resumeSet = seekerProfileService.getById(seekerProfileId).getResumes();
-			return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
-		} else {
-			Set<Resume> resumeSet = seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()).getResumes();
-			return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
-		}
-	}
+    @RolesAllowed({"ROLE_SEEKER"})
+    @RequestMapping(value = "/seeker", method = RequestMethod.POST, produces = "application/json")
+    public Page<Resume> getSeekerResumesPage(Authentication authentication) {
+        Set<Resume> resumeSet = seekerProfileService.getById(((User) authentication.getPrincipal())
+                .getProfile().getId()).getResumes();
+        return seekerProfileService.getPageSeekerResumesById(resumeSet, (((User) authentication
+                .getPrincipal()).getProfile().getId()));
+    }
+
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @RequestMapping(value = "/seeker/{seekerProfileId}", method = RequestMethod.POST)
+    public Page<Resume> getSeekerResumesPageForEmployer(@PathVariable Long seekerProfileId) {
+        Set<Resume> resumeSet = seekerProfileService.getById(seekerProfileId).getResumes();
+        return seekerProfileService.getPageSeekerResumesById(resumeSet, seekerProfileId);
+    }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateSeekerUser(@RequestBody Resume resume) {
@@ -75,5 +82,4 @@ public class ResumeRestController {
         resumeService.deleteByResumeId(resumeId);
         return new ResponseEntity(HttpStatus.OK);
     }
-  
 }
