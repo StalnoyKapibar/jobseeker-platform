@@ -26,7 +26,7 @@ public class SeekerProfile extends Profile implements Serializable {
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Portfolio> portfolios;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER )
     private Set<Vacancy> favoriteVacancy;
 
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "seekerProfile")

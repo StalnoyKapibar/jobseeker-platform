@@ -14,7 +14,7 @@
     <div class="container-fluid" style="margin: 30px">
         <h3>Текущие приглашения</h3>
         <h4 th:if="${seekerProfile.meetings.isEmpty()}">У вас пока нет приглашений</h4>
-        <div th:if="${isOwner && !seekerProfile.meetings.isEmpty()}" id="table" style="padding: 15px;">
+        <div th:if="${!seekerProfile.meetings.isEmpty()}" id="table" style="padding: 15px;">
             <table class="table table-sm table-bordered" style=" width: 80% ;background-color: var(--sidebar-bg-color); color: var(--text-color)">
                 <thead class="" style="border-width: 0px;">
                     <tr style="font-weight: bold; ">

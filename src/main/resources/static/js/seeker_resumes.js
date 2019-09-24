@@ -2,14 +2,12 @@ let header = $("meta[name='_csrf_header']").attr("content");
 let token = $("meta[name='_csrf']").attr("content");
 
 $(document).ready(function () {
-    let url = window.location.pathname;
-    let seekerProfileId = url.substring(url.lastIndexOf('/') + 1);
-    getSeekerResumes(seekerProfileId);
+    getSeekerResumes();
 });
 
-function getSeekerResumes(seekerProfileId) {
+function getSeekerResumes() {
     $.ajax ({
-        url: "api/resumes/seeker/" + seekerProfileId,
+        url: "api/resumes/seeker",
         type: "POST",
         async: false,
         beforeSend: function (request) {
@@ -21,7 +19,6 @@ function getSeekerResumes(seekerProfileId) {
     })
 }
 
-
 function seekerResumes(resumeList) {
     $.each(resumeList.content, function (key, value) {
         let minSalary = '';
@@ -32,19 +29,15 @@ function seekerResumes(resumeList) {
         $.each(value.tags, function (i, item) {
             resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
         });
-
-        $.each(resumeList.seeker, function (i, item) {
-            fio = item.fullName;
-        });
-
-        $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
-            ' data-target="#resumeModal" onclick="showChosenResume(\'' + value.id + '\')">' +
+        $('#searchList').append('<li class="list-group-item clearfix">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
-            '<div class="companyData"><span>Сикер: ' + fio + '</span><br><span>Город: ' + value.city + '</span></div>' +
+            '<div class="companyData"><span>Сикер: ' + resumeList.seeker[0].fullName + '</span><br><span>Город: ' + value.city + '</span></div>' +
             '<br>' +
             minSalary +
-            '<div class="pull-right">' +
+            '<div class="text-right">' +
+            '<span class="btn btn-outline-info btn-sm btnShowResume" data-toggle="modal"' +
+            ' data-target="#resumeModal" onclick="showChosenResume(\'' + value.id + '\')">Подробнее</span>' +
             '<span class="btn btn-outline-secondary btn-sm btnEditResume"' +
             'onclick="#">Редактировать</span>' +
             '<span class="btn btn-outline-danger btn-sm btnDeleteResume"' +
@@ -99,7 +92,6 @@ function showChosenResume(id) {
 }
 
 function deleteSeekerResumeById(seekerProfileIdResume) {
-
     $.ajax({
         url: '/api/resumes/delete/' + seekerProfileIdResume,
         type: 'GET',
@@ -108,7 +100,7 @@ function deleteSeekerResumeById(seekerProfileIdResume) {
             request.setRequestHeader(header, token);
         },
         success: function () {
-            location.href = "/seeker/resumes/" + seekerProfileIdResume
+            location.href = "/seeker/resumes"
         },
         error: function (error) {
             console.log(error);
