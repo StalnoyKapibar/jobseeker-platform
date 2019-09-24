@@ -79,12 +79,13 @@ function addUser() {
     var userEmail = $("#user_email").val();
     var userPass = $("#user_password").val();
     var role = {'authority': $("#role").val()};
+    var type = (role.authority == 'ROLE_SEEKER') ? 'seeker' : 'employer';
     var checkBox = document.getElementById("notify");
 
     var newUser = {
         'email': userEmail,
         'password': userPass,
-        'authority': role
+        'type': type
     };
 
     $.ajax({

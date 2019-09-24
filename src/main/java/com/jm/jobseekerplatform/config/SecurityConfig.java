@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         //регистрация пользователя(добавление),  подтверждение регистрации доступен всем и всегда
                         "/api/users/add", "/confirm_reg/*", "/js/**", "/vacancy/**").permitAll()
                 // всё, что касается админа только для админа и емплоера
-                .antMatchers("/admin/**").access("hasAnyRole('ADMIN','EMPLOYER')").anyRequest().authenticated();
+                .antMatchers("/admin/**", "api/resumes/**", "api/cities/**").access("hasAnyRole('ADMIN','EMPLOYER')").anyRequest().authenticated();
     }
 
 }
