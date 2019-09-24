@@ -73,7 +73,6 @@ public class MainController {
     public String mainPage(Model model, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             model.addAttribute("vacMess", "Доступные вакансии:");
-            model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         } else {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 try {
@@ -81,22 +80,18 @@ public class MainController {
                     SeekerProfile profile = seekerProfileService.getCurrentProfile(authentication);
                     model.addAttribute("favoriteVacancies", profile.getFavoriteVacancy());
                     model.addAttribute("seekerProfileId", profile.getId());
-                    model.addAttribute("googleMapsApiKey", googleMapsApiKey);
                     model.addAttribute("seekerAuthority", seekerUser.getAuthority());
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
                 } catch (NullPointerException e) {
-                    model.addAttribute("googleMapsApiKey", googleMapsApiKey);
                     model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
                 }
-            } else {
-                model.addAttribute("googleMapsApiKey", googleMapsApiKey);
             }
-
             if (authentication.getAuthorities().contains(roleEmployer)) {
                 Profile profile = employerProfileService.getCurrentProfile(authentication);
                 model.addAttribute("employerProfileId", profile.getId());
             }
         }
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "index";
     }
 
