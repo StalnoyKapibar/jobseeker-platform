@@ -158,7 +158,6 @@ public class SeekerController {
         }
         return "resume/edit_resume";
     }
-}
 
     @RequestMapping("/update/{seekerProfileId}")
     public String updateSeekerProfilePage(@PathVariable Long seekerProfileId, Model model) {
