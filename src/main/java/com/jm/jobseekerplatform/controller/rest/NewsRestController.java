@@ -43,7 +43,7 @@ public class NewsRestController {
     public ResponseEntity addNews(@RequestBody News news,
                                   @RequestParam("tags") Set<String> tags,
                                   Authentication authentication) {
-        news.setAuthor(employerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()));
+        news.setAuthor(employerProfileService.getCurrentProfile(authentication));
         Set<Tag> tagSet = tagService.getTagsByStringNames(tags);
         news.setTags(tagSet);
         newsService.add(news);
@@ -72,7 +72,7 @@ public class NewsRestController {
     public ResponseEntity<List<News>> getAllNewsByEmployerProfileId(@RequestParam("newsPageCount") int newsPageCount,
                                                                     Authentication authentication) {
         Sort sort = new Sort(Sort.Direction.DESC, "date");
-        Long employerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
+        Long employerProfileId = employerProfileService.getCurrentProfile(authentication).getId();
         List<News> news = newsService.getAllByEmployerProfileId(employerProfileService.getById(employerProfileId),
                 PageRequest.of(newsPageCount, 10, sort)).getContent();
         return new ResponseEntity<>(news, HttpStatus.OK);
