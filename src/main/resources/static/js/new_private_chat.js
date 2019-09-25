@@ -22,7 +22,7 @@ $(document).ready(function () {
         //Проверка на длину сообщения:
         if (this.value.length > 119) {
             event.preventDefault();
-            alert("Сообщение максимум 120 знаков");
+            console.log("Сообщение максимум 120 знаков");
         }
 
         //Проверка на нажатие shift+enter:
@@ -32,14 +32,13 @@ $(document).ready(function () {
         }
 
         //Проверка/ограничение на высоту окна ввода:
-        if(this.scrollTop > 0 && this.scrollHeight < 100) {
+        if(this.scrollTop > 0 && this.scrollHeight < 95) {
             this.style.height = this.scrollHeight + "px";
         } else if (this.scrollTop > 1 && event.which == 13) {
             event.preventDefault();
         }
     });
 });
-
 
 function connectToServerByChatId(chatId) {
     var socket = new SockJS('/private_chat-messaging');
@@ -111,21 +110,21 @@ function displayMessage(message) {
         $(".msg_history").append('' +
             '<div class="outgoing_msg">' +
             '<div class="sent_msg">' +
-            '<ul id="idp"></ul>' +
-            '<span class="tsme_date">' + date + '</span>' +
+            '<ul id="insertUl"></ul>' +
+            '<span class="time_date">' + date + '</span>' +
             '</div>' +
             '</div>')
         ;
 
         let str = message.text;
-        let x =  $(".sent_msg:last").children('#idp');
+        let urlLast =  $(".sent_msg:last").find('#insertUl');
         if(str.indexOf('\n') > 0) {
             let arr = str.split('\n');
             for (var i = 0; i < arr.length; i++) {
-                $(x).append('<li>' + arr[i] + '</li>');
+                $(urlLast).append('<li>' + arr[i] + '</li>');
             }
         } else {
-            $(x).append('<li>' + message.text + '</li>');
+            $(urlLast).append('<li>' + str + '</li>');
         }
     }
 
@@ -176,7 +175,7 @@ function getMessageLog(message) {
 }
 
 function sendMessage() {
-    $(".write_msg").css({height: "33px"});
+    $(".write_msg").css({height: "55px"});
     var messageContent = $(".write_msg").val().trim();
     if (messageContent && stompClient) {
         var chatMessage = {

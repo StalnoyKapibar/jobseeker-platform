@@ -167,7 +167,7 @@ img {
     width: 100%;
 }
 
-#idp {
+#insertUl {
     background: rgb(0, 188, 140) none repeat scroll 0 0;
     border-radius: 3px;
     font-size: 14px;
@@ -176,9 +176,17 @@ img {
     width: 100%;
 }
 
-#idp li {
+#insertUl li {
     white-space: normal;
     word-wrap: break-word;
+}
+
+.privChat {
+	height: 55px;
+	width: 90%;
+	overflow: hidden;
+	outline: none;
+	resize: none;
 }
 
 .outgoing_msg {
