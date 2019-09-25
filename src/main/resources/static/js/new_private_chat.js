@@ -104,36 +104,28 @@ function displayMessage(message) {
         $(".msg_history").append('<div class="special_msg text-center"><p>' + messageLog + '</p></div>')
     }
 
-    function addYourMessage(message) {
-        var date = messageDateFormat(message.date);
-
 //Вывод сообщений построчно:
-        var str = message.text;
+    function addYourMessage(message) {
+        let date = messageDateFormat(message.date);
+
+        $(".msg_history").append('' +
+            '<div class="outgoing_msg">' +
+            '<div class="sent_msg">' +
+            '<ul id="idp"></ul>' +
+            '<span class="tsme_date">' + date + '</span>' +
+            '</div>' +
+            '</div>')
+        ;
+
+        let str = message.text;
+        let x =  $(".sent_msg:last").children('#idp');
         if(str.indexOf('\n') > 0) {
             let arr = str.split('\n');
-
-            $(".msg_history").append('' +
-                '<div class="outgoing_msg">' +
-                    '<div class="sent_msg">' +
-                        '<ul id="idp"></ul>' +
-                        '<span class="tsme_date">' + date + '</span>' +
-                    '</div>' +
-                '</div>')
-            ;
-
-           var x =  $(".sent_msg:last").children('#idp');
             for (var i = 0; i < arr.length; i++) {
                 $(x).append('<li>' + arr[i] + '</li>');
             }
         } else {
-            $(".msg_history").append('' +
-                '<div class="outgoing_msg">' +
-                    '<div class="sent_msg">' +
-                        '<ul id="idp"><li>' + message.text + '</li></ul>' +
-                        '<span class="time_date">' + date + '</span>' +
-                    '</div>' +
-                '</div>')
-            ;
+            $(x).append('<li>' + message.text + '</li>');
         }
     }
 
