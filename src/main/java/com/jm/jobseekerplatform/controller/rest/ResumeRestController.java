@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -62,6 +63,12 @@ public class ResumeRestController {
                 .getProfile().getId()).getResumes();
         return seekerProfileService.getPageSeekerResumesById(resumeSet, (((User) authentication
                 .getPrincipal()).getProfile().getId()));
+    }
+    @PostMapping("/getfilter")
+    public Page<Resume> getPagableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize (@RequestBody Map<String, Object> queryParamsMap,
+                                                                                    @RequestParam("page") int pageNumber) {
+        int pageSize = 10;
+        return resumeService.getPagableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(queryParamsMap, pageNumber, pageSize);
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
