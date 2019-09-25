@@ -262,7 +262,7 @@ function validateAndPreview() {
             'tags': tags,
             'coordinates': point
         };
-        let jobHead = "Предыдущий опыт работы: <br>";
+        let jobHead = "Предыдущий опыт работы<br>";
         let jobExp = "";
         let jobPer = "";
         if (jobExperiences[0].companyName === "") {

@@ -73,7 +73,6 @@ $(document).ready(function () {
     });
 });
 
-
 function validateAndPreview() {
     let isValid = headline_check && address_check && salary_min_check && salary_max_check &&
         company_check && firstDay_check && lastDay_check && position_check && responsibilities_check;
@@ -131,7 +130,7 @@ function validateAndPreview() {
             'tags': tags,
             'coordinates': point
         };
-        let jobHead = "Предыдущий опыт работы: <br>";
+        let jobHead = "Предыдущий опыт работы<br>";
         let jobExp = "";
         let jobPer = "";
         if (jobExperiences[0].companyName === "") {
