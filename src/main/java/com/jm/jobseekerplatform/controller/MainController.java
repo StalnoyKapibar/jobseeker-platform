@@ -207,7 +207,6 @@ public class MainController {
         model.addAttribute("vacancyFromServer", vacancy);
         model.addAttribute("EmployerProfileFromServer", vacancy.getCreatorProfile());
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getCreatorProfile().getLogo()));
-
         return "/vacancy/vacancy";
     }
 

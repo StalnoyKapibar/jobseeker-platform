@@ -26,13 +26,18 @@ public class Comment implements Serializable {
     @Column(name = "text")
     private String text;
 
-    @ManyToOne
+   @ManyToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
 
     public Comment(){
 
+    }
+
+    public Comment(String text, Profile profile) {
+        this.text=text;
+        this.profile=profile;
     }
 
     public Long getId() {

@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
+import com.jm.jobseekerplatform.model.comments.Comment;
 import com.jm.jobseekerplatform.model.profiles.AdminProfile;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
@@ -16,6 +17,7 @@ import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
 import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatService;
+import com.jm.jobseekerplatform.service.impl.comments.CommentService;
 import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
@@ -105,6 +107,9 @@ public class InitData {
     @Autowired
     private StoredProcedureService storedProcedureService;
 
+    @Autowired
+    private CommentService commentService;
+
     private Faker faker = new Faker(new Locale("ru"));
 
     private Random rnd = new Random();
@@ -128,6 +133,7 @@ public class InitData {
         initNews();
         initJobExperience();
         initResumes();
+        initComments();
     }
 
     private void initNews() {
@@ -434,7 +440,6 @@ public class InitData {
         tagService.add(new Tag("MySQL", verified));
         tagService.add(new Tag("Thymeleaf", verified));
         tagService.add(new Tag("OAuth2", verified));
-
     }
 
     public void initSeekerProfile() {
@@ -579,4 +584,9 @@ public class InitData {
             jobExperiences.clear();
         }
     }
+    public void initComments(){
+        Profile profile = profileService.getById(Long.valueOf(8));
+        commentService.add(new Comment("HelloF World", profile ));
+    }
+
 }

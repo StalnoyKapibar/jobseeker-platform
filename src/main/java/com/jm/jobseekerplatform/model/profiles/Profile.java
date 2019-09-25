@@ -57,7 +57,7 @@ public abstract class Profile implements Serializable {
 
     public abstract String getTypeName();
 
-    public String getEncoderPhoto() {
+   public String getEncoderPhoto() {
         return Base64.getEncoder().encodeToString(this.getLogo());
     }
 
