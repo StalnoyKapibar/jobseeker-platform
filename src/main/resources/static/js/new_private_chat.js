@@ -37,10 +37,6 @@ $(document).ready(function () {
         } else if (this.scrollTop > 1 && event.which == 13) {
             event.preventDefault();
         }
-
-
-        $('#textInfo').empty().append(this.value.length + 1);
-
     });
 });
 
