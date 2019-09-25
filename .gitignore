@@ -53,4 +53,8 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 
-## Credential and Enviroment depended properties
+## Credential and Environment depended properties
+application.properties
+datasource.properties
+jpa.properties
+mail.properties
