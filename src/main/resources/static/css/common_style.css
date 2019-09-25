@@ -79,6 +79,10 @@ li {
     margin-right:5vw;
 }
 
+.sidebar, .btn {
+    cursor: pointer;
+}
+
 /*Sidebar style*/
 .sidebar {
     position: fixed;
