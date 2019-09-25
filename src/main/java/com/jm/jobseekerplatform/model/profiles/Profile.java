@@ -1,11 +1,15 @@
 package com.jm.jobseekerplatform.model.profiles;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.jm.jobseekerplatform.model.State;
+import com.jm.jobseekerplatform.model.comments.Comment;
 import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Base64;
+import java.util.List;
 
 /**
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
@@ -13,7 +17,7 @@ import java.util.Base64;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Profile implements Serializable {
+public class Profile implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +31,10 @@ public abstract class Profile implements Serializable {
     @Type(type = "image")
     private byte[] logo;
 
+    /*@OneToMany
+    @JsonManagedReference
+    private List<Comment> comments;*/
+
     public Profile() {
         this.state = State.NO_ACCESS;
     }
@@ -36,7 +44,6 @@ public abstract class Profile implements Serializable {
         this.logo = logo;
     }
 
-//    @JsonValue
     public Long getId() {
         return id;
     }
@@ -53,9 +60,13 @@ public abstract class Profile implements Serializable {
         this.state = state;
     }
 
-    public abstract String getFullName();
+    public  String getFullName(){
+        return null;
+    }
 
-    public abstract String getTypeName();
+    public  String getTypeName(){
+        return null;
+    }
 
    public String getEncoderPhoto() {
         return Base64.getEncoder().encodeToString(this.getLogo());
@@ -68,6 +79,14 @@ public abstract class Profile implements Serializable {
     public void setLogo(byte[] logo) {
         this.logo = logo;
     }
+
+    /*public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }*/
 
     @Override
     public String toString() {

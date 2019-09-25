@@ -1,11 +1,12 @@
 package com.jm.jobseekerplatform.service.impl.comments;
 
 import com.jm.jobseekerplatform.model.comments.Comment;
+import com.jm.jobseekerplatform.service.AbstractService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+@Service("commentService")
+@Transactional
+public class CommentService extends AbstractService<Comment> {
 
-public interface CommentService {
-    void add(Comment comment);
-
-    List getAllComments();
 }

@@ -1,15 +1,10 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.comments.Comment;
-import com.jm.jobseekerplatform.model.profiles.Profile;
-import com.jm.jobseekerplatform.model.users.User;
-import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.comments.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,11 +14,11 @@ public class CommentRestController {
     @Autowired
     private CommentService commentService;
 
-    @RequestMapping(value = "/api/comments/", method = RequestMethod.GET, consumes="application/json; charset=utf-8", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/api/comments/", method = RequestMethod.GET)
     public ResponseEntity<List<Comment>> getAllComments() {
           List<Comment> commentList = null;
           try{
-              commentList = commentService.getAllComments();
+              commentList = commentService.getAll();
           }catch (Exception e){
               e.printStackTrace();
           }

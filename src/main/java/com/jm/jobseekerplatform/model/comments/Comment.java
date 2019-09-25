@@ -28,6 +28,7 @@ public class Comment implements Serializable {
 
    @ManyToOne
     @JoinColumn(name = "profile_id")
+   @JsonBackReference
     private Profile profile;
 
 
