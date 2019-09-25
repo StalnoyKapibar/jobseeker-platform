@@ -66,8 +66,9 @@ public class SeekerApiAccessFilter implements Filter {
                 try {
                     JsonNode jsonNode = getJsonNode(request);
                     if (jsonNode != null && jsonNode.has(SEEKER_PROFILE_ID)) {
-                        if (jsonNode.isLong()) {
-                            bodySeekerProfileId = jsonNode.get(SEEKER_PROFILE_ID).asLong();
+                        JsonNode seekerProfileIdNode = jsonNode.get(SEEKER_PROFILE_ID);
+                        if (seekerProfileIdNode.isNumber()) {
+                            bodySeekerProfileId = seekerProfileIdNode.asLong();
                             logger.debug("Body seeker profile: logged id: {}  request id: {}",
                                     loggedUser.getProfile().getId(), bodySeekerProfileId);
                         } else {
