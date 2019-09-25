@@ -4,6 +4,7 @@ var header = $("meta[name='_csrf_header']").attr("content");
 var page = 1;
 var total_pages;
 var city;
+var fio;
 
 $(function () {
     getCurrentLocation(function () {
@@ -127,7 +128,6 @@ function getSortedResumes(point) {
     })
 }
 
-var fio;
 function printResumes(data) {
     $.each(data.content, function (key, value) {
         let minSalary = '';
@@ -136,6 +136,7 @@ function printResumes(data) {
         if (value.salaryMin) {
             minSalary = '<div class="salary"><span>Зарплата от: ' + value.salaryMin + ' руб.</span></div>';
         }
+
         $.each(value.tags, function (i, item) {
             resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
         });
@@ -261,7 +262,7 @@ function searchByTags() {
                             }
                         }
                     }
-                    printResumes(data.content);
+                    printResumes(data);
                     total_pages = data.totalPages;
                     pageCount++;
                 }

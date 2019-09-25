@@ -52,7 +52,8 @@ public class ResumeDAO extends AbstractDAO<Resume> {
                 .setFirstResult(page * limit)
                 .setMaxResults(limit)
                 .getResultList();
-        return new ResumePageDTO(resumes, totalPages);
+        List<SeekerProfile> seeker = seekerProfileService.getAllSeekersById(resumes);
+		return new ResumePageDTO(resumes, totalPages, seeker);
     }
 
     private int getTotalPages(long totalElements, int limit) {
