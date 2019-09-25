@@ -18,17 +18,18 @@ import java.util.List;
 public class CommentRestController {
     @Autowired
     private CommentService commentService;
-    @Autowired
-    private NewsService newsService;
 
-    @RequestMapping(value = "/api/comments/news", params = {"newsId"}, method = RequestMethod.GET)
-    public ResponseEntity<List<Comment>> getAllCommentsForThisNews(@RequestParam Long newsId) {
-        News news = newsService.getById(newsId);
-        List<Comment> comments = news.getComments();
-        if(comments.isEmpty()){
+    @RequestMapping(value = "/api/comments/", method = RequestMethod.GET)
+    public ResponseEntity<List<Comment>> getAllComments() {
+          List<Comment> commentList = null;
+          try{
+              commentList = commentService.getAllComments();
+          }catch (Exception e){
+              e.printStackTrace();
+          }
+        if(commentList.isEmpty()){
             return new ResponseEntity<List<Comment>>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
+        return new ResponseEntity<List<Comment>>(commentList, HttpStatus.OK);
     }
-
 }

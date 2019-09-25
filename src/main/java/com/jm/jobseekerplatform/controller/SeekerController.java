@@ -90,7 +90,7 @@ public class SeekerController {
         return "seeker_subscription_news";
     }
 
-    @RolesAllowed({"ROLE_SEEKER"})
+    //@RolesAllowed({"ROLE_SEEKER"})
     @GetMapping("/news/{newsId}")
     public String getSeekerSubscriptionNewsById(@PathVariable Long newsId, Model model) {
         News currentNews = newsService.getById(newsId);

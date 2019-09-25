@@ -33,10 +33,10 @@ function printSeekerNews() {
                 month = month < 10 ? '0' + month : month;
                 // tags
                 let newsTags = "";
-                $.each(item.tags, (i, tag) =>  {
+               /* $.each(item.tags, (i, tag) =>  {
                     newsTags += '<span class="badge badge-pill badge-success btnClick text-dark">' +
-                        '<h7>' + tag.name + '</h7></span>';
-                });
+                        '<h7>' + tag.name + '</h7></span>'
+                });*/
                 var description;
                 var numberOfViews = item.numberOfViews;
                 if (numberOfViews == null) {
@@ -66,8 +66,8 @@ function printSeekerNews() {
             $('#seekerNewsLine').append(cardHTML);
         },
         error: function (error) {
-            /*console.log(error);
-            alert(error.toString());*/
+            console.log(error);
+            alert(error.toString());
         }
     })
 }

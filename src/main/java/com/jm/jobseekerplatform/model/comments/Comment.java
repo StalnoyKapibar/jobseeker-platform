@@ -6,7 +6,10 @@ import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
+/*INSERT INTO jobseeker_db.comments (id, text, profile_id) values(1, 'Hello world', '8');
+        INSERT INTO jobseeker_db.comments (id, text, profile_id) values(2, 'Hello java', '8');
+        INSERT INTO jobseeker_db.comments (id, text, profile_id) values(3, 'It is good', '8');
+        INSERT INTO jobseeker_db.comments (id, text, profile_id) values(4, 'Not bad', '8');*/
 @Entity
 @Table(name= "comments")
 public class Comment {
@@ -19,6 +22,7 @@ public class Comment {
     private String text;
 
     @ManyToOne
+    @JoinColumn(name = "profile_id")
     private Profile profile;
 
     public Comment(){
