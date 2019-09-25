@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.security;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jm.jobseekerplatform.model.users.User;
@@ -31,7 +32,7 @@ public class SeekerApiAccessFilter implements Filter {
             HttpMethod.HEAD.name(),
             HttpMethod.OPTIONS.name());
     private static final String JSON_HEADER_VALUE = "application/json";
-    private static final String URLENCODED_HEADER_VALUE = "application/x-www-form-urlencoded";
+    //    private static final String URLENCODED_HEADER_VALUE = "application/x-www-form-urlencoded";
     private static final GrantedAuthority ADMIN_AUTHORITY = new SimpleGrantedAuthority("ROLE_ADMIN");
     private static final String SEEKER_PROFILE_ID = "seekerProfileId";
 
@@ -53,7 +54,7 @@ public class SeekerApiAccessFilter implements Filter {
             Long urlSeekerProfileId = null;
             Long bodySeekerProfileId = null;
             logger.debug("Parameters: {}", Collections.list(request.getParameterNames()));
-            HttpServletRequest requestEff = request;
+//            HttpServletRequest requestEff = request;
 //            logger.debug("Headers: {}", Collections.list(request.getHeaderNames()).stream()
 //                    .map(x -> x + ": " + requestEff.getHeader(x))
 //                    .collect(Collectors.joining(", ")));
@@ -62,14 +63,33 @@ public class SeekerApiAccessFilter implements Filter {
                 if (!(request instanceof ReadTwiceHttpServletRequestWrapper)) {
                     request = new ReadTwiceHttpServletRequestWrapper(request);
                 }
-                JsonNode jsonNode = getJsonNode(request);
-                bodySeekerProfileId = jsonNode != null ? jsonNode.get(SEEKER_PROFILE_ID).asLong() : null;
-                logger.debug("Body seeker profile: logged id: {}  request id: {}", loggedUser.getProfile().getId(), bodySeekerProfileId);
+                try {
+                    JsonNode jsonNode = getJsonNode(request);
+                    if (jsonNode != null && jsonNode.has(SEEKER_PROFILE_ID)) {
+                        if (jsonNode.isLong()) {
+                            bodySeekerProfileId = jsonNode.get(SEEKER_PROFILE_ID).asLong();
+                            logger.debug("Body seeker profile: logged id: {}  request id: {}",
+                                    loggedUser.getProfile().getId(), bodySeekerProfileId);
+                        } else {
+                            response.sendError(HttpStatus.BAD_REQUEST.value(), SEEKER_PROFILE_ID + "is not a number");
+                            return;
+                        }
+                    }
+                } catch (JsonParseException jpe) {
+                    response.sendError(HttpStatus.BAD_REQUEST.value(), jpe.getMessage());
+                    return;
+                }
             }
             if (request.getParameterMap().size() > 0) {
                 String seekerProfileIdStr = request.getParameter(SEEKER_PROFILE_ID);
-                urlSeekerProfileId = NumberUtils.isParsable(seekerProfileIdStr) ? Long.parseLong(seekerProfileIdStr) : null;
-                logger.debug("Urlencoded seeker profile: logged id: {}  request id: {}", loggedUser.getProfile().getId(), urlSeekerProfileId);
+                if (NumberUtils.isParsable(seekerProfileIdStr)) {
+                    urlSeekerProfileId = Long.parseLong(seekerProfileIdStr);
+                    logger.debug("Urlencoded seeker profile: logged id: {}  request id: {}",
+                            loggedUser.getProfile().getId(), urlSeekerProfileId);
+                } else {
+                    response.sendError(HttpStatus.BAD_REQUEST.value(), SEEKER_PROFILE_ID + "is not a number");
+                    return;
+                }
             }
             if (urlSeekerProfileId != null && !loggedUser.getProfile().getId().equals(urlSeekerProfileId) ||
                     bodySeekerProfileId != null && !loggedUser.getProfile().getId().equals(bodySeekerProfileId)) {
@@ -89,7 +109,11 @@ public class SeekerApiAccessFilter implements Filter {
     }
 
     private boolean isAdmin(User user) {
-        return user.getAuthority().equals(ADMIN_AUTHORITY);
+        if (user != null) {
+            return user.getAuthority().equals(ADMIN_AUTHORITY);
+        } else {
+            return false;
+        }
     }
 
     private boolean isOpenAccess(HttpServletRequest request) {
@@ -99,9 +123,14 @@ public class SeekerApiAccessFilter implements Filter {
     private JsonNode getJsonNode(HttpServletRequest request) throws IOException {
         String json = request.getReader().lines().collect(Collectors.joining());
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readTree(json);
-        logger.debug("Json node: {}", jsonNode);
-        return jsonNode;
+        try {
+            JsonNode jsonNode = mapper.readTree(json);
+            logger.debug("Json node: {}", jsonNode);
+            return jsonNode;
+        } catch (JsonParseException jpe) {
+            logger.debug("Exception: {}", jpe.toString());
+            throw jpe;
+        }
     }
 
 }

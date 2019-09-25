@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Objects;
 
 @Component
 public final class AuthErrorEntryPoint implements AuthenticationEntryPoint {
@@ -25,8 +24,9 @@ public final class AuthErrorEntryPoint implements AuthenticationEntryPoint {
             throws IOException {
 
         logger.debug("Request URI: {}", request.getRequestURI());
+        String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
         if (request.getRequestURI().contains("/api/") ||
-                Objects.equals(request.getHeader(HttpHeaders.CONTENT_TYPE), JSON_HEADER_VALUE)) {
+                (contentType != null && contentType.contains(JSON_HEADER_VALUE))) {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         } else {
             response.sendRedirect("/login");
