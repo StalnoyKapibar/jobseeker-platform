@@ -5,6 +5,7 @@ $(document).ready(function () {
     $.ajax({
         url: "/api/comments/",
         type: "GET",
+        contentType: 'application/json; charset=utf-8',
         success: function (item) {
             console.log(item);
             $.each(item, function (i, comment) {
