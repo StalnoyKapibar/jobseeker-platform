@@ -19,7 +19,7 @@ public class CommentRestController {
     @Autowired
     private CommentService commentService;
 
-    @RequestMapping(value = "/api/comments/", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/comments/", method = RequestMethod.GET, consumes="application/json; charset=utf-8", produces = "application/json; charset=utf-8")
     public ResponseEntity<List<Comment>> getAllComments() {
           List<Comment> commentList = null;
           try{
