@@ -20,12 +20,12 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     @Autowired
     private UserService userService;
 
-    LoginFailureHandler(UserService userService) {
+    public LoginFailureHandler(UserService userService) {
         this.userService = userService;
     }
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, 
+    public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                         AuthenticationException exception) throws IOException, ServletException {
         httpServletRequest.getSession().invalidate();
         if (exception.getMessage().equals("User is disabled")) {
@@ -38,24 +38,23 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
             long howManyHours = (diff - howManyDays)/60/60;
             long howManyMinutes = (diff - (howManyDays*60*60*24) - (howManyHours*60*60))/60;
             long howManySeconds = (diff - (howManyDays*60*60*24) - (howManyHours*60*60) - (howManyMinutes*60));
-            StringBuilder timeRemaining = new StringBuilder("До конца блокировки осталось: ");
+            StringBuilder timeRemaining = new StringBuilder("Ваша учетная запись заблокирована. " +
+                    "До конца блокировки осталось: ");
             timeRemaining.append(howManyDays == 0 ? "" : howManyDays +  " дней, ")
                          .append(howManyHours == 0 ? "" : howManyHours + " часов, ")
                          .append(howManyMinutes == 0 ? "" : howManyMinutes + " минут, ")
                          .append(howManySeconds == 0 ? "" : howManySeconds + " секунд.");
-            httpServletRequest.getSession().setAttribute("disabled", timeRemaining);
+            httpServletRequest.getSession().setAttribute("error", timeRemaining);
             httpServletResponse.sendRedirect("/login?timeRemaining");
         } else if (exception.getMessage().equalsIgnoreCase("Bad credentials")) {
             httpServletRequest.getSession().setAttribute("error", "Неверный логин или пароль.");
             httpServletResponse.sendRedirect("/login?error");
-        }
-        else if (exception.getMessage().equalsIgnoreCase("User account has expired")) {
-            httpServletRequest.getSession().setAttribute("expired",
+        } else if (exception.getMessage().equalsIgnoreCase("User account has expired")) {
+            httpServletRequest.getSession().setAttribute("error",
                     "Срок действия учетной записи истек.");
             httpServletResponse.sendRedirect("/login?expired");
-        }
-        else if (exception.getMessage().equalsIgnoreCase("blocked")) {
-            httpServletRequest.getSession().setAttribute("blocked", "Ваша учетная запись заблокирована.");
+        } else if (exception.getMessage().equalsIgnoreCase("blocked")) {
+            httpServletRequest.getSession().setAttribute("error", "Ваша учетная запись заблокирована.");
             httpServletResponse.sendRedirect("/login?blocked");
         } else {
             httpServletResponse.sendRedirect("/login?unknownError");
