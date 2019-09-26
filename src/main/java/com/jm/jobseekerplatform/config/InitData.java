@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
+import com.jm.jobseekerplatform.model.comments.Comment;
 import com.jm.jobseekerplatform.model.profiles.AdminProfile;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
@@ -16,6 +17,7 @@ import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
 import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatService;
+import com.jm.jobseekerplatform.service.impl.comments.CommentService;
 import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
@@ -105,6 +107,9 @@ public class InitData {
     @Autowired
     private StoredProcedureService storedProcedureService;
 
+    @Autowired
+    private CommentService commentService;
+
     private Faker faker = new Faker(new Locale("ru"));
 
     private Random rnd = new Random();
@@ -128,6 +133,7 @@ public class InitData {
         initNews();
         initJobExperience();
         initResumes();
+        initComments();
     }
 
     private void initNews() {
@@ -434,7 +440,6 @@ public class InitData {
         tagService.add(new Tag("MySQL", verified));
         tagService.add(new Tag("Thymeleaf", verified));
         tagService.add(new Tag("OAuth2", verified));
-
     }
 
     public void initSeekerProfile() {
@@ -452,6 +457,7 @@ public class InitData {
         Set<Vacancy> vacancies = new HashSet<>(vacancyService.getAll());
 
         seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L), portfolios, vacancies, new HashSet<>()));
+
 
         portfolios.clear();
         portfolios.add(portfolioService.getById(3L));
@@ -579,4 +585,21 @@ public class InitData {
             jobExperiences.clear();
         }
     }
+    public void initComments(){
+       Comment comment1 = new Comment("Отличная новость", null);
+        Comment comment2 = new Comment("Плохая новость", null);
+        commentService.add(comment1);
+        commentService.add(comment2);
+        Profile profile1 = profileService.getById(8L);
+        Profile profile2 = profileService.getById(9L);
+        comment1.setAuthor(profile1);
+        commentService.update(comment1);
+        profileService.update(profile1);
+        comment2.setAuthor(profile2);
+        commentService.update(comment2);
+        profileService.update(profile2);
+
+
+    }
+
 }

@@ -58,13 +58,14 @@ public class NewsRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RolesAllowed({"ROLE_EMPLOYER"})
+    //@RolesAllowed({"ROLE_EMPLOYER"})
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
     @GetMapping("/{newsId}")
     @ResponseBody
     public ResponseEntity<News> getNewsById(@PathVariable("newsId") Long newsId) {
         return new ResponseEntity<>(newsService.getById(newsId), HttpStatus.OK);
     }
+
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @GetMapping("/")
@@ -73,7 +74,7 @@ public class NewsRestController {
                                                                     Authentication authentication) {
         Sort sort = new Sort(Sort.Direction.DESC, "date");
         Long employerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
-        List<News> news = newsService.getAllByEmployerProfileId(employerProfileService.getById(employerProfileId),
+       List<News> news = newsService.getAllByEmployerProfileId(employerProfileService.getById(employerProfileId),
                 PageRequest.of(newsPageCount, 10, sort)).getContent();
         return new ResponseEntity<>(news, HttpStatus.OK);
     }

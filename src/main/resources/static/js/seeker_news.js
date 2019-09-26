@@ -25,6 +25,7 @@ function printSeekerNews() {
             if (data.length === 0) {
                 return;
             }
+            console.log(data);
             var cardHTML = '';
             $.each(data, function (i, item) {
                 var date = new Date(item.date.toString());
@@ -33,27 +34,22 @@ function printSeekerNews() {
                 month = month < 10 ? '0' + month : month;
                 // tags
                 let newsTags = "";
-                $.each(item.tags, (i, tag) =>  {
+               /* $.each(item.tags, (i, tag) =>  {
                     newsTags += '<span class="badge badge-pill badge-success btnClick text-dark">' +
-                        '<h7>' + tag.name + '</h7></span>';
-                });
+                        '<h7>' + tag.name + '</h7></span>'
+                });*/
                 var description;
                 var numberOfViews = item.numberOfViews;
                 if (numberOfViews == null) {
                     numberOfViews = 0;
                 }
-                if (item.description.length > 150) {
-                    description = item.description.substr(0, 150) +
-                        '<span><button id="readMoreButton_' + item.id + '" value="' + item.description + '" onclick="getFullDescription(' + item.id + ')" class="btn btn-link">... Читать полностью' +
-                        '</button></span>';
-                } else {
                     description = item.description;
-                }
                 cardHTML += '<div class="card newsCard empCard" id="newsCard_' + item.id + '" style="margin-top: 10px">' +
                     '<div class="card-body">' +
                     '<h4 class="card-title seekerNewsHeadLine">' + item.headline + '</h4>' +
                     '<p class="card-text newsDescription" id="description_' + item.id + '"><span id="newsDescription_' + item.id + '">' + description + '</span></p>' +
                     '<p class="card-text seekerNewsDate">' + 'от: ' + day + '.' + month + '.' + date.getFullYear() + '</p>' +
+                    '<a href="/seeker/news/' + item.id + '" class="card-link">' + "Читать полностью" + '</a>' +
                     '<a href="/employer/' + item.author.id + '" class="card-link">' + item.author.companyName + '</a>' +
                     // tags
                     '<div class="newsTags">' + newsTags + '</div>' +

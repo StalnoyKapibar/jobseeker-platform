@@ -2,3 +2,4 @@
 server.port=7070
 google.maps.api.key=${googleMapsApiKey}
 logging.level.com.jm.jobseekerplatform=debug
+

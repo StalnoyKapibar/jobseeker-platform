@@ -1,11 +1,16 @@
 package com.jm.jobseekerplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.jm.jobseekerplatform.model.comments.Comment;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,6 +41,10 @@ public class News implements Serializable {
             joinColumns = @JoinColumn(name = "news_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
+
+    /*@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinTable(name = "news_comments", joinColumns = {@JoinColumn(name = "news_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "comments_id", referencedColumnName = "id")})
+    private List<Comment> comments;*/
 
     public News() {
     }
@@ -102,4 +111,12 @@ public class News implements Serializable {
     public void setNumberOfViews(Long numberOfViews) {
         this.numberOfViews = numberOfViews;
     }
+
+    /*public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }*/
 }
