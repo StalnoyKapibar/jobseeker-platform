@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 import javax.persistence.Query;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Repository("resumeDAO")
@@ -28,6 +29,60 @@ public class ResumeDAO extends AbstractDAO<Resume> {
 
 		List<SeekerProfile> seeker = seekerProfileService.getAllSeekersById(resumes);
         return new ResumePageDTO(resumes, totalPages, seeker);
+    }
+
+    public Page<Resume> getPagableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(Map<String, Object> queryParamsMap,
+                                                                                   int pageNumber, int pageSize) {
+        String query = "select r from Resume r ";
+        String queryCount = "select count(distinct r)  from Resume r ";
+        StringBuilder whereQuery = new StringBuilder(query);
+        StringBuilder whereQueryCount = new StringBuilder(queryCount);
+        if (queryParamsMap.containsKey("tagFls")) {
+            whereQuery.append("join r.tags t WHERE r.id <> 0");
+            whereQueryCount.append("join r.tags t WHERE r.id <> 0");
+        } else {
+            whereQuery.append("WHERE r.id <> 0");
+            whereQueryCount.append("WHERE r.id <> 0");
+        }
+        for (Map.Entry<String, Object> entry : queryParamsMap.entrySet()) {
+            switch (entry.getKey()) {
+                case "city":
+                    whereQuery.append(" AND r.city.name = '" + entry.getValue() + "'");
+                    whereQueryCount.append(" AND r.city.name = '" + entry.getValue() + "'");
+                    break;
+                case "salFrom":
+                    whereQuery.append(" AND r.salaryMin >= '" + entry.getValue() + "'");
+                    whereQueryCount.append(" AND r.salaryMin >= '" + entry.getValue() + "'");
+                    break;
+                case "salTo":
+                    whereQuery.append(" AND r.salaryMax <= '" + entry.getValue() + "'");
+                    whereQueryCount.append(" AND r.salaryMax <= '" + entry.getValue() + "'");
+                    break;
+                case "tagFls":
+                    String tagsForQuery = "";
+                    List<Long> tags = (List<Long>) entry.getValue();
+                    if (tags.size() == 1) {
+                        tagsForQuery = String.valueOf(tags.get(0));
+                    } else {
+                        for (int i = 0; i < tags.size(); i++) {
+                            if (i == tags.size() - 1) {
+                                tagsForQuery += String.valueOf(tags.get(i));
+                            } else {
+                                tagsForQuery += String.valueOf(tags.get(i));
+                                tagsForQuery += ", ";
+                            }
+                        }
+                    }
+                    whereQuery.append(" AND t in (" + tagsForQuery + ") group by (r.id)");
+                    whereQueryCount.append(" AND t in (" + tagsForQuery + ") group by (r.id)");
+            }
+        }
+        pageNumber = (pageNumber == 0) ? pageNumber : --pageNumber;
+        Query queryToHql = entityManager.createQuery(whereQuery.toString(), Resume.class);
+        long totalElements = (long) entityManager.createQuery(whereQueryCount.toString()).getSingleResult();
+        int totalPages = getTotalPages(totalElements, pageSize);
+        List<Resume> resumes = queryToHql.setFirstResult(pageNumber * pageSize).setMaxResults(pageSize).getResultList();
+        return new ResumePageDTO(resumes, totalPages);
     }
 
     public Page<Resume> getResumesByTag(Set<Tag> tags, int limit, int page) {
@@ -52,7 +107,8 @@ public class ResumeDAO extends AbstractDAO<Resume> {
                 .setFirstResult(page * limit)
                 .setMaxResults(limit)
                 .getResultList();
-        return new ResumePageDTO(resumes, totalPages);
+        List<SeekerProfile> seeker = seekerProfileService.getAllSeekersById(resumes);
+		return new ResumePageDTO(resumes, totalPages, seeker);
     }
 
     private int getTotalPages(long totalElements, int limit) {

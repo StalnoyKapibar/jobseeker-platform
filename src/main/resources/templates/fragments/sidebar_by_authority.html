@@ -4,29 +4,24 @@
     <meta charset="UTF-8">
 </head>
 <body>
-
-<th:block th:fragment="not_authority_sidebar">
-    <li><a href="#"><span>Все вакансии</span></a></li>
-</th:block>
-
-<th:block th:fragment="seeker_sidebar">
-    <li><a th:href="@{/seeker/get_subscription_news/{id}(id=${seekerProfileId})}"><span>Новости</span></a></li>
-    <li><a href="#"><span>Все вакансии</span></a></li>
-    <li><a th:href="@{/seeker/companies}"><span>Все компании</span></a></li>
-    <li><a th:href="@{/seeker/get_subscriptions/{id}(id=${seekerProfileId})}"><span>Мои подписки</span></a></li>
-    <li><a class="font-color" th:href="@{/seeker/chats/{id}(id=${seekerProfileId})}">Мои чаты<span id="count_not_read_messages"></span></a></li>
-    <li><a th:href="@{/seeker/meetings/{id}(id=${seekerProfileId})}"><span>Мои встречи</span></a></li>
-    <li><a th:href="@{/seeker/resumes/{id}(id=${seekerProfileId})}"><span>Мои резюме</span></a></li>
-    <li><span id="username" th:utext="${username}"></span></li>
-<!--    <li><span id="vacancyId" th:utext="${vacancyId}"></span></li>-->
-</th:block>
-
-<th:block th:fragment="employer_sidebar">
-    <li><a th:href="@{/employer/get_resumes}"><span>Все резюме</span></a></li>
-    <li><a th:href="@{/employer/get_news}"><span>Мои новости</span></a></li>
-    <li><a class="font-color" th:href="@{/employer/chats/{id}(id=${employerProfileId})}">Мои чаты<span id="count_not_read_messages"></span></a></li>
-    <li><span id="username" th:utext="${username}"></span></li>
-<!--    <li><span id="vacancyId" th:utext="${vacancyId}"></span></li>-->
-</th:block>
-
+    <th:block th:fragment="not_authority_sidebar">
+        <li><a href="#"><span>Все вакансии</span></a></li>
+    </th:block>
+    <th:block th:fragment="seeker_sidebar">
+        <li><a th:href="@{/seeker/get_subscription_news}"><span>Новости</span></a></li>
+        <li><a href="#"><span>Все вакансии</span></a></li>
+        <li><a th:href="@{/seeker/companies}"><span>Все компании</span></a></li>
+        <li><a th:href="@{/seeker/get_subscriptions}"><span>Мои подписки</span></a></li>
+        <li><a class="font-color" th:href="@{/seeker/chats}">Мои чаты<span id="count_not_read_messages"></span></a></li>
+        <li><a th:href="@{/seeker/meetings}"><span>Мои встречи</span></a></li>
+        <li><a th:href="@{/seeker/resumes}"><span>Мои резюме</span></a></li>
+        <li><span id="username" th:utext="${username}"></span></li>
+    </th:block>
+    <th:block th:fragment="employer_sidebar">
+        <li><a th:href="@{/employer/get_resumes}"><span>Все резюме</span></a></li>
+        <li><a th:href="@{/employer/get_news}"><span>Мои новости</span></a></li>
+        <li><a class="font-color" th:href="@{/employer/chats/{id}(id=${employerProfileId})}">
+            Мои чаты<span id="count_not_read_messages"></span></a></li>
+        <li><span id="username" th:utext="${username}"></span></li>
+    </th:block>
 </body>
