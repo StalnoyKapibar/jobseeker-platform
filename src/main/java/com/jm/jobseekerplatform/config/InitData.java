@@ -586,24 +586,19 @@ public class InitData {
         }
     }
     public void initComments(){
-        Comment comment1 = new Comment("Отличная новость", null);
+       Comment comment1 = new Comment("Отличная новость", null);
         Comment comment2 = new Comment("Плохая новость", null);
         commentService.add(comment1);
         commentService.add(comment2);
         Profile profile1 = profileService.getById(8L);
         Profile profile2 = profileService.getById(9L);
-        List<Comment> commentList1 = profile1.getComments();
         comment1.setAuthor(profile1);
         commentService.update(comment1);
-        commentList1.add(comment1);
-        profile1.setComments(commentList1);
         profileService.update(profile1);
-        List<Comment> commentList2 = profile2.getComments();
         comment2.setAuthor(profile2);
         commentService.update(comment2);
-        commentList2.add(comment2);
-        profile2.setComments(commentList2);
         profileService.update(profile2);
+
 
     }
 

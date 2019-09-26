@@ -16,6 +16,7 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+
 public class Profile implements Serializable {
 
     @Id
@@ -29,9 +30,9 @@ public class Profile implements Serializable {
     @Column(name = "logo")
     @Type(type = "image")
     private byte[] logo;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    private List<Comment> comments;
+
+    /*@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private List<Comment> comments;*/
 
     public Profile() {
         this.state = State.NO_ACCESS;
@@ -78,13 +79,13 @@ public class Profile implements Serializable {
         this.logo = logo;
     }
 
-    public List<Comment> getComments() {
+   /*public List<Comment> getComments() {
         return comments;
     }
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
+    }*/
 
     @Override
     public String toString() {

@@ -5,7 +5,11 @@ $(document).ready(function () {
     $.ajax({
         url: "/api/comments/",
         type: "GET",
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
         success: function (item) {
+
             console.log(item);
            /* $.each(item, function (i, comment) {
                 $('#user_comments').after('<div class="m-5"><div class="card-body"><div class="row">' +

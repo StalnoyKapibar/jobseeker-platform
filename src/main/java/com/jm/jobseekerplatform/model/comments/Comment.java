@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.model.comments;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 
 import javax.persistence.*;
@@ -16,8 +17,7 @@ public class Comment implements Serializable {
     @Column(name = "text")
     private String text;
 
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "profile_id")
     private Profile author;
 

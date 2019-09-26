@@ -24,6 +24,7 @@ function printEmployerNews() {
             request.setRequestHeader(header, token);
         },
         success: function (data) {
+            console.log(data)
             if (data.length === 0) {
                 return;
             }

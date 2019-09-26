@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,15 +17,16 @@ public class CommentRestController {
 
     @RequestMapping(value = "/api/comments/", method = RequestMethod.GET)
     public ResponseEntity<List<Comment>> getAllComments() {
-          List<Comment> commentList = null;
+        List<Comment> commentList = new ArrayList<>();
           try{
-              commentList = commentService.getAll();
+              Comment comment1 = commentService.getById(1L);
+              Comment comment2 = commentService.getById(2L);
+              commentList.add(comment1);
+              commentList.add(comment2);
+
           }catch (Exception e){
               e.printStackTrace();
           }
-        if(commentList.isEmpty()){
-            return new ResponseEntity<List<Comment>>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<List<Comment>>(commentList, HttpStatus.OK);
+        return new ResponseEntity<>(commentList, HttpStatus.OK);
     }
 }

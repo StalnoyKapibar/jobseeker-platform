@@ -74,7 +74,7 @@ public class NewsRestController {
                                                                     Authentication authentication) {
         Sort sort = new Sort(Sort.Direction.DESC, "date");
         Long employerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
-        List<News> news = newsService.getAllByEmployerProfileId(employerProfileService.getById(employerProfileId),
+       List<News> news = newsService.getAllByEmployerProfileId(employerProfileService.getById(employerProfileId),
                 PageRequest.of(newsPageCount, 10, sort)).getContent();
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
