@@ -592,10 +592,14 @@ public class InitData {
         commentService.add(comment2);
         Profile profile1 = profileService.getById(8L);
         Profile profile2 = profileService.getById(9L);
-       comment1.setAuthor(profile1);
-       comment2.setAuthor(profile2);
-       commentService.update(comment1);
-       commentService.update(comment2);
+        List<Comment> commentList1 = profile1.getComments();
+        comment1.setAuthor(profile1);
+        commentService.update(comment1);
+        commentList1.add(comment1);
+        List<Comment> commentList2 = profile2.getComments();
+        comment2.setAuthor(profile2);
+        commentService.update(comment2);
+        commentList2.add(comment2);
     }
 
 }
