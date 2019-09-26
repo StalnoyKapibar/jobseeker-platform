@@ -560,10 +560,10 @@ public class InitData {
         City city;
         for (int i = 0, m = 0; i < seekerProfileService.getAll().size(); i++) {
             SeekerProfile seekerProfile = getRandomSeekerProfile();
-            while(!usedProfiles.add(seekerProfile.getId())){
+            while (!usedProfiles.add(seekerProfile.getId())){
               seekerProfile = getRandomSeekerProfile();
             }
-            for(int j = 0; j < 4; j++ ){
+            for (int j = 0; j < 4; j++){
                 city = cities.get(rnd.nextInt(cities.size()));
                 point = city.getPoint();
                 jobExperiences.add(jobExperienceList.get(m++));
