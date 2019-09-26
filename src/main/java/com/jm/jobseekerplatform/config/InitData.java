@@ -585,21 +585,9 @@ public class InitData {
             jobExperiences.clear();
         }
     }
-    public void initComments(){
-       Comment comment1 = new Comment("Отличная новость", null);
-        Comment comment2 = new Comment("Плохая новость", null);
-        commentService.add(comment1);
-        commentService.add(comment2);
-        Profile profile1 = profileService.getById(8L);
-        Profile profile2 = profileService.getById(9L);
-        comment1.setAuthor(profile1);
-        commentService.update(comment1);
-        profileService.update(profile1);
-        comment2.setAuthor(profile2);
-        commentService.update(comment2);
-        profileService.update(profile2);
-
-
+    private void initComments(){
+        Comment comment = new Comment("Hello world", profileService.getById(8L));
+        commentService.add(comment);
     }
 
 }

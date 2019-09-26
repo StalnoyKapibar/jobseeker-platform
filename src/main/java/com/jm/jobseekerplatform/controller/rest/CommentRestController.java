@@ -19,10 +19,10 @@ public class CommentRestController {
     public ResponseEntity<List<Comment>> getAllComments() {
         List<Comment> commentList = new ArrayList<>();
           try{
-              commentList = commentService.getAll();
-              // Comment comment1 = commentService.getById(1L);
+              //commentList = commentService.getAll();
+               Comment comment1 = commentService.getById(1L);
               //Comment comment2 = commentService.getById(2L);
-              //commentList.add(comment1);
+              commentList.add(comment1);
               //commentList.add(comment2);
 
           }catch (Exception e){
