@@ -15,6 +15,29 @@ $(document).ready(function () {
     currentProfileId = parseInt($("#profileId").text());
     connectToServerByChatId(currentChatId);
     getAllChatMessagesByChatId(currentChatId);
+
+//Ввод сообщения в несколько строк:
+    $('.write_msg').bind('keypress', function (event) {
+
+        //Проверка на длину сообщения:
+        if (this.value.length > 119) {
+            event.preventDefault();
+            console.log("Сообщение максимум 120 знаков");
+        }
+
+        //Проверка на нажатие shift+enter:
+        if (event.which == 13 && event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+
+        //Проверка/ограничение на высоту окна ввода:
+        if(this.scrollTop > 0 && this.scrollHeight < 95) {
+            this.style.height = this.scrollHeight + "px";
+        } else if (this.scrollTop > 1 && event.which == 13) {
+            event.preventDefault();
+        }
+    });
 });
 
 function connectToServerByChatId(chatId) {
@@ -80,13 +103,29 @@ function displayMessage(message) {
         $(".msg_history").append('<div class="special_msg text-center"><p>' + messageLog + '</p></div>')
     }
 
+//Вывод сообщений построчно:
     function addYourMessage(message) {
-        var date = messageDateFormat(message.date);
-        $(".msg_history").append('<div class="outgoing_msg">\n' +
-            '                            <div class="sent_msg">\n' +
-            '                                <p>' + message.text + '</p>\n' +
-            '                                <span class="time_date">' + date + '</span> </div>\n' +
-            '                        </div>');
+        let date = messageDateFormat(message.date);
+
+        $(".msg_history").append('' +
+            '<div class="outgoing_msg">' +
+            '<div class="sent_msg">' +
+            '<ul id="insertUl"></ul>' +
+            '<span class="time_date">' + date + '</span>' +
+            '</div>' +
+            '</div>')
+        ;
+
+        let str = message.text;
+        let urlLast =  $(".sent_msg:last").find('#insertUl');
+        if(str.indexOf('\n') > 0) {
+            let arr = str.split('\n');
+            for (var i = 0; i < arr.length; i++) {
+                $(urlLast).append('<li>' + arr[i] + '</li>');
+            }
+        } else {
+            $(urlLast).append('<li>' + str + '</li>');
+        }
     }
 
     function addForeignMessage(message) {
@@ -136,6 +175,7 @@ function getMessageLog(message) {
 }
 
 function sendMessage() {
+    $(".write_msg").css({height: "55px"});
     var messageContent = $(".write_msg").val().trim();
     if (messageContent && stompClient) {
         var chatMessage = {

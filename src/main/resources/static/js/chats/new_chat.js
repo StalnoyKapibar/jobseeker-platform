@@ -141,7 +141,6 @@ function getMessageLog(message) {
 
 function sendMessageButton() {
     const messageContent = $(".write_msg");
-
     if (messageContent) {
         sendMessageToServer(messageContent.val().trim());
         messageContent.val("");
