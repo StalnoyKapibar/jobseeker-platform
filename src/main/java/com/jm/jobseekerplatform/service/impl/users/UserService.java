@@ -102,9 +102,10 @@ public class UserService extends AbstractService<User> {
         User userNew = null;
 
         if (userRole.equals("ROLE_SEEKER")) {
-            SeekerProfile seekerProfile = new SeekerProfile();
+            userNew = new SeekerUser(userEmail, userPass, LocalDateTime.now());
+            SeekerProfile seekerProfile = new SeekerProfile(userNew);
             seekerProfileService.add(seekerProfile);
-            userNew = new SeekerUser(userEmail, userPass, LocalDateTime.now(), seekerProfile);
+
         } else if (userRole.equals("ROLE_EMPLOYER")) {
             EmployerProfile employerProfile = new EmployerProfile();
             employerProfileService.add(employerProfile);

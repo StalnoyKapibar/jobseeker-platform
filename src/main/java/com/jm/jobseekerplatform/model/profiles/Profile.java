@@ -42,6 +42,10 @@ public abstract class Profile<T extends User> implements Serializable {
         this();
         this.logo = logo;
     }
+    public Profile(T user){
+        this.user = user;
+    }
+
 
     public Long getId() {
         return id;

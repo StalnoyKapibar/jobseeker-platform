@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.model.profiles;
 
 import com.jm.jobseekerplatform.model.users.AdminUser;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
 
 import javax.persistence.Entity;
 
@@ -13,7 +14,9 @@ public class AdminProfile extends Profile<AdminUser> {
 
     public AdminProfile() {
     }
-
+    public AdminProfile(AdminUser user) {
+        super(user);
+    }
     @Override
     public String getFullName() {
         return "Admin";

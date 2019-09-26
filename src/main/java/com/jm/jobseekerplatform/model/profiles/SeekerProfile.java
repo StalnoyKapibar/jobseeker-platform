@@ -44,6 +44,9 @@ public class SeekerProfile extends Profile<SeekerUser> implements Serializable {
 
     public SeekerProfile() {
     }
+    public SeekerProfile(SeekerUser user) {
+        super(user);
+    }
 
     @Override
     public String getFullName() {

@@ -34,7 +34,9 @@ public class EmployerProfile extends Profile<EmployerUser>  implements Serializa
 
     public EmployerProfile() {
     }
-
+    public EmployerProfile(EmployerUser user) {
+        super(user);
+    }
     @Override
     public String getFullName() {
         return companyName;

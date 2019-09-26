@@ -20,4 +20,10 @@ public class UserDAO extends AbstractDAO<User> {
                 .setParameter("param", email)
                 .getSingleResult();
     }
+    public User findByProfileId(Long id) {
+        return entityManager
+                .createQuery("SELECT u FROM User u WHERE u.profile.id = :param", User.class)
+                .setParameter("param", id)
+                .getSingleResult();
+    }
 }
