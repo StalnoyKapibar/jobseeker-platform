@@ -29,7 +29,7 @@ public class Profile implements Serializable {
     @Column(name = "logo")
     @Type(type = "image")
     private byte[] logo;
-
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Comment> comments;
 
