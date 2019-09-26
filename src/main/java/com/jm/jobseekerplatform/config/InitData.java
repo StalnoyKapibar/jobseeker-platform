@@ -458,6 +458,7 @@ public class InitData {
 
         seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L), portfolios, vacancies, new HashSet<>()));
 
+
         portfolios.clear();
         portfolios.add(portfolioService.getById(3L));
         portfolios.add(portfolioService.getById(4L));
@@ -585,8 +586,16 @@ public class InitData {
         }
     }
     public void initComments(){
-        Profile profile = profileService.getById(Long.valueOf(8));
-        commentService.add(new Comment("HelloF World", profile ));
+        Comment comment1 = new Comment("Отличная новость", null);
+        Comment comment2 = new Comment("Плохая новость", null);
+        commentService.add(comment1);
+        commentService.add(comment2);
+        Profile profile1 = profileService.getById(8L);
+        Profile profile2 = profileService.getById(9L);
+       comment1.setAuthor(profile1);
+       comment2.setAuthor(profile2);
+       commentService.update(comment1);
+       commentService.update(comment2);
     }
 
 }

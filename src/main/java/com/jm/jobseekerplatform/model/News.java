@@ -42,9 +42,9 @@ public class News implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    /*@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinTable(name = "news_comments", joinColumns = {@JoinColumn(name = "news_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "comments_id", referencedColumnName = "id")})
-    private List<Comment> comments;
+    private List<Comment> comments;*/
 
     public News() {
     }
@@ -112,11 +112,11 @@ public class News implements Serializable {
         this.numberOfViews = numberOfViews;
     }
 
-    public List<Comment> getComments() {
+    /*public List<Comment> getComments() {
         return comments;
     }
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
+    }*/
 }

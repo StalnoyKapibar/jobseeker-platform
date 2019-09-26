@@ -5,40 +5,39 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.News;
+import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-/*INSERT INTO jobseeker_db.comments (id, text, profile_id) values(1, 'Hello world', '8');
-        INSERT INTO jobseeker_db.comments (id, text, profile_id) values(2, 'Hello java', '8');
-        INSERT INTO jobseeker_db.comments (id, text, profile_id) values(3, 'It is good', '8');
-        INSERT INTO jobseeker_db.comments (id, text, profile_id) values(4, 'Not bad', '8');*/
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name= "comments")
 public class Comment implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Long id;
 
     @Column(name = "text")
     private String text;
 
-   @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")
-   @JsonBackReference
-    private Profile profile;
+    private Profile author;
 
 
-    public Comment(){
-
+    public Comment() {
     }
 
-    public Comment(String text, Profile profile) {
-        this.text=text;
-        this.profile=profile;
+    public Comment(String text, Profile author) {
+        this.text = text;
+        this.author = author;
     }
 
     public Long getId() {
@@ -49,6 +48,7 @@ public class Comment implements Serializable {
         this.id = id;
     }
 
+
     public String getText() {
         return text;
     }
@@ -57,12 +57,12 @@ public class Comment implements Serializable {
         this.text = text;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public Profile getAuthor() {
+        return author;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public void setAuthor(Profile author) {
+        this.author = author;
     }
 
 }

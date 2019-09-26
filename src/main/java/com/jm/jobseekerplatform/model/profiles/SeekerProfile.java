@@ -52,6 +52,12 @@ public class SeekerProfile extends Profile implements Serializable {
         return "Соискатель";
     }
 
+    public SeekerProfile(String name, String patronymic, String surname){
+        this.name = name;
+        this.patronymic = patronymic;
+        this.surname = surname;
+    }
+
     public SeekerProfile(String name, String patronymic, String surname, String description, byte[] photo, Set<Tag> tags,
                          Set<Portfolio> portfolios, Set<Vacancy> favoriteVacancy, Set<Subscription> subscriptions) {
         super(photo);

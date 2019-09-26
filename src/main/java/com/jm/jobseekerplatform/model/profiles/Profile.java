@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.model.profiles;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.jm.jobseekerplatform.model.State;
@@ -31,9 +32,9 @@ public class Profile implements Serializable {
     @Type(type = "image")
     private byte[] logo;
 
-    /*@OneToMany
-    @JsonManagedReference
-    private List<Comment> comments;*/
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Comment> comments;
 
     public Profile() {
         this.state = State.NO_ACCESS;
@@ -80,13 +81,13 @@ public class Profile implements Serializable {
         this.logo = logo;
     }
 
-    /*public List<Comment> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }*/
+    }
 
     @Override
     public String toString() {
