@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
@@ -34,10 +35,12 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
             LocalDateTime date = expireDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDateTime localDate = LocalDateTime.now();
             long diff = ChronoUnit.SECONDS.between(localDate, date);
-            long howManyDays = diff/60/60/24;
-            long howManyHours = (diff - howManyDays)/60/60;
-            long howManyMinutes = (diff - (howManyDays*60*60*24) - (howManyHours*60*60))/60;
-            long howManySeconds = (diff - (howManyDays*60*60*24) - (howManyHours*60*60) - (howManyMinutes*60));
+            long howManyDays = TimeUnit.SECONDS.toDays(diff);
+            long howManyHours = TimeUnit.SECONDS.toHours(diff - TimeUnit.DAYS.toSeconds(howManyDays));
+            long howManyMinutes = TimeUnit.SECONDS.toMinutes(diff - TimeUnit.DAYS.toSeconds(howManyDays) 
+                    - TimeUnit.HOURS.toSeconds(howManyHours));
+            long howManySeconds = (diff - TimeUnit.DAYS.toSeconds(howManyDays) - TimeUnit.HOURS.toSeconds(howManyHours) 
+                    - TimeUnit.MINUTES.toSeconds(howManyMinutes));
             StringBuilder timeRemaining = new StringBuilder("Ваша учетная запись заблокирована. " +
                     "До конца блокировки осталось: ");
             timeRemaining.append(howManyDays == 0 ? "" : howManyDays +  " дней, ")
