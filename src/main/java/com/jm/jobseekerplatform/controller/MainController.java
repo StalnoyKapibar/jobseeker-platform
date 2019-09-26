@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -101,16 +102,12 @@ public class MainController {
     public String login(@RequestParam(value = "logout", required = false) String logout,
                         HttpServletRequest request,
                         Model model) {
-        String[] errors = {"error", "disabled", "expired", "blocked"};
         if (logout != null) {
             model.addAttribute("logout", logout);
-        }
-        else {
-            for (String error : errors) {
-                if (request.getSession().getAttribute(error) != null) {
-                    model.addAttribute(error, request.getSession().getAttribute(error));
-                    return "login";
-                }
+        } else {
+            if (request.getSession().getAttribute("error") != null) {
+                model.addAttribute("error", request.getSession().getAttribute("error"));
+                return "login";
             }
         }
         return "login";
@@ -143,7 +140,7 @@ public class MainController {
     public String filterProfilePage(Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             Long id = ((User) authentication.getPrincipal()).getId();
-            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> 
+            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority ->
                     ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
                 EmployerUser employerUser = employerUserService.getById(id);
@@ -169,7 +166,7 @@ public class MainController {
 
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/edit_vacancy/{vacancyId}", method = RequestMethod.GET)
-    public String edit_vacancyPage(@PathVariable("vacancyId") Long vacancyId, Authentication authentication, 
+    public String edit_vacancyPage(@PathVariable("vacancyId") Long vacancyId, Authentication authentication,
                                    Model model) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         EmployerProfile employerProfile = employerProfileService.getById(userId);
@@ -199,12 +196,12 @@ public class MainController {
             Long id = ((User) authentication.getPrincipal()).getId();
             Profile profile = userService.getById(id).getProfile();
             if (profile instanceof SeekerProfile) {
-                Subscription subscription = subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, 
+                Subscription subscription = subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile,
                         vacancy.getCreatorProfile());
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
                 isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(subscription);
                 hasResponded = vacancy.getMeetings()
-                        .stream().filter(meeting -> 
+                        .stream().filter(meeting ->
                                 meeting.getSeekerProfile().getId().equals(id)).findFirst().isPresent();
                 model.addAttribute("isContain", isContain);
                 model.addAttribute("isSubscribe", isSubscribe);
