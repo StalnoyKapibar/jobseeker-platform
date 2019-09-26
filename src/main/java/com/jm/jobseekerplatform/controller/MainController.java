@@ -55,9 +55,6 @@ public class MainController {
     private EmployerUserService employerUserService;
 
     @Autowired
-    private SeekerProfileService seekerProfileService;
-
-    @Autowired
     private SubscriptionService subscriptionService;
 
     @Autowired
@@ -86,12 +83,12 @@ public class MainController {
                     model.addAttribute("vacMess", "Вакансии с учетом Вашего опыта:");
                 } catch (NullPointerException e) {
                     model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-                    model.addAttribute("vacMess", "Доступные вакансии: (Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
+                    model.addAttribute("vacMess", "Доступные вакансии: " +
+                            "(Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
                 }
             } else {
                 model.addAttribute("googleMapsApiKey", googleMapsApiKey);
             }
-
             if (authentication.getAuthorities().contains(roleEmployer)) {
                 Profile profile = ((User) authentication.getPrincipal()).getProfile();
                 model.addAttribute("employerProfileId", profile.getId());
@@ -104,16 +101,17 @@ public class MainController {
     public String login(@RequestParam(value = "logout", required = false) String logout,
                         HttpServletRequest request,
                         Model model) {
-        if (request.getSession().getAttribute("error") != null) {
-            model.addAttribute("error", request.getSession().getAttribute("error"));
-        } else if (logout != null) {
+        String[] errors = {"error", "disabled", "expired", "blocked"};
+        if (logout != null) {
             model.addAttribute("logout", logout);
-        } else if (request.getSession().getAttribute("disabled") != null) {
-            model.addAttribute("disabled", request.getSession().getAttribute("disabled"));
-        } else if (request.getSession().getAttribute("expired") != null) {
-            model.addAttribute("expired", request.getSession().getAttribute("expired"));
-        } else if (request.getSession().getAttribute("blocked") != null) {
-            model.addAttribute("blocked", request.getSession().getAttribute("blocked"));
+        }
+        else {
+            for (String error : errors) {
+                if (request.getSession().getAttribute(error) != null) {
+                    model.addAttribute(error, request.getSession().getAttribute(error));
+                    return "login";
+                }
+            }
         }
         return "login";
     }
@@ -145,7 +143,8 @@ public class MainController {
     public String filterProfilePage(Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             Long id = ((User) authentication.getPrincipal()).getId();
-            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
+            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority -> 
+                    ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
                 EmployerUser employerUser = employerUserService.getById(id);
                 return "redirect:/employer/" + employerUser.getProfile().getId();
@@ -170,16 +169,15 @@ public class MainController {
 
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/edit_vacancy/{vacancyId}", method = RequestMethod.GET)
-    public String edit_vacancyPage(@PathVariable("vacancyId") Long vacancyId, Authentication authentication, Model model) {
+    public String edit_vacancyPage(@PathVariable("vacancyId") Long vacancyId, Authentication authentication, 
+                                   Model model) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         EmployerProfile employerProfile = employerProfileService.getById(userId);
         model.addAttribute("employer", employerProfile);
         String employerName = ((User) authentication.getPrincipal()).getUsername();
-
         if (vacancyService.getById(vacancyId).getCreatorProfile().getId() == employerProfile.getId()) {
             model.addAttribute("vacancy", vacancyService.getById(vacancyId));
         }
-
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "/vacancy/edit_vacancy";
     }
@@ -201,11 +199,13 @@ public class MainController {
             Long id = ((User) authentication.getPrincipal()).getId();
             Profile profile = userService.getById(id).getProfile();
             if (profile instanceof SeekerProfile) {
-                Subscription subscription = subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, vacancy.getCreatorProfile());
+                Subscription subscription = subscriptionService.findBySeekerAndEmployer((SeekerProfile) profile, 
+                        vacancy.getCreatorProfile());
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
                 isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(subscription);
                 hasResponded = vacancy.getMeetings()
-                        .stream().filter(meeting -> meeting.getSeekerProfile().getId().equals(id)).findFirst().isPresent();
+                        .stream().filter(meeting -> 
+                                meeting.getSeekerProfile().getId().equals(id)).findFirst().isPresent();
                 model.addAttribute("isContain", isContain);
                 model.addAttribute("isSubscribe", isSubscribe);
                 model.addAttribute("seekerProfileId", profile.getId());
@@ -217,7 +217,6 @@ public class MainController {
         model.addAttribute("vacancyFromServer", vacancy);
         model.addAttribute("EmployerProfileFromServer", vacancy.getCreatorProfile());
         model.addAttribute("logoimg", Base64.getEncoder().encodeToString(vacancy.getCreatorProfile().getLogo()));
-
         return "/vacancy/vacancy";
     }
 
