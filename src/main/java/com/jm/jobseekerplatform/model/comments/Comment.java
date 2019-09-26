@@ -1,25 +1,15 @@
 package com.jm.jobseekerplatform.model.comments;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.jm.jobseekerplatform.model.News;
-import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
-import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name= "comments")
 public class Comment implements Serializable {
-   @Id
+    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
@@ -27,7 +17,7 @@ public class Comment implements Serializable {
     private String text;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "profile_id")
     private Profile author;
 

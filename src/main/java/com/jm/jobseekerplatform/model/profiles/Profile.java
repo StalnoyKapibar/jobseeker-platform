@@ -1,9 +1,7 @@
 package com.jm.jobseekerplatform.model.profiles;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.jm.jobseekerplatform.model.State;
 import com.jm.jobseekerplatform.model.comments.Comment;
 import org.hibernate.annotations.Type;
@@ -32,8 +30,7 @@ public class Profile implements Serializable {
     @Type(type = "image")
     private byte[] logo;
 
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Comment> comments;
 
     public Profile() {
