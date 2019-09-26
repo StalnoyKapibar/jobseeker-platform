@@ -18,7 +18,16 @@
                     <h2 class="form-signin-heading">Please sign in</h2>
                     <div th:if="${logout}" class="alert alert-success" role="alert">You have been signed out
                     </div>
-                    <div th:if="${error}" class="alert alert-danger" role="alert">Bad credentials</div>
+                    <div th:if="${error != null}" class="alert alert-danger" role="alert">Bad credentials</div>
+                    <div th:if="${disabled != null}" id="disabled" class="alert alert-danger" role="alert">
+                        <h5>Ваша учетная запись заблокирована.<br></h5><h6 th:text="${disabled}"></h6>
+                    </div>
+                    <div th:if="${expired != null}" class="alert alert-danger" role="alert">
+                        Срок действия учетной записи истек.
+                    </div>
+                    <div th:if="${blocked != null}" class="alert alert-danger" role="alert">
+                        Ваша учетная запись заблокирована.
+                    </div>
                     <p>
                         <label for="j_username" class="sr-only">Username</label>
                         <input type="text" id="j_username" name="j_username" class="form-control"
@@ -35,7 +44,6 @@
                     <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in
                     </button>
                 </form>
-
                 <div sec:authorize="!isAuthenticated()" th:align="right">
                     <a href="/recovery">Восстановить пароль</a><br/>
                     <a href="/registration">Зарегистрироваться</a>

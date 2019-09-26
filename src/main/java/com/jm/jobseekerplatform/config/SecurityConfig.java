@@ -53,8 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(new LoginSuccessHandler(userService))
                 // указываем action с формы логина
                 .loginProcessingUrl("/login")
-                // указываем URL при неудачном логине
-                .failureUrl("/login?error")
+                // указываем логику обработки при неудачном логине
+                .failureHandler(new LoginFailureHandler(userService))
                 // Указываем параметры логина и пароля с формы логина
                 .usernameParameter("j_username")
                 .passwordParameter("j_password")

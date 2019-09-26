@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -100,11 +101,20 @@ public class MainController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(@RequestParam(value = "error", required = false) String error,
-                        @RequestParam(value = "logout", required = false) String logout,
+    public String login(@RequestParam(value = "logout", required = false) String logout,
+                        HttpServletRequest request,
                         Model model) {
-        model.addAttribute("error", error != null);
-        model.addAttribute("logout", logout != null);
+        if (request.getSession().getAttribute("error") != null) {
+            model.addAttribute("error", request.getSession().getAttribute("error"));
+        } else if (logout != null) {
+            model.addAttribute("logout", logout);
+        } else if (request.getSession().getAttribute("disabled") != null) {
+            model.addAttribute("disabled", request.getSession().getAttribute("disabled"));
+        } else if (request.getSession().getAttribute("expired") != null) {
+            model.addAttribute("expired", request.getSession().getAttribute("expired"));
+        } else if (request.getSession().getAttribute("blocked") != null) {
+            model.addAttribute("blocked", request.getSession().getAttribute("blocked"));
+        }
         return "login";
     }
 
