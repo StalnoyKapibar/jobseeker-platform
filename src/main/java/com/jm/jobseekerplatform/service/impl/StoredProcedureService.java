@@ -14,4 +14,8 @@ public class StoredProcedureService {
     public void createSortVacancyProcedure() {
         storedProcedureDAO.createSortVacancyProcedure();
     }
+
+    public void createDeleteUserProcedure() {
+        storedProcedureDAO.createDeleteUserProcedure();
+    }
 }

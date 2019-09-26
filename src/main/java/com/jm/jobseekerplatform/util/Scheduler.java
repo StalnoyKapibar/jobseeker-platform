@@ -1,8 +1,9 @@
 package com.jm.jobseekerplatform.util;
 
 import com.jm.jobseekerplatform.service.impl.MeetingService;
-import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
+import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -23,16 +24,23 @@ public class Scheduler {
     @Autowired
     MeetingService meetingService;
 
+    @Autowired
+    UserService userService;
+
     @Scheduled(cron = "${scheduler.deleteExpiryVacancies.cron}")
     public void deleteExpiryVacancies() {
         vacancyService.deletePermanentBlockVacancies();
         vacancyService.deleteExpiryBlockVacancies();
     }
 
-    @Scheduled(cron = "${scheduler.deleteExpiryEmployerProfiles.cron}")
+    @Scheduled(cron = "${scheduler.deletePermanentBlockUsers.cron}")
     public void deleteExpiryEmployerProfiles() {
-        employerProfileService.deletePermanentBlockEmployerProfiles();
-        employerProfileService.deleteExpiryBlockEmployerProfiles();
+        userService.deletePermanentBlockUsers();
+    }
+
+    @Scheduled(cron = "${scheduler.unblockBlockedUsersWithExpiryBanDate.cron}")
+    public void unblockBlockedUsersWithExpiryBanDate() {
+        userService.unblockBlockedUsersWithExpiryBanDate();
     }
 
     @Scheduled(cron = "${scheduler.updateMeetingStatus.cron}")

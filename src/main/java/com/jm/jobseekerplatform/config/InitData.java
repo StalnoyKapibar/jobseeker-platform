@@ -111,6 +111,7 @@ public class InitData {
 
     public void initData() {
         storedProcedureService.createSortVacancyProcedure();
+        storedProcedureService.createDeleteUserProcedure();
 
         initCities();
         initTags();

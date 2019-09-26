@@ -4,6 +4,7 @@ import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/seeker")
 public class SeekerUserRestController {
+    @Autowired
+    private UserService userService;
+
     @Autowired
     private SeekerUserService seekerUserService;
 
@@ -43,7 +47,7 @@ public class SeekerUserRestController {
 
     @RequestMapping(value = "/delete/{seekerUserId}", method = RequestMethod.GET)
     public ResponseEntity deleteSeekerById(@PathVariable Long seekerUserId) {
-        seekerUserService.deleteById(seekerUserId);
+        userService.deleteById(seekerUserId);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

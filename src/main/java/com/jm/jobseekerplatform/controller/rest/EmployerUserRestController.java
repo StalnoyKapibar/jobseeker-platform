@@ -2,8 +2,10 @@ package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.service.impl.StoredProcedureService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/employer")
 public class EmployerUserRestController {
+    @Autowired
+    private UserService userService;
+
     @Autowired
     private EmployerUserService employerUserService;
 
@@ -52,7 +57,8 @@ public class EmployerUserRestController {
 
     @RequestMapping(value = "/delete/{employerUserId}", method = RequestMethod.GET)
     public ResponseEntity deleteEmployerUserById(@PathVariable Long employerUserId) {
-        employerUserService.deleteById(employerUserId);
+        userService.deleteById(employerUserId);
         return new ResponseEntity(HttpStatus.OK);
     }
+
 }
