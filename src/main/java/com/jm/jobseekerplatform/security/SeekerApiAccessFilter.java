@@ -27,14 +27,13 @@ public class SeekerApiAccessFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(SeekerApiAccessFilter.class);
 
+    private static final GrantedAuthority ADMIN_AUTHORITY = new SimpleGrantedAuthority("ROLE_ADMIN");
+    private static final String SEEKER_PROFILE_ID = "seekerProfileId";
+    private static final String JSON_HEADER_VALUE = "application/json";
     private static final List<String> OPEN_ACCESS_METHODS = Arrays.asList(
             HttpMethod.GET.name(),
             HttpMethod.HEAD.name(),
             HttpMethod.OPTIONS.name());
-    private static final String JSON_HEADER_VALUE = "application/json";
-    //    private static final String URLENCODED_HEADER_VALUE = "application/x-www-form-urlencoded";
-    private static final GrantedAuthority ADMIN_AUTHORITY = new SimpleGrantedAuthority("ROLE_ADMIN");
-    private static final String SEEKER_PROFILE_ID = "seekerProfileId";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -54,12 +53,7 @@ public class SeekerApiAccessFilter implements Filter {
             Long urlSeekerProfileId = null;
             Long bodySeekerProfileId = null;
             logger.debug("Parameters: {}", Collections.list(request.getParameterNames()));
-//            HttpServletRequest requestEff = request;
-//            logger.debug("Headers: {}", Collections.list(request.getHeaderNames()).stream()
-//                    .map(x -> x + ": " + requestEff.getHeader(x))
-//                    .collect(Collectors.joining(", ")));
-            if (request.getHeader(HttpHeaders.CONTENT_TYPE).contains(JSON_HEADER_VALUE) &&
-                    Long.parseLong(request.getHeader(HttpHeaders.CONTENT_LENGTH)) > 0) {
+            if (request.getHeader(HttpHeaders.CONTENT_TYPE).contains(JSON_HEADER_VALUE) && request.getContentLength() > 0) {
                 if (!(request instanceof ReadTwiceHttpServletRequestWrapper)) {
                     request = new ReadTwiceHttpServletRequestWrapper(request);
                 }

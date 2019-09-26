@@ -1,7 +1,6 @@
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
 
-
 $(function () {
     $('#search_box').bind("input keyup click", function () {
         if (this.value === '') {
@@ -101,7 +100,6 @@ function deleteTag(id, name) {
     }
 }
 
-
 function showPortfolio(id) {
     $.ajax({
         url: "/api/portfolios/" + id,
@@ -146,10 +144,8 @@ function inFavorite(vacancyId, seekerProfileId) {
     $.ajax({
         type: 'post',
         url: "/api/seekerprofiles/inFavoriteVacancy",
-        // data: "seekerProfileId=" + seekerProfileId + "&vacancyId=" + vacancyId,
-        data: JSON.stringify({ seekerProfileId: seekerProfileId, vacancyId: vacancyId }),
-        // contentType: "application/x-www-form-urlencoded;charset=utf-8",
-        contentType: "application/json;charset=utf-8",
+        data: "seekerProfileId=" + seekerProfileId + "&vacancyId=" + vacancyId,
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
@@ -169,10 +165,8 @@ function outFavorite(vacancyId, seekerProfileId) {
     $.ajax({
         type: 'post',
         url: "/api/seekerprofiles/outFavoriteVacancy",
-        // data: "seekerProfileId=" + seekerProfileId + "&vacancyId=" + vacancyId,
-        data: JSON.stringify({ seekerProfileId: seekerProfileId, vacancyId: vacancyId }),
-        // contentType: "application/x-www-form-urlencoded;charset=utf-8",
-        contentType: "application/json;charset=utf-8",
+        data: "seekerProfileId=" + seekerProfileId + "&vacancyId=" + vacancyId,
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },

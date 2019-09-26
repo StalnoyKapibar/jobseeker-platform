@@ -1,6 +1,5 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
@@ -23,14 +22,16 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.security.RolesAllowed;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/seekerprofiles")
 public class SeekerProfileRestController {
-
-//    private static final Logger logger = LoggerFactory.getLogger(SeekerProfileRestController.class);
 
     @Autowired
     private SeekerProfileService seekerProfileService;
@@ -64,10 +65,7 @@ public class SeekerProfileRestController {
     }
 
     @PostMapping(value = "/outFavoriteVacancy")
-//    public ResponseEntity outFavoriteVacancy(@RequestParam Long vacancyId, @RequestParam Long seekerProfileId) {
-    public ResponseEntity outFavoriteVacancy(@RequestBody JsonNode jsonNode) {
-        Long seekerProfileId = jsonNode.get("seekerProfileId").asLong();
-        Long vacancyId = jsonNode.get("vacancyId").asLong();
+    public ResponseEntity outFavoriteVacancy(@RequestParam Long vacancyId, @RequestParam Long seekerProfileId) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Vacancy vacancy = vacancyService.getById(vacancyId);
         seekerProfile.getFavoriteVacancy().remove(vacancy);
@@ -76,10 +74,7 @@ public class SeekerProfileRestController {
     }
 
     @PostMapping(value = "/inFavoriteVacancy")
-//    public ResponseEntity inFavoriteVacancy(@RequestParam Long vacancyId, @RequestParam Long seekerProfileId) {
-    public ResponseEntity inFavoriteVacancy(@RequestBody JsonNode jsonNode) {
-        Long seekerProfileId = jsonNode.get("seekerProfileId").asLong();
-        Long vacancyId = jsonNode.get("vacancyId").asLong();
+    public ResponseEntity inFavoriteVacancy(@RequestParam Long vacancyId, @RequestParam Long seekerProfileId) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         Vacancy vacancy = vacancyService.getById(vacancyId);
         seekerProfile.getFavoriteVacancy().add(vacancy);
@@ -156,7 +151,7 @@ public class SeekerProfileRestController {
     }
 
     @PostMapping("/update")
-    public SeekerProfile updateSeekerProfie(@RequestBody SeekerProfile seekerProfile) {
+    public SeekerProfile updateSeekerProfile(@RequestBody SeekerProfile seekerProfile) {
         SeekerProfile updatedProfile = seekerProfileService.getById(seekerProfile.getId());
         updatedProfile.setName(seekerProfile.getName());
         updatedProfile.setSurname(seekerProfile.getSurname());
@@ -167,12 +162,10 @@ public class SeekerProfileRestController {
         return updatedProfile;
     }
 
-    @RequestMapping(value = "/update_image", method = RequestMethod.POST)
-    public String updateImage(@RequestParam(value = "id") long id,
-                              @RequestParam(value = "image") MultipartFile img) {
-        seekerProfileService.updatePhoto(id, img);
+    @PostMapping(value = "/update_image")
+    public String updateImage(@RequestParam long id, @RequestParam MultipartFile image) {
+        seekerProfileService.updatePhoto(id, image);
         return seekerProfileService.getById(id).getEncoderPhoto();
     }
 
 }
-
