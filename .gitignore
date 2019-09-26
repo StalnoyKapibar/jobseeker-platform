@@ -3,8 +3,7 @@
 *.iml
 *.DS_Store
 
-
-
+## Logs
 logs/
 **/*.log
 **/*.log.gz
@@ -54,4 +53,8 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 
-# Created by .ignore support plugin (hsz.mobi)
+## Credential and Environment depended properties
+resources/config/application.properties
+resources/config/datasource.properties
+resources/config/jpa.properties
+resources/config/mail.properties
