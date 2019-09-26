@@ -21,15 +21,6 @@
                     <div th:if="${error != null}" class="alert alert-danger" role="alert">
                         <h5 th:text="${error}"></h5>
                     </div>
-                    <div th:if="${disabled != null}" id="disabled" class="alert alert-danger" role="alert">
-                        <h5>Ваша учетная запись заблокирована.<br></h5><h6 th:text="${disabled}"></h6>
-                    </div>
-                    <div th:if="${expired != null}" class="alert alert-danger" role="alert">
-                        <h5 th:text="${expired}"></h5>
-                    </div>
-                    <div th:if="${blocked != null}" class="alert alert-danger" role="alert">
-                        <h5 th:text="${blocked}"></h5>
-                    </div>
                     <p>
                         <label for="j_username" class="sr-only">Username</label>
                         <input type="text" id="j_username" name="j_username" class="form-control"
