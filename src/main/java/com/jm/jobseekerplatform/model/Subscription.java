@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 
@@ -17,6 +18,7 @@ public class Subscription implements Serializable {
     @ManyToOne
     private EmployerProfile employerProfile;
 
+    @JsonBackReference
     @ManyToOne
     private SeekerProfile seekerProfile;
 

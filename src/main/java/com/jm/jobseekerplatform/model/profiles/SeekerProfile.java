@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.model.profiles;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.*;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,6 +34,7 @@ public class SeekerProfile extends Profile implements Serializable {
     @OrderBy("status, date desc")
     private Set<Meeting> meetings;
 
+    @JsonManagedReference
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Subscription> subscriptions;
 
