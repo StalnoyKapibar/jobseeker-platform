@@ -1,3 +1,4 @@
+### DO NOT edit, rename or delete this file, just make copy w/o .sample extension and customize ###
 spring.mail.host=smtp.gmail.com
 spring.mail.properties.mail.smtp.ssl.trust=smtp.gmail.com
 spring.mail.port=587

@@ -1,3 +1,4 @@
+### DO NOT edit, rename or delete this file, just make copy w/o .sample extension and customize ###
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.url=jdbc:mysql://localhost:3306/jobseeker_db?serverTimezone=Europe/Moscow&verifyServerCertificate=false&useSSL=true&characterEncoding=UTF-8
 spring.datasource.username=root
