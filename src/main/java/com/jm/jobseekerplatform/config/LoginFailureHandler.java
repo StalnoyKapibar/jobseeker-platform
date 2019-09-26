@@ -25,7 +25,8 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     }
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException exception) throws IOException, ServletException {
+    public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, 
+                                        AuthenticationException exception) throws IOException, ServletException {
         httpServletRequest.getSession().invalidate();
         if (exception.getMessage().equals("User is disabled")) {
             User user = userService.findByEmail(httpServletRequest.getParameter("j_username"));
