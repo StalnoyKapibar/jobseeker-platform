@@ -8,12 +8,12 @@ import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
 @Entity
-public class EmployerUser extends User<EmployerProfile> {
+public class EmployerUser extends User {
     public EmployerUser() {
     }
 
     public EmployerUser(String email, char[] password, LocalDateTime date, EmployerProfile profile) {
-        super(email, password, date, profile);
+        super(email, password, date);
     }
 
     @Override

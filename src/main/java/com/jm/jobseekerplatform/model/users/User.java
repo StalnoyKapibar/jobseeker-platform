@@ -24,7 +24,7 @@ import java.util.Objects;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "users")
-public abstract class User<T extends Profile> implements Serializable, UserDetails {
+public abstract class User implements Serializable, UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -39,8 +39,8 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
-    @OneToOne(fetch = FetchType.EAGER, targetEntity = Profile.class)
-    private T profile;
+//    @OneToOne(fetch = FetchType.EAGER, targetEntity = Profile.class)
+//    private T profile;
 
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
@@ -51,13 +51,13 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
     public User() {
     }
 
-    public User(String email, char[] password, LocalDateTime date, T profile) {
+    public User(String email, char[] password, LocalDateTime date) {
         this.email = email;
         this.password = password;
         this.date = date;
         this.enabled = true;
         this.confirm = false;
-        this.profile = profile;
+        //this.profile = profile;
     }
 
     public abstract GrantedAuthority getAuthority();
@@ -79,14 +79,15 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
     }
 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    public T getProfile() {
-        return profile;
-    }
 
-    public void setProfile(T profile) {
-        this.profile = profile;
-    }
+//    @JsonIdentityReference(alwaysAsId = true)
+//    public T getProfile() {
+//        return profile;
+//    }
+//
+//    public void setProfile(T profile) {
+//        this.profile = profile;
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -154,7 +155,7 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User<?> user = (User<?>) o;
+        User user = (User) o;
         return enabled == user.enabled &&
                 confirm == user.confirm &&
                 Objects.equals(id, user.id) &&

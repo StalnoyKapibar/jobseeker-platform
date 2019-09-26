@@ -2,6 +2,8 @@ package com.jm.jobseekerplatform.model.profiles;
 
 import com.jm.jobseekerplatform.model.EmployerReviews;
 import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class EmployerProfile extends Profile implements Serializable {
+public class EmployerProfile extends Profile<EmployerUser>  implements Serializable {
 
     @Column(name = "companyname")
     private String companyName;

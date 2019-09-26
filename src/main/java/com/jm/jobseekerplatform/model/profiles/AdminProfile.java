@@ -1,5 +1,7 @@
 package com.jm.jobseekerplatform.model.profiles;
 
+import com.jm.jobseekerplatform.model.users.AdminUser;
+
 import javax.persistence.Entity;
 
 /**
@@ -7,7 +9,7 @@ import javax.persistence.Entity;
  */
 
 @Entity
-public class AdminProfile extends Profile {
+public class AdminProfile extends Profile<AdminUser> {
 
     public AdminProfile() {
     }

@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.model.profiles;
 
 import com.jm.jobseekerplatform.model.State;
+import com.jm.jobseekerplatform.model.users.User;
 import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,7 +14,7 @@ import java.util.Date;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Profile implements Serializable {
+public abstract class Profile<T extends User> implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +30,9 @@ public abstract class Profile implements Serializable {
 
     @Column(name = "expiry_block")
     private Date expiryBlock;
+
+    @OneToOne(fetch = FetchType.EAGER, targetEntity = User.class)
+    private T user;
 
     public Profile() {
         this.state = State.NO_ACCESS;
@@ -77,6 +81,14 @@ public abstract class Profile implements Serializable {
 
     public void setLogo(byte[] logo) {
         this.logo = logo;
+    }
+
+    public T getUser() {
+        return user;
+    }
+
+    public void setUser(T user) {
+        this.user = user;
     }
 
     @Override

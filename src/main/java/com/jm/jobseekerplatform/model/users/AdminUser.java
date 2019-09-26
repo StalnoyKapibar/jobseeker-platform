@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
  */
 
 @Entity
-public class AdminUser extends User<AdminProfile> {
+public class AdminUser extends User {
     public AdminUser() {
     }
 
     public AdminUser(String email, char[] password, LocalDateTime date, AdminProfile profile) {
-        super(email, password, date, profile);
+        super(email, password, date);
     }
 
     @Override

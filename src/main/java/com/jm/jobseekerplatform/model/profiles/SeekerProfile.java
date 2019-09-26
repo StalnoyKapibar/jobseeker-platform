@@ -1,12 +1,15 @@
 package com.jm.jobseekerplatform.model.profiles;
 
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.model.users.User;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-public class SeekerProfile extends Profile implements Serializable {
+public class SeekerProfile extends Profile<SeekerUser> implements Serializable {
 
     @Column(name = "name")
     private String name;
