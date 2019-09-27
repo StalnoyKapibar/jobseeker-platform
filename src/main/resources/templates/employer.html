@@ -81,6 +81,7 @@
                                         <h3><span id="EPcompanyName"
                                                                       th:text="${employerProfile.companyName}"></span>
                                         </h3>
+                                            <a th:if="${isOwner == true}" th:href="@{'/employer/update/' + ${employerProfile.id}}">Редактировать профиль</a>
                                             <div sec:authorize="hasRole('ROLE_ADMIN')" th:insert="fragments/adminfragments :: admin_user_button(user=${employerUser})"></div>
                                         </div>
                                         <div class="card-body">
