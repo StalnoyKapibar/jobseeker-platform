@@ -166,9 +166,8 @@ public class MainController {
 
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/edit_vacancy/{vacancyId}", method = RequestMethod.GET)
-    public String edit_vacancyPage(@PathVariable("vacancyId") Long vacancyId, Authentication authentication,
-                                   Model model) {
-        Long userId = ((User) authentication.getPrincipal()).getId();
+    public String edit_vacancyPage(@PathVariable("vacancyId") Long vacancyId, Authentication authentication, Model model) {
+        Long userId = ((User) authentication.getPrincipal()).getProfile().getId();
         EmployerProfile employerProfile = employerProfileService.getById(userId);
         model.addAttribute("employer", employerProfile);
         String employerName = ((User) authentication.getPrincipal()).getUsername();
