@@ -54,7 +54,8 @@ crashlytics.properties
 crashlytics-build.properties
 
 ## Credential and Environment depended properties
-resources/config/application.properties
-resources/config/datasource.properties
-resources/config/jpa.properties
-resources/config/mail.properties
+/src/main/resources/config/application.properties
+/src/main/resources/config/datasource.properties
+/src/main/resources/config/jpa.properties
+/src/main/resources/config/mail.properties
+
