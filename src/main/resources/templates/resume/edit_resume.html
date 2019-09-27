@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <title>Редактирование резюме</title>
+    <meta name="apiKey" th:content="${googleMapsApiKey}"/>
+    <style>
+        .label {
+            font-size: 110%;
+            display: inline-block;
+            margin: 2px;
+            background-color: #5CB85C;
+            border-radius: 7px;
+            color: white;
+            border-style: solid;
+            border-color: #5CB85C;
+        }
+
+        .col-md-7.inputGroupContainer {
+            flex: none;
+            max-width: none;
+            padding-left: 10%;
+        }
+
+        #techLabel {
+            flex: none;
+            max-width: none;
+            padding-left: 10%;
+        }
+
+        /*Эти стили нужны для корректной работы формы автозаполнения*/
+
+        .pac-container {
+            background-color: #FFF;
+            z-index: 2001;
+            position: fixed;
+            display: inline-block;
+            float: left;
+        }
+
+        .modal {
+            z-index: 2000;
+        }
+
+        .modal-backdrop {
+            z-index: 1000;
+        }
+
+    </style>
+    <!--<script type="text/javascript"-->
+    <!--src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>-->
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.css" rel="stylesheet">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
+    <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
+    <script type="text/javascript" src="js/edit_resume.js"></script>
+    <script th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleMapsApiKey} + '&libraries=places'}"
+            async defer></script>
+    <script type="text/javascript" src="js/map.js"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid" id="resume_container">
+        <div class="row">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-8">
+                <form class="well form-horizontal" id="resume_form" style="margin-top: 40px">
+                    <fieldset>
+                        <legend align="center">
+                            <h2><b>Редактирование резюме</b></h2>
+                        </legend>
+                        <br>
+                        <input id="resumeId" hidden th:value="${oldResume.id}">
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-2 col-form-label">Желаемая должность</label>
+                            <div class="col-md-8 inputGroupContainer">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                    </div>
+                                    <input name="v_headline" id="v_headline"
+                                           placeholder="Введите название должности (обязательно)"
+                                           class="form-control is-valid" type="text" th:value="${oldResume.headline}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-2 control-label">Адрес</label>
+                            <div class="col-md-8 inputGroupContainer">
+                                <div class="input-group">
+                                    <input id="long" hidden th:value="${oldResume.coordinates.longitudeX}">
+                                    <input id="lat" hidden th:value="${oldResume.coordinates.latitudeY}">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="button" data-toggle="modal"
+                                                    data-target="#mapModal"
+                                                    style="background-color: #F39C12; color: #222"
+                                                    onclick="initV_Map()"><i class="fas fa-map"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <input name="v_address" id="v_address"
+                                           placeholder="Введите полный адрес вручную или выберите на карте (обязательно)"
+                                           class="form-control is-valid" type="text" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-2 control-label">Зарплата: от</label>
+                            <div class="col-md-8 inputGroupContainer">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-ruble-sign"></i></span>
+                                    </div>
+                                    <input name="v_salaryMin" id="v_salaryMin" placeholder="Можно не указывать"
+                                           class="form-control" type="text" th:value="${oldResume.salaryMin}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-md-2 control-label">до</label>
+                            <div class="col-md-8 inputGroupContainer">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-ruble-sign"></i></span>
+                                    </div>
+                                    <input name="v_salaryMax" id="v_salaryMax" placeholder="Можно не указывать"
+                                           class="form-control" type="text" th:value="${oldResume.salaryMax}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row" id="v_form_group_tags">
+                            <div class="col-sm-1"></div>
+                            <label id="techLabel" class="col-md-2 control-label">Технологии (минимум одна)</label>
+                            <div class="col-md-7 inputGroupContainer">
+                                <div class="input-group mb-4" style="width: 100%;">
+                                    <div class="well well-sm" name="v_tagsWell" id="v_tagsWell"
+                                         style="margin-bottom: 0px;">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                data-target="#tagsModal" onclick="showTags()"
+                                                style=";height: 24px;width: 21px;padding-right: 3px;padding-left: 3px;padding-top: 2px;padding-bottom: 2px;margin-bottom: 2px;">
+                                            <i class="fas fa-plus-square"></i>
+                                        </button>
+                                        <th:block th:each="tag : ${oldResume.tags}">
+                                            <span class='label label-success' th:value="${tag.name}"
+                                                  th:attr="id='v_tagLabel_'+${tag.id}" th:data-name="${tag.name}"
+                                                  th:text="${tag.name}"
+                                                  th:onclick="'deleteTag('+${tag.id}+
+                                                   ',this.getAttribute(\'data-name\'))'"></span>
+                                        </th:block>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" align="center">
+                                <label class="col-md-2 control-label"></label>
+                                <div class="col-md-10 buttons" style="display: flex; justify-content: right;"><br>
+                                    <button type="button" id="addExperienceButton" hidden="true"
+                                            class="btn-sm btn-warning" onclick="addExperience()"
+                                            style="width: 130px">Добавить
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group" align="center">
+                                <label class="col-md-2 control-label"></label>
+                                <div class="col-md-10 buttons" style="display: flex; justify-content: right;"><br>
+                                    <button type="button" id="hideExperienceButton" hidden="true"
+                                            class="btn-sm btn-warning" onclick="hideExperience()"
+                                            style="width: 130px">Удалить
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="jobExperienceSet" hidden="true">
+                            <div class="form-group row">
+                                <div class="col-sm-1"></div>
+                                <h4>Опыт работы:</h4>
+                            </div>
+                            <b/>
+                            <div class="form-group row">
+                                <div class="col-sm-1"></div>
+                                <label class="col-md-2 control-label">Название компании</label>
+                                <div class="col-md-8 inputGroupContainer">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-industry"></i></span>
+                                        </div>
+                                        <tr th:each="jobExperience : ${oldResume.jobExperiences}">
+                                            <input name="v_experienceId" id="v_experienceId" hidden
+                                                   placeholder="Можно не указывать"
+                                                   class="form-control" type="text"
+                                                   th:value="${jobExperience.id}">
+                                            <input name="v_company" id="v_company"
+                                                   placeholder="Введите название компании (обязательно)"
+                                                   class="form-control" type="text"
+                                                   th:value="${jobExperience.companyName}">
+                                        </tr>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-1"></div>
+                                <label class="col-md-2 control-label">Время работы: с</label>
+                                <div class="col-md-8 inputGroupContainer">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-industry"></i></span>
+                                        </div>
+                                        <tr th:each="jobExperience : ${oldResume.jobExperiences}">
+                                            <input name="v_firstDay" id="v_firstDay"
+                                                   class="form-control" type="text" hidden="true"
+                                                   th:value="${jobExperience.firstWorkDay}">
+                                        </tr>
+                                        <input name="v_firstDays" id="v_firstDays"
+                                               placeholder="День начала работы (обязательно)"
+                                               class="form-control is-valid" type="date">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-1"></div>
+                                <label class="col-md-2 control-label">по</label>
+                                <div class="col-md-8 inputGroupContainer">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-industry"></i></span>
+                                        </div>
+                                        <tr th:each="jobExperience : ${oldResume.jobExperiences}">
+                                            <input name="v_lastDay" id="v_lastDay"
+                                                   class="form-control" type="text" hidden="true"
+                                                   th:value="${jobExperience.lastWorkDay}">
+                                        </tr>
+                                        <input name="v_lastDays" id="v_lastDays"
+                                               placeholder="День окончания работы (обязательно)"
+                                               class="form-control is-valid" type="date">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-1"></div>
+                                <label class="col-md-2 control-label">Занимаемая должность</label>
+                                <div class="col-md-8 inputGroupContainer">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-industry"></i></span>
+                                        </div>
+                                        <tr th:each="jobExperience : ${oldResume.jobExperiences}">
+                                            <input name="v_position" id="v_position"
+                                                   placeholder="Введите название должности (обязательно)"
+                                                   class="form-control" type="text"
+                                                   th:value="${jobExperience.position}">
+                                        </tr>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-1"></div>
+                                <label class="col-md-2 control-label">Обязанности</label>
+                                <div class="col-md-8 inputGroupContainer">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-industry"></i></span>
+                                        </div>
+                                        <tr th:each="jobExperience : ${oldResume.jobExperiences}">
+                                            <input name="v_responsibilities" id="v_responsibilities"
+                                                   placeholder="Исполнявшиеся Вами обязанности (обязательно)"
+                                                   class="form-control" type="text"
+                                                   th:value="${jobExperience.responsibilities}">
+                                        </tr>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="addJobExperienceSet" hidden="true">
+                            <div class="form-group row">
+                                <div class="col-sm-1"></div>
+                                <h4>Опыт работы:</h4>
+                            </div>
+                            <b/>
+                            <div class="form-group row">
+                                <div class="col-sm-1"></div>
+                                <label class="col-md-2 control-label">Название компании</label>
+                                <div class="col-md-8 inputGroupContainer">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-industry"></i></span>
+                                        </div>
+                                        <input name="v_newCompany" id="v_newCompany"
+                                               placeholder="Введите название компании (обязательно)"
+                                               class="form-control" type="text" disabled="true">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-1"></div>
+                                <label class="col-md-2 control-label">Время работы: с</label>
+                                <div class="col-md-8 inputGroupContainer">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                        </div>
+                                        <input name="v_newFirstDay" id="v_newFirstDay"
+                                               placeholder="День начала работы (обязательно)"
+                                               class="form-control" type="date" disabled="true">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-1"></div>
+                                <label class="col-md-2 control-label">по</label>
+                                <div class="col-md-8 inputGroupContainer">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                        </div>
+                                        <input name="v_newLastDay" id="v_newLastDay"
+                                               placeholder="День окончания работы (обязательно)"
+                                               class="form-control" type="date" disabled="true">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-1"></div>
+                                <label class="col-md-2 control-label">Занимаемая должность</label>
+                                <div class="col-md-8 inputGroupContainer">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                        </div>
+                                        <input name="v_newPosition" id="v_newPosition"
+                                               placeholder="Введите название должности (обязательно)"
+                                               class="form-control" type="text" disabled="true">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-1"></div>
+                                <label class="col-md-2 control-label">Обязанности</label>
+                                <div class="col-md-8 inputGroupContainer">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-address-card"></i></span>
+                                        </div>
+                                        <input name="v_responsibilities" id="v_newResponsibilities"
+                                               placeholder="Исполнявшиеся Вами обязанности (обязательно)"
+                                               class="form-control" type="text" disabled="true">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Button -->
+                        <div class="form-group" align="center">
+                            <label class="col-md-2 control-label"></label>
+                            <div class="col-md-10" style="display: flex; justify-content: center;"><br>
+                                <button type="button" class="btn btn-warning" onclick="validateAndPreview()"
+                                        style="width: 150px;"> Изменить
+                                    <i class="fas fa-paper-plane "></i>
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- resumeModal -->
+    <div id="resumeModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Предварительный просмотр</h2>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h4><span id="VMTags"></span><br></h4>
+                    <h3><span id="VMHeadline"></span><br></h3>
+                    <h5><span id="VMSalary"></span><br></h5>
+                    <span id="VMCity"></span>
+                    <span id="VMAddress"></span>
+                    <br>
+                    <a data-toggle="collapse" data-target="#map_collapse"> Показать на карте</a>
+                    <div id="map_collapse" class="collapsed collapse">
+                        <div id="map" style="height: 300px"></div>
+                    </div>
+                    <h5><span id="VMJobHead"></span></h5>
+                    <span id="VMJobPer"></span>
+                    <span id="VMJobExp"></span>
+                    <span id="VMId" hidden></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="sendResume()">
+                        Сохранить
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- tagsModal -->
+    <div id="tagsModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Добавление тегов</h2>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-4">
+                        <input id="search_tags" class="form-control width100" placeholder="Фильтр по названию"
+                               maxlength="50">
+                        <span class="input-group-btn">
+                        <button type="button" class="btn btn-info" onclick="addNewTag();">Добавить</button>
+                    </span>
+                    </div>
+                    <div class="well well-sm" id="tagsWell">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- mapModal -->
+    <div id="mapModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Укажите место на карте</h2>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input name="v_address_modal" id="v_address_modal"
+                           placeholder="Введите полный адрес вручную или выберите на карте"
+                           class="form-control is-valid" type="text">
+                </div>
+                <div id="v_map" style="height: 600px"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
