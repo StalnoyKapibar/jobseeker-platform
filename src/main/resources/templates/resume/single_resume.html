@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+
+<head>
+    <title>Резюме</title>
+    <meta name="resumeId" th:content="${resumeID}"/>
+    <meta name="userRole" th:content="${userRole}"/>
+    <script type="text/javascript" src="/js/single_resume.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="main-block chromeFix" layout:fragment="content">
+            <div id="singleResumeDiv" class="container-fluid" style="margin-top: 30px">
+                <div class="row" style="margin-top: 30px">
+                    <div class="col-sm-1">
+                    </div>
+                    <div class="col-sm-10">
+                        <br>
+                        <div id="singleResume">
+                            <h3><span id="VMHeadline"></span><br></h3>
+                            <h4 style="white-space: pre"><span id="VMCity"></span></h4>
+                            <h6 style="white-space: pre; color: #dc3545"><span id="VMSalary"></span></h6><br>
+                            <h5 style="white-space: pre"><span id="VMJobHead"></span></h5>
+                            <div class="row border border-left-0 border-right-0 border-bottom-0">
+                                <div class="col-sm-3">
+                                    <br>
+                                    <span id="VMJobPer"></span>
+                                </div>
+                                <div class="col-sm-7">
+                                    <br>
+                                    <span id="VMJobExp"></span>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row border border-left-0 border-right-0 border-bottom-0">
+                                <div class="col-sm-3">
+                                    <br>
+                                    <h6><span id="VMTagsHead"></span><br></h6>
+                                </div>
+                                <div class="col-sm-7">
+                                    <br>
+                                    <h6><span id="VMTags"></span><br></h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Button -->
+                <div class="form-group" align="center">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-10" style="display: flex; justify-content: center;"><br>
+                        <button id="editButton" type="button" class="btn btn-warning"
+                                hidden="true" onclick="edit()" style="width: 150px;"> Изменить
+                            <i class="fas fa-paper-plane "></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
