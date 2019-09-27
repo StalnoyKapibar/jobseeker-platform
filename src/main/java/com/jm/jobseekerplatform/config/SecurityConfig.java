@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.config;
 
+import com.jm.jobseekerplatform.security.AuthErrorEntryPoint;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,14 +31,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserService userService;
 
-    private PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    @Autowired
+    private AuthErrorEntryPoint authErrorEntryPoint;
 
+    private PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return passwordEncoder;
     }
 
+    @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .userDetailsService(userDetailsService)
@@ -76,11 +80,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/registration").anonymous()
                 // домашняя страница, стили, js и список вакансий
-                .antMatchers("/", "/api/tags/**", "/api/vacancies/**", "/api/users/email/*", "/css/*",
+                .antMatchers("/*", "/api/tags/**", "/api/vacancies/**", "/api/users/email/*", "/css/**",
                         //регистрация пользователя(добавление),  подтверждение регистрации доступен всем и всегда
                         "/api/users/add", "/confirm_reg/*", "/js/**", "/vacancy/**").permitAll()
                 // всё, что касается админа только для админа и емплоера
                 .antMatchers("/admin/**", "api/resumes/**", "api/cities/**").access("hasAnyRole('ADMIN','EMPLOYER')").anyRequest().authenticated();
+        // Сообщение об ошибки для неавторизованного доступа к API, вместо редиректа на страницу логина
+        http.exceptionHandling().authenticationEntryPoint(authErrorEntryPoint);
+
     }
 
 }
