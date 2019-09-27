@@ -8,7 +8,7 @@ $(document).ready(function () {
         searching: false,
         info: false,
 
-        "sAjaxSource": "/api/chats/getAllChatsByProfileId/" + currentProfileId,
+        "sAjaxSource": "/api/chats/getAllChatsByMemberId/",
         "sAjaxDataProp": "",
         "order": [[1, "desc"]],
         "aoColumns": [

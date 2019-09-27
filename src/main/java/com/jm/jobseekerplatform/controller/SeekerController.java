@@ -19,8 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import javax.annotation.security.RolesAllowed;
-import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 
@@ -125,7 +125,7 @@ public class SeekerController {
     public String EmployerPageChatsMy(Model model, Authentication authentication) {
         model.addAttribute("seekerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
         model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(((User) authentication
-                .getPrincipal()).getProfile().getId()));
+                .getPrincipal()).getId()));
         return "seeker_chats";
     }
 

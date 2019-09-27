@@ -40,7 +40,7 @@ function printEmployerNews() {
                     'class = "btn btn-link" onclick = "newsDescription(' + item.id + ')"' +
                     'value="' + item.description + '" data-toggle="modal"data-target="#viewDescriptionModal">Описание </button>' +
                     '</td>' +
-                    '<td>' + getFormatedDate(new Date(item.date)) + '</td>' +
+                    '<td>' + getFormattedDate(new Date(item.date)) + '</td>' +
                     '<td>' +
                     '<button style="width: 120px" onclick="editNews(' + item.id + ')" type="button"' +
                     'class="btn btn-primary" data-toggle="modal" data-target="#editNewsModal">Edit news </button>' +
@@ -97,7 +97,7 @@ function editNews(newsId) {
         success: function (data) {
             $("#NMId").val(data.id);
             $("#NMHeadline").val(data.headline);
-            $(".note-editable").text(data.description);
+            $("#NMDescription").summernote('code', data.description).val();
             $("#NMAuthorId").val(data.author);
         },
         error: function (error) {
@@ -110,7 +110,7 @@ function editNews(newsId) {
 function editModalNews() {
     var newsId = $("#NMId").val();
     var newsHeadline = $("#NMHeadline").val();
-    var newsDescription = $(".note-editable").text();
+    var newsDescription = $("#NMDescription").summernote('code');
 
     $.ajax({
         type: 'post',
@@ -130,7 +130,7 @@ function editModalNews() {
 }
 
 //DD-MM-YYYY HH:mm
-function getFormatedDate(dateObject){
+function getFormattedDate(dateObject){
     return ('0' + dateObject.getDate()).slice(-2) + '/'
         + ('0' + (dateObject.getMonth()+1)).slice(-2) + '/'
         + dateObject.getFullYear()+' '+('0' + dateObject.getHours()).slice(-2)+':'
@@ -138,5 +138,5 @@ function getFormatedDate(dateObject){
 }
 
 function newsDescription(newsId) {
-    $("#NMViewDescription").text($('#newsDescription-' + newsId).val());
+    $("#NMViewDescription").summernote('code', $('#newsDescription-' + newsId).val());
 }
