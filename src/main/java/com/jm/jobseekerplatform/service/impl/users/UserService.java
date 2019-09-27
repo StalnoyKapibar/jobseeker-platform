@@ -63,6 +63,14 @@ public class UserService extends AbstractService<User> {
         return dao.findByEmail(email);
     }
 
+    public void unblockBlockedUsersWithExpiryBanDate() {
+        dao.unblockBlockedUsersWithExpiryBanDate();
+    }
+
+    public void deletePermanentBlockUsers() {
+        dao.deletePermanentBlockUsers();
+    }
+
     public User findUserByTokenValue(String token) {
 
         PasswordResetToken passwordResetToken = passwordResetTokenService.findByToken(token);
