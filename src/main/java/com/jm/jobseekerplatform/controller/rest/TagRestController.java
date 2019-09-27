@@ -56,4 +56,11 @@ public class TagRestController {
         return ResponseEntity.ok(true);
 
     }
+
+	@RolesAllowed({"ROLE_ADMIN"})
+	@RequestMapping(value = "/createNewTagController", method = RequestMethod.POST)
+	public void createNewTagController(@RequestBody Tag tag) {
+		tagService.createNewTagService(tag);
+	}
+
 }

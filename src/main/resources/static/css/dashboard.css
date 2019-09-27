@@ -82,6 +82,28 @@ body {
   }
 }
 
+.adminTagForm {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#labelTextNewTag {
+	margin-top: -6px;
+}
+
+#textNewTag {
+	font-size: 11px;
+	margin-left: 10px;
+}
+
+#tagCheck {
+	margin-left: 10px;
+}
+
+#btnCreateNewTag {
+	margin: -10px 0 0 6px;
+}
+
 /*
  * Navbar
  */
