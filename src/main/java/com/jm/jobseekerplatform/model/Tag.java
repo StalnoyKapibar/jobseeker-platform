@@ -1,5 +1,8 @@
 package com.jm.jobseekerplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.jm.jobseekerplatform.model.comments.Comment;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
@@ -23,6 +26,13 @@ public class Tag implements Serializable {
     @Column(name = "verified")
     private Boolean verified;
 
+    @JsonBackReference
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "tag_comments",
+            joinColumns = @JoinColumn(name = "tag_id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id"))
+    private List<Comment> comments;
+
     public Tag() {
     }
 
@@ -34,6 +44,7 @@ public class Tag implements Serializable {
         this.name = name;
         this.verified = verified;
     }
+
 
     public Long getId() {
         return id;
@@ -57,6 +68,14 @@ public class Tag implements Serializable {
 
     public void setVerified(Boolean verified) {
         this.verified = verified;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override

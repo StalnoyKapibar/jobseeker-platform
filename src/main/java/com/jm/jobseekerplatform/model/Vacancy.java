@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.jm.jobseekerplatform.model.createdByProfile.CreatedByEmployerProfileBase;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -42,6 +43,7 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
 
     @Column(name = "creationdate")
     private Date creationDate;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Tag> tags;

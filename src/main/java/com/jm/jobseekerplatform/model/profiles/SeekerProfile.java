@@ -1,9 +1,14 @@
 package com.jm.jobseekerplatform.model.profiles;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.comments.Comment;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,12 +26,14 @@ public class SeekerProfile extends Profile implements Serializable {
     @Column(name = "description", columnDefinition = "mediumtext")
     private String description;
 
+    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Tag> tags;
 
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Portfolio> portfolios;
 
+    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER )
     private Set<Vacancy> favoriteVacancy;
 
@@ -38,8 +45,10 @@ public class SeekerProfile extends Profile implements Serializable {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Subscription> subscriptions;
 
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Resume> resumes;
+
 
     public SeekerProfile() {
     }

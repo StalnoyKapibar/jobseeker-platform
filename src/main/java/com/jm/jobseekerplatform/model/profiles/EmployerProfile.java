@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.model.profiles;
 
 import com.jm.jobseekerplatform.model.EmployerReviews;
+import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Vacancy;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,6 +31,7 @@ public class EmployerProfile extends Profile implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_profile_id")
     private Set<Vacancy> vacancies;
+
 
     public EmployerProfile() {
     }
@@ -114,4 +117,6 @@ public class EmployerProfile extends Profile implements Serializable {
     public void setVacancies(Set<Vacancy> vacancies) {
         this.vacancies = vacancies;
     }
+
+
 }

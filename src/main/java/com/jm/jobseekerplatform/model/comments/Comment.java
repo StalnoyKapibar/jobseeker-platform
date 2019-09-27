@@ -3,6 +3,7 @@ package com.jm.jobseekerplatform.model.comments;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 
 import javax.persistence.*;
@@ -18,7 +19,7 @@ public class Comment implements Serializable {
     @Column(name = "text")
     private String text;
 
-
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "profile_id")
     private Profile author;
@@ -29,7 +30,7 @@ public class Comment implements Serializable {
 
     public Comment(String text, Profile author) {
         this.text = text;
-        this.author = author;
+        //this.author = author;
     }
 
     public Long getId() {

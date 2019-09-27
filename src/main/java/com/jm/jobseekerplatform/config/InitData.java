@@ -151,7 +151,7 @@ public class InitData {
                 newsService.update(newsList.get(i));
             }
             if (i >= 10 && i < 20) {
-                newsList.get(i).setAuthor(employerProfileService.getById(3L));
+               newsList.get(i).setAuthor(employerProfileService.getById(3L));
                 newsList.get(i).setTags(randomTags(2L));
                 newsService.update(newsList.get(i));
             }
@@ -176,6 +176,7 @@ public class InitData {
                 newsService.update(newsList.get(i));
             }
         }
+
     }
 
     public void initReviews() {
@@ -588,24 +589,11 @@ public class InitData {
     }
 
     private void initComments() {
-        Profile profile = profileService.getById(8L);
+       Profile profile = profileService.getById(8L);
         Comment comment = new Comment("Отличная новость", profile);
         commentService.add(comment);
-
-        List<Comment> commentList = null;
-        News news = null;
-        int newsSum = newsService.getAll().size();
-        for (int i = 0; i < newsSum; i++) {
-            news = newsService.getById(Long.valueOf(i + 1));
-            commentList = news.getComments();
-            commentList.add(comment);
-            news.setComments(commentList);
-            newsService.update(news);
-        }
         profile.setComments(commentService.getAll());
         profileService.update(profile);
-
-
     }
 
 }
