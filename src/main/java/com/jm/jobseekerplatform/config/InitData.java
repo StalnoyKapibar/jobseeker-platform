@@ -27,6 +27,7 @@ import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -585,9 +586,26 @@ public class InitData {
             jobExperiences.clear();
         }
     }
-    private void initComments(){
-        Comment comment = new Comment("Hello world", profileService.getById(8L));
+
+    private void initComments() {
+        Profile profile = profileService.getById(8L);
+        Comment comment = new Comment("Отличная новость", profile);
         commentService.add(comment);
+
+        List<Comment> commentList = null;
+        News news = null;
+        int newsSum = newsService.getAll().size();
+        for (int i = 0; i < newsSum; i++) {
+            news = newsService.getById(Long.valueOf(i + 1));
+            commentList = news.getComments();
+            commentList.add(comment);
+            news.setComments(commentList);
+            newsService.update(news);
+        }
+        profile.setComments(commentService.getAll());
+        profileService.update(profile);
+
+
     }
 
 }

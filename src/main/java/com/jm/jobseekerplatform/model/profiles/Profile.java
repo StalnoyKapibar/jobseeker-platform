@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.model.profiles;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.State;
 import com.jm.jobseekerplatform.model.comments.Comment;
@@ -34,7 +35,7 @@ public abstract class Profile implements Serializable {
     @Column(name = "expiry_block")
     private Date expiryBlock;
 
-    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Comment> comments = new ArrayList<>();
 

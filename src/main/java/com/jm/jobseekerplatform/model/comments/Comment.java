@@ -19,8 +19,7 @@ public class Comment implements Serializable {
     private String text;
 
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "profile_id")
     private Profile author;
 

@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
         var $newsId = $('#newsId').val();
         $.ajax({
             url: "/api/comments/",
