@@ -1,11 +1,16 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.dao.impl.ResumeDAO;
+import com.jm.jobseekerplatform.dao.impl.profiles.SeekerProfileDAO;
 import com.jm.jobseekerplatform.model.Point;
 import com.jm.jobseekerplatform.model.Resume;
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.ResumeService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +32,13 @@ public class ResumeRestController {
     private ResumeService resumeService;
 
     @Autowired
+    private SeekerUserService seekerUserService;
+
+    @Autowired
     private SeekerProfileService seekerProfileService;
+
+    @Autowired
+    SeekerProfileDAO seekerProfileDAO;
 
     @RequestMapping("/getbyid/{resumeId}")
     public Resume getResumeById(@PathVariable Long resumeId) {
@@ -54,6 +65,15 @@ public class ResumeRestController {
         } else {
             return resumeService.findResumesByPoint(city, point, limit, page);
         }
+    }
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @PostMapping("/sendmail")
+    public ResponseEntity sendMailToSeeker(@RequestParam("dataID") long resumeID) {
+        Resume resume = resumeService.getById(resumeID);
+        SeekerProfile seekerProfile = seekerProfileDAO.getByResume(resume);
+        SeekerUser seekerUser = seekerUserService.getByProfileId(seekerProfile.getId());
+        System.out.println(seekerUser.getEmail());
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @RolesAllowed({"ROLE_SEEKER"})
