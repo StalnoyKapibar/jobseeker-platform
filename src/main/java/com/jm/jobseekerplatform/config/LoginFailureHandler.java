@@ -3,6 +3,9 @@ package com.jm.jobseekerplatform.config;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -31,8 +34,8 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                         AuthenticationException exception) throws IOException, ServletException {
         httpServletRequest.getSession().invalidate();
-        if (exception.getMessage().equals("User is disabled")) {
-            User user = userService.findByEmail(httpServletRequest.getParameter("j_username"));
+        User user = userService.findByEmail(httpServletRequest.getParameter("j_username"));
+        if (exception instanceof DisabledException && user.getProfile().getExpiryBlock() != null) {
             Date expireDate = user.getProfile().getExpiryBlock();
             LocalDateTime date = expireDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDateTime localDate = LocalDateTime.now();
@@ -51,17 +54,18 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
                          .append(howManySeconds == 0 ? "" : howManySeconds + " секунд.");
             httpServletRequest.getSession().setAttribute("error", timeRemaining);
             httpServletResponse.sendRedirect("/login?timeRemaining");
-        } else if (exception.getMessage().equalsIgnoreCase("Bad credentials")) {
+        } else if (exception instanceof BadCredentialsException) {
             httpServletRequest.getSession().setAttribute("error", "Неверный логин или пароль.");
             httpServletResponse.sendRedirect("/login?error");
-        } else if (exception.getMessage().equalsIgnoreCase("User account has expired")) {
+        } else if (exception instanceof AccountExpiredException) {
             httpServletRequest.getSession().setAttribute("error",
                     "Срок действия учетной записи истек.");
             httpServletResponse.sendRedirect("/login?expired");
-        } else if (exception.getMessage().equalsIgnoreCase("blocked")) {
+        } else if (exception instanceof DisabledException) {
             httpServletRequest.getSession().setAttribute("error", "Ваша учетная запись заблокирована.");
             httpServletResponse.sendRedirect("/login?blocked");
         } else {
+            httpServletRequest.getSession().setAttribute("error", "Неизвестная ошибка");
             httpServletResponse.sendRedirect("/login?unknownError");
         }
     }

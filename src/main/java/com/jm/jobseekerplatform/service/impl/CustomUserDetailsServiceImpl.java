@@ -27,9 +27,9 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
         User user = userService.findByEmail(s);
         if (user == null) {
             throw new UsernameNotFoundException("USER not found");
-        } else if (!user.isEnabled()) {
-            long diff = ChronoUnit.SECONDS.between(user.getProfile().getExpiryBlock().toInstant()
-                    .atZone(ZoneId.systemDefault()).toLocalDateTime(), LocalDateTime.now());
+        } else if (!user.isEnabled() && user.getProfile().getExpiryBlock() != null) {
+            long diff = ChronoUnit.SECONDS.between(LocalDateTime.now(), user.getProfile().getExpiryBlock().toInstant()
+                    .atZone(ZoneId.systemDefault()).toLocalDateTime());
             if (diff <= 0) {
                 user.setEnabled(true);
                 userService.update(user);
