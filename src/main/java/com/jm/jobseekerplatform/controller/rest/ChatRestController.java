@@ -74,9 +74,10 @@ public class ChatRestController {
         return new ResponseEntity<>(chatsInfo, HttpStatus.OK);
     }
 
-    @GetMapping("getAllChatsByProfileId/{profileId:\\d+}")
-    public HttpEntity getAllChatsByProfileId(@PathVariable("profileId") Long profileId) {
-        List<ChatInfoDetailWithTopicDTO> chatsInfo = chatWithTopicService.getAllChatsInfoDTOByProfileId(profileId);
+    @GetMapping("getAllChatsByMemberId")
+    public HttpEntity getAllChatsByMemberId(Authentication authentication) {
+        Long memberId = ((User) authentication.getPrincipal()).getId();
+        List<ChatInfoDetailWithTopicDTO> chatsInfo = chatWithTopicService.getAllChatsInfoDTOByProfileId(memberId);
         return new ResponseEntity<>(chatsInfo, HttpStatus.OK);
     }
 

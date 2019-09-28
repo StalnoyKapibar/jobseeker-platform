@@ -115,7 +115,7 @@ public class ChatController {
         } else {
             model.addAttribute("adminProfileId", user.getProfile().getId());
         }
-        model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(user.getProfile().getId()));
+        model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(user.getId()));
         if (chat instanceof ChatWithTopic) {
             ChatWithTopic chatWithTopic = (ChatWithTopic) chat;
             model.addAttribute("chatWithTopic", chatWithTopic);
