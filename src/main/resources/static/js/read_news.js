@@ -1,7 +1,7 @@
 $(document).ready(function () {
         var $newsId = $('#newsId').val();
         $.ajax({
-            url: "/api/comments/",
+            url: "/api/news/read/" + $newsId,
             type: "GET",
             success: function (data) {
                 console.log(data)
@@ -16,5 +16,13 @@ $(document).ready(function () {
                          ' </div></div></div></div>');
                  });*/
             }
-        })
+        });
+
+        $.ajax({
+            url: "/api/comments/" + $newsId,
+            type: "GET",
+            success: function (data) {
+                console.log(data);
+            }
+        });
 });

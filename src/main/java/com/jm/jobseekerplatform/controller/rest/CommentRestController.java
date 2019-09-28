@@ -1,6 +1,8 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.comments.Comment;
+import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.comments.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,12 +16,15 @@ import java.util.List;
 public class CommentRestController {
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private NewsService newsService;
 
-    @RequestMapping(value = "/api/comments/", method = RequestMethod.GET)
-    public ResponseEntity<List<Comment>> getAllComments() {
+    @RequestMapping(value = "/api/comments/{id}", method = RequestMethod.GET)
+    public ResponseEntity<List<Comment>> getAllCommentsForNews(@PathVariable Long id) {
         List<Comment> commentList = new ArrayList<>();
+        News news = newsService.getById(id);
           try{
-              commentList = commentService.getAll();
+              commentList = commentService.getAllCommentsForNews(news);
 
           }catch (Exception e){
               e.printStackTrace();

@@ -589,9 +589,13 @@ public class InitData {
     }
 
     private void initComments() {
-       Profile profile = profileService.getById(8L);
-        Comment comment = new Comment("Отличная новость", profile);
-        commentService.add(comment);
+        Profile profile = profileService.getById(8L);
+        List<News> newsList = newsService.getAll();
+        Comment comment = null;
+        for(News n : newsList){
+            comment = new Comment("Отличная новость", n);
+            commentService.add(comment);
+        }
         profile.setComments(commentService.getAll());
         profileService.update(profile);
     }

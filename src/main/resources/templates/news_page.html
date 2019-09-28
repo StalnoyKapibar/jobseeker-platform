@@ -14,7 +14,7 @@
         <div class=" d-flex flex-column w-100">
             <img src="http://www.ifes-ras.ru/images/stories/pics/news.png" class="card-img-top img img-fluid  mx-auto news-img" style="height: 30vh; width: 10vw;">
             <div class="card-body w-100 mx-auto p-5">
-                <input type="hidden" th:value="${newsId}" id="newsId">
+                <input type="text" th:value="${newsId}" id="newsId">
                 <h5 class="card-title text-center" th:text="${headline}"></h5>
                 <p class="card-text text-center " style=" word-wrap: break-word;"  th:text="${description}"></p>
             </div>

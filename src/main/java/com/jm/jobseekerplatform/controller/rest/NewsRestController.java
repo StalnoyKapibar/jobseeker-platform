@@ -3,10 +3,14 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.comments.Comment;
+import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
+import com.jm.jobseekerplatform.service.impl.comments.CommentService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +32,8 @@ public class NewsRestController {
 
     @Autowired
     private NewsService newsService;
-
+    @Autowired
+    private ProfileService profileService;
     @Autowired
     private EmployerProfileService employerProfileService;
 
@@ -37,6 +42,9 @@ public class NewsRestController {
 
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private CommentService commentService;
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @PostMapping("/add")
@@ -58,11 +66,21 @@ public class NewsRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    //@RolesAllowed({"ROLE_EMPLOYER"})
+    @RolesAllowed({"ROLE_SEEKER"})
+    @GetMapping("/read/{id}")
+    public ResponseEntity<List<Profile>> getNewsById(@PathVariable  Long id) {
+        List<Comment> commentList = new ArrayList<>();
+        News news = newsService.getById(id);
+        commentList = commentService.getAllCommentsForNews(news);
+        List<Profile> profiles = profileService.loadProfilesCommentsForNews(commentList);
+        return new ResponseEntity<List<Profile>>(profiles, HttpStatus.OK);
+    }
+
+    @RolesAllowed({"ROLE_EMPLOYER"})
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
     @GetMapping("/{newsId}")
     @ResponseBody
-    public ResponseEntity<News> getNewsById(@PathVariable("newsId") Long newsId) {
+    public ResponseEntity<News> getNewsByIdForSeeker(@PathVariable("newsId") Long newsId) {
         return new ResponseEntity<>(newsService.getById(newsId), HttpStatus.OK);
     }
 
@@ -74,7 +92,7 @@ public class NewsRestController {
                                                                     Authentication authentication) {
         Sort sort = new Sort(Sort.Direction.DESC, "date");
         Long employerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
-       List<News> news = newsService.getAllByEmployerProfileId(employerProfileService.getById(employerProfileId),
+        List<News> news = newsService.getAllByEmployerProfileId(employerProfileService.getById(employerProfileId),
                 PageRequest.of(newsPageCount, 10, sort)).getContent();
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
