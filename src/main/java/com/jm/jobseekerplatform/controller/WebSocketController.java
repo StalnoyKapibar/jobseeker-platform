@@ -13,7 +13,10 @@ import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -32,18 +35,19 @@ public class WebSocketController {
     @Autowired
     private ChatMessageService chatMessageService;
 
-
     @MessageMapping("/chat/{chatId}")
-    public void sendMessage(@DestinationVariable("chatId") String id, MessageDTO messageDTO) {
+    public void sendMessage(@DestinationVariable("chatId") String id, MessageDTO messageDTO,
+                            Authentication authentication) {
         Long chatId = Long.parseLong(id);
-        Profile creatorProfile = profileService.getById(messageDTO.getCreatorProfileId());
-
-        ChatMessage chatMessage = new ChatMessage(messageDTO.getText(), creatorProfile, new Date());
-
-        chatMessageService.add(chatMessage);
-        chatService.addChatMessage(chatId, chatMessage);
-
-        simpMessagingTemplate.convertAndSend("/topic/chat/" + chatId, chatMessage);
+        List membersId = chatService.getChatMembers(chatId);
+        User user = (User) authentication.getPrincipal();
+        if (membersId.contains(BigInteger.valueOf(user.getId()))) {
+            Profile creatorProfile = profileService.getById(messageDTO.getCreatorProfileId());
+            ChatMessage chatMessage = new ChatMessage(messageDTO.getText(), creatorProfile, new Date());
+            chatMessageService.add(chatMessage);
+            chatService.addChatMessage(chatId, chatMessage);
+            simpMessagingTemplate.convertAndSend("/topic/chat/" + chatId, chatMessage);
+        }
     }
 
     @MessageMapping("/private_chat/{chatId}")
