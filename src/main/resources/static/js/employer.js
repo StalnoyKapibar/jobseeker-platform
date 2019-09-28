@@ -228,7 +228,8 @@ function sortByDateNewFirst() {
     $("#sort").children().find('u').contents().unwrap();
     let link = document.getElementById('dateSort');
     link.setAttribute('onclick', 'sortByDateOldFirst()');
-    link.innerHTML = ('<u>дате</u><li value="sortByDateNewFirst" class="fas fa-sort-amount-down" style="font-size:14px"></li>');
+    link.innerHTML = ('<u>дате</u><li value="sortByDateNewFirst" class="fas fa-sort-amount-down" ' +
+        'style="font-size:14px"></li>');
     parent.append(items);
 }
 
@@ -253,7 +254,8 @@ function sortByDateOldFirst() {
     $("#sort").children().find('u').contents().unwrap();
     let link = document.getElementById('dateSort');
     link.setAttribute('onclick', 'sortByDateNewFirst()');
-    link.innerHTML = ('<u>дате</u><li value="sortByDateOldFirst" class="fas fa-sort-amount-up" style="font-size:14px"></li>');
+    link.innerHTML = ('<u>дате</u><li value="sortByDateOldFirst" class="fas fa-sort-amount-up" ' +
+        'style="font-size:14px"></li>');
     parent.append(items);
 }
 
@@ -461,12 +463,14 @@ function getNewReviewRating(rating) {
     var ratingStars = '';
     var count = 1;
     for (var j = 1; j <= rating; j++) {
-        ratingStars += '<i title="' + j + '" style="margin-right: 4px" id="' + j + '" class="fas fa-star RMStars" onclick="getNewReviewRating(' + j + ')"></i>';
+        ratingStars += '<i title="' + j + '" style="margin-right: 4px" id="' + j +
+            '" class="fas fa-star RMStars" onclick="getNewReviewRating(' + j + ')"></i>';
         count++;
     }
     if (rating < 5) {
         for (var j = 1; j <= 5 - rating; j++) {
-            ratingStars += '<i title="' + count + '" style="margin-right: 4px" id="' + count + '" class="far fa-star RMStars" onclick="getNewReviewRating(' + count + ')"></i>';
+            ratingStars += '<i title="' + count + '" style="margin-right: 4px" id="' + count +
+                '" class="far fa-star RMStars" onclick="getNewReviewRating(' + count + ')"></i>';
             count++;
         }
     }
@@ -479,12 +483,14 @@ function getNewEditReviewRating(rating) {
     var ratingStars = '';
     var count = 1;
     for (var j = 1; j <= rating; j++) {
-        ratingStars += '<i title="' + j + '" style="margin-right: 4px" class="fas fa-star RMEditStars" onclick="getNewEditReviewRating(' + j + ')"></i>';
+        ratingStars += '<i title="' + j + '" style="margin-right: 4px" ' +
+            'class="fas fa-star RMEditStars" onclick="getNewEditReviewRating(' + j + ')"></i>';
         count++;
     }
     if (rating < 5) {
         for (var j = 1; j <= 5 - rating; j++) {
-            ratingStars += '<i title="' + count + '" style="margin-right: 4px" class="far fa-star RMEditStars" onclick="getNewEditReviewRating(' + count + ')"></i>';
+            ratingStars += '<i title="' + count + '" style="margin-right: 4px" ' +
+                'class="far fa-star RMEditStars" onclick="getNewEditReviewRating(' + count + ')"></i>';
             count++;
         }
     }
@@ -496,7 +502,8 @@ function resetRating() {
     $('.RMStars').remove();
     var ratingStars = '';
     for (var j = 1; j <= 5; j++) {
-        ratingStars += '<i title="' + j + '" style="margin-right: 4px" id="' + j + '" class="far fa-star RMStars" onclick="getNewReviewRating(' + j + ')"></i>';
+        ratingStars += '<i title="' + j + '" style="margin-right: 4px" id="' + j + '" ' +
+            'class="far fa-star RMStars" onclick="getNewReviewRating(' + j + ')"></i>';
     }
     $('#RMRating').append(ratingStars);
     $('#RMRatingValue').val('0');
@@ -506,7 +513,8 @@ function resetEditRating() {
     $('.RMEditStars').remove();
     var ratingStars = '';
     for (var j = 1; j <= 5; j++) {
-        ratingStars += '<i title="' + j + '" style="margin-right: 4px" class="far fa-star RMEditStars" onclick="getNewEditReviewRating(' + j + ')"></i>';
+        ratingStars += '<i title="' + j + '" style="margin-right: 4px" ' +
+            'class="far fa-star RMEditStars" onclick="getNewEditReviewRating(' + j + ')"></i>';
     }
     $('#RMEditRating').append(ratingStars);
     $('#RMEditRatingValue').val('0');
@@ -547,12 +555,14 @@ function showEditReview(reviewId) {
             var ratingStars = '';
             var count = 1;
             for (var j = 1; j <= data.evaluation; j++) {
-                ratingStars += '<i title="' + j + '" style="margin-right: 4px" class="fas fa-star RMEditStars" onclick="getNewEditReviewRating(' + j + ')"></i>';
+                ratingStars += '<i title="' + j + '" style="margin-right: 4px" ' +
+                    'class="fas fa-star RMEditStars" onclick="getNewEditReviewRating(' + j + ')"></i>';
                 count++;
             }
             if (data.evaluation < 5) {
                 for (var j = 1; j <= 5 - data.evaluation; j++) {
-                    ratingStars += '<i title="' + count + '" style="margin-right: 4px" class="far fa-star RMEditStars" onclick="getNewEditReviewRating(' + count + ')"></i>';
+                    ratingStars += '<i title="' + count + '" style="margin-right: 4px" ' +
+                        'class="far fa-star RMEditStars" onclick="getNewEditReviewRating(' + count + ')"></i>';
                     count++;
                 }
             }
@@ -834,14 +844,13 @@ function blockEmployerProfile(period) {
 
 function addComplainReview() {
     var reviewId = $('#RMReviewId').val();
-    var employerProfileId = $('#employerProfileId').val();
     var chatMessage = {
         'text': $('#RMComplain').val(),
         'date': new Date()
     };
     $.ajax({
         type: 'post',
-        url: "/api/chats/add_complain_chat?reviewId=" + reviewId + '&employerProfileId=' + employerProfileId,
+        url: "/api/chats/add_complain_chat?reviewId=" + reviewId,
         contentType: 'application/json; charset=utf-8',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);

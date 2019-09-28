@@ -112,15 +112,18 @@ public class EmployerController {
     @RolesAllowed({"ROLE_EMPLOYER"})
     @GetMapping("/employer/get_resumes")
     public String getResumes(Model model, Authentication authentication) {
-        model.addAttribute("employerProfileId", ((User) authentication.getPrincipal()).getId());
+        model.addAttribute("employerProfileId", ((User) authentication.getPrincipal()).getProfile().getId());
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "resume/all_resumes";
     }
 
-    @GetMapping("/employer/chats/{employerProfileId}")
-    public String EmployerPageChatsMy(@PathVariable Long employerProfileId, Model model) {
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @GetMapping("/employer/get_chats")
+    public String EmployerPageChatsMy(Model model, Authentication authentication) {
+        Long memberId = ((User) authentication.getPrincipal()).getId();
+        Long employerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
         model.addAttribute("employerProfileId", employerProfileId);
-        model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(employerProfileId));
+        model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(memberId));
         return "employer_chats_my";
     }
 
