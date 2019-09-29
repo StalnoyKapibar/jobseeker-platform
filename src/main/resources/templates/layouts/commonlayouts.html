@@ -31,9 +31,16 @@
         let containerFluid = document.getElementsByClassName("container-fluid");
         containerFluid[0].style.opacity = 0;
         let loader = document.getElementById("loader");
-        setTimeout(function () {
-            containerFluid[0].style.opacity = 1;
-        }, 2500);
+
+        let iterator = 0;
+        let interval = setInterval(function () {
+            if(iterator >= 1) {
+                clearInterval(interval);
+            }
+            iterator += 0.025;
+            containerFluid[0].style.opacity = iterator;
+        }, 100);
+
         setTimeout(function () {
             if (!loader.classList.contains('done')) {
                 loader.classList.add('done');
