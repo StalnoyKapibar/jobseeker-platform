@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -593,7 +594,8 @@ public class InitData {
         List<News> newsList = newsService.getAll();
         Comment comment = null;
         for(News n : newsList){
-            comment = new Comment("Отличная новость", n);
+            String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            comment = new Comment("Отличная новость", n, profile, dateTime);
             commentService.add(comment);
         }
         profile.setComments(commentService.getAll());

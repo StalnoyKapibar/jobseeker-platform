@@ -14,7 +14,7 @@
         <div class=" d-flex flex-column w-100">
             <img src="http://www.ifes-ras.ru/images/stories/pics/news.png" class="card-img-top img img-fluid  mx-auto news-img" style="height: 30vh; width: 10vw;">
             <div class="card-body w-100 mx-auto p-5">
-                <input type="text" th:value="${newsId}" id="newsId">
+                <input type="hidden" th:value="${newsId}" id="newsId">
                 <h5 class="card-title text-center" th:text="${headline}"></h5>
                 <p class="card-text text-center " style=" word-wrap: break-word;"  th:text="${description}"></p>
             </div>
@@ -22,44 +22,6 @@
     </div>
     <div class="container p-5">
         <h2 class="text-center" id="user_comments">Комментарии</h2>
-        <!--<div class="m-5">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-2">
-                        <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid mb-2">
-                        <p class="text-secondary text-center">15 Minutes Ago</p>
-                    </div>
-                    <div class="col-md-10">
-                        <p>
-                            <strong>Maniruzzaman Akash</strong>
-                        </p>
-                        <p>Lorem Ipsum is simply dummy text of the pr make  but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                        <p>
-                            <a class="float-right btn text-white btn-danger"> <i class="fas fa-exclamation-triangle"></i> Пожаловаться</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>!-->
-        <!-- <div class="m-5">
-             <div class="card-body">
-                 <div class="row">
-                     <div class="col-md-2">
-                         <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid mb-2"/>
-                         <p class="text-secondary text-center">15 Minutes Ago</p>
-                     </div>
-                     <div class="col-md-10">
-                         <p>
-                             <strong>Maniruzzaman Akash</strong>
-                         </p>
-                         <p>Lorem Ipsum is simply dummy text of the pr make  but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                         <p>
-                             <a class="float-right btn text-white btn-danger"> <i class="fas fa-exclamation-triangle"></i> Пожаловаться</a>
-                         </p>
-                     </div>
-                 </div>
-             </div>
-         </div>!-->
         <h2 class="text-center">Оставить комментарий</h2>
         <div class="m-5">
             <div class="card-body">
@@ -73,14 +35,42 @@
                             <div class="form-group basic-textarea rounded-corners">
                                 <textarea class="form-control z-depth-1" id="user_comment" rows="3" placeholder="Write your comment..."></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary" name="submit" id="submit_comment">Submit</button>
+                            <button type="submit" class="btn btn-success" name="submit" id="submit_comment">Отправить</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <input type="hidden" th:value="${profileId}" id="profileId">
 </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #00bc8c;">
+                    <h5 class="modal-title" id="exampleModalLabel">Изменить комментарий:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="edit-form">
+                        <div class="form-group">
+                            <input type="hidden" id="edit_commentId">
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control z-depth-1" id="edit-user_comment" rows="3" ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #00bc8c;">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><span>Отмена</span></button>
+                    <button type="button" class="btn btn-success" id="save-comment"><i class="far fa-save"></i><span>Сохранить</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 </body>
 </html>

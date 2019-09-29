@@ -36,7 +36,8 @@ public abstract class Profile implements Serializable {
     @Column(name = "expiry_block")
     private Date expiryBlock;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JsonBackReference
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Comment> comments;
 
     public Profile() {

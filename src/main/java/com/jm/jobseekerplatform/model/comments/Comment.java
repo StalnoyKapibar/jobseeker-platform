@@ -9,6 +9,8 @@ import com.jm.jobseekerplatform.model.profiles.Profile;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.security.PrivateKey;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name= "comments")
@@ -20,18 +22,30 @@ public class Comment implements Serializable {
     @Column(name = "text")
     private String text;
 
+    @Column(name="date_time")
+    private String dateTime;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "news_id")
     private News news;
 
+    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Profile profile;
 
     public Comment() {
     }
+public Comment(String text){
+        this.text = text;
+}
 
-    public Comment(String text, News news) {
+    public Comment(String text, News news, Profile profile, String dateTime) {
         this.text = text;
         this.news = news;
+        this.profile=profile;
+        this.dateTime = dateTime;
     }
 
     public Long getId() {
@@ -57,5 +71,21 @@ public class Comment implements Serializable {
 
     public void setNews(News news) {
         this.news = news;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
     }
 }

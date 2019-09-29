@@ -66,7 +66,7 @@ public class NewsRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RolesAllowed({"ROLE_SEEKER"})
+    /*@RolesAllowed({"ROLE_SEEKER"})
     @GetMapping("/read/{id}")
     public ResponseEntity<List<Profile>> getNewsById(@PathVariable  Long id) {
         List<Comment> commentList = new ArrayList<>();
@@ -74,7 +74,7 @@ public class NewsRestController {
         commentList = commentService.getAllCommentsForNews(news);
         List<Profile> profiles = profileService.loadProfilesCommentsForNews(commentList);
         return new ResponseEntity<List<Profile>>(profiles, HttpStatus.OK);
-    }
+    }*/
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
