@@ -13,7 +13,6 @@
         <div class="main-block chromeFix" layout:fragment="content"></div>
     </div>
 </div>
-
 <div class="block" id="loader">
     <div class="text text-j">J</div>
     <div class="text text-o">o</div>
@@ -25,7 +24,6 @@
     <div class="text text-e3">e</div>
     <div class="text text-r">r</div>
 </div>
-
 <script>
     document.body.onload = function () {
         let containerFluid = document.getElementsByClassName("container-fluid");
@@ -34,7 +32,7 @@
 
         let iterator = 0;
         let interval = setInterval(function () {
-            if(iterator >= 1) {
+            if (iterator >= 1) {
                 clearInterval(interval);
             }
             iterator += 0.025;
@@ -48,5 +46,6 @@
         }, 4000);
     };
 </script>
+
 </body>
 </html>
