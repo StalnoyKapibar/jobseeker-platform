@@ -6,12 +6,10 @@ $(document).ready(function () {
     let $editForm = $('#edit-user_comment');
    let $editCommentId = $('#edit_commentId');
     let $saveBtn = $('#save-comment');
-    let currentNews;
     $.ajax({
         url: "/api/comments/" + $newsId,
         type: "GET",
         success: function (data) {
-            currentNews= data[0].news;
             $.each(data, function (i, comment) {
                 $('#user_comments').after('<div class="m-5"><div class="card-body"><div class="row">' +
                     '<div class="col-md-2"><img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid mb-2 ml-4" alt="">' +
@@ -49,22 +47,28 @@ $(document).ready(function () {
         }
     });
  $saveBtn.on('click', function () {
-        console.log(currentNews);
+     let id = Number($editCommentId.val());
      let now = new Date(Date.now());
      let formatted = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDay() + " " + now.getHours() + ":" + now.getMinutes();
-     let $comment = {
-         'id': $editCommentId.val(),
-         'text': $editForm.val(),
-         'dateTime': formatted,
-         'news':currentNews
-     };
+     // let $comment = {
+     //     'id': id,
+     //     'text': $editForm.val(),
+     //     'dateTime': formatted
+     // };
      $.ajax({
         //url: "/api/comments/update?id=" + $editCommentId.val() + "&text=" + $editForm.val() + "&dateTime=" + formatted,
         url: "/api/comments/update",
          type: "PUT",
-        data: JSON.stringify($comment),
-         dataType: "json",
-         contentType: "application/json",
+       //   headers: {
+       //       'Accept': 'application/json;charset=UTF-8',
+       //       'Content-Type': 'application/json;charset=UTF-8'
+       //   },
+       // data: JSON.stringify($comment),
+       //   dataType: "json",
+       //   contentType: "application/json;charset=UTF-8",
+         data: "id=" + id + "&text=" + $editForm.val() + "&dateTime=" + formatted,
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+
         beforeSend: function (request) {
              request.setRequestHeader($header, $token);
          },

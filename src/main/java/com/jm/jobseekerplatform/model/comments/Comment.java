@@ -36,9 +36,8 @@ public class Comment implements Serializable {
 
     public Comment() {
     }
-    public Comment(String text, News news, String dateTime) {
+    public Comment(String text,String dateTime) {
         this.text = text;
-        this.news = news;
         this.dateTime = dateTime;
     }
 
