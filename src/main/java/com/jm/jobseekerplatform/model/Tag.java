@@ -1,8 +1,12 @@
 package com.jm.jobseekerplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tags")
@@ -22,6 +26,34 @@ public class Tag implements Serializable {
      */
     @Column(name = "verified")
     private Boolean verified;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "vacancies_tags",
+            joinColumns = @JoinColumn(name = "tags_id"),
+            inverseJoinColumns = @JoinColumn(name = "vacancy_id"))
+    @JsonIgnore
+    private Set<Vacancy> vacancies;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "news_tags",
+            joinColumns = @JoinColumn(name = "tag_id"),
+            inverseJoinColumns = @JoinColumn(name = "news_id"))
+    @JsonIgnore
+    private Set<News> news;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "resumes_tags",
+            joinColumns = @JoinColumn(name = "tags_id"),
+            inverseJoinColumns = @JoinColumn(name = "resume_id"))
+    @JsonIgnore
+    private Set<Resume> resumes;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "profile_tags",
+            joinColumns = @JoinColumn(name = "tags_id"),
+            inverseJoinColumns = @JoinColumn(name = "seeker_profile_id"))
+    @JsonIgnore
+    private Set<SeekerProfile> seekerProfiles;
 
     public Tag() {
     }
@@ -57,6 +89,38 @@ public class Tag implements Serializable {
 
     public void setVerified(Boolean verified) {
         this.verified = verified;
+    }
+
+    public Set<News> getNews() {
+        return news;
+    }
+
+    public void setNews(Set<News> news) {
+        this.news = news;
+    }
+
+    public Set<Vacancy> getVacancies() {
+        return vacancies;
+    }
+
+    public void setVacancies(Set<Vacancy> vacancies) {
+        this.vacancies = vacancies;
+    }
+
+    public Set<Resume> getResumes() {
+        return resumes;
+    }
+
+    public void setResumes(Set<Resume> resumes) {
+        this.resumes = resumes;
+    }
+
+    public Set<SeekerProfile> getSeekerProfiles() {
+        return seekerProfiles;
+    }
+
+    public void setSeekerProfiles(Set<SeekerProfile> seekerProfiles) {
+        this.seekerProfiles = seekerProfiles;
     }
 
     @Override
