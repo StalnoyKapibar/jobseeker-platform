@@ -1,9 +1,12 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.dto.NewsDTO;
+import com.jm.jobseekerplatform.model.DraftNews;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.DraftNewsService;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
@@ -25,6 +28,11 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/news")
 public class NewsRestController {
+
+    public static final int MIN_NUMBER_OF_VIEWS_FOR_VALIDATE = 10;
+
+    @Autowired
+    private DraftNewsService draftNewsService;
 
     @Autowired
     private NewsService newsService;
@@ -62,8 +70,13 @@ public class NewsRestController {
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
     @GetMapping("/{newsId}")
     @ResponseBody
-    public ResponseEntity<News> getNewsById(@PathVariable("newsId") Long newsId) {
-        return new ResponseEntity<>(newsService.getById(newsId), HttpStatus.OK);
+    public ResponseEntity<NewsDTO> getNewsById(@PathVariable("newsId") Long newsId) {
+        NewsDTO newsDTO = new NewsDTO();
+        News news = newsService.getById(newsId);
+        newsDTO.setNews(news);
+        newsDTO.setOnValidation(draftNewsService.isNewsOnValidation(newsId));
+        newsDTO.setNeedValidate(isNewsNeedValidate(news));
+        return new ResponseEntity<>(newsDTO, HttpStatus.OK);
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
@@ -97,9 +110,27 @@ public class NewsRestController {
                                    @RequestParam("newsHeadline") String newsHeadline,
                                    @RequestParam("newsDescription") String newsDescription) {
         News news = newsService.getById(newsId);
-        news.setHeadline(newsHeadline);
-        news.setDescription(newsDescription);
-        newsService.update(news);
+        //Если обновление новости требует последующей проверки администратором
+        if(isNewsNeedValidate(news)) {
+            //Только одно обновление новости для проверки допустимо
+            if(draftNewsService.isNewsOnValidation(newsId)){
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+            DraftNews draftNews = new DraftNews();
+            draftNews.setHeadline(newsHeadline);
+            draftNews.setDescription(newsDescription);
+            draftNews.setOriginal(news);
+            draftNewsService.add(draftNews);
+        } else {
+            news.setHeadline(newsHeadline);
+            news.setDescription(newsDescription);
+            newsService.update(news);
+        }
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    private boolean isNewsNeedValidate(News news) {
+        return news.getNumberOfViews() != null ?
+                news.getNumberOfViews() >= MIN_NUMBER_OF_VIEWS_FOR_VALIDATE : false;
     }
 }

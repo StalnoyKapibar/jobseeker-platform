@@ -4,6 +4,7 @@ import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.DraftNewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +28,8 @@ import java.util.List;
 @Controller
 public class AdminController {
 
+    @Autowired
+    private DraftNewsService draftNewsService;
     @Autowired
     private EmployerUserService employerUserService;
     @Autowired
@@ -159,5 +163,11 @@ public class AdminController {
         List<Tag> tags = tagService.getSortedAll();
         model.addAttribute("tags", tags);
         return "admin/admin_tags";
+    }
+
+    @GetMapping(value = "/admin/draftNews")
+    public String draftNewsPage(Model model) {
+        model.addAttribute("draftNews", draftNewsService.getAll());
+        return "admin/admin_draft_news";
     }
 }
