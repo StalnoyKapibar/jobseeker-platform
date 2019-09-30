@@ -42,8 +42,6 @@ public class News implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
-   /* @OneToMany(fetch = FetchType.EAGER)
-    private List<Comment> comments;*/
 
     public News() {
     }

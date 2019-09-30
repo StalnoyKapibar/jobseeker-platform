@@ -51,7 +51,7 @@ public class ProfileService extends AbstractService<Profile> {
         dao.update(profile);
     }
 
-    public List<Profile> loadProfilesCommentsForNews(List<Comment> comments){
+   /* public List<Profile> loadProfilesCommentsForNews(List<Comment> comments){
         return dao.loadProfilesCommentsForNews(comments);
-    }
+    }*/
 }

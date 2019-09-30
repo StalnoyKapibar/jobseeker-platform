@@ -24,8 +24,7 @@ public class CommentRestController {
     private CommentService commentService;
     @Autowired
     private NewsService newsService;
-    @Autowired
-    private ProfileService profileService;
+
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<List<Comment>> getAllCommentsForNews(@PathVariable Long id) {
@@ -47,15 +46,15 @@ public class CommentRestController {
     }
 
 
-//   @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = {"content-type=application/json;charset=UTF-8"}, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-//    public  ResponseEntity<Comment> updateComment(@RequestBody Comment comment){
-//        Comment currentComment = commentService.getById(comment.getId());
-//        currentComment.setText(comment.getText());
-//        currentComment.setDateTime(comment.getDateTime());
-//        currentComment.setNews(comment.getNews());
-//        commentService.update(currentComment);
-//        return new ResponseEntity<Comment>(currentComment, HttpStatus.OK);
-//    }
+  /* @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    public  ResponseEntity<Comment> updateComment(@RequestBody Comment comment){
+       Comment currentComment = commentService.getById(comment.getId());
+        currentComment.setText(comment.getText());
+        currentComment.setDateTime(comment.getDateTime());
+       currentComment.setNews(comment.getNews());
+        commentService.update(currentComment);
+       return new ResponseEntity<Comment>(currentComment, HttpStatus.OK);
+   }*/
 
    @RequestMapping(value = "/update", params = {"id", "text", "dateTime"}, method = RequestMethod.PUT)
     public  ResponseEntity<Comment> updateComment(@RequestParam("id") Long id, @RequestParam("text") String text, @RequestParam("dateTime") String dateTime){
@@ -64,5 +63,11 @@ public class CommentRestController {
         comment.setDateTime(dateTime);
         commentService.update(comment);
         return new ResponseEntity<Comment>(comment, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/delete", params={"id"}, method = RequestMethod.DELETE)
+    public ResponseEntity<Comment> deleteComment(@RequestParam("id") Long id){
+       commentService.deleteById(id);
+       return new ResponseEntity<Comment>(HttpStatus.NO_CONTENT);
     }
 }
