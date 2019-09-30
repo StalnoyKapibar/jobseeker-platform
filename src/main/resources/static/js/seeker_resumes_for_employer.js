@@ -35,7 +35,7 @@ function seekerResumes(resumeList) {
         $('#searchList').append('<li class="list-group-item clearfix">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
-            '<div class="companyData"><span>Сикер: ' + resumeList.seeker[0].fullName + '</span><br>' +
+            '<div class="companyData"><span>Соискатель: ' + resumeList.seeker[0].fullName + '</span><br>' +
             '<span>Город: ' + value.city + '</span></div>' +
             '<br>' +
             minSalary +

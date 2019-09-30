@@ -33,12 +33,14 @@ function seekerResumes(resumeList) {
             minSalary = '<div class="salary"><span>Зарплата от: ' + value.salaryMin + ' руб.</span></div>';
         }
         $.each(value.tags, function (i, item) {
-            resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
+            resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" ' +
+                'style="white-space: pre"><h7>' + item.name + '   </h7></span>';
         });
         $('#searchList').append('<li class="list-group-item clearfix">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
-            '<div class="companyData"><span>Сикер: ' + resumeList.seeker[0].fullName + '</span><br><span>Город: ' + value.city + '</span></div>' +
+            '<div class="companyData"><span>Соискатель: ' + resumeList.seeker[0].fullName +
+            '</span><br><span>Город: ' + value.city + '</span></div>' +
             '<br>' +
             minSalary +
             '<div class="text-right">' +

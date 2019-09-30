@@ -83,6 +83,42 @@ body {
 }
 
 /*
+ * addNewTag
+ */
+
+.adminTagForm {
+  margin-left: auto;
+  margin-right: auto;
+  height: 50px;
+  width: 450px;
+  padding: 10px;
+}
+
+#labelTextNewTag {
+  margin-top: -6px;
+}
+
+#textNewTag {
+  font-size: 11px;
+  margin-left: 10px;
+}
+
+#tagCheck {
+  margin-left: 10px;
+}
+
+#btnCreateNewTag {
+  margin: -10px 0 0 6px;
+  background: #007bff;
+  color: white;
+  height: 31px;
+}
+
+#btnCreateNewTag:hover {
+  background: #1973ff;
+}
+
+/*
  * Navbar
  */
 

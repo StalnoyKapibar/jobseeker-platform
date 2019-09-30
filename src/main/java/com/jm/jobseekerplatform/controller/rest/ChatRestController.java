@@ -73,27 +73,26 @@ public class ChatRestController {
         return new ResponseEntity<>(chatsInfo, HttpStatus.OK);
     }
 
-    @GetMapping("getAllChatsByProfileId/{profileId:\\d+}")
-    public HttpEntity getAllChatsByProfileId(@PathVariable("profileId") Long profileId) {
-
-        List<ChatInfoDetailWithTopicDTO> chatsInfo = chatWithTopicService.getAllChatsInfoDTOByProfileId(profileId);
-
+    @GetMapping("getAllChatsByMemberId")
+    public HttpEntity getAllChatsByMemberId(Authentication authentication) {
+        Long memberId = ((User) authentication.getPrincipal()).getId();
+        List<ChatInfoDetailWithTopicDTO> chatsInfo = chatWithTopicService.getAllChatsInfoDTOByProfileId(memberId);
         return new ResponseEntity<>(chatsInfo, HttpStatus.OK);
     }
 
     @GetMapping("getCountOfUnreadChatsByProfileId")
     public HttpEntity getCountOfUnreadChatsByProfileId(Authentication authentication) {
-
         User user = (User) authentication.getPrincipal();
-        long countOfUnreadChatsByProfileId = chatWithTopicService.getCountOfUnreadChatsByProfileId(user.getProfile().getId());
-
+        long countOfUnreadChatsByProfileId = chatWithTopicService
+                                    .getCountOfUnreadChatsByProfileId(user.getProfile().getId());
         return new ResponseEntity<>(countOfUnreadChatsByProfileId, HttpStatus.OK);
     }
 
     @PostMapping
     public String saveMeeting(@RequestParam("vacancyId") Long vacancyId, @RequestParam("seekerId") Long seekerId) {
         SeekerProfile seeker = seekerProfileService.getById(seekerId);
-        ChatWithTopic<Vacancy> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType(vacancyId, seeker.getId(), ChatWithTopicVacancy.class);
+        ChatWithTopic<Vacancy> chat = chatWithTopicService
+                .getChatByTopicIdCreatorProfileIdChatType(vacancyId, seeker.getId(), ChatWithTopicVacancy.class);
         if (chat == null) {
             Vacancy vacancy = vacancyService.getById(vacancyId);
             EmployerProfile employerProfile = vacancy.getCreatorProfile();
@@ -109,7 +108,8 @@ public class ChatRestController {
     @PostMapping("/add_complain_chat")
     public ResponseEntity<String> addComplainChat(@RequestBody MessageDTO message,
                                                   @RequestParam("reviewId") Long reviewId,
-                                                  @RequestParam("employerProfileId") Long employerProfileId) {
+                                                  Authentication authentication) {
+        Long employerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
         ChatMessage chatMessage = new ChatMessage(message.getText(),
                 employerProfileService.getById(employerProfileId), message.getDate());
         List<User> list = new ArrayList<>();
@@ -137,22 +137,22 @@ public class ChatRestController {
     @PutMapping("set_chat_read_by_profile_id")
     public HttpEntity setChatReadByProfileId(@RequestBody MessageReadDataDTO messageReadDataDTO) {
 
-        chatService.setChatReadByProfileId(messageReadDataDTO.getChatId(), messageReadDataDTO.getReaderProfileId(), messageReadDataDTO.getMessageId());
+        chatService.setChatReadByProfileId(messageReadDataDTO.getChatId(), messageReadDataDTO.getReaderProfileId(),
+                                            messageReadDataDTO.getMessageId());
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @PutMapping("set_message_read_by_profile_id")
     public HttpEntity setMessageReadByProfileId(@RequestBody MessageReadDataDTO messageReadDataDTO) {
-
-        chatMessageService.setMessageReadByProfileId(messageReadDataDTO.getReaderProfileId(), messageReadDataDTO.getMessageId());
-
+        chatMessageService.setMessageReadByProfileId(messageReadDataDTO.getReaderProfileId(),
+                                                    messageReadDataDTO.getMessageId());
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("getChatByMessageId/{messageId}")
-    public HttpEntity getChatByMessageId(@PathVariable("messageId") Long messsageId) {
-        ChatWithTopic chatWithTopic= chatWithTopicService.getChatByMessageId(messsageId);
+    public HttpEntity getChatByMessageId(@PathVariable("messageId") Long messageId) {
+        ChatWithTopic chatWithTopic= chatWithTopicService.getChatByMessageId(messageId);
         return new ResponseEntity<>(chatWithTopic, HttpStatus.OK);
     }
 }

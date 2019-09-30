@@ -6,8 +6,36 @@ $(document).ready(function(){
     $("body").on("click",".btn-primary", function(){
         $(this).hide();
     });
+
+    $("body").on("click", "#btnCreateNewTag", function () {
+        let nameNewTag = $("#textNewTag").val();
+        if (!nameNewTag) return;
+        createNewTag(nameNewTag);
+    })
 });
 
+function createNewTag(nameNewTag) {
+    let token = $("meta[name='_csrf']").attr("content");
+    let header = $("meta[name='_csrf_header']").attr("content");
+    let tagCheck = document.getElementById("tagCheck");
+    let newDataTag = {'name': nameNewTag, 'verified': tagCheck.checked};
+
+    $.ajax({
+        url: "/api/tags/createNewTagController/",
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        method: "POST",
+        data: JSON.stringify(newDataTag),
+        success: function () {
+            console.log('Новый тэг ' + nameNewTag + ' успешно записался');
+        },
+        error: function (error) {
+            console.log("Ошибка записи нового тэга " + error.toString());
+        }
+    });
+}
 
 function deleteTag(userId) {
     var token = $("meta[name='_csrf']").attr("content");

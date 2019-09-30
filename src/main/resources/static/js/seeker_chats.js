@@ -5,7 +5,7 @@ $(document).ready(function () {
     let seekerProfileId = $('#seekerProfileId').val();
     $.ajax({
         type: 'get',
-        url: "/api/chats/getAllChatsByProfileId/" + seekerProfileId,
+        url: "/api/chats/getAllChatsByMemberId",
         contentType: 'application/json; charset=utf-8',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
@@ -30,8 +30,8 @@ function getLastMessage(chatId) {
             chatMessagesList.reverse();
             var lastReceivedMessage = chatMessagesList[chatMessagesList.length - 1];
             var date = messageDateFormat(lastReceivedMessage.date);
-            $('#chatMessageData_' + chatId).append('<div class="chatMessageText"><span>' + lastReceivedMessage.text + '</span></div>' +
-                '<div class="chatMessageDate"><span>' + date + '</span></div>');
+            $('#chatMessageData_' + chatId).append('<div class="chatMessageText"><span>' + lastReceivedMessage.text +
+                '</span></div>' + '<div class="chatMessageDate"><span>' + date + '</span></div>');
         }
     });
 }
