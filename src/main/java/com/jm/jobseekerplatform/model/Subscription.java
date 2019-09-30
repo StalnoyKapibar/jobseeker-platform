@@ -22,7 +22,7 @@ public class Subscription implements Serializable {
     @ManyToOne
     private SeekerProfile seekerProfile;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Tag> tags;
 
     public Subscription() {

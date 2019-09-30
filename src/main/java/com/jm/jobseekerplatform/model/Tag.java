@@ -55,6 +55,13 @@ public class Tag implements Serializable {
     @JsonIgnore
     private Set<SeekerProfile> seekerProfiles;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "subscription_tags",
+            joinColumns = @JoinColumn(name = "tags_id"),
+            inverseJoinColumns = @JoinColumn(name = "subscription_id"))
+    @JsonIgnore
+    private Set<Subscription> subscriptions;
+
     public Tag() {
     }
 
@@ -121,6 +128,14 @@ public class Tag implements Serializable {
 
     public void setSeekerProfiles(Set<SeekerProfile> seekerProfiles) {
         this.seekerProfiles = seekerProfiles;
+    }
+
+    public Set<Subscription> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(Set<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 
     @Override
