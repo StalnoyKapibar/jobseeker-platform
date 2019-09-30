@@ -1,15 +1,17 @@
 $(document).ready(function () {
-    var header = $("meta[name='_csrf_header']").attr("content");
-    var token = $("meta[name='_csrf']").attr("content");
-    var $newsId = $('#newsId').val();
-    var $currentProfileId = $('#profileId').val();
-    var $editForm = $('#edit-user_comment');
-    var $editCommentId = $('#edit_commentId');
-    var $saveBtn = $('#save-comment');
+    let $header = $("meta[name='_csrf_header']").attr("content");
+    let $token = $("meta[name='_csrf']").attr("content");
+    let $newsId = $('#newsId').val();
+    let $currentProfileId = $('#profileId').val();
+    let $editForm = $('#edit-user_comment');
+   let $editCommentId = $('#edit_commentId');
+    let $saveBtn = $('#save-comment');
+    let currentNews;
     $.ajax({
         url: "/api/comments/" + $newsId,
         type: "GET",
         success: function (data) {
+            currentNews= data[0].news;
             $.each(data, function (i, comment) {
                 $('#user_comments').after('<div class="m-5"><div class="card-body"><div class="row">' +
                     '<div class="col-md-2"><img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid mb-2 ml-4" alt="">' +
@@ -24,17 +26,17 @@ $(document).ready(function () {
                     );
                     $comments.after(`<button type="button" class="float-right btn text-white btn-danger ml-3 mt-2" id="delete-comment_' + ${data[i].id}+'"> <i class="far fa-trash-alt"></i><span> Удалить</span></button>`);
                 } else {
-                    $comments.after('<a class="float-right btn text-white btn-submit ml-3 mt-2"> ' +
-                        '<i class="fas fa-exclamation-triangle"></i><span>Пожаловаться</span></a>');
+                    $comments.after('<button type="button" class="float-right btn text-white btn-danger ml-3 mt-2"> ' +
+                        '<i class="fas fa-exclamation-triangle"></i><span>Пожаловаться</span></button>');
                 }
                 let $editBtn = $('#edit-comment_' + data[i].id);
                 $editBtn.on('click', function (event) {
-                    let $commentId = data[i].id;
+                    let commentId = data[i].id;
                     $.ajax({
                         url: "/api/comments",
                         type: "GET",
                         data:{
-                            id: $commentId
+                            id: commentId
                         },
                         success: function (comment) {
                             $editCommentId.attr("value", comment.id);
@@ -47,23 +49,25 @@ $(document).ready(function () {
         }
     });
  $saveBtn.on('click', function () {
-     let $now = new Date(Date.now());
-     let $formatted = $now.getFullYear() + "-" + $now.getMonth() + "-" + $now.getDay() + " " + $now.getHours() + ":" + $now.getMinutes();
+        console.log(currentNews);
+     let now = new Date(Date.now());
+     let formatted = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDay() + " " + now.getHours() + ":" + now.getMinutes();
+     let $comment = {
+         'id': $editCommentId.val(),
+         'text': $editForm.val(),
+         'dateTime': formatted,
+         'news':currentNews
+     };
      $.ajax({
-         url: "/api/comments/update/" + $editCommentId.val(),
-         type: "POST",
+        //url: "/api/comments/update?id=" + $editCommentId.val() + "&text=" + $editForm.val() + "&dateTime=" + formatted,
+        url: "/api/comments/update",
+         type: "PUT",
+        data: JSON.stringify($comment),
          dataType: "json",
-         contentType:'application/json',
-         beforeSend: function (request) {
-             request.setRequestHeader(header, token);
+         contentType: "application/json",
+        beforeSend: function (request) {
+             request.setRequestHeader($header, $token);
          },
-         data: JSON.stringify({
-             id:  $editCommentId.val(),
-             text: $editForm.val(),
-             /*news: $newsId,*/
-             /*profile: $currentProfileId,*/
-            /* dateTime: $formatted*/
-         }),
          success: function () {
              location.reload();
          }

@@ -590,16 +590,17 @@ public class InitData {
     }
 
     private void initComments() {
-        Profile profile = profileService.getById(8L);
+        Profile profile1 = profileService.getById(8L);
         List<News> newsList = newsService.getAll();
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         Comment comment = null;
         for(News n : newsList){
-            String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-            comment = new Comment("Отличная новость", n, profile, dateTime);
+            comment = new Comment("Отличная новость", n, profile1, dateTime);
             commentService.add(comment);
         }
-        profile.setComments(commentService.getAll());
-        profileService.update(profile);
+        profile1.setComments(commentService.getAll());
+        profileService.update(profile1);
+
     }
 
 }

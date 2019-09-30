@@ -25,7 +25,6 @@ public class Comment implements Serializable {
     @Column(name="date_time")
     private String dateTime;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "news_id")
     private News news;
@@ -37,9 +36,11 @@ public class Comment implements Serializable {
 
     public Comment() {
     }
-public Comment(String text){
+    public Comment(String text, News news, String dateTime) {
         this.text = text;
-}
+        this.news = news;
+        this.dateTime = dateTime;
+    }
 
     public Comment(String text, News news, Profile profile, String dateTime) {
         this.text = text;
