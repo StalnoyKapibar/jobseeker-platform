@@ -36,7 +36,7 @@ public class Tag implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "news_tags",
-            joinColumns = @JoinColumn(name = "tag_id"),
+            joinColumns = @JoinColumn(name = "tags_id"),
             inverseJoinColumns = @JoinColumn(name = "news_id"))
     @JsonIgnore
     private Set<News> news;
