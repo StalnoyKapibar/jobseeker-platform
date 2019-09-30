@@ -132,7 +132,7 @@ public class EmployerController {
     public String getEmployerProfileUpdatePage(@PathVariable Long employerProfileId, Model model,  Authentication authentication) {
         Long userId = ((User) authentication.getPrincipal()).getId();
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
-        if (employerProfile.getId().equals(userId)) {
+        if (employerProfile.getId().equals(employerProfileId)) {
             model.addAttribute("employerProfile", employerProfile);
             Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
             model.addAttribute("vacancies", vacancies);
