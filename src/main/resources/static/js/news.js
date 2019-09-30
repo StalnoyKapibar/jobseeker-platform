@@ -102,9 +102,8 @@ function editNews(newsId) {
         success: function (data) {
             $("#NMId").val(data.news.id);
             $("#NMHeadline").val(data.news.headline);
-            $("#NMDescription").summernote('code', data.news.description).val();
+            $("#NMDescription").summernote('code', data.news.description);
             var buttonTitle = data.needValidate ? "Отправить на проверку" : "Отправить";
-            $("#NMAuthorId").val(data.news.author.id);
             $("#editNewsModal button.btn-success").html(buttonTitle);
 
             if(data.onValidation) {
