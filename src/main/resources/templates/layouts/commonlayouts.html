@@ -14,15 +14,9 @@
     </div>
 </div>
 <div class="block" id="loader">
-    <div class="text text-j">J</div>
-    <div class="text text-o">o</div>
-    <div class="text text-b">b</div>
-    <div class="text text-s">S</div>
-    <div class="text text-e1">e</div>
-    <div class="text text-e2">e</div>
-    <div class="text text-k">k</div>
-    <div class="text text-e3">e</div>
-    <div class="text text-r">r</div>
+    <div class="loader-inner box1"></div>
+    <div class="loader-inner box2"></div>
+    <div class="loader-inner box3"></div>
 </div>
 <script>
     document.body.onload = function () {
@@ -43,9 +37,8 @@
             if (!loader.classList.contains('done')) {
                 loader.classList.add('done');
             }
-        }, 4000);
+        }, 3000);
     };
 </script>
-
 </body>
 </html>
