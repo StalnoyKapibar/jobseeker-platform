@@ -28,7 +28,7 @@ public class ChatService extends AbstractService<Chat> {
         chatDAO.setChatReadByProfileId(chatId, readerProfileId, lastReadMessageId);
     }
 
-    public List<BigInteger> getChatMembers(Long chatId) {
-        return chatDAO.getChatMembers(chatId);
+    public List<BigInteger> getChatMembersIds(Long chatId) {
+        return chatDAO.getChatMembersIds(chatId);
     }
 }

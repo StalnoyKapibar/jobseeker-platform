@@ -31,7 +31,7 @@ public class ChatDAO extends AbstractDAO<Chat> {
                 .executeUpdate();
     }
 
-    public List<BigInteger> getChatMembers(Long chatId) {
+    public List<BigInteger> getChatMembersIds(Long chatId) {
         return entityManager.createNativeQuery("SELECT chat_members_id FROM chats_chat_members chatmembers " +
                 "WHERE chatmembers.chat_id = :chatId").setParameter("chatId", chatId).getResultList();
     }

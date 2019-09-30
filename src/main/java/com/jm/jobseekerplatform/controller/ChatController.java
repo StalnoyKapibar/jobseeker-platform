@@ -61,7 +61,7 @@ public class ChatController {
     public String getChatById(@PathVariable("chatId") Long chatId, Authentication authentication, Model model) {
         User user = (User) authentication.getPrincipal();
         Long currentProfileId = user.getProfile().getId();
-        List<BigInteger> membersId = chatService.getChatMembers(chatId);
+        List<BigInteger> membersId = chatService.getChatMembersIds(chatId);
         if (membersId.contains(BigInteger.valueOf(user.getId())) || user.getProfile().getTypeName()
                 .equalsIgnoreCase("Администратор")) {
             ChatWithTopic chatWithTopic = chatWithTopicService.getById(chatId);
@@ -83,7 +83,7 @@ public class ChatController {
                                                    Model model) {
         User user = (User) authentication.getPrincipal();
         Long currentProfileId = user.getProfile().getId();
-        List<BigInteger> membersId = chatService.getChatMembers(chatId);
+        List<BigInteger> membersId = chatService.getChatMembersIds(chatId);
         ChatWithTopic chatWithTopic = chatWithTopicService.getById(chatId);
         model.addAttribute("profileId", currentProfileId);
         model.addAttribute("chatId", chatWithTopic.getId());
