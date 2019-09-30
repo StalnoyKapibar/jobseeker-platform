@@ -39,7 +39,7 @@ public class WebSocketController {
     public void sendMessage(@DestinationVariable("chatId") String id, MessageDTO messageDTO,
                             Authentication authentication) {
         Long chatId = Long.parseLong(id);
-        List membersId = chatService.getChatMembers(chatId);
+        List<BigInteger> membersId = chatService.getChatMembers(chatId);
         User user = (User) authentication.getPrincipal();
         if (membersId.contains(BigInteger.valueOf(user.getId()))) {
             Profile creatorProfile = profileService.getById(messageDTO.getCreatorProfileId());

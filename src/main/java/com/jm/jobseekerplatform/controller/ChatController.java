@@ -61,7 +61,7 @@ public class ChatController {
     public String getChatById(@PathVariable("chatId") Long chatId, Authentication authentication, Model model) {
         User user = (User) authentication.getPrincipal();
         Long currentProfileId = user.getProfile().getId();
-        List membersId = chatService.getChatMembers(chatId);
+        List<BigInteger> membersId = chatService.getChatMembers(chatId);
         if (membersId.contains(BigInteger.valueOf(user.getId())) || user.getProfile().getTypeName()
                 .equalsIgnoreCase("Администратор")) {
             ChatWithTopic chatWithTopic = chatWithTopicService.getById(chatId);
@@ -83,11 +83,14 @@ public class ChatController {
                                                    Model model) {
         User user = (User) authentication.getPrincipal();
         Long currentProfileId = user.getProfile().getId();
+        List<BigInteger> membersId = chatService.getChatMembers(chatId);
         ChatWithTopic chatWithTopic = chatWithTopicService.getById(chatId);
         model.addAttribute("profileId", currentProfileId);
         model.addAttribute("chatId", chatWithTopic.getId());
         model.addAttribute("topicName", chatWithTopic.getTopic().getTypeName());
         model.addAttribute("topic", chatWithTopic.getTopic());
+        model.addAttribute("currentUserId", BigInteger.valueOf(user.getId()));
+        model.addAttribute("membersId", membersId);
         Long seekerId = chatWithTopic.getCreatorProfile().getId();
         Long vacancyId = chatWithTopic.getTopic().getId();
         ChatWithTopicVacancy chatWithTopicVacancy = (ChatWithTopicVacancy) chatWithTopic;
@@ -128,8 +131,8 @@ public class ChatController {
                                                        Authentication authentication) {
         User authenticatedUser = ((User) authentication.getPrincipal());
         Profile authenticatedProfile = authenticatedUser.getProfile();
-        ChatWithTopic<Vacancy> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType
-                (vacancyId, authenticatedProfile.getId(), ChatWithTopicVacancy.class);
+        ChatWithTopic<Vacancy> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType(vacancyId,
+                authenticatedProfile.getId(), ChatWithTopicVacancy.class);
         if (chat == null) {
             Vacancy vacancy = vacancyService.getById(vacancyId);
             EmployerProfile employerProfile = vacancy.getCreatorProfile();

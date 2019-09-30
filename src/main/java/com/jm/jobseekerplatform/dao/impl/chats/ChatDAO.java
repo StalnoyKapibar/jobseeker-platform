@@ -4,6 +4,7 @@ import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.chats.Chat;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Repository("chatDAO")
@@ -30,7 +31,7 @@ public class ChatDAO extends AbstractDAO<Chat> {
                 .executeUpdate();
     }
 
-    public List getChatMembers(Long chatId) {
+    public List<BigInteger> getChatMembers(Long chatId) {
         return entityManager.createNativeQuery("SELECT chat_members_id FROM chats_chat_members chatmembers " +
                 "WHERE chatmembers.chat_id = :chatId").setParameter("chatId", chatId).getResultList();
     }
