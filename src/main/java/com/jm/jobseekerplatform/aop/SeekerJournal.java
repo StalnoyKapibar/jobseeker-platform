@@ -31,7 +31,7 @@ public class SeekerJournal {
     @Autowired
     private VacancyService vacancyService;
 
-    @Pointcut( "execution(public * com.jm.jobseekerplatform.controller.MainController.viewVacancy(..))")
+    @Pointcut("execution(public * com.jm.jobseekerplatform.controller.MainController.viewVacancy(..))")
     public void monitor(){}
 
     @Before("monitor() && args(vacancyId,..)")
