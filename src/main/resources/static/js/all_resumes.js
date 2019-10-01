@@ -231,9 +231,6 @@ function sendMailToSeeker(resumeId) {
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
-        success: function (data) {
-            alert('ok');
-        }
     });
 }
 
