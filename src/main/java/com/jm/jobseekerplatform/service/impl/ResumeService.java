@@ -89,6 +89,6 @@ public class ResumeService extends AbstractService<Resume> {
 
     public Page<Resume> getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(Map<String, Object> queryParamsMap,
                                                                                    int pageNumber, int pageSize) {
-        return dao.getPagableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(queryParamsMap, pageNumber, pageSize);
- }
+        return dao.getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(queryParamsMap, pageNumber, pageSize);
+    }
 }

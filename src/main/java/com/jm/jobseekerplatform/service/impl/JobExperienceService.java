@@ -12,7 +12,7 @@ import java.util.Set;
 public class JobExperienceService extends AbstractService<JobExperience> {
 
     @Autowired
-    JobExperienceDAO jobExperienceDAO;
+    private JobExperienceDAO jobExperienceDAO;
 
     public Set<JobExperience> validateJobExperiences(Set<JobExperience> jobExperiences) {
         for (JobExperience jobExperience : jobExperiences) {
@@ -32,5 +32,9 @@ public class JobExperienceService extends AbstractService<JobExperience> {
             }
         }
         return jobExperiences;
+    }
+
+    public Set<Long> getAllExperiencesIdForResume(Long id){
+        return jobExperienceDAO.getAllExperiencesIdForResume(id);
     }
 }

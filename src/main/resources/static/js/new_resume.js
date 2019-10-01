@@ -25,6 +25,7 @@ $(document).ready(function () {
                 headline_check = false;
             }
         });
+
     bootstrapValidate('#v_address', 'required:', function (isValid) {
         if (isValid) {
             $('#v_address').removeClass('is-invalid');
@@ -34,6 +35,7 @@ $(document).ready(function () {
             address_check = false;
         }
     });
+
     bootstrapValidate('#v_address_modal', 'required:', function (isValid) {
         if (isValid) {
             $('#v_address_modal').removeClass('is-invalid');
@@ -46,27 +48,31 @@ $(document).ready(function () {
             $('#v_address_modal').addClass('is-invalid');
         }
     });
-    bootstrapValidate('#v_salaryMin', 'regex:^[0-9]{0,100}$:Поле может содержать цифры от одного до 10 разрядов',
+
+    bootstrapValidate('#v_salaryMin', 'regex:^[0-9]{4,7}$:Поле может содержать цифры от 4 до 7 разрядов' +
+        ' или остаться пустым',
         function (isValid) {
             if (isValid) {
                 $('#v_salaryMin').addClass('is-valid');
                 salary_min_check = true;
             } else {
-                salary_min_check = false;
+                let check_salary = $('#v_salaryMin').val();
+                salary_min_check = check_salary.length < 1;
             }
+        });
 
-        }
-    );
-    bootstrapValidate('#v_salaryMax', 'regex:^[0-9]{0,100}$:Поле может содержать цифры от одного до 10 разрядов',
+    bootstrapValidate('#v_salaryMax', 'regex:^[0-9]{4,7}$:Поле может содержать цифры от 4 до 7 разрядов' +
+        ' или остаться пустым',
         function (isValid) {
             if (isValid) {
                 $('#v_salaryMax').addClass('is-valid');
                 salary_max_check = true;
             } else {
-                salary_max_check = false;
+                let check_salary = $('#v_salaryMax').val();
+                salary_max_check = check_salary.length < 1;
             }
-        }
-    );
+        });
+
     $("#search_tags").keyup(function (e) {
         e.preventDefault();
         tags_search();
@@ -193,7 +199,8 @@ function sendResume() {
         success: function (data) {
             $("#resume_container").empty();
             $("#resume_container").append("<div class='alert alert-success' role='alert'>" +
-                "Резюме добавлено!<br/>Вы также можете <a href='/user'>посмотреть свой профиль</a></div>");
+                "Резюме добавлено!<br/>Теперь вы можете просмотреть его в разделе " +
+                "<a href='/seeker/resumes'>&quot;Мои резюме&quot;</a></div>");
         },
         error: function (error) {
             console.log(error);
@@ -254,6 +261,8 @@ function deleteTag(id, name) {
 }
 
 function jobOn() {
+    $('#cancelButton').prop('disabled', false);
+    $('#editButton').prop('disabled', true);
     $('#v_company').addClass('is-invalid');
     $('#v_firstDay').addClass('is-invalid');
     $('#v_lastDay').addClass('is-invalid');
@@ -331,6 +340,8 @@ function jobOn() {
 }
 
 function jobOff() {
+    $('#editButton').prop('disabled', false);
+    $('#cancelButton').prop('disabled', true);
     $('#v_company').removeClass('is-invalid');
     $('#v_company').addClass('is-valid');
     $('#v_firstDay').removeClass('is-invalid');

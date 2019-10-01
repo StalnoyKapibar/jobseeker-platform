@@ -54,7 +54,8 @@
                         <button th:if="${isProfileOwner}" type="button" th:onclick="'showInviteModal('+${seekerProfile.id}+')'" class="btn btn-warning">
                         <i class="fas fa-user-plus"></i>InviteFriend</button>
                         <button class="btn btn-success" th:onclick="'window.location.href = \'' + @{/seeker/vacancies/{id}(id=${seekerProfile.id})} + '\''">Избранное</button>
-                        <button class="btn btn-primary" th:onclick="'window.location.href = \'' + @{/seeker/resumes} + '\''">Все резюме</button>
+                        <button sec:authorize="hasRole('ROLE_SEEKER')" class="btn btn-primary" th:onclick="'window.location.href = \'' + @{/seeker/resumes} + '\''">Все резюме</button>
+                        <button sec:authorize="hasAnyRole('ROLE_EMPLOYER')" class="btn btn-primary" th:onclick="'window.location.href = \'' + @{/resumes/{id}(id=${seekerProfile.id})} + '\''">Все резюме</button>
                     </div>
                 </div>
             </div>
