@@ -71,7 +71,6 @@ var header = $("meta[name='_csrf_header']").attr("content");
 var token = $("meta[name='_csrf']").attr("content");
 
 function deleteNews(newsId) {
-    console.log(newsId);
     $.ajax({
         type: 'get',
         url: "/api/news/delete/" + newsId,

@@ -4,6 +4,7 @@ package com.jm.jobseekerplatform.model.comments;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 
@@ -47,6 +48,8 @@ public class Comment implements Serializable {
         this.profile=profile;
         this.dateTime = dateTime;
     }
+
+
 
     public Long getId() {
         return id;

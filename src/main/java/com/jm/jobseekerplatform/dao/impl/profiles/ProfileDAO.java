@@ -17,13 +17,4 @@ import java.util.Set;
 @Repository("profileDAO")
 public class ProfileDAO extends AbstractDAO<Profile> {
 
-   /* public List<Profile> loadProfilesCommentsForNews(List<Comment> comments){
-        List<Profile> profiles = new ArrayList<>();
-        for(Comment c: comments){
-            Query query = entityManager.createQuery("SELECT distinct p FROM Profile p JOIN p.comments pc where pc in :commentForNews", Profile.class);
-            query.setParameter("commentForNews", c);
-            profiles.addAll(query.getResultList());
-        }
-        return profiles;
-    }*/
 }

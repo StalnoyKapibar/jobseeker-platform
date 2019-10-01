@@ -45,8 +45,7 @@ public class CommentRestController {
         return new ResponseEntity<Comment>(comment, HttpStatus.OK);
     }
 
-
-  /* @RequestMapping(value = "/update", method = RequestMethod.PUT)
+   /*@RequestMapping(value = "/update", method = RequestMethod.PUT)
     public  ResponseEntity<Comment> updateComment(@RequestBody Comment comment){
        Comment currentComment = commentService.getById(comment.getId());
         currentComment.setText(comment.getText());
@@ -69,5 +68,18 @@ public class CommentRestController {
     public ResponseEntity<Comment> deleteComment(@RequestParam("id") Long id){
        commentService.deleteById(id);
        return new ResponseEntity<Comment>(HttpStatus.NO_CONTENT);
+    }
+
+    /*@RequestMapping(value = "/insert", method = RequestMethod.POST, consumes = {"application/json", "multipart/form-data" })
+    public ResponseEntity<Void> createComment(@RequestBody Comment comment, Authentication authentication){
+       commentService.add(comment);
+       return new ResponseEntity<Void>(HttpStatus.CREATED);
+    }*/
+
+    @RequestMapping(value = "/insert", params = {"newsId", "text", "dateTime"}, method = RequestMethod.POST)
+    public ResponseEntity<Void> createComment(@RequestParam("newsId") Long id, @RequestParam("text") String text, @RequestParam("dateTime") String dateTime, Authentication authentication){
+        Comment comment = new Comment(text,newsService.getById(id), ((User) authentication.getPrincipal()).getProfile(), dateTime);
+        commentService.add(comment);
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 }

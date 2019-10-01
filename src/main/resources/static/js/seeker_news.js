@@ -25,7 +25,6 @@ function printSeekerNews() {
             if (data.length === 0) {
                 return;
             }
-            console.log(data);
             var cardHTML = '';
             $.each(data, function (i, item) {
                 var date = new Date(item.date.toString());
@@ -34,10 +33,10 @@ function printSeekerNews() {
                 month = month < 10 ? '0' + month : month;
                 // tags
                 let newsTags = "";
-               /* $.each(item.tags, (i, tag) =>  {
+                $.each(item.tags, (i, tag) =>  {
                     newsTags += '<span class="badge badge-pill badge-success btnClick text-dark">' +
                         '<h7>' + tag.name + '</h7></span>'
-                });*/
+                });
                 var description;
                 var numberOfViews = item.numberOfViews;
                 if (numberOfViews == null) {
