@@ -26,6 +26,7 @@ $(document).ready(function () {
             ]
         } // set maximum height of editor
     });
+    $(".panel-heading").css('background-color', 'white');
     showTags();
 });
 

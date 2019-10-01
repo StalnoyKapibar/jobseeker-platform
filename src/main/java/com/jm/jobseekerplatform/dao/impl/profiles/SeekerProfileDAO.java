@@ -25,8 +25,7 @@ public class SeekerProfileDAO extends AbstractDAO<SeekerProfile> {
         return seekerProfiles;
     }
 
-    public SeekerProfile getByResume(Resume resume) {
-        long id = resume.getId();
+    public SeekerProfile getSeekerProfileByResumeID(long id) {
         return entityManager.createQuery("SELECT v FROM SeekerProfile v JOIN v.resumes r WHERE r.id =:param", SeekerProfile.class)
                 .setParameter("param", id)
                 .getSingleResult();

@@ -59,6 +59,18 @@ public class MailService {
         sendEmail(address, subject, templateEngine.process("/emails/regemail.html", ctx));
     }
 
+    public void sendFeedBackEMail(String address, String companyName, long employerProfileID) {
+        String subject = "На ваше резюме отозвались!";
+        String employerProfileLink = "http://localhost:" + port + "/employer/" + employerProfileID;
+        String linkToChats = "http://localhost:" + port + "/seeker/chats";
+        final Context ctx = new Context();
+        ctx.setVariable("name", address);
+        ctx.setVariable("employerProfileLink", employerProfileLink);
+        ctx.setVariable("company", companyName);
+        ctx.setVariable("linkToChat", linkToChats);
+        sendEmail(address, subject, templateEngine.process("/emails/feedBackEmail.html", ctx));
+    }
+
     // приглашение друга
     public void sendFriendInvitaionEmail(String address, String friendAddres) {
         String subject = address + " Приглашает вас попробовать нашу платформу";

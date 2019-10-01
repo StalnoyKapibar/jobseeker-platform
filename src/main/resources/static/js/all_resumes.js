@@ -213,7 +213,6 @@ function showResume(id) {
             $("#VMSalary").text(str);
 
             let chat='<button onclick="openChatByResume('+data.id+')">Связаться с сикером</button>'+
-                '<button onclick="sendMailToSeeker('+data.id+')">Откликнуться на резюме</button>'+
                 '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
             $("#resumeModalFooter").html(chat);
 
@@ -235,6 +234,7 @@ function sendMailToSeeker(resumeId) {
 }
 
 function openChatByResume(resumeId) {
+    sendMailToSeeker(resumeId);
     window.location.replace("http://localhost:7070/chat/resume/"+resumeId);
 }
 

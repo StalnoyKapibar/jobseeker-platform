@@ -94,4 +94,9 @@ public class TagService extends AbstractService<Tag> {
     public void deleteById(Long id) {
         dao.deleteById(id);
     }
+
+    public void createNewTagService(Tag tag) {
+        dao.createNewTagDAO(tag);
+    }
+
 }
