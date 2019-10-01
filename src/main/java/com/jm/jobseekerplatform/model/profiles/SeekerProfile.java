@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.model.profiles;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.*;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -21,7 +22,7 @@ public class SeekerProfile extends Profile implements Serializable {
     @Column(name = "description", columnDefinition = "mediumtext")
     private String description;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Tag> tags;
 
     @OneToMany(fetch = FetchType.EAGER)
