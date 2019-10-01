@@ -50,7 +50,6 @@ public class ResumeRestController {
     @Autowired
     private SeekerUserService seekerUserService;
 
-
     @Autowired
     MailService mailService;
 

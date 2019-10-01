@@ -30,5 +30,4 @@ public class SeekerProfileDAO extends AbstractDAO<SeekerProfile> {
                 .setParameter("param", id)
                 .getSingleResult();
     }
-
 }

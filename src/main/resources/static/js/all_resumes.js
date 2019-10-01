@@ -219,14 +219,12 @@ function showResume(id) {
             let chat='<button onclick="openChatByResume('+data.id+')">Связаться с соискателем</button>'+
                 '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
             $("#resumeModalFooter").html(chat);
-
-        }
+         }
     });
 }
 function sendMailToSeeker(resumeId) {
-    let dataID = resumeId;
-    $.ajax({
-        url: "api/resumes/sendmail?dataID=" + dataID,
+   $.ajax({
+        url: "api/resumes/sendmail?dataID=" + resumeId,
         type: "POST",
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
