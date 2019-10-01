@@ -98,7 +98,8 @@ function getCurrentLocation(callback) {
 
 function getCityByCoords(lat, lng) {
     $.ajax({
-        url: "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=" + $("meta[name='apiKey']").attr("content"),
+        url: "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng +
+            "&key=" + $("meta[name='apiKey']").attr("content"),
         type: "GET",
         async: false,
         success: function (data) {
@@ -147,7 +148,8 @@ function printResumes(data) {
         }
 
         $.each(value.tags, function (i, item) {
-            resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
+            resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" ' +
+                'style="white-space: pre"><h7>' + item.name + '   </h7></span>';
         });
 
         $.each(data.seeker, function (i, item) {
@@ -161,12 +163,14 @@ function printResumes(data) {
             'data-target="#resumeModal" onclick="showResume(\'' + value.id + '\')">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
-            '<div class="companyData"><span>Сикер: ' + fio + '</span><br><span>Город: ' + value.city + '</span></div>' +
+            '<div class="companyData"><span>Соискатель: ' + fio + '</span><br><span>Город: ' +
+            value.city + '</span></div>' +
             '<br>' +
             minSalary +
             '<div class="pull-right">' +
             '<span class="btn btn-outline-success btn-sm btnOnResumePage"' +
-            'onclick="window.location.href =\'/seeker/' + value.creatorProfile + '\';event.stopPropagation();">На страницу сикера</span>' + '</div>' +
+            'onclick="window.location.href =\'/seeker/' + value.creatorProfile +
+            '\';event.stopPropagation();">На страницу соискателя</span>' + '</div>' +
         '</li>');
     });
 }
@@ -212,7 +216,7 @@ function showResume(id) {
             }
             $("#VMSalary").text(str);
 
-            let chat='<button onclick="openChatByResume('+data.id+')">Связаться с сикером</button>'+
+            let chat='<button onclick="openChatByResume('+data.id+')">Связаться с соискателем</button>'+
                 '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
             $("#resumeModalFooter").html(chat);
 

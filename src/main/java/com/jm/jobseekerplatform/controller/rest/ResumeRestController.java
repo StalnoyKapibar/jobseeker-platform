@@ -1,11 +1,13 @@
 package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.JobExperience;
+import com.jm.jobseekerplatform.model.JobExperience;
 import com.jm.jobseekerplatform.dao.impl.ResumeDAO;
 import com.jm.jobseekerplatform.dao.impl.profiles.SeekerProfileDAO;
 import com.jm.jobseekerplatform.model.Point;
 import com.jm.jobseekerplatform.model.Resume;
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
@@ -14,11 +16,13 @@ import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.JobExperienceService;
 import com.jm.jobseekerplatform.service.impl.MailService;
+import com.jm.jobseekerplatform.service.impl.JobExperienceService;
 import com.jm.jobseekerplatform.service.impl.ResumeService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.hibernate.Hibernate;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,13 +51,19 @@ public class ResumeRestController {
     private SeekerUserService seekerUserService;
 
     @Autowired
-    private ResumeService resumeService;
+    SeekerProfileService seekerProfileService;
+
+    @Autowired
+    JobExperienceService jobExperienceService;
 
     @Autowired
     MailService mailService;
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    private ResumeService resumeService;
 
     @RequestMapping("/getbyid/{resumeId}")
     public Resume getResumeById(@PathVariable Long resumeId) {
