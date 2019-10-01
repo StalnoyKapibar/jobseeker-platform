@@ -47,14 +47,14 @@ function resetDraftTableContent(filter = 'ACTIVE') {
 function rejectDraft(draftId) {
     $.get("/api/draftNews/" + draftId + "/reject", function () {
         $('#alert_modal').modal('show');
-        resetDraftTableContent(filter);
+        resetDraftTableContent();
     })
 }
 
 function approveDraft(draftId) {
     $.get("/api/draftNews/" + draftId + "/approve", function () {
         $('#alert_modal').modal('show');
-        resetDraftTableContent(filter);
+        resetDraftTableContent();
     })
 }
 
