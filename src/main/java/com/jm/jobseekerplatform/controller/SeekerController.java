@@ -31,6 +31,7 @@ import java.util.Set;
 @Controller
 @RequestMapping("/seeker")
 public class SeekerController {
+
     @Autowired
     private SeekerUserService seekerUserService;
 
@@ -49,12 +50,11 @@ public class SeekerController {
     @Autowired
     private EmployerProfileService employerProfileService;
 
-    @Value("${google.maps.api.key}")
-    private String googleMapsApiKey;
-
     @Autowired
     private NewsService newsService;
 
+    @Value("${google.maps.api.key}")
+    private String googleMapsApiKey;
 
     @GetMapping("/{seekerProfileId}")
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
