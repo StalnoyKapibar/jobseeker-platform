@@ -7,6 +7,7 @@ import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.NewsService;
+import com.jm.jobseekerplatform.service.impl.ResumeService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
@@ -43,10 +44,17 @@ public class SeekerController {
     private TagService tagService;
 
     @Autowired
+    private ResumeService resumeService;
+
+
+    @Autowired
     private EmployerProfileService employerProfileService;
 
     @Autowired
     private NewsService newsService;
+
+    @Value("${google.maps.api.key}")
+    private String googleMapsApiKey;
 
     @GetMapping("/{seekerProfileId}")
     public String seekerProfilePage(@PathVariable Long seekerProfileId, Model model, Authentication authentication) {
@@ -108,9 +116,6 @@ public class SeekerController {
         model.addAttribute("profileId", ((User) authentication.getPrincipal()).getProfile().getId());
         return "news_page";
     }
-
-    @Value("${google.maps.api.key}")
-    private String googleMapsApiKey;
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @GetMapping("/resumes/{seekerProfileId}")

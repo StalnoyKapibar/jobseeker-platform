@@ -1,16 +1,12 @@
 package com.jm.jobseekerplatform.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.jm.jobseekerplatform.model.comments.Comment;
+
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity

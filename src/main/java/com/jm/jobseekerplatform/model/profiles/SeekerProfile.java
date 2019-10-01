@@ -42,7 +42,7 @@ public class SeekerProfile extends Profile implements Serializable {
     private Set<Meeting> meetings;
 
     @JsonManagedReference
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Subscription> subscriptions;
 
     @JsonManagedReference
