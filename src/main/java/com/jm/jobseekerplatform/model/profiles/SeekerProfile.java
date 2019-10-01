@@ -21,8 +21,7 @@ public class SeekerProfile extends Profile implements Serializable {
     @Column(name = "description", columnDefinition = "mediumtext")
     private String description;
 
-    @JsonManagedReference
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Tag> tags;
 
     @OneToMany(fetch = FetchType.EAGER)
