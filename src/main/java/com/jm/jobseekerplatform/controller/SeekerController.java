@@ -160,7 +160,9 @@ public class SeekerController {
     public String getSingleResume(@PathVariable Long resumeId,
                                   @PathVariable Long seekerProfileId,
                                   Model model, Authentication authentication) {
-        SeekerProfile seekerProfile = (SeekerProfile) Hibernate.unproxy(seekerProfileService.getById(((User) authentication.getPrincipal()).getProfile().getId()));
+        SeekerProfile seekerProfile = (SeekerProfile) Hibernate.unproxy(seekerProfileService.
+                                                                getById(((User) authentication.getPrincipal())
+                                                                .getProfile().getId()));
         if (seekerProfile.getId().equals(seekerProfileId) &&
                 seekerProfileService.getById(seekerProfileId).getId()
                         .equals(resumeService.getById(resumeId).getCreatorProfile().getId())){
