@@ -28,6 +28,7 @@ public class SeekerProfile extends Profile implements Serializable {
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Portfolio> portfolios;
 
+    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER )
     private Set<Vacancy> favoriteVacancy;
 
@@ -39,6 +40,7 @@ public class SeekerProfile extends Profile implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Subscription> subscriptions;
 
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Resume> resumes;
 
@@ -53,6 +55,12 @@ public class SeekerProfile extends Profile implements Serializable {
     @Override
     public String getTypeName() {
         return "Соискатель";
+    }
+
+    public SeekerProfile(String name, String patronymic, String surname){
+        this.name = name;
+        this.patronymic = patronymic;
+        this.surname = surname;
     }
 
     public SeekerProfile(String name, String patronymic, String surname, String description, byte[] photo, Set<Tag> tags,
@@ -152,5 +160,4 @@ public class SeekerProfile extends Profile implements Serializable {
     public void setResumes(Set<Resume> resumes) {
         this.resumes = resumes;
     }
-
 }

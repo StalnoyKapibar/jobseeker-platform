@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.model;
 
+
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 
 import javax.persistence.*;
