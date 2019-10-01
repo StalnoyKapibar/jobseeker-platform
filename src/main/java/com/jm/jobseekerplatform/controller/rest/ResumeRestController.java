@@ -50,11 +50,6 @@ public class ResumeRestController {
     @Autowired
     private SeekerUserService seekerUserService;
 
-    @Autowired
-    SeekerProfileService seekerProfileService;
-
-    @Autowired
-    JobExperienceService jobExperienceService;
 
     @Autowired
     MailService mailService;
