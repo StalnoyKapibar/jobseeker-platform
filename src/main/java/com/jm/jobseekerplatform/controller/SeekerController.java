@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.controller;
 
+import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
@@ -48,6 +49,9 @@ public class SeekerController {
 
     @Autowired
     private EmployerProfileService employerProfileService;
+
+    @Autowired
+    private NewsService newsService;
 
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
@@ -186,5 +190,15 @@ public class SeekerController {
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         }
         return "resume/edit_resume";
+    }
+
+    @GetMapping("/news/{newsId}")
+    public String getSeekerSubscriptionNewsById(@PathVariable Long newsId, Model model,  Authentication authentication) {
+        News currentNews = newsService.getById(newsId);
+        model.addAttribute("newsId", currentNews.getId());
+        model.addAttribute("headline", currentNews.getHeadline());
+        model.addAttribute("description", currentNews.getDescription());
+        model.addAttribute("profileId", ((User) authentication.getPrincipal()).getProfile().getId());
+        return "news_page";
     }
 }
