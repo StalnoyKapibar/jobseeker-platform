@@ -20,6 +20,12 @@ function getSeekerResumes() {
 }
 
 function seekerResumes(resumeList) {
+    $('#searchList').append('<div class="form-group" align="center">' +
+        '<label class="col-md-1 control-label"></label>' +
+        '<div class="col-md-4" style="display: flex; justify-content:'+
+        ' center;"><br> <button id="editButton" type="button"' +
+        'class="btn btn-warning" onclick="newResumePage()" style="width: 150px;"> Новое резюме'+
+        '<i class="fas fa-paper-plane "></i> </button> </div> </div>');
     $.each(resumeList.content, function (key, value) {
         let minSalary = '';
         let resumeTags = "";
@@ -27,19 +33,21 @@ function seekerResumes(resumeList) {
             minSalary = '<div class="salary"><span>Зарплата от: ' + value.salaryMin + ' руб.</span></div>';
         }
         $.each(value.tags, function (i, item) {
-            resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
+            resumeTags += '<span class="badge badge-pill badge-success btnClick text-dark" ' +
+                'style="white-space: pre"><h7>' + item.name + '   </h7></span>';
         });
         $('#searchList').append('<li class="list-group-item clearfix">' +
             '<div class="headLine"><span>' + value.headline + '</span></div>' +
             '<div class="resumeTags" style="position: absolute; left: 75%; top: 5%">' + resumeTags + '</div>' +
-            '<div class="companyData"><span>Сикер: ' + resumeList.seeker[0].fullName + '</span><br><span>Город: ' + value.city + '</span></div>' +
+            '<div class="companyData"><span>Соискатель: ' + resumeList.seeker[0].fullName +
+            '</span><br><span>Город: ' + value.city + '</span></div>' +
             '<br>' +
             minSalary +
             '<div class="text-right">' +
             '<span class="btn btn-outline-info btn-sm btnShowResume" data-toggle="modal"' +
             ' data-target="#resumeModal" onclick="showChosenResume(\'' + value.id + '\')">Подробнее</span>' +
             '<span class="btn btn-outline-secondary btn-sm btnEditResume"' +
-            'onclick="#">Редактировать</span>' +
+            'onclick=resumePage(\'' + value.id + '\')>На страницу резюме</span>' +
             '<span class="btn btn-outline-danger btn-sm btnDeleteResume"' +
             'onclick="deleteSeekerResumeById(\'' + value.id + '\')">Удалить резюме</span>'
             + '</div>' +
@@ -107,4 +115,12 @@ function deleteSeekerResumeById(seekerProfileIdResume) {
             alert(error.toString());
         }
     });
+}
+
+function resumePage(resumeId) {
+    location.href = "/seeker/resumes/edit/" + resumeId;
+}
+
+function newResumePage() {
+    location.href = "/seeker/resumes/new";
 }

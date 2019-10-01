@@ -16,8 +16,6 @@ import com.jm.jobseekerplatform.service.impl.ResumeService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
-import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
-import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
@@ -111,13 +109,13 @@ public class ChatController {
         model.addAttribute("profileId", user.getProfile().getId());
         if (user.getAuthority().toString().equals("ROLE_EMPLOYER")) {
             model.addAttribute("employerProfileId", user.getProfile().getId());
-            model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId( user.getProfile().getId()));
+            model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId( user.getId()));
         } else if (user.getAuthority().toString().equals("ROLE_SEEKER")) {
             model.addAttribute("seekerProfileId", user.getProfile().getId());
-            model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId( user.getProfile().getId()));
+            model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId( user.getId()));
         } else {
             model.addAttribute("adminProfileId", user.getProfile().getId());
-            model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId( user.getProfile().getId()));
+            model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId( user.getId()));
         }
         if (chat instanceof ChatWithTopic) {
             ChatWithTopic chatWithTopic = (ChatWithTopic) chat;

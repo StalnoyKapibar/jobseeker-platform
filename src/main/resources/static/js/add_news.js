@@ -4,7 +4,8 @@ var header = $("meta[name='_csrf_header']").attr("content");
 var token = $("meta[name='_csrf']").attr("content");
 
 $(document).ready(function () {
-    bootstrapValidate('#n_headline', 'regex:^[A-Za-z0-9А-Яа-я ()\\-]{3,100}$:Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов',
+    bootstrapValidate('#n_headline', 'regex:^[A-Za-z0-9А-Яа-я \\D]{3,100}$:' +
+        'Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов',
         function (isValid) {
             if (isValid) {
                 $('#n_headline').addClass('is-valid');
@@ -26,6 +27,7 @@ $(document).ready(function () {
             ]
         } // set maximum height of editor
     });
+    $(".panel-heading").css('background-color', 'white');
     showTags();
 });
 
@@ -50,7 +52,8 @@ $(function () {
                 success: function (data) {
                     $("#search_advice_wrapper").html("").show();
                     if (data.length == 0) {
-                        $('#search_advice_wrapper').append('<div class="advice_variant"> По запросу "' + param + '" ничего не найдено</div>');
+                        $('#search_advice_wrapper').append('<div class="advice_variant">' +
+                            ' По запросу "' + param + '" ничего не найдено</div>');
                     } else {
                         $.each(data, function (key, value) {
                             var isAdded = false;
@@ -61,9 +64,13 @@ $(function () {
                                 }
                             });
                             if (isAdded) {
-                                $('#search_advice_wrapper').append('<div style="display: none" class="advice_variant"  onclick="addTag(\'' + value.id + '\',\'' + value.name + '\')">' + value.name + '</div>');
+                                $('#search_advice_wrapper').append('<div style="display: none" ' +
+                                    'class="advice_variant"  onclick="addTag(\'' + value.id + '\',\'' +
+                                    value.name + '\')">' + value.name + '</div>');
                             } else {
-                                $('#search_advice_wrapper').append('<div class="advice_variant" onclick="addTag(\'' + value.id + '\',\'' + value.name + '\')">' + value.name + '</div>');
+                                $('#search_advice_wrapper').append('<div class="advice_variant" ' +
+                                    'onclick="addTag(\'' + value.id + '\',\'' + value.name + '\')">' +
+                                    value.name + '</div>');
                             }
                         });
                     }
@@ -87,7 +94,9 @@ function addTag(id, name) {
     if (nodelist === 0) {
         div.style.display = "block";
     }
-    $("#selectedTags").append("<label class='listTags' id='tagItem-" + id + "'><span class='badge badge-pill badge-success tagButton' value='" + id + "' id='v_tagLabel_" + id + "' onclick='deleteTag(" + id + ",\"" + name + "\")'>" + name + "</span></label> ");
+    $("#selectedTags").append("<label class='listTags' id='tagItem-" + id + "'><span " +
+        "class='badge badge-pill badge-success tagButton' value='" + id + "' id='v_tagLabel_" + id +
+        "' onclick='deleteTag(" + id + ",\"" + name + "\")'>" + name + "</span></label> ");
     $("#tagLabel_" + id).remove();
     $('#search_box').val('');
     $('#search_advice_wrapper').fadeOut(350).html('');
@@ -97,7 +106,8 @@ function addTag(id, name) {
 function deleteTag(id, name) {
     var div = document.getElementById("selectedTags");
     $('#tagItem-' + id).remove();
-    $("#tagsWell").append("<span class='badge badge-pill badge-success' value='" + name + "'id='tagLabel_" + id + "' onclick='addTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
+    $("#tagsWell").append("<span class='badge badge-pill badge-success' value='" + name +
+        "'id='tagLabel_" + id + "' onclick='addTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
     $("#v_tagLabel_" + id).remove();
     var nodelist = div.getElementsByTagName("label").length;
     if (nodelist === 0) {
@@ -113,7 +123,9 @@ function showTags() {
         async: false,
         success: function (data) {
             $.each(data, function (key, value) {
-                $("#tagsWell").append("<span class='badge badge-pill badge-success' value='" + value.name + "' id='tagLabel_" + value.id + "' onclick='addTag(" + value.id + ",\"" + value.name + "\")'>" + value.name + "</span>");
+                $("#tagsWell").append("<span class='badge badge-pill badge-success' value='" +
+                    value.name + "' id='tagLabel_" + value.id + "' onclick='addTag(" + value.id +
+                    ",\"" + value.name + "\")'>" + value.name + "</span>");
             });
         }
     });
@@ -153,12 +165,10 @@ function validateAndPreview() {
         },
         data: JSON.stringify(news),
         success: function () {
-            $("#n_headline").val('');
-            $('.note-editable').text('');
-            $('#selectedTags').html("");
-            $('#tagsWell').html("");
-            showTags();
-            alert('Новость добавлена');
+            $("#news_container").empty();
+            $("#news_container").append("<div class='alert alert-success' role='alert'>" +
+                "Новость добавлена!<br/>Теперь вы можете просмотреть ее в разделе " +
+                "<a href='/employer/get_news'>&quot;Мои новости&quot;</a></div>");
         },
         error: function (error) {
             console.log(error);

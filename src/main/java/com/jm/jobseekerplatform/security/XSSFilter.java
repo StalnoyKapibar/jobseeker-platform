@@ -4,28 +4,42 @@
 
 package com.jm.jobseekerplatform.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpMethod;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.logging.Logger;
+import java.util.Arrays;
+import java.util.List;
 
 public class XSSFilter implements Filter {
-    private static Logger logger = Logger.getLogger(String.valueOf(XSSFilter.class));
+
+    private static final Logger logger = LoggerFactory.getLogger(XSSFilter.class);
+
+    private static final List<String> REQUEST_BODY_METHODS = Arrays.asList(
+            HttpMethod.POST.name(),
+            HttpMethod.PUT.name(),
+            HttpMethod.PATCH.name());
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        if ("POST".equals(httpServletRequest.getMethod()) || "UPDATE".equals(httpServletRequest.getMethod())) {
-            ReadTwiceHttpServletRequestWrapper readTwiceHttpServletRequestWrapper = new ReadTwiceHttpServletRequestWrapper((HttpServletRequest) request);
-            readTwiceHttpServletRequestWrapper.setBody(cleanXSS(readTwiceHttpServletRequestWrapper.getBody()));
-            chain.doFilter(readTwiceHttpServletRequestWrapper, response);
-        } else {
-            chain.doFilter(request, response);
+        if (REQUEST_BODY_METHODS.contains(((HttpServletRequest) request).getMethod())) {
+            ReadTwiceHttpServletRequestWrapper requestWrapper;
+            if (request instanceof ReadTwiceHttpServletRequestWrapper) {
+                requestWrapper = (ReadTwiceHttpServletRequestWrapper) request;
+            } else {
+                requestWrapper = new ReadTwiceHttpServletRequestWrapper((HttpServletRequest) request);
+                request = requestWrapper;
+            }
+            requestWrapper.setBody(cleanXSS(requestWrapper.getBody()));
         }
+        chain.doFilter(request, response);
     }
 
     private String cleanXSS(String value) {
-        logger.info("In cleanXSS RequestWrapper ..............." + value);
+        logger.debug("In cleanXSS RequestWrapper ...............{}", value);
         value = value.replaceAll("'", "&#39;");
         value = value.replaceAll("eval\\((.*)\\)", "");
         value = value.replaceAll("[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']", "\"\"");
@@ -39,7 +53,8 @@ public class XSSFilter implements Filter {
         value = value.replaceAll("(?i)&lt;script&gt;", "");
         value = value.replaceAll("(?i)</script>", "");
         value = value.replaceAll("&lt;/script&gt;", "");
-        logger.info("Out cleanXSS RequestWrapper ........ value ......." + value);
+        logger.debug("Out cleanXSS RequestWrapper ..............{}", value);
         return value;
     }
+
 }

@@ -563,29 +563,37 @@ public class InitData {
         Set<JobExperience> jobExperiences = new HashSet<>();
         List<City> cities = cityService.getAll();
         List<JobExperience> jobExperienceList = jobExperienceService.getAll();
+        Set<Long> usedProfiles = new HashSet<>();
         Resume resume;
         Point point;
         City city;
-        for (int i = 0; i < 14; i++) {
-            city = cities.get(rnd.nextInt(cities.size()));
-            point = city.getPoint();
+        for (int i = 0, m = 0; i < seekerProfileService.getAll().size(); i++) {
             SeekerProfile seekerProfile = getRandomSeekerProfile();
-            jobExperiences.add(jobExperienceList.get(i));
-            resume = new Resume(
-                    seekerProfile,
-                    faker.job().title(),
-                    randomTags(0L),
-                    Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 50) + 50) * 1000), //salaryMin
-                    Math.random() < 0.5 ? null : (((int) Math.round(Math.random() * 100) + 100) * 1000), //salaryMax
-                    jobExperiences,
-                    city,
-                    point);
-            resumes.add(resume);
-            resumeService.add(resume);
+            while (!usedProfiles.add(seekerProfile.getId())){
+              seekerProfile = getRandomSeekerProfile();
+            }
+            for (int j = 0; j < 4; j++){
+                city = cities.get(rnd.nextInt(cities.size()));
+                point = city.getPoint();
+                jobExperiences.add(jobExperienceList.get(m++));
+                resume = new Resume(
+                        seekerProfile,
+                        faker.job().title(),
+                        randomTags(0L),
+                        Math.random() < 0.5 ? null : (((int) Math.round(Math.random()
+                                * 50) + 50) * 1000), //salaryMin
+                        Math.random() < 0.5 ? null : (((int) Math.round(Math.random()
+                                * 100) + 100) * 1000), //salaryMax
+                        jobExperiences,
+                        city,
+                        point);
+                resumes.add(resume);
+                resumeService.add(resume);
+                jobExperiences.clear();
+            }
             seekerProfile.setResumes(resumes);
             seekerProfileService.update(seekerProfile);
             resumes.clear();
-            jobExperiences.clear();
         }
     }
 
