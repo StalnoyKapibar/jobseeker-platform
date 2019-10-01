@@ -50,5 +50,4 @@ public class ProfileService extends AbstractService<Profile> {
         profile.setExpiryBlock(null);
         dao.update(profile);
     }
-
 }

@@ -16,7 +16,7 @@ public class CommentService extends AbstractService<Comment> {
     @Autowired
     private CommentDAO commentDAO;
 
-    public List<Comment> getAllCommentsForNews(News news){
+    public List<Comment> getAllCommentsForNews(News news) {
         return commentDAO.getAllCommentsForNews(news);
     }
 }

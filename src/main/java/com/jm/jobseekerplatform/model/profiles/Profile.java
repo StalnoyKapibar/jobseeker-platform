@@ -20,7 +20,6 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Profile implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,10 +34,6 @@ public abstract class Profile implements Serializable {
 
     @Column(name = "expiry_block")
     private Date expiryBlock;
-
-   /* @JsonBackReference
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Comment> comments;*/
 
     public Profile() {
         this.state = State.NO_ACCESS;
@@ -89,19 +84,10 @@ public abstract class Profile implements Serializable {
         this.logo = logo;
     }
 
-  /* public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }*/
-
     @Override
     public String toString() {
         return "Profile{" +
                 "id=" + id +
                 '}';
     }
-
 }

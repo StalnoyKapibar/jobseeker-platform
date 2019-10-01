@@ -49,7 +49,6 @@ public class SeekerProfile extends Profile implements Serializable {
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Resume> resumes;
 
-
     public SeekerProfile() {
     }
 
@@ -166,5 +165,4 @@ public class SeekerProfile extends Profile implements Serializable {
     public void setResumes(Set<Resume> resumes) {
         this.resumes = resumes;
     }
-
 }

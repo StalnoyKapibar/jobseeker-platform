@@ -596,7 +596,7 @@ public class InitData {
         List<News> newsList = newsService.getAll();
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         Comment comment = null;
-        for(News n : newsList){
+        for (News n : newsList) {
             comment = new Comment("Отличная новость", n, profile1, dateTime);
             commentService.add(comment);
             comment = new Comment("Плохая новость", n, profile2, dateTime);
@@ -604,9 +604,5 @@ public class InitData {
             comment = new Comment("Тупая новость", n, profile3, dateTime);
             commentService.add(comment);
         }
-
-
-
     }
-
 }

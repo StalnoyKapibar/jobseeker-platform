@@ -42,7 +42,6 @@ public class News implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
-
     public News() {
     }
 
@@ -108,12 +107,4 @@ public class News implements Serializable {
     public void setNumberOfViews(Long numberOfViews) {
         this.numberOfViews = numberOfViews;
     }
-
-   /*public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }*/
 }

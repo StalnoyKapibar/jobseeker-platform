@@ -17,6 +17,5 @@ public class CommentDAO extends AbstractDAO<Comment> {
         query.setParameter("currentNews", news);
         List<Comment> newsComments = query.getResultList();
         return newsComments;
-
     }
 }

@@ -16,5 +16,4 @@ import java.util.Set;
  */
 @Repository("profileDAO")
 public class ProfileDAO extends AbstractDAO<Profile> {
-
 }

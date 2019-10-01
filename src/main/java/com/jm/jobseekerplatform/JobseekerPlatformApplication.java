@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class JobseekerPlatformApplication {
-/* insert into jobseeker_db.tag_comments (tag_id, comments_id) values(1,1);*/
     public static void main(String[] args) {
         SpringApplication.run(JobseekerPlatformApplication.class, args);
     }

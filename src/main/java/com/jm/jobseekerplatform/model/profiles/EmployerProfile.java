@@ -32,7 +32,6 @@ public class EmployerProfile extends Profile implements Serializable {
     @JoinColumn(name = "creator_profile_id")
     private Set<Vacancy> vacancies;
 
-
     public EmployerProfile() {
     }
 
@@ -107,7 +106,6 @@ public class EmployerProfile extends Profile implements Serializable {
         } else {
             return 0d;
         }
-
     }
 
     public Set<Vacancy> getVacancies() {
@@ -117,6 +115,4 @@ public class EmployerProfile extends Profile implements Serializable {
     public void setVacancies(Set<Vacancy> vacancies) {
         this.vacancies = vacancies;
     }
-
-
 }

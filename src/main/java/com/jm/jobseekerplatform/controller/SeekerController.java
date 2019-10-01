@@ -99,7 +99,6 @@ public class SeekerController {
         return "seeker_subscription_news";
     }
 
-    //@RolesAllowed({"ROLE_SEEKER"})
     @GetMapping("/news/{newsId}")
     public String getSeekerSubscriptionNewsById(@PathVariable Long newsId, Model model,  Authentication authentication) {
         News currentNews = newsService.getById(newsId);
@@ -109,7 +108,6 @@ public class SeekerController {
         model.addAttribute("profileId", ((User) authentication.getPrincipal()).getProfile().getId());
         return "news_page";
     }
-
 
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;

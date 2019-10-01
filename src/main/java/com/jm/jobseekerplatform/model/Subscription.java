@@ -24,7 +24,6 @@ public class Subscription implements Serializable {
     @ManyToOne
     private SeekerProfile seekerProfile;
 
-
     @ManyToMany
     private Set<Tag> tags;
 
