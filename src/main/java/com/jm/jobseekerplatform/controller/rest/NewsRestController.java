@@ -58,24 +58,20 @@ public class NewsRestController {
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-    @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
-    @GetMapping("/delete/{newsId}")
+    @GetMapping ("/delete/{newsId}")
     public ResponseEntity deleteNews(@PathVariable("newsId") Long newsId) {
         newsService.deleteById(newsId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RolesAllowed({"ROLE_EMPLOYER"})
-    @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
-    @GetMapping("/{newsId}")
-    @ResponseBody
+    @RolesAllowed ({"ROLE_EMPLOYER"})
+    @GetMapping ("/{newsId}")
     public ResponseEntity<News> getNewsByIdForSeeker(@PathVariable("newsId") Long newsId) {
         return new ResponseEntity<>(newsService.getById(newsId), HttpStatus.OK);
     }
 
-    @RolesAllowed({"ROLE_EMPLOYER"})
-    @GetMapping("/")
-    @ResponseBody
+    @RolesAllowed ({"ROLE_EMPLOYER"})
+    @GetMapping ("/")
     public ResponseEntity<List<News>> getAllNewsByEmployerProfileId(@RequestParam("newsPageCount") int newsPageCount,
                                                                     Authentication authentication) {
         Sort sort = new Sort(Sort.Direction.DESC, "date");
@@ -85,8 +81,7 @@ public class NewsRestController {
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
 
-    @GetMapping("/all_seeker_news")
-    @ResponseBody
+    @GetMapping ("/all_seeker_news")
     public ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
                                                                   @RequestParam("newsPageCount") int newsPageCount) {
         Set<Subscription> subscriptions = seekerProfileService.getById(seekerProfileId).getSubscriptions();
@@ -100,7 +95,7 @@ public class NewsRestController {
     }
 
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
-    @PostMapping("/editNews")
+    @PostMapping ("/editNews")
     public ResponseEntity editNews(@RequestParam("newsId") Long newsId,
                                    @RequestParam("newsHeadline") String newsHeadline,
                                    @RequestParam("newsDescription") String newsDescription) {
