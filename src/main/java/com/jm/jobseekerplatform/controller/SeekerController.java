@@ -183,8 +183,8 @@ public class SeekerController {
     @RequestMapping(value = "/resumes/edit/{resumeId}")
     public String editResume(@PathVariable("resumeId") Long resumeId, Authentication authentication, Model model) {
         SeekerProfile seekerProfile = (SeekerProfile) Hibernate.unproxy(seekerProfileService.
-                getById(((User) authentication.getPrincipal())
-                        .getProfile().getId()));
+                                                                getById(((User) authentication.getPrincipal())
+                                                                .getProfile().getId()));
         if (resumeService.getById(resumeId).getCreatorProfile().getId() == seekerProfile.getId()) {
             model.addAttribute("oldResume", resumeService.getById(resumeId));
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
