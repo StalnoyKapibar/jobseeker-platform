@@ -22,6 +22,7 @@ import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.users.AdminUserService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -84,18 +85,18 @@ public class ChatRestController {
     public HttpEntity getCountOfUnreadChatsByProfileId(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         long countOfUnreadChatsByProfileId = chatWithTopicService
-                                    .getCountOfUnreadChatsByProfileId(user.getProfile().getId());
+                .getCountOfUnreadChatsByProfileId(user.getProfile().getId());
         return new ResponseEntity<>(countOfUnreadChatsByProfileId, HttpStatus.OK);
     }
 
     @PostMapping
     public String saveMeeting(@RequestParam("vacancyId") Long vacancyId, @RequestParam("seekerId") Long seekerId) {
         SeekerProfile seeker = seekerProfileService.getById(seekerId);
-        ChatWithTopic<Vacancy> chat = chatWithTopicService
-                .getChatByTopicIdCreatorProfileIdChatType(vacancyId, seeker.getId(), ChatWithTopicVacancy.class);
+        ChatWithTopic<Vacancy> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType
+                (vacancyId, seeker.getId(), ChatWithTopicVacancy.class);
         if (chat == null) {
             Vacancy vacancy = vacancyService.getById(vacancyId);
-            EmployerProfile employerProfile = vacancy.getCreatorProfile();
+            EmployerProfile employerProfile = (EmployerProfile) Hibernate.unproxy(vacancy.getCreatorProfile());
             List<User> chatMembers = new ArrayList<>();
             chatMembers.add(seekerUserService.getByProfileId(seeker.getId()));
             chatMembers.add(employerUserService.getByProfileId(employerProfile.getId()));
@@ -108,8 +109,7 @@ public class ChatRestController {
     @PostMapping("/add_complain_chat")
     public ResponseEntity<String> addComplainChat(@RequestBody MessageDTO message,
                                                   @RequestParam("reviewId") Long reviewId,
-                                                  Authentication authentication) {
-        Long employerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
+                                                  @RequestParam("employerProfileId") Long employerProfileId) {
         ChatMessage chatMessage = new ChatMessage(message.getText(),
                 employerProfileService.getById(employerProfileId), message.getDate());
         List<User> list = new ArrayList<>();
@@ -136,17 +136,15 @@ public class ChatRestController {
 
     @PutMapping("set_chat_read_by_profile_id")
     public HttpEntity setChatReadByProfileId(@RequestBody MessageReadDataDTO messageReadDataDTO) {
-
         chatService.setChatReadByProfileId(messageReadDataDTO.getChatId(), messageReadDataDTO.getReaderProfileId(),
-                                            messageReadDataDTO.getMessageId());
-
+                messageReadDataDTO.getMessageId());
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @PutMapping("set_message_read_by_profile_id")
     public HttpEntity setMessageReadByProfileId(@RequestBody MessageReadDataDTO messageReadDataDTO) {
         chatMessageService.setMessageReadByProfileId(messageReadDataDTO.getReaderProfileId(),
-                                                    messageReadDataDTO.getMessageId());
+                messageReadDataDTO.getMessageId());
         return new ResponseEntity(HttpStatus.OK);
     }
 

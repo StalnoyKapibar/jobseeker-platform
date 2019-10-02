@@ -104,7 +104,9 @@ $(document).ready(function () {
                 ['font', ['bold', 'underline', 'clear']]
             ]
         } // set maximum height of editor
+
     });
+    $(".panel-heading").css('background-color', 'white');
 
     // Валидация поля подробного описания ( не менее 100 символов )
     $(".note-editor.note-frame").css("border", "1px solid #dc3545");

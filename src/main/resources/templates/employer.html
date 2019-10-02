@@ -81,6 +81,7 @@
                                         <h3><span id="EPcompanyName"
                                                                       th:text="${employerProfile.companyName}"></span>
                                         </h3>
+                                            <a th:if="${isOwner == true}" th:href="@{'/employer/update/' + ${employerProfile.id}}">Редактировать профиль</a>
                                             <div sec:authorize="hasRole('ROLE_ADMIN')" th:insert="fragments/adminfragments :: admin_user_button(user=${employerUser})"></div>
                                         </div>
                                         <div class="card-body">
@@ -472,8 +473,11 @@
                         </ul>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                     </div>
+                    <div sec:authorize="hasRole('ROLE_EMPLOYER')">
+
+                        <a th:if="${isOwner == true}" class="btn btn-secondary" id="VMedit_butt" href="#">Редактировать вакансию</a>
+                    </div>
                     <div sec:authorize="!hasRole('ROLE_ADMIN')">
-                        <a class="btn btn-secondary" id="VMedit_butt" href="#">Редактировать вакансию</a>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                     </div>
                 </div>
