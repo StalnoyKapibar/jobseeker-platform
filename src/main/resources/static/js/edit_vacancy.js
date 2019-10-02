@@ -156,7 +156,11 @@ $(document).ready(function () {
 
     function validateAndPreview() {
         let isValid = headline_check && address_check && remote_check
-            && salary_min_check && salary_max_check && shrt_desc_check && desc_check;
+            && salary_min_check && salary_max_check && shrt_desc_check && desc_check && minIsLCorrect();
+
+        if (!minIsLCorrect()){
+            window.alert("Неверно указаны промежутки заработной платы");
+        }
 
         if ($("#v_tagsWell").children().length < 2) {
             $("#v_form_group_tags").attr("class", "form-group has-feedback has-error");
@@ -309,4 +313,12 @@ $(document).ready(function () {
                 alert(error.responseJSON.message);
             }
         });
+
+        function minIsLCorrect() {
+            if (parseInt($("#v_salaryMin").val()) <= parseInt($("#v_salaryMax").val()) ||
+                $('#v_salaryMin').val().length < 1 || $('#v_salaryMax').val().length < 1){
+                return true;
+            }
+            return false;
+        }
     }

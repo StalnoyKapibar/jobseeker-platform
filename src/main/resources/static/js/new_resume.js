@@ -81,7 +81,12 @@ $(document).ready(function () {
 
 function validateAndPreview() {
     let isValid = headline_check && address_check && salary_min_check && salary_max_check &&
-        company_check && firstDay_check && lastDay_check && position_check && responsibilities_check;
+        company_check && firstDay_check && lastDay_check && position_check && responsibilities_check &&
+        minIsLCorrect() && dateIsCorrect();
+
+    if (!minIsLCorrect() || !dateIsCorrect()){
+        window.alert("Проверьте правильность последовательности в полях зарплата и опыт работы");
+    }
 
     if ($("#v_tagsWell").children().length < 2) {
         $("#v_form_group_tags").attr("class", "form-group has-feedback has-error");
@@ -372,4 +377,20 @@ function jobOff() {
     lastDay_check = true;
     position_check = true;
     responsibilities_check = true;
+}
+
+function minIsLCorrect() {
+    if (parseInt($("#v_salaryMin").val()) <= parseInt($("#v_salaryMax").val()) ||
+        $('#v_salaryMin').val().length < 1 || $('#v_salaryMax').val().length < 1){
+        return true;
+    }
+    return false;
+}
+
+function dateIsCorrect() {
+    if ($('#v_firstDay').val() <= $('#v_lastDay').val() ||
+        ($('#v_firstDay').val() === null && $('#v_lastDay').val() === null)){
+        return true;
+    }
+    return false;
 }

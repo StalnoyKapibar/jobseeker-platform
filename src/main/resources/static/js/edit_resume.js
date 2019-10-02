@@ -207,7 +207,12 @@ function deleteTag(id, name) {
 function validateAndPreview() {
 
     let isValid = headline_check && address_check && salary_min_check && salary_max_check &&
-        company_check && firstDay_check && lastDay_check && position_check && responsibilities_check;
+        company_check && firstDay_check && lastDay_check && position_check && responsibilities_check &&
+        minIsLCorrect();
+
+    if (!minIsLCorrect()){
+        window.alert("Проверьте правильность последовательности в полях зарплата");
+    }
 
     if ($("#v_tagsWell").children().length < 2) {
         $("#v_form_group_tags").attr("class", "form-group has-feedback has-error");
@@ -464,4 +469,12 @@ function hideExperience() {
     lastDay_check = true;
     position_check = true;
     responsibilities_check = true;
+}
+
+function minIsLCorrect() {
+    if (parseInt($("#v_salaryMin").val()) <= parseInt($("#v_salaryMax").val()) ||
+        $('#v_salaryMin').val().length < 1 || $('#v_salaryMax').val().length < 1){
+        return true;
+    }
+    return false;
 }
