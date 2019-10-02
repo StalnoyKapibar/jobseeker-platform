@@ -29,7 +29,7 @@
             if (iterator >= 1) {
                 clearInterval(interval);
             }
-            iterator += 0.025;
+            iterator += 0.1;
             containerFluid[0].style.opacity = iterator;
         }, 100);
 
@@ -37,7 +37,7 @@
             if (!loader.classList.contains('done')) {
                 loader.classList.add('done');
             }
-        }, 3000);
+        }, 500);
     };
 </script>
 </body>
