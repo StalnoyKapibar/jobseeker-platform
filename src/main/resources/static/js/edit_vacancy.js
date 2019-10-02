@@ -31,6 +31,7 @@ $(document).ready(function () {
             }
         }
     );
+
     bootstrapValidate('#v_address', 'required:', function (isValid) {
         if (isValid) {
             $('#v_address').removeClass('is-invalid');
@@ -100,6 +101,7 @@ $(document).ready(function () {
         e.preventDefault();
         tags_search();
     });
+
     vacancyDescription = $('#v_description').val();
 
     $('#v_description').summernote({
@@ -113,6 +115,7 @@ $(document).ready(function () {
             ]
         } // set maximum height of editor
     });
+
     $(".panel-heading").css('background-color', 'white');
 //   $('#v_description').summernote('pasteHTML', vacancyDescription);
 

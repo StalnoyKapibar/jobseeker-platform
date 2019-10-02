@@ -45,7 +45,6 @@ $(document).ready(function () {
         }
     });
 
-
     bootstrapValidate('#v_remote', 'required:', function (isValid) {
         if (isValid) {
             $('#v_remote').removeClass('is-invalid');

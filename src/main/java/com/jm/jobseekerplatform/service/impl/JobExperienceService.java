@@ -6,6 +6,7 @@ import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.Set;
 
 @Service
@@ -34,7 +35,7 @@ public class JobExperienceService extends AbstractService<JobExperience> {
         return jobExperiences;
     }
 
-    public Set<Long> getAllExperiencesIdForResume(Long id){
+    public Set<BigInteger> getAllExperiencesIdForResume(Long id) {
         return jobExperienceDAO.getAllExperiencesIdForResume(id);
     }
 }

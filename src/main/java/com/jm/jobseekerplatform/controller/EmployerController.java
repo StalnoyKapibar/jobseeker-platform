@@ -134,10 +134,11 @@ public class EmployerController {
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @RequestMapping("/employer/update/{employerProfileId}")
-    public String getEmployerProfileUpdatePage(@PathVariable Long employerProfileId, Model model,  Authentication authentication) {
-        Long userId = ((User) authentication.getPrincipal()).getId();
+    public String getEmployerProfileUpdatePage(@PathVariable Long employerProfileId, Model model,
+                                               Authentication authentication) {
+        Long userId = ((User) authentication.getPrincipal()).getProfile().getId();
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
-        if (employerProfile.getId().equals(employerProfileId)) {
+        if (employerProfile.getId().equals(userId)) {
             model.addAttribute("employerProfile", employerProfile);
             Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
             model.addAttribute("vacancies", vacancies);
@@ -153,7 +154,7 @@ public class EmployerController {
     @GetMapping("/resumes/{seekerProfileId}")
     public String seekerResumesPageForEmployer(@PathVariable Long seekerProfileId, Model model) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        if (seekerProfile != null){
+        if (seekerProfile != null) {
             model.addAttribute("seekerProfileId", seekerProfile.getId());
             model.addAttribute("resumesList", seekerProfile.getResumes());
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);

@@ -20,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.math.BigInteger;
 import java.util.Map;
 import java.util.Set;
 
@@ -94,10 +95,10 @@ public class ResumeRestController {
 
     @RequestMapping(value = "/delete/{resumeId}", method = RequestMethod.GET)
     public ResponseEntity deleteResumeById(@PathVariable Long resumeId) {
-        Set<Long> experiencesId = jobExperienceService.getAllExperiencesIdForResume(resumeId);
+        Set<BigInteger> experiencesId = jobExperienceService.getAllExperiencesIdForResume(resumeId);
         resumeService.deleteByResumeId(resumeId);
-        for(Long expId : experiencesId){
-            jobExperienceService.deleteById(expId);
+        for (BigInteger expId : experiencesId) {
+            jobExperienceService.deleteById(expId.longValue());
         }
         return new ResponseEntity(HttpStatus.OK);
     }

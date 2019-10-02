@@ -143,10 +143,9 @@ public class SeekerController {
     @RequestMapping("/resumes/{resumeId}")
     public String getSingleResume(@PathVariable Long resumeId,
                                   Model model, Authentication authentication) {
-        SeekerProfile seekerProfile = (SeekerProfile) Hibernate.unproxy(seekerProfileService.
-                                                                getById(((User) authentication.getPrincipal())
-                                                                .getProfile().getId()));
-        if (seekerProfile.getId().equals(resumeService.getById(resumeId).getCreatorProfile().getId())){
+        long seekerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
+        if (seekerProfileId == ((SeekerProfile) Hibernate.unproxy(resumeService.getById(resumeId)
+                                                                    .getCreatorProfile())).getId()) {
             model.addAttribute("resumeID", resumeId);
             model.addAttribute("userRole", ((User) authentication.getPrincipal()).getAuthority());
             return "resume/single_resume";
@@ -165,13 +164,14 @@ public class SeekerController {
     @RolesAllowed({"ROLE_SEEKER"})
     @RequestMapping(value = "/resumes/edit/{resumeId}")
     public String editResume(@PathVariable("resumeId") Long resumeId, Authentication authentication, Model model) {
-        SeekerProfile seekerProfile = (SeekerProfile) Hibernate.unproxy(seekerProfileService.
-                                                                getById(((User) authentication.getPrincipal())
-                                                                .getProfile().getId()));
-        if (resumeService.getById(resumeId).getCreatorProfile().getId() == seekerProfile.getId()) {
+        long seekerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
+        if (seekerProfileId == ((SeekerProfile) Hibernate.unproxy(resumeService.getById(resumeId)
+                                                                    .getCreatorProfile())).getId()) {
             model.addAttribute("oldResume", resumeService.getById(resumeId));
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+            return "resume/edit_resume";
         }
-        return "resume/edit_resume";
+        model.addAttribute("status", "403");
+        return "error";
     }
 }
