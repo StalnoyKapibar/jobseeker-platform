@@ -138,7 +138,7 @@ public class EmployerController {
                                                Authentication authentication) {
         Long userId = ((User) authentication.getPrincipal()).getProfile().getId();
         EmployerProfile employerProfile = employerProfileService.getById(employerProfileId);
-        if (employerProfile.getId().equals(employerProfileId)) {
+        if (employerProfile.getId().equals(userId)) {
             model.addAttribute("employerProfile", employerProfile);
             Set<Vacancy> vacancies = vacancyService.getAllByEmployerProfileId(employerProfile.getId());
             model.addAttribute("vacancies", vacancies);
