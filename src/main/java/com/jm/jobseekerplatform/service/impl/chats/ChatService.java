@@ -8,15 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigInteger;
-import java.util.List;
-
 @Service("chatService")
 @Transactional
 public class ChatService extends AbstractService<Chat> {
 
     @Autowired
-    private ChatDAO chatDAO;
+    ChatDAO chatDAO;
 
     public void addChatMessage(Long chatId, ChatMessage chatMessage) {
         Chat chat = getById(chatId);
@@ -26,9 +23,5 @@ public class ChatService extends AbstractService<Chat> {
 
     public void setChatReadByProfileId(Long chatId, Long readerProfileId, Long lastReadMessageId) {
         chatDAO.setChatReadByProfileId(chatId, readerProfileId, lastReadMessageId);
-    }
-
-    public List<BigInteger> getChatMembersIds(Long chatId) {
-        return chatDAO.getChatMembersIds(chatId);
     }
 }

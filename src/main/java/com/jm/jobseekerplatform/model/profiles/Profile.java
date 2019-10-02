@@ -1,17 +1,11 @@
 package com.jm.jobseekerplatform.model.profiles;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.State;
-import com.jm.jobseekerplatform.model.comments.Comment;
 import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
@@ -20,6 +14,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Profile implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -90,4 +85,5 @@ public abstract class Profile implements Serializable {
                 "id=" + id +
                 '}';
     }
+
 }

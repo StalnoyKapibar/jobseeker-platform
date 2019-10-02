@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.model.profiles;
 
 import com.jm.jobseekerplatform.model.EmployerReviews;
-import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Vacancy;
 
 import javax.persistence.*;
@@ -9,7 +8,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -106,6 +104,7 @@ public class EmployerProfile extends Profile implements Serializable {
         } else {
             return 0d;
         }
+
     }
 
     public Set<Vacancy> getVacancies() {

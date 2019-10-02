@@ -248,7 +248,7 @@ function deleteSubscription(employerProfileId, seekerProfileId) {
             request.setRequestHeader(header, token);
         },
         success: function () {
-            location.href = '/seeker/get_subscriptions/';
+            location.href = '/seeker/get_subscriptions/' + seekerProfileId;
         },
         error: function (error) {
             console.log(error);

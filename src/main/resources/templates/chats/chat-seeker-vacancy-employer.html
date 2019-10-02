@@ -13,8 +13,7 @@
     <div class="container-fluid" style="margin-left: 20px ; width: 660px">
         <div class="data_block" id="meetingId" th:text="${meeting.id}"></div>
         <th:block
-                th:replace="fragments/chat-with-topic-fragment::chat-with-topic (${chatId}, ${topic}, ${profileId},
-                ${currentUserId}, ${membersId})"></th:block>
+                th:replace="fragments/chat-with-topic-fragment::chat-with-topic (${chatId}, ${topic}, ${profileId})"></th:block>
         <div>
             <div th:if="${isOwner}" class="text-center mb-2 mr-2 mt-1">
                 <button th:if="${meeting.status==meeting.status.NOT_CONFIRMED}"

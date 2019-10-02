@@ -1,9 +1,7 @@
 package com.jm.jobseekerplatform.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfileBase;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -19,7 +17,6 @@ public class Resume extends CreatedByProfileBase<SeekerProfile> implements Seria
     @Column(name = "headline", nullable = false)
     private String headline;
 
-    @JsonBackReference
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Tag> tags;
 

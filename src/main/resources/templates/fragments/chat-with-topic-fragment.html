@@ -4,8 +4,11 @@
 <head>
     <meta charset="UTF-8">
 </head>
+
 <body>
-<th:block th:fragment="chat-with-topic (chatId, topic, profileId, currentUserId, membersId)">
+
+<th:block th:fragment="chat-with-topic (chatId, topic, profileId)">
+
     <div class="container-fluid" style="margin-left: 20px ; width: 660px">
         <h3 class="text-center mt-5">Тема чата: <span th:text="${topic.getTypeName() + ' ' + topic.headline}"></span></h3>
         <div class="data_block" id="chatId" th:text="${chatId}"></div>
@@ -16,7 +19,7 @@
                     <div class="msg_history mb-3">
                     </div>
                     <div class="type_msg">
-                        <div th:if="${#lists.contains(membersId, currentUserId)}" class="input_msg_write">
+                        <div class="input_msg_write">
                             <input type="text" class="write_msg pl-3 mb-4 mt-3" placeholder="Type a message" />
                             <button onclick="sendMessageButton()" class="msg_send_btn mr-1" type="button">
                                 <img style="filter: invert(1);" src="https://png.pngtree.com/svg/20170329/25907eee9d.png">
@@ -27,10 +30,12 @@
             </div>
         </div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script th:src="@{/js/date_status_format.js}"></script>
     <script th:src="@{/js/chats/new_chat.js}"></script>
 </th:block>
+
 </body>
 </html>

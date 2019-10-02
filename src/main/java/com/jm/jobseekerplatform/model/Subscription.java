@@ -22,7 +22,7 @@ public class Subscription implements Serializable {
     @ManyToOne
     private SeekerProfile seekerProfile;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     private Set<Tag> tags;
 
     public Subscription() {
@@ -61,4 +61,5 @@ public class Subscription implements Serializable {
     public Long getId() {
         return id;
     }
+
 }

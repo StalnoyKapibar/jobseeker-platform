@@ -29,9 +29,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Controller
 public class ChatController {
@@ -61,78 +61,81 @@ public class ChatController {
     public String getChatById(@PathVariable("chatId") Long chatId, Authentication authentication, Model model) {
         User user = (User) authentication.getPrincipal();
         Long currentProfileId = user.getProfile().getId();
-        List<BigInteger> membersId = chatService.getChatMembersIds(chatId);
-        if (membersId.contains(BigInteger.valueOf(user.getId())) || user.getProfile().getTypeName()
-                .equalsIgnoreCase("Администратор")) {
-            ChatWithTopic chatWithTopic = chatWithTopicService.getById(chatId);
-            model.addAttribute("profileId", currentProfileId);
-            model.addAttribute("chatId", chatWithTopic.getId());
-            model.addAttribute("topicName", chatWithTopic.getTopic().getTypeName());
-            model.addAttribute("topic", chatWithTopic.getTopic());
-            model.addAttribute("currentUserId", BigInteger.valueOf(user.getId()));
-            model.addAttribute("membersId", membersId);
-            return "chats/chat";
-        } else {
-            model.addAttribute("status", "403");
-            return "error";
-        }
+        ChatWithTopic chatWithTopic = chatWithTopicService.getById(chatId);
+
+        model.addAttribute("profileId", currentProfileId);
+        model.addAttribute("chatId", chatWithTopic.getId());
+
+        model.addAttribute("topicName", chatWithTopic.getTopic().getTypeName());
+        model.addAttribute("topic", chatWithTopic.getTopic());
+
+        return "chats/chat";
     }
 
     @RequestMapping("/chat/seeker-vacancy-employer/{chatId}")
-    public String getChatSeekerVacancyEmployerById(@PathVariable("chatId") Long chatId, Authentication authentication,
-                                                   Model model) {
+    public String getChatSeekerVacancyEmployerById(@PathVariable("chatId") Long chatId, Authentication authentication, Model model) {
         User user = (User) authentication.getPrincipal();
         Long currentProfileId = user.getProfile().getId();
-        List<BigInteger> membersId = chatService.getChatMembersIds(chatId);
         ChatWithTopic chatWithTopic = chatWithTopicService.getById(chatId);
+
         model.addAttribute("profileId", currentProfileId);
         model.addAttribute("chatId", chatWithTopic.getId());
+
         model.addAttribute("topicName", chatWithTopic.getTopic().getTypeName());
         model.addAttribute("topic", chatWithTopic.getTopic());
-        model.addAttribute("currentUserId", BigInteger.valueOf(user.getId()));
-        model.addAttribute("membersId", membersId);
+
         Long seekerId = chatWithTopic.getCreatorProfile().getId();
         Long vacancyId = chatWithTopic.getTopic().getId();
+
         ChatWithTopicVacancy chatWithTopicVacancy = (ChatWithTopicVacancy) chatWithTopic;
         Meeting newMeeting = chatWithTopicVacancy.getTopic().getMeetings().stream()
                 .filter(meeting -> meeting.getSeekerProfile().getId().equals(seekerId)
                         && meeting.getVacancy().getId().equals(vacancyId))
                 .findFirst()
                 .orElse(null);
+
         model.addAttribute("meeting", newMeeting);
         model.addAttribute("isOwner", !currentProfileId.equals(seekerId));
+
         return "chats/chat-seeker-vacancy-employer";
     }
 
     @RequestMapping("/private_chat/{chatId}")
-    public String getPrivateChatById(@PathVariable("chatId") Long chatId, Model model, Authentication authentication,
-                                     HttpServletResponse httpServletResponse) throws IOException {
+    public String getPrivateChatById(@PathVariable("chatId") Long chatId, Model model,
+                                     Authentication authentication, HttpServletResponse httpServletResponse) throws IOException {
         Chat chat = chatService.getById(chatId);
         User user = (User) authentication.getPrincipal();
         ChatAccessHandler.isContainInChatMembers(chat, userService.findByEmail(user.getUsername()), httpServletResponse);
         model.addAttribute("profileId", user.getProfile().getId());
         if (user.getAuthority().toString().equals("ROLE_EMPLOYER")) {
             model.addAttribute("employerProfileId", user.getProfile().getId());
+            model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId( user.getId()));
         } else if (user.getAuthority().toString().equals("ROLE_SEEKER")) {
             model.addAttribute("seekerProfileId", user.getProfile().getId());
+            model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId( user.getId()));
         } else {
             model.addAttribute("adminProfileId", user.getProfile().getId());
+            model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId( user.getId()));
         }
-        model.addAttribute("chats", chatWithTopicService.getAllChatsByMemberProfileId(user.getId()));
         if (chat instanceof ChatWithTopic) {
             ChatWithTopic chatWithTopic = (ChatWithTopic) chat;
             model.addAttribute("chatWithTopic", chatWithTopic);
+
         }
         return "chats/private_chat";
     }
 
     @RequestMapping("/chat/vacancy/{vacancyId:\\d+}")
     public String getChatByVacancyAndAuthenticatedUser(@PathVariable("vacancyId") Long vacancyId,
-                                                       Authentication authentication) {
+                                                       Authentication authentication, Model model) {
+
         User authenticatedUser = ((User) authentication.getPrincipal());
         Profile authenticatedProfile = authenticatedUser.getProfile();
-        ChatWithTopic<Vacancy> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType(vacancyId,
-                authenticatedProfile.getId(), ChatWithTopicVacancy.class);
+
+        //ChatWithTopicVacancy chat = chatWithTopicVacancyService.getByTopicIdAndCreatorProfileId(vacancyId, authenticatedProfile.getId());
+        //ChatWithTopic<Vacancy> chat = chatWithTopicService.getByTopicIdCreatorProfileIdTopicType(vacancyId, authenticatedProfile.getId(), Vacancy.class);
+        ChatWithTopic<Vacancy> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType(vacancyId, authenticatedProfile.getId(), ChatWithTopicVacancy.class);
+
         if (chat == null) {
             Vacancy vacancy = vacancyService.getById(vacancyId);
             EmployerProfile employerProfile = vacancy.getCreatorProfile();
@@ -142,6 +145,7 @@ public class ChatController {
             chat = new ChatWithTopicVacancy(authenticatedProfile, chatMembers, vacancy);
             chatWithTopicService.add(chat);
         }
+
         return "redirect:/chat/" + chat.getId();
     }
 
@@ -150,8 +154,8 @@ public class ChatController {
                                                       Authentication authentication) {
         User authenticatedUser = (User) authentication.getPrincipal();
         Profile authenticatedProfile = authenticatedUser.getProfile();
-        ChatWithTopic<Resume> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType
-                (resumeId, authenticatedProfile.getId(), ChatWithTopicResume.class);
+
+        ChatWithTopic<Resume> chat = chatWithTopicService.getChatByTopicIdCreatorProfileIdChatType(resumeId, authenticatedProfile.getId(), ChatWithTopicResume.class);
         if (chat == null) {
             Resume resume = resumeService.getById(resumeId);
             SeekerProfile seekerProfile = (SeekerProfile) Hibernate.unproxy(resume.getCreatorProfile());

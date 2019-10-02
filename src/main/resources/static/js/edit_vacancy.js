@@ -109,7 +109,6 @@ $(document).ready(function () {
             ]
         } // set maximum height of editor
     });
-    $(".panel-heading").css('background-color', 'white');
 //   $('#v_description').summernote('pasteHTML', vacancyDescription);
 
 // Валидация поля подробного описания ( не менее 100 символов )

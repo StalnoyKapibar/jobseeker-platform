@@ -43,6 +43,10 @@ body {
     height: calc(100%);
 }
 
+.btn {
+    cursor: pointer;
+}
+
 li {
     list-style-type: none;
 }
