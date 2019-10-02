@@ -200,7 +200,7 @@
                                                                            th:onclick="'showEditReview('+${review.id}+')'"></i>
                                                                     </div>
                                                                     <div class="employerComplaint"
-                                                                         sec:authorize="hasRole('ROLE_EMPLOYER')">
+                                                                         sec:authorize="hasRole('ROLE_EMPLOYER')"  th:if="${isOwner}">
                                                                         <i class="fas fa-ban"
                                                                            title="пожаловаться администратору"
                                                                            data-toggle="modal"
