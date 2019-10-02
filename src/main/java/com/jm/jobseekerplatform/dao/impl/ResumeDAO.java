@@ -31,8 +31,8 @@ public class ResumeDAO extends AbstractDAO<Resume> {
         return new ResumePageDTO(resumes, totalPages, seeker);
     }
 
-    public Page<Resume> getPagableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(Map<String, Object> queryParamsMap,
-                                                                                   int pageNumber, int pageSize) {
+    public Page<Resume> getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(Map<String,
+                                                    Object> queryParamsMap, int pageNumber, int pageSize) {
         String query = "select r from Resume r ";
         String queryCount = "select count(distinct r)  from Resume r ";
         StringBuilder whereQuery = new StringBuilder(query);
@@ -86,7 +86,8 @@ public class ResumeDAO extends AbstractDAO<Resume> {
     }
 
     public Page<Resume> getResumesByTag(Set<Tag> tags, int limit, int page) {
-        Query query = entityManager.createQuery("select r from Resume r join r.tags t where t in (:tags) group by (r.id)", Resume.class)
+        Query query = entityManager.createQuery("select r from Resume r join r.tags t where t" +
+                " in (:tags) group by (r.id)", Resume.class)
                 .setParameter("tags", tags);
         long totalElements = (long) entityManager
                 .createQuery("select count(distinct r) from Resume r join r.tags t where t in (:tags)")
@@ -100,7 +101,8 @@ public class ResumeDAO extends AbstractDAO<Resume> {
     public Page<Resume> getResumesSortByCity(String city, int limit, int page) {
         page = (page == 0) ? page : --page;
         Query query = entityManager
-                .createQuery("select r from Resume r join r.city c join CityDistance cd on c=cd.to where cd.from.name=:city order by cd.distance", Resume.class);
+                .createQuery("select r from Resume r join r.city c join CityDistance cd" +
+                        " on c=cd.to where cd.from.name=:city order by cd.distance", Resume.class);
         long totalElements = (long) entityManager.createQuery("select count(r) from Resume r").getSingleResult();
         int totalPages = getTotalPages(totalElements, limit);
         List<Resume> resumes = query.setParameter("city", city)
@@ -117,7 +119,8 @@ public class ResumeDAO extends AbstractDAO<Resume> {
 
 
     public void deleteResumeById(Long id) {
-        entityManager.createNativeQuery("delete from profile_resumes where profile_resumes.resumes_id = :id").setParameter("id", id).executeUpdate();
+        entityManager.createNativeQuery("delete from profile_resumes where profile_resumes.resumes_id = :id")
+                .setParameter("id", id).executeUpdate();
         entityManager.createQuery("delete from Resume where id = :id").setParameter("id", id).executeUpdate();
     }
 }
