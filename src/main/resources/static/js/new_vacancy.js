@@ -45,7 +45,6 @@ $(document).ready(function () {
         }
     });
 
-
     bootstrapValidate('#v_remote', 'required:', function (isValid) {
         if (isValid) {
             $('#v_remote').removeClass('is-invalid');
@@ -56,29 +55,29 @@ $(document).ready(function () {
         }
     });
 
-    bootstrapValidate('#v_salaryMin', 'regex:^[0-9]{4,7}$:Поле может содержать цифры от 4 до 7 разрядов',
+    bootstrapValidate('#v_salaryMin', 'regex:^[0-9]{4,7}$:Поле может содержать цифры от 4 до 7 разрядов' +
+        ' или остаться пустым',
         function (isValid) {
             if (isValid) {
                 $('#v_salaryMin').addClass('is-valid');
                 salary_min_check = true;
             } else {
-                salary_min_check = false;
+                let check_salary = $('#v_salaryMin').val();
+                salary_min_check = check_salary.length < 1;
             }
+        });
 
-        }
-    );
-
-    bootstrapValidate('#v_salaryMax', 'regex:^[0-9]{4,7}$:Поле может содержать цифры от 4 до 7 разрядов',
+    bootstrapValidate('#v_salaryMax', 'regex:^[0-9]{4,7}$:Поле может содержать цифры от 4 до 7 разрядов' +
+        ' или остаться пустым',
         function (isValid) {
             if (isValid) {
                 $('#v_salaryMax').addClass('is-valid');
                 salary_max_check = true;
             } else {
-                salary_max_check = false;
+                let check_salary = $('#v_salaryMax').val();
+                salary_max_check = check_salary.length < 1;
             }
-
-        }
-    );
+        });
 
     bootstrapValidate('#v_shortDescription', 'required:', function (isValid) {
         if (isValid) {
@@ -120,6 +119,7 @@ $(document).ready(function () {
             desc_check = false;
         }
     });
+    $(".panel-heading").css('background-color', 'white');
 });
 
 function tags_search() {
@@ -135,7 +135,11 @@ function tags_search() {
 
 function validateAndPreview() {
     let isValid = headline_check&&address_check&&remote_check
-        &&salary_min_check&&salary_max_check&&shrt_desc_check&&desc_check;
+        &&salary_min_check&&salary_max_check&&shrt_desc_check&&desc_check && minIsLCorrect();
+
+    if (!minIsLCorrect()){
+        window.alert("Неверно указаны промежутки заработной платы");
+    }
 
     if ($("#v_tagsWell").children().length < 2) {
         $("#v_form_group_tags").attr("class", "form-group has-feedback has-error");
@@ -284,4 +288,12 @@ function sendVacancy() {
             alert(error.responseJSON.message);
         }
     });
+}
+
+function minIsLCorrect() {
+    if (parseInt($("#v_salaryMin").val()) <= parseInt($("#v_salaryMax").val()) ||
+        $('#v_salaryMin').val().length < 1 || $('#v_salaryMax').val().length < 1){
+        return true;
+    }
+    return false;
 }
