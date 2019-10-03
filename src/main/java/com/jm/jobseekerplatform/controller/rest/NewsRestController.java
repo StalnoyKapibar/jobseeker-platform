@@ -114,9 +114,9 @@ public class NewsRestController {
                                    @RequestParam("newsDescription") String newsDescription) {
         News news = newsService.getById(newsId);
         //Если обновление новости требует последующей проверки администратором
-        if(isNewsNeedValidate(news)) {
+        if( isNewsNeedValidate(news) ) {
             //Только одно обновление новости для проверки допустимо
-            if(draftNewsService.isNewsOnValidation(newsId)){
+            if( draftNewsService.isNewsOnValidation(newsId) ) {
                 return new ResponseEntity(HttpStatus.BAD_REQUEST);
             }
             DraftNews draftNews = new DraftNews();
