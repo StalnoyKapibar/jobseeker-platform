@@ -13,40 +13,31 @@
         <div class="main-block chromeFix" layout:fragment="content"></div>
     </div>
 </div>
-
+<div class="block" id="loader">
+    <div class="loader-inner box1"></div>
+    <div class="loader-inner box2"></div>
+    <div class="loader-inner box3"></div>
+</div>
 <script>
-    let loader = document.createElement("div");
-    loader.className = "loader";
-    loader.style = "visibility: visible";
+    document.body.onload = function () {
+        let containerFluid = document.getElementsByClassName("container-fluid");
+        containerFluid[0].style.opacity = 0;
+        let loader = document.getElementById("loader");
 
-    let circle1 = document.createElement("div");
-    circle1.className = "circle";
-    let circle2 = document.createElement("div");
-    circle2.className = "circle";
+        let iterator = 0;
+        let interval = setInterval(function () {
+            if (iterator >= 1) {
+                clearInterval(interval);
+            }
+            iterator += 0.1;
+            containerFluid[0].style.opacity = iterator;
+        }, 100);
 
-    let face1 = document.createElement("div");
-    face1.className = "face face1";
-    let face2 = document.createElement("div");
-    face2.className = "face face2";
-
-    face1.appendChild(circle1);
-    face2.appendChild(circle2);
-    loader.appendChild(face1);
-    loader.appendChild(face2);
-
-    document.body.appendChild(loader);
-
-    window.addEventListener("load", function () {
-        loader.style = "visibility: hidden";
-    }, false);
-
-    window.addEventListener("unload", function () {
-        loader.style = "visibility: visible";
-    }, false);
-
-    window.onbeforeunload = function () {
-        loader.style = "visibility: visible";
-        return null;
+        setTimeout(function () {
+            if (!loader.classList.contains('done')) {
+                loader.classList.add('done');
+            }
+        }, 500);
     };
 </script>
 </body>
