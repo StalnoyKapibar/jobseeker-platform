@@ -13,6 +13,10 @@ $(document).ready(function () {
     $(".panel-heading").css('background-color', 'white');
 
     printEmployerNews();
+
+    $('#editNewsModal').on('hidden.bs.modal', function () {
+        resetEditModalWindowElements();
+    });
 });
 
 function printEmployerNews() {
@@ -96,10 +100,15 @@ function editNews(newsId) {
             request.setRequestHeader(header, token);
         },
         success: function (data) {
-            $("#NMId").val(data.id);
-            $("#NMHeadline").val(data.headline);
-            $("#NMDescription").summernote('code', data.description).val();
-            $("#NMAuthorId").val(data.author);
+            $("#NMId").val(data.news.id);
+            $("#NMHeadline").val(data.news.headline);
+            $("#NMDescription").summernote('code', data.news.description);
+            var buttonTitle = data.needValidate ? "Отправить на проверку" : "Отправить";
+            $("#editNewsModal button.btn-success").html(buttonTitle);
+
+            if(data.onValidation) {
+                disableEditModalWindowElements();
+            }
         },
         error: function (error) {
             console.log(error);
@@ -140,4 +149,20 @@ function getFormattedDate(dateObject){
 
 function newsDescription(newsId) {
     $("#NMViewDescription").summernote('code', $('#newsDescription-' + newsId).val());
+}
+
+function disableEditModalWindowElements() {
+    $('#NMDescription').summernote('disable');
+    $("#editNewsModal button.btn-success").attr("disabled", true);
+    $("#NMHeadline").attr("disabled", true);
+    $("#alertModalWindow").html("Обновленная новость ожидает проверку!<br />Текущее изменение недоступно!");
+    $("#alertModalWindow").show();
+}
+
+function resetEditModalWindowElements() {
+    $('#NMDescription').summernote('enable');
+    $("#editNewsModal button.btn-success").attr("disabled", false);
+    $("#NMHeadline").attr("disabled", false);
+    $("#alertModalWindow").html("");
+    $("#alertModalWindow").hide();
 }
