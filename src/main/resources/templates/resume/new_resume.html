@@ -102,8 +102,8 @@
                                             </button>
                                         </span>
                                         </div>
-                                        <input name="v_address" id="v_address"
-                                               placeholder="<----- Введите адрес или выберите на карте"
+                                        <input name="v_address" id="v_address" disabled
+                                               placeholder="<----- Выберите адрес на карте"
                                                class="form-control is-invalid" type="text" readonly>
                                     </div>
                                 </div>
@@ -231,7 +231,7 @@
                                     </button>
                                     <button type="button" id="cancelButton" class="btn-sm btn-warning"
                                             onclick="jobOff()"
-                                            style="width: 80px">Отмена
+                                            style="width: 80px" disabled="true">Отмена
                                     </button>
                                 </div>
                             </div>
@@ -240,8 +240,8 @@
                                 <label class="col-md-2 control-label"></label>
                                 <div class="col-md-10" style="display: flex; justify-content: center;"><br>
                                     <button type="button" class="btn btn-warning"
-                                            onclick="validateAndPreview()" style="width: 150px;"> Создать
-                                        <i class="fas fa-paper-plane "></i>
+                                            onclick="validateAndPreview()" style="width: 150px;"> Отправить
+                                        <i class="fas fa-paper-plane"></i>
                                     </button>
                                 </div>
                             </div>

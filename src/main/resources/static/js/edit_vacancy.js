@@ -31,6 +31,7 @@ $(document).ready(function () {
             }
         }
     );
+
     bootstrapValidate('#v_address', 'required:', function (isValid) {
         if (isValid) {
             $('#v_address').removeClass('is-invalid');
@@ -61,24 +62,28 @@ $(document).ready(function () {
             remote_check = false;
         }
     });
-    bootstrapValidate('#v_salaryMin', 'regex:^[0-9]{0,100}$:Поле может содержать цифры от одного до 10 разрядов',
+
+    bootstrapValidate('#v_salaryMin', 'regex:^[0-9]{4,7}$:Поле может содержать цифры от 4 до 7 разрядов' +
+        ' или остаться пустым',
         function (isValid) {
             if (isValid) {
                 $('#v_salaryMin').addClass('is-valid');
                 salary_min_check = true;
             } else {
-                salary_min_check = false;
+                let check_salary = $('#v_salaryMin').val();
+                salary_min_check = check_salary.length < 1;
             }
         });
 
-
-    bootstrapValidate('#v_salaryMax', 'regex:^[0-9]{0,100}$:Поле может содержать цифры от одного до 10 разрядов',
+    bootstrapValidate('#v_salaryMax', 'regex:^[0-9]{4,7}$:Поле может содержать цифры от 4 до 7 разрядов' +
+        ' или остаться пустым',
         function (isValid) {
             if (isValid) {
                 $('#v_salaryMax').addClass('is-valid');
                 salary_max_check = true;
             } else {
-                salary_max_check = false;
+                let check_salary = $('#v_salaryMax').val();
+                salary_max_check = check_salary.length < 1;
             }
         });
 
@@ -96,6 +101,7 @@ $(document).ready(function () {
         e.preventDefault();
         tags_search();
     });
+
     vacancyDescription = $('#v_description').val();
 
     $('#v_description').summernote({
@@ -109,6 +115,8 @@ $(document).ready(function () {
             ]
         } // set maximum height of editor
     });
+
+    $(".panel-heading").css('background-color', 'white');
 //   $('#v_description').summernote('pasteHTML', vacancyDescription);
 
 // Валидация поля подробного описания ( не менее 100 символов )
@@ -148,7 +156,11 @@ $(document).ready(function () {
 
     function validateAndPreview() {
         let isValid = headline_check && address_check && remote_check
-            && salary_min_check && salary_max_check && shrt_desc_check && desc_check;
+            && salary_min_check && salary_max_check && shrt_desc_check && desc_check && minIsLCorrect();
+
+        if (!minIsLCorrect()){
+            window.alert("Неверно указаны промежутки заработной платы");
+        }
 
         if ($("#v_tagsWell").children().length < 2) {
             $("#v_form_group_tags").attr("class", "form-group has-feedback has-error");
@@ -301,4 +313,12 @@ $(document).ready(function () {
                 alert(error.responseJSON.message);
             }
         });
+
+        function minIsLCorrect() {
+            if (parseInt($("#v_salaryMin").val()) <= parseInt($("#v_salaryMax").val()) ||
+                $('#v_salaryMin').val().length < 1 || $('#v_salaryMax').val().length < 1){
+                return true;
+            }
+            return false;
+        }
     }
