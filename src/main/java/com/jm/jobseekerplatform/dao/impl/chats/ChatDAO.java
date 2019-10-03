@@ -4,12 +4,16 @@ import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.chats.Chat;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
+import java.util.List;
+
 @Repository("chatDAO")
 public class ChatDAO extends AbstractDAO<Chat> {
 
     public void setChatReadByProfileId(Long chatId, Long readerProfileId, Long lastReadMessageId) {
         entityManager
-                .createNativeQuery("INSERT INTO chat_message_is_read_by_profiles_id (chat_message_id, is_read_by_profiles_id) " +
+                .createNativeQuery("INSERT INTO chat_message_is_read_by_profiles_id " +
+                                "(chat_message_id, is_read_by_profiles_id) " +
                         "SELECT cmirbpi.chat_message_id, :readerProfileId " +
                         "FROM chat_message_is_read_by_profiles_id cmirbpi " +
                         "         JOIN chats_chat_messages ccm ON cmirbpi.chat_message_id = ccm.chat_messages_id " +
@@ -25,5 +29,10 @@ public class ChatDAO extends AbstractDAO<Chat> {
                 .setParameter("chatId", chatId)
                 .setParameter("lastReadMessageId", lastReadMessageId)
                 .executeUpdate();
+    }
+
+    public List<BigInteger> getChatMembersIds(Long chatId) {
+        return entityManager.createNativeQuery("SELECT chat_members_id FROM chats_chat_members chatmembers " +
+                "WHERE chatmembers.chat_id = :chatId").setParameter("chatId", chatId).getResultList();
     }
 }

@@ -22,6 +22,7 @@ $(document).ready(function () {
     lng = parseFloat($("#long").val());
     let address = getAddressByCoords(lat, lng);
     $("#v_address").val(address);
+
     bootstrapValidate('#v_headline', 'regex:^[A-Za-z0-9А-Яа-я ()\\-]{3,100}$:' +
         'Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов',
         function (isValid) {
@@ -33,6 +34,7 @@ $(document).ready(function () {
             }
         }
     );
+
     bootstrapValidate('#v_address', 'required:', function (isValid) {
         if (isValid) {
             $('#v_address').removeClass('is-invalid');
@@ -43,6 +45,7 @@ $(document).ready(function () {
             address_check = false;
         }
     });
+
     bootstrapValidate('#v_address_modal', 'required:', function (isValid) {
         if (isValid) {
             $('#v_address_modal').removeClass('is-invalid');
@@ -52,24 +55,31 @@ $(document).ready(function () {
             $('#v_address_modal').addClass('is-invalid');
         }
     });
-    bootstrapValidate('#v_salaryMin', 'regex:^[0-9]{0,100}$:Поле может содержать цифры от одного до 10 разрядов',
+
+    bootstrapValidate('#v_salaryMin', 'regex:^[0-9]{4,7}$:Поле может содержать цифры от 4 до 7 разрядов' +
+        ' или остаться пустым',
         function (isValid) {
             if (isValid) {
                 $('#v_salaryMin').addClass('is-valid');
                 salary_min_check = true;
             } else {
-                salary_min_check = false;
+                let check_salary = $('#v_salaryMin').val();
+                salary_min_check = check_salary.length < 1;
             }
         });
-    bootstrapValidate('#v_salaryMax', 'regex:^[0-9]{0,100}$:Поле может содержать цифры от одного до 10 разрядов',
+
+    bootstrapValidate('#v_salaryMax', 'regex:^[0-9]{4,7}$:Поле может содержать цифры от 4 до 7 разрядов' +
+        ' или остаться пустым',
         function (isValid) {
             if (isValid) {
                 $('#v_salaryMax').addClass('is-valid');
                 salary_max_check = true;
             } else {
-                salary_max_check = false;
+                let check_salary = $('#v_salaryMax').val();
+                salary_max_check = check_salary.length < 1;
             }
         });
+
     if (checkJobsExist()) {
         let beginDate = new Date($("#v_firstDay").val());
         let endDate = new Date($("#v_lastDay").val());
@@ -86,6 +96,7 @@ $(document).ready(function () {
                 }
             }
         );
+
         bootstrapValidate('#v_firstDays', 'required:', function (isValid) {
             if (isValid) {
                 $('#v_firstDays').removeClass('is-invalid');
@@ -95,6 +106,7 @@ $(document).ready(function () {
                 firstDay_check = false;
             }
         });
+
         bootstrapValidate('#v_lastDays', 'required:', function (isValid) {
             if (isValid) {
                 $('#v_lastDays').removeClass('is-invalid');
@@ -104,6 +116,7 @@ $(document).ready(function () {
                 lastDay_check = false;
             }
         });
+
         bootstrapValidate('#v_position', 'regex:^[A-Za-z0-9А-Яа-я ()\\-]{3,100}$:' +
             'Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов',
             function (isValid) {
@@ -115,6 +128,7 @@ $(document).ready(function () {
                 }
             }
         );
+
         bootstrapValidate('#v_responsibilities', 'regex:^[A-Za-z0-9А-Яа-я ()\\-]{3,100}$:' +
             'Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов',
             function (isValid) {
@@ -193,7 +207,12 @@ function deleteTag(id, name) {
 function validateAndPreview() {
 
     let isValid = headline_check && address_check && salary_min_check && salary_max_check &&
-        company_check && firstDay_check && lastDay_check && position_check && responsibilities_check;
+        company_check && firstDay_check && lastDay_check && position_check && responsibilities_check &&
+        minIsLCorrect();
+
+    if (!minIsLCorrect()){
+        window.alert("Проверьте правильность последовательности в полях зарплата");
+    }
 
     if ($("#v_tagsWell").children().length < 2) {
         $("#v_form_group_tags").attr("class", "form-group has-feedback has-error");
@@ -450,4 +469,12 @@ function hideExperience() {
     lastDay_check = true;
     position_check = true;
     responsibilities_check = true;
+}
+
+function minIsLCorrect() {
+    if (parseInt($("#v_salaryMin").val()) <= parseInt($("#v_salaryMax").val()) ||
+        $('#v_salaryMin').val().length < 1 || $('#v_salaryMax').val().length < 1){
+        return true;
+    }
+    return false;
 }

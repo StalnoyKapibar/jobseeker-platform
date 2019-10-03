@@ -6,13 +6,14 @@ import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.Set;
 
 @Service
 public class JobExperienceService extends AbstractService<JobExperience> {
 
     @Autowired
-    JobExperienceDAO jobExperienceDAO;
+    private JobExperienceDAO jobExperienceDAO;
 
     public Set<JobExperience> validateJobExperiences(Set<JobExperience> jobExperiences) {
         for (JobExperience jobExperience : jobExperiences) {
@@ -32,5 +33,9 @@ public class JobExperienceService extends AbstractService<JobExperience> {
             }
         }
         return jobExperiences;
+    }
+
+    public Set<BigInteger> getAllExperiencesIdForResume(Long id) {
+        return jobExperienceDAO.getAllExperiencesIdForResume(id);
     }
 }
