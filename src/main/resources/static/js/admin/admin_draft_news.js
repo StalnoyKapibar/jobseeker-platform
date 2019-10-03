@@ -23,7 +23,8 @@ function resetDraftTableContent(filter = 'ACTIVE') {
             tBodyHtml += '<tr>'
             tBodyHtml += '<td>' + draft.id + '</td>';
             tBodyHtml += '<td>' + draft.headline + '</td>';
-            var description = draft.description.length > 100 ? draft.description.substr(0, 100) + '...' : '';
+            var description = draft.description.length > 100 ?
+                draft.description.substr(0, 100) + '...' : draft.description;
             tBodyHtml += '<td>' + description + '</td>';
             tBodyHtml += '<td class="text-center">';
             if (draft.valid == null) {

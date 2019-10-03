@@ -113,9 +113,27 @@ public class NewsRestController {
                                    @RequestParam("newsHeadline") String newsHeadline,
                                    @RequestParam("newsDescription") String newsDescription) {
         News news = newsService.getById(newsId);
-        news.setHeadline(newsHeadline);
-        news.setDescription(newsDescription);
-        newsService.update(news);
+        //Если обновление новости требует последующей проверки администратором
+        if(isNewsNeedValidate(news)) {
+            //Только одно обновление новости для проверки допустимо
+            if(draftNewsService.isNewsOnValidation(newsId)){
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+            DraftNews draftNews = new DraftNews();
+            draftNews.setHeadline(newsHeadline);
+            draftNews.setDescription(newsDescription);
+            draftNews.setOriginal(news);
+            draftNewsService.add(draftNews);
+        } else {
+            news.setHeadline(newsHeadline);
+            news.setDescription(newsDescription);
+            newsService.update(news);
+        }
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    private boolean isNewsNeedValidate(News news) {
+        return news.getNumberOfViews() != null ?
+                news.getNumberOfViews() >= MIN_NUMBER_OF_VIEWS_FOR_VALIDATE : false;
     }
 }

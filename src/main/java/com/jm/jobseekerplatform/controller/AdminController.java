@@ -30,12 +30,16 @@ public class AdminController {
 
     @Autowired
     private DraftNewsService draftNewsService;
+
     @Autowired
     private EmployerUserService employerUserService;
+
     @Autowired
     private SeekerUserService seekerUserService;
+
     @Autowired
     private VacancyService vacancyService;
+
     @Autowired
     private TagService tagService;
 
