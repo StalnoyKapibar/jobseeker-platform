@@ -126,37 +126,58 @@
 					</div>
 				</div>
 
-
-
 				<div class="form-group">
 					<label>Profile vacancies : </label>
 					<div class="input-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text mycss"><i class="fas fa-copy"></i></span>
-						</div>
-						<select id="employerVacancies" name="employerVacancies" class="input-group-text mycssBorder">
-							<option th:each = "vacancy : ${vacancies}"
-									th:value = "${vacancy.getId()}"
-									th:text = "${vacancy.headline}"
-									th:selected = "${vacancy == 0}">
-							</option>
-						</select>
+						<table class="table table-striped table-hover">
+							<thead>
+								<tr align="center">
+									<th scope="col">id</th>
+									<th scope="col">Vacancy name</th>
+									<th scope="col">View</th>
+									<th scope="col">Delete</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each = "vac : ${vacancies}">
+									<th th:text="${vac.getId()}" style="padding: 0 10px; text-align: center"></th>
+									<td th:text="${vac.headline}" style="padding: 0 10px"></td>
+									<td style="padding: 0 10px" align="center">
+										<a th:href="@{'/vacancy/' + ${vac.getId()}}">View</a>
+
+									</td>
+									<td style="padding: 0 10px" align="center">
+										<a th:href="@{'/vacancyDelete/' + ${vac.getId()}}">Delete</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label>Profile reviews : </label>
 					<div class="input-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text mycss"><i class="fas fa-comment-dots"></i></span>
-						</div>
-						<select id="employerReviews" name="employerReviews" class="input-group-text mycssBorder">
-							<option th:each="review : ${employerProfile.reviews}"
-									th:value="${review.reviews}"
-									th:text="${review.reviews}"
-									th:selected="${review==0}">
-							</option>
-						</select>
+						<table class="table table-striped table-hover">
+							<thead>
+								<tr align="center">
+									<th scope="col">id</th>
+									<th scope="col">Text review</th>
+									<th scope="col">Creator name</th>
+									<th scope="col">View</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="review : ${employerProfile.reviews}">
+									<th th:text="${review.id}" style="padding: 0 10px; text-align: center"></th>
+									<td th:text="${review.reviews}" style="padding: 0 10px"></td>
+									<td th:text="${review.getHeadline()}" style="padding: 0 10px"></td>
+									<td style="padding: 0 10px" align="center">
+										<a href="#">View</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 
@@ -169,12 +190,9 @@
 		</div>
 	</div>
 
-	<div>New div</div>
-
 </div>
 <div class="container-fluid" layout:fragment="content-script">
 	<script src="/js/admin/admin_employers.js"></script>
-
 </div>
 </body>
 </html>

@@ -8,6 +8,7 @@ $(document).ready(function () {
             param.prop('selected', true);
         }
     });
+    
     $('#sorBy option').each(function () {
         var param = $(this);
         if (location.href.indexOf(param.val()) !== -1) {

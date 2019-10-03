@@ -154,5 +154,18 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         vacancies.addAll(query.getResultList());
         return vacancies;
     }
-}
 
+	public void vacancyDeleteDAO(Long vacid) {
+		List<String> queries = new ArrayList<>();
+		queries.add("DELETE FROM vacancies_tags WHERE vacancy_id = :id");
+		queries.add("DELETE FROM profile_favorite_vacancy WHERE favorite_vacancy_id = :id");
+		queries.add("DELETE FROM vacancies WHERE id = :id");
+		queries.forEach(
+				query -> entityManager
+						.createNativeQuery(query)
+						.setParameter("id", vacid)
+						.executeUpdate()
+		);
+	}
+
+}

@@ -234,4 +234,11 @@ public class MainController {
         }
         return "password_reset";
     }
+
+	@RequestMapping(value = "/vacancyDelete/{vacancyId}", method = RequestMethod.GET)
+	public String vacancyDelete(@PathVariable Long vacancyId) {
+		vacancyService.vacancyDelete(vacancyId);
+		return "redirect:/admin/employers";
+	}
+
 }

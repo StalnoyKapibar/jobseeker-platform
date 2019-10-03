@@ -153,4 +153,9 @@ public class VacancyService extends AbstractService<Vacancy> {
         oldVacancy.setTags(tagService.matchTagsByName(vacancy.getTags()));
         return true;
     }
+
+	public void vacancyDelete(Long vacancyId) {
+		dao.vacancyDeleteDAO(vacancyId);
+	}
+
 }

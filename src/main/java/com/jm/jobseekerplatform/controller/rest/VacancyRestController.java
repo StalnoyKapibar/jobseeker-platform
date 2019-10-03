@@ -126,4 +126,5 @@ public class VacancyRestController {
         }
         return vacancyService.findVacanciesByPointWithLimitAndPaging(city, point, limit, page);
     }
+
 }

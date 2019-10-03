@@ -11,3 +11,7 @@
 .form-control.is-valid{
 	border-color: #F39C12;
 }
+
+tr {
+	align: center;
+}
