@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private Long id;
+    private Long id;
 
     @Column(name = "text")
     private String text;

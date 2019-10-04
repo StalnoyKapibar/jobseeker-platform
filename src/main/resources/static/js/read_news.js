@@ -7,6 +7,9 @@ $(document).ready(function () {
     let $editCommentId = $('#edit_commentId');
     let $saveBtn = $('#save-comment');
     let $addBtn = $('#submit_comment');
+    let $reportReasons = $('input[id^="reportRadios"]');
+    let $sendReportBtn = $('#send_report');
+    let $commentId = $('#commentId');
     $.ajax({
         url: "/api/comments/" + $newsId,
         type: "GET",
@@ -27,7 +30,7 @@ $(document).ready(function () {
                 if ($currentProfileId == data[i].profile.id) {
                     $comments.after('<button type="button"' +
                         ' class="float-right btn text-white btn-info ml-3 mt-2"' +
-                        ' id="edit-comment_' + data[i].id + '" data-toggle="modal" data-target="#exampleModal"> ' +
+                        ' id="edit-comment_' + data[i].id + '" data-toggle="modal" data-target="#editModal"> ' +
                         '<i class="far fa-edit"></i><span> Редактировать</span></button>'
                     );
                     $comments.after('<button type="button" ' +
@@ -36,7 +39,8 @@ $(document).ready(function () {
                         ' <i class="far fa-trash-alt"></i><span> Удалить</span></button>');
                 } else {
                     $comments.after('<button type="button" ' +
-                        'class="float-right btn text-white btn-warning ml-3 mt-2"> ' +
+                        'class="float-right btn text-white btn-warning ml-3 mt-2" id = "report_to_comment_'
+                        + data[i].id + '" data-toggle="modal" data-target="#reportModal"> ' +
                         '<i class="fas fa-exclamation-triangle"></i><span>Пожаловаться</span></button>');
                 }
                 let $editBtn = $('#edit-comment_' + data[i].id);
@@ -69,7 +73,14 @@ $(document).ready(function () {
                         }
                     });
                 });
-
+                let $reportBtn = $('#report_to_comment_' + data[i].id);
+                $reportBtn.on('click', function () {
+                    $sendReportBtn.addClass("d-none");
+                    $reportReasons.each(function () {
+                        $(this).prop('checked', false);
+                    });
+                    $commentId.prop('value', data[i].id);
+                });
             });
         }
     });
@@ -110,4 +121,15 @@ $(document).ready(function () {
             }
         });
     });
+
+    showBtn();
+
+    function showBtn() {
+        $reportReasons.each(function () {
+            $(this).change(function () {
+                $sendReportBtn.removeClass("d-none");
+            });
+        });
+    }
+
 });

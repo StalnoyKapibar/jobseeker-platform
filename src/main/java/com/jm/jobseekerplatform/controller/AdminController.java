@@ -155,9 +155,14 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/tags", method = RequestMethod.GET)
-    public String UsersViewPage(Model model) {
+    public String adminTagsPage(Model model) {
         List<Tag> tags = tagService.getSortedAll();
         model.addAttribute("tags", tags);
         return "admin/admin_tags";
+    }
+
+    @RequestMapping(value = "/admin/reports", method = RequestMethod.GET)
+    public String adminReportsPage(Model model) {
+        return "admin_reports";
     }
 }
