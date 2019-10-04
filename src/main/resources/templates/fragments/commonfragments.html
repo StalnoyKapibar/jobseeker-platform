@@ -68,7 +68,7 @@
                 <ul class="navbar-nav d-flex flex-row  justify-content-between" >
                     <li class="nav-item d-flex flex-row" sec:authorize="hasRole('ROLE_SEEKER')"  >
                         <i class="far fa-user text-light align-middle nav-link m-1"></i>
-                        <a href="/user" class="nav-link text-light" sec:authentication="name"></a>
+                        <a id="profile-href" href="/user" class="nav-link text-light" sec:authentication="name"></a>
                     </li>
                     <li class="nav-item  d-flex flex-row" sec:authorize="hasRole('ROLE_EMPLOYER')"  >
                         <i class="far fa-user text-light align-middle nav-link m-1"></i>
@@ -103,7 +103,7 @@
                         </div>
                         <input name="_csrf" type="hidden" th:value="${_csrf.token}"/>
                         <div class="form-group d-flex flex-column m-0" >
-                            <button type="submit" class="btn btn-warning">Войти</button>
+                            <button id="submit-button" type="submit" class="btn btn-warning">Войти</button>
                             <a href="/login" class=" loginHelp">Проблемы со входом?</a>
                         </div>
                     </form>
