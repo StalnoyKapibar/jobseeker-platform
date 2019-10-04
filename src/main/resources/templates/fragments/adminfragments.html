@@ -60,6 +60,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" th:classappend="${side == 'drafts' ? 'active' : ''}" href="/admin/draftNews">
+                        <span data-feather="layers"></span>
+                        Новости для проверки
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" th:classappend="${side == 'vac' ? 'active' : ''}" href="/admin/vacancies">
                         <span data-feather="layers"></span>
                         Вакансии

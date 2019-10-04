@@ -1,0 +1,107 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/adminlayouts" th:with="side='drafts'">
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+</head>
+<body>
+<div class="container-fluid" layout:fragment="content">
+    <br/>
+    <h2>Все правки новостей для проверки</h2>
+    <div>
+        <div class="form-inline form-group">
+            <label for="filter" style="padding-right: 10px;"> Фильтр: </label>
+            <select id="filter" class="browser-default custom-select">
+                <option value="ACTIVE">Активные</option>
+                <option value="ALL">Все</option>
+            </select>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table id="draftNewsTable" class="table table-striped table-sm table-bordered" cellspacing="0"
+               width="100%">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Headline</th>
+                <th>Description</th>
+                <th>Edit</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div id="editModal" class="modal fade" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5>Проверка редактирования новости:</h5>
+                        <button class="close" id="modalclosebutton" data-dismiss="modal">x</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group-lg">
+                                    <input type="hidden" id="draftId">
+                                    <label for="draftHeadline">Новый заголовок</label>
+                                    <input type="text" class="form-control" id="draftHeadline"
+                                           name="draftHeadline" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-group-lg">
+                                    <label for="originalHeadline">Оригинальный заголовок</label>
+                                    <input type="text" class="form-control" id="originalHeadline"
+                                           name="originalHeadline" disabled="disabled">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group-lg">
+                                    <label for="draftDescription">Новый текст</label>
+                                    <textarea class="form-control" id="draftDescription" rows="10"
+                                              name="draftDescription" disabled="disabled"></textarea>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-group-lg">
+                                    <label for="originalDescription">Оригинальный текст</label>
+                                    <textarea class="form-control" id="originalDescription" rows="10"
+                                              name="originalDescription" disabled="disabled"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="approveDraft" data-dismiss="modal" aria-label="Принять">
+                            <span aria-hidden="true">Принять</span>
+                        </button>
+                        <button type="button" class="btn btn-danger" id="rejectDraft" data-dismiss="modal" aria-label="Отклонить">
+                            <span aria-hidden="true">Отклонить</span>
+                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">Закрыть</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div th:replace="fragments/adminfragments :: admin_modal_success_operation_window"></div>
+        <!-- /Modal -->
+    </div>
+</div>
+</div>
+</div>
+
+<div class="container-fluid" layout:fragment="content-script">
+    <script src="/js/admin/admin_draft_news.js"></script>
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+</div>
+
+</body>
+</html>
