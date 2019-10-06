@@ -1,41 +1,32 @@
 package com.jm.jobseekerplatform.model.reports;
 
-import com.jm.jobseekerplatform.model.comments.Comment;
+
 import com.jm.jobseekerplatform.model.profiles.Profile;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "reports")
-public class Report implements Serializable {
+@Table(name="reports")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
+public abstract class Report implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "type", nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private ReportType type;
+    @Column(name = "date_time")
+    private String dateTime;
 
-    @ManyToOne
-    @JoinColumn(name = "comment_id")
-    private Comment comment;
-
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private Profile profile;
+    @Column(name = "description", nullable = false)
+    private String description;
 
     public Report() {
     }
 
-    public Report(ReportType type) {
-        this.type = type;
-    }
-
-    public Report(ReportType type, Comment comment, Profile profile) {
-        this.type = type;
-        this.comment = comment;
-        this.profile = profile;
+    public Report(String dateTime, String description) {
+        this.dateTime = dateTime;
+        this.description = description;
     }
 
     public Long getId() {
@@ -46,27 +37,19 @@ public class Report implements Serializable {
         this.id = id;
     }
 
-    public ReportType getType() {
-        return type;
+    public String getDateTime() {
+        return dateTime;
     }
 
-    public void setType(ReportType type) {
-        this.type = type;
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
     }
 
-    public Comment getComment() {
-        return comment;
+    public String getDescription() {
+        return description;
     }
 
-    public void setComment(Comment comment) {
-        this.comment = comment;
-    }
-
-    public Profile getAuthor() {
-        return profile;
-    }
-
-    public void setAuthor(Profile profile) {
-        this.profile = profile;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

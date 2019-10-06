@@ -1,4 +1,4 @@
-package com.jm.jobseekerplatform.service.impl;
+package com.jm.jobseekerplatform.service.impl.reports;
 
 import com.jm.jobseekerplatform.model.reports.Report;
 import com.jm.jobseekerplatform.service.AbstractService;

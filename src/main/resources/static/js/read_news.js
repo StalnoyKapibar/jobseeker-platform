@@ -122,6 +122,31 @@ $(document).ready(function () {
         });
     });
 
+    $sendReportBtn.on('click', function (e) {
+        let $id = Number($commentId.val());
+        let now = new Date(Date.now());
+        let formatted = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDay() + " " +
+            now.getHours() + ":" + now.getMinutes();
+        let $description;
+        $reportReasons.each(function () {
+            if($(this).is(":checked")){
+                $description = ($(this).next()).text().trim();
+            }
+        });
+        $.ajax({
+            url: "/api/report/comments/add",
+            type: "POST",
+            data: "id=" + $id + "&dateTime=" + formatted + "&description=" + $description,
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            beforeSend: function (request) {
+                request.setRequestHeader($header, $token);
+            },
+            success: function () {
+                location.reload();
+            }
+        });
+    });
+
     showBtn();
 
     function showBtn() {

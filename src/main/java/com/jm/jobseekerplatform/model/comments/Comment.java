@@ -23,7 +23,6 @@ public class Comment implements Serializable {
     @JoinColumn(name = "news_id")
     private News news;
 
-    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Profile profile;

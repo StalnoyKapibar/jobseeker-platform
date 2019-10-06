@@ -163,6 +163,6 @@ public class AdminController {
 
     @RequestMapping(value = "/admin/reports", method = RequestMethod.GET)
     public String adminReportsPage(Model model) {
-        return "admin_reports";
+        return "admin/admin_reports";
     }
 }
