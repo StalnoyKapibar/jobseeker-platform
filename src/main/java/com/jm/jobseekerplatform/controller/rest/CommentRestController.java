@@ -13,7 +13,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 @RestController
 @RequestMapping (value = "/api/comments")
 public class CommentRestController {
@@ -23,11 +26,11 @@ public class CommentRestController {
     private NewsService newsService;
 
     @RequestMapping (value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<List<Comment>> getAllCommentsForNews(@PathVariable Long id) {
-        List<Comment> commentList = new ArrayList<>();
+    public ResponseEntity<Set<Comment>> getAllCommentsForNews(@PathVariable Long id) {
+       Set<Comment> commentList = new HashSet<>();
         News news = newsService.getById(id);
           try{
-              commentList = commentService.getAllCommentsForNews(news);
+             commentList = news.getComments();
           } catch (Exception e) {
               e.printStackTrace();
           }
@@ -52,8 +55,13 @@ public class CommentRestController {
         return new ResponseEntity<Comment>(comment, HttpStatus.OK);
     }
 
-    @RequestMapping (value = "/delete", params = {"id"}, method = RequestMethod.DELETE)
-    public ResponseEntity<Comment> deleteComment(@RequestParam("id") Long id) {
+    @RequestMapping (value = "/delete", params = {"newsId","id"}, method = RequestMethod.DELETE)
+    public ResponseEntity<Comment> deleteComment(@RequestParam("id") Long id, @RequestParam("newsId") Long newsId) {
+        /*News news = newsService.getById(newsId);
+        Set<Comment> comments = news.getComments();
+        Comment comment = commentService.getById(id);
+        comments.remove(comment);
+        newsService.update(news);*/
        commentService.deleteById(id);
        return new ResponseEntity<Comment>(HttpStatus.NO_CONTENT);
     }
@@ -67,7 +75,8 @@ public class CommentRestController {
         News news = newsService.getById(id);
         Profile profile =((User) authentication.getPrincipal()).getProfile();
         Comment comment = new Comment(text, news, profile, dateTime);
-        commentService.add(comment);
+        news.getComments().add(comment);
+        newsService.update(news);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 }

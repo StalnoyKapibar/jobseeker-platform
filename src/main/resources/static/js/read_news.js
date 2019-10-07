@@ -14,6 +14,7 @@ $(document).ready(function () {
         url: "/api/comments/" + $newsId,
         type: "GET",
         success: function (data) {
+            console.log(data);
             $.each(data, function (i, comment) {
                 $('#user_comments').after('<div class="m-5"><div class="card-body"><div class="row">' +
                     '<div class="col-md-2"><img id="logo_' + data[i].id + '" ' +
@@ -62,8 +63,10 @@ $(document).ready(function () {
                 $deleteBtn.on('click', function (event) {
                     let confirmation = confirm("Вы действительно хотите удалить свой комментарий?");
                     $.ajax({
-                        url: "/api/comments/delete?id=" + data[i].id,
+                        url: "/api/comments/delete",
                         type: "DELETE",
+                        data: "newsId=" + $newsId + "&id=" + data[i].id,
+                        contentType: "application/x-www-form-urlencoded;charset=utf-8",
                         beforeSend: function (request) {
                             request.setRequestHeader($header, $token);
                         },
@@ -73,6 +76,7 @@ $(document).ready(function () {
                         }
                     });
                 });
+
                 let $reportBtn = $('#report_to_comment_' + data[i].id);
                 $reportBtn.on('click', function () {
                     $sendReportBtn.addClass("d-none");

@@ -19,6 +19,7 @@ public class Comment implements Serializable {
     @Column(name ="date_time")
     private String dateTime;
 
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "news_id")
     private News news;
@@ -30,9 +31,15 @@ public class Comment implements Serializable {
     public Comment() {
     }
 
-    public Comment(String text,String dateTime) {
+    public Comment(String text, String dateTime) {
         this.text = text;
         this.dateTime = dateTime;
+    }
+
+    public Comment(String text, String dateTime, Profile profile) {
+        this.text = text;
+        this.dateTime = dateTime;
+        this.profile = profile;
     }
 
     public Comment(String text, News news, Profile profile, String dateTime) {
