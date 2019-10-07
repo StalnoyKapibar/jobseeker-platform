@@ -32,9 +32,29 @@ function showVacancy(id) {
                 $('#VMRemote').hide();
             }
 
+            let chat='<button onclick="openChatByVacancy('+data.id+')">Связаться с работодателем</button>'+
+                '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
+            $("#vacancyModalFooter").html(chat);
         }
     });
 }
+
+function openChatByVacancy(vacancyId) {
+    sendMailToEmployer(vacancyId);
+    window.location.replace("http://localhost:7070/chat/vacancy/" + vacancyId);
+}
+
+function sendMailToEmployer(vacancyId) {
+    $.ajax({
+        url: "api/vacancies/sendmailvac?dataID=" + vacancyId,
+        type: "POST",
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        }
+    });
+}
+
+
 
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");

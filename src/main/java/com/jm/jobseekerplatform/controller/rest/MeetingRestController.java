@@ -8,7 +8,7 @@ import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/meetings")
@@ -29,6 +29,7 @@ public class MeetingRestController {
         Meeting meeting = new Meeting();
         meeting.setVacancy(vacancyService.getById(vacancyId));
         meeting.setSeekerProfile(seekerProfileService.getById(seekerId));
+        meeting.setDate(LocalDateTime.now());
         meeting.setStatus(Status.NOT_CONFIRMED);
         meetingService.addMeeting(meeting);
     }

@@ -5,12 +5,17 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.MailService;
 import com.jm.jobseekerplatform.service.impl.SeekerHistoryService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
+import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,8 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.security.RolesAllowed;
 import java.util.Collections;
 import java.util.Date;
@@ -33,6 +38,15 @@ public class VacancyRestController {
 
     @Autowired
     private VacancyService vacancyService;
+
+    @Autowired
+    MailService mailService;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+	EmployerUserService employerUserService;
 
     @Autowired
     private SeekerProfileService seekerProfileService;
@@ -125,6 +139,18 @@ public class VacancyRestController {
             }
         }
         return vacancyService.findVacanciesByPointWithLimitAndPaging(city, point, limit, page);
+    }
+
+    @RolesAllowed({"ROLE_SEEKER"})
+    @PostMapping("/sendmailvac")
+    public ResponseEntity sendMailToEmployer(@RequestParam("dataID") long vacancyID) {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		SeekerProfile seekerProfile = (((SeekerUser) userService.findByEmail(userName)).getProfile());
+		EmployerProfile employerProfile = employerUserService.getEmployerProfileByVacancyID(vacancyID);
+		String seekerFullName = seekerProfile.getFullName();
+		EmployerUser employerUser = employerUserService.getByProfileId(employerProfile.getId());
+		mailService.sendFeedBackEMailVacancy(employerUser.getEmail(), seekerFullName, seekerProfile.getId());
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

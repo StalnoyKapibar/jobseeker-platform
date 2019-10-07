@@ -8,7 +8,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
@@ -70,6 +69,18 @@ public class MailService {
         ctx.setVariable("linkToChat", linkToChats);
         sendEmail(address, subject, templateEngine.process("/emails/feedBackEmail.html", ctx));
     }
+
+	public void sendFeedBackEMailVacancy(String address, String seekerFullName, long seekerProfileID) {
+		String subject = "На вашу вакансию отозвались!";
+		String seekerProfileLink = "http://localhost:" + port + "/seeker/" + seekerProfileID;
+		String linkToChats = "http://localhost:" + port + "/employer/chats";
+		final Context ctx = new Context();
+		ctx.setVariable("name", address);
+		ctx.setVariable("seekerProfileLink", seekerProfileLink);
+		ctx.setVariable("seekerFullName", seekerFullName);
+		ctx.setVariable("linkToChat", linkToChats);
+		sendEmail(address, subject, templateEngine.process("/emails/feedBackEmailVacancy.html", ctx));
+	}
 
     // приглашение друга
     public void sendFriendInvitaionEmail(String address, String friendAddres) {

@@ -108,14 +108,13 @@ public class AdminController {
     @RequestMapping(value = "/admin/employer/{userEmployerId}", method = RequestMethod.GET)
     public String adminPageEmployerToEdit(@PathVariable Long userEmployerId, Model model) {
         EmployerUser employerUser = employerUserService.getById(userEmployerId);
-
         model.addAttribute("employerUser", employerUser);
         model.addAttribute("employerProfile", employerUser.getProfile());
-        model.addAttribute("vacancies", vacancyService.getAllByEmployerProfileId(employerUser.getProfile().getId()));
+// Отключил, т.к. все вакансии есть в "employerProfile"
+//        model.addAttribute("vacancies", vacancyService.getAllByEmployerProfileId(employerUser.getProfile().getId()));
         if(employerUser.getProfile().getLogo() != null) {
             model.addAttribute("photoimg", Base64.getEncoder().encodeToString(employerUser.getProfile().getLogo()));
         }
-
         return "admin/admin_employer_edit";
     }
 

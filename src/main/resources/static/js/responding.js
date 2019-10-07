@@ -15,7 +15,7 @@ function sendRespond(vacancyId, seekerId) {
         },
         error: function (error) {
             console.log(error);
-            alert(error.toString());
+            alert("function sendRespond ERROR " + error.toString());
         }
     })
 }
@@ -95,7 +95,7 @@ function createChat(vacancyId, seekerId) {
         },
         error: function (error) {
             console.log(error);
-            alert(error.toString());
+            alert("function createChat ERROR " + error.toString());
         }
     })
 }

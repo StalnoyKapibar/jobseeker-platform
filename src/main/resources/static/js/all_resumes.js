@@ -228,7 +228,7 @@ function sendMailToSeeker(resumeId) {
         type: "POST",
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
-        },
+        }
     });
 }
 
