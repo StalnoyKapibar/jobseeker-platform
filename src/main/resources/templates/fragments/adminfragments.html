@@ -28,7 +28,7 @@
             <a class="navbar-brand text-light" href="#">JobSeeker</a>
         </div>
         <div class="right-navbar  d-flex flex-row ">
-            <ul class="navbar-nav d-flex flex-row  justify-content-between" >
+            <ul class="navbar-nav d-flex flex-row  justify-content-between">
                 <li class="nav-item">
                     <a href="/logout" class="nav-link, text-light"> <span data-feather="log-out"></span></a>
                 </li>
@@ -39,65 +39,66 @@
 </th:block>
 
 <th:block th:fragment="sidebar">
-        <div class="sidebar-sticky">
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'admin' ? 'active' : ''}" href="/admin">
-                        <span data-feather="home"></span>
-                        Главная <!--<span class="sr-only">(current)</span>-->
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'empl' ? 'active' : ''}" href="/admin/employers">
-                        <span data-feather="user"></span>
-                        Работодатели
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'seek' ? 'active' : ''}" href="/admin/seekers">
-                        <span data-feather="user"></span>
-                        Соискатели
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'drafts' ? 'active' : ''}" href="/admin/draftNews">
-                        <span data-feather="layers"></span>
-                        Новости для проверки
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'vac' ? 'active' : ''}" href="/admin/vacancies">
-                        <span data-feather="layers"></span>
-                        Вакансии
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'add' ? 'active' : ''}" href="/admin/addUser">
-                        <span data-feather="user-plus"></span>
-                        Добавить Пользователя
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'chatsMy' ? 'active' : ''}" href="/admin/chats/my" style="display: inline; padding-right: 0;">
-                        <span data-feather="message-circle"></span>
-                        Мои чаты
-                    </a>
-                    <a class="nav-link" href="" id="count_not_read_chats" style="display: inline; padding-left: 0"></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'chatsAll' ? 'active' : ''}" href="/admin/chats/all">
-                        <span data-feather="message-circle"></span>
-                        Все чаты
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${side == 'tag' ? 'active' : ''}" href="/admin/tags">
-                        <span data-feather="tag"></span>
-                        Теги
-                    </a>
-                </li>
-            </ul>
-        </div>
+    <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${side == 'admin' ? 'active' : ''}" href="/admin">
+                    <span data-feather="home"></span>
+                    Главная <!--<span class="sr-only">(current)</span>-->
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${side == 'empl' ? 'active' : ''}" href="/admin/employers">
+                    <span data-feather="user"></span>
+                    Работодатели
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${side == 'seek' ? 'active' : ''}" href="/admin/seekers">
+                    <span data-feather="user"></span>
+                    Соискатели
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${side == 'drafts' ? 'active' : ''}" href="/admin/draftNews">
+                    <span data-feather="layers"></span>
+                    Новости для проверки
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${side == 'vac' ? 'active' : ''}" href="/admin/vacancies">
+                    <span data-feather="layers"></span>
+                    Вакансии
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${side == 'add' ? 'active' : ''}" href="/admin/addUser">
+                    <span data-feather="user-plus"></span>
+                    Добавить Пользователя
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${side == 'chatsMy' ? 'active' : ''}" href="/admin/chats/my"
+                   style="display: inline; padding-right: 0;">
+                    <span data-feather="message-circle"></span>
+                    Мои чаты
+                </a>
+                <a class="nav-link" href="" id="count_not_read_chats" style="display: inline; padding-left: 0"></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${side == 'chatsAll' ? 'active' : ''}" href="/admin/chats/all">
+                    <span data-feather="message-circle"></span>
+                    Все чаты
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${side == 'tag' ? 'active' : ''}" href="/admin/tags">
+                    <span data-feather="tag"></span>
+                    Теги
+                </a>
+            </li>
+        </ul>
+    </div>
 </th:block>
 
 <th:block th:fragment="scripts">
@@ -110,43 +111,75 @@
 </th:block>
 
 <th:block th:fragment="admin_user_button(user)">
-<div th:id="userBlockId+${user.id}">
-    <button
-            class="btn btn-success user_unblock adminEnableUserBtn"
-            th:style="${user.enabled} ? 'display:none' : ''"
-            th:attr="data-id=${user.id}"
-    >Разблокировать</button>
-    <div class="dropdown user_block" style="margin:0;" th:styleappend="${!user.enabled} ? 'display:none;' : ''">
-        <button class="btn btn-danger dropdown-toggle" type="button"
-                data-toggle="dropdown">
-            Блокировать<span
-                class="caret"></span></button>
-        <div class="dropdown-menu">
-            <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=1">На сутки</a>
-            <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=3">На 3 дня</a>
-            <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=7">На 7 дней</a>
-            <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=14">На 14 дней</a>
-            <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=0">Бессрочно</a>
-        </div>
-    </div>
-</div>
-</th:block>
-
-<th:block th:fragment="admin_modal_success_operation_window">
-<div class="modal fade" id="alert_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <!-- Admin Operation Modal -->
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header alert alert-success" style="margin-bottom : 0; background-color: #d4edda">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Операция выполнена!</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <div th:id="userBlockId+${user.id}">
+        <button
+                class="btn btn-success user_unblock adminEnableUserBtn"
+                th:style="${user.enabled} ? 'display:none' : ''"
+                th:attr="data-id=${user.id}"
+        >Разблокировать
+        </button>
+        <div class="dropdown user_block" style="margin:0;" th:styleappend="${!user.enabled} ? 'display:none;' : ''">
+            <button class="btn btn-danger dropdown-toggle" type="button"
+                    data-toggle="dropdown">
+                Блокировать<span
+                    class="caret"></span></button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=1,
+                data-email=${user.email}">На сутки</a>
+                <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=3,
+                data-email=${user.email}">На 3 дня</a>
+                <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=7,
+                data-email=${user.email}">На 7 дней</a>
+                <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=14,
+                data-email=${user.email}">На 14 дней</a>
+                <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=0
+                , data-email=${user.email}">Бессрочно</a>
             </div>
         </div>
     </div>
-    <!-- /Admin Operation Modal -->
-</div>
+    <!--    модальное окно блокировки-->
+    <div class="modal fade" id="jobSeekerLock" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <b>Блокировка пользователя</b>
+                </div>
+                <div class="modal-body">
+                    Заблокировать пользователя
+                    <span id="modalBodyEmail" class="font-weight-bolder"></span>
+                    на
+                    <span id="modalBodyPeriod" class="font-weight-bolder"></span>
+                    ?
+                </div>
+                <div class="modal-footer">
+                    <button id="btnSuccess" class="btn btn-primary">
+                        Подтвердить
+                    </button>
+                    <button class="btn btn-secondary" data-dismiss="modal">
+                        выход
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="admin_modal_success_operation_window">
+    <div class="modal fade" id="alert_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <!-- Admin Operation Modal -->
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header alert alert-success" style="margin-bottom : 0; background-color: #d4edda">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Операция выполнена!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- /Admin Operation Modal -->
+    </div>
 </th:block>
 
 </body>

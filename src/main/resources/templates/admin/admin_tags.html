@@ -45,7 +45,9 @@
                     </div>
                 </td>
                 <td>
-                    <button th:onclick="'deleteTag(' + ${tag.getId()} + ');'" type="button" class="btn btn-danger">
+                    <button th:attr="data-id=${tag.id}, data-name=${tag.name}"
+                            data-toggle="modal" data-target="#tagRemovalModal"
+                            type="button" class="btn btn-danger">
                         удалить
                     </button>
                 </td>
@@ -53,8 +55,30 @@
             </tbody>
         </table>
     </div>
+    <!--    модальное окно подтверждения для удаления тегов-->
+    <div class="modal fade" id="tagRemovalModal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <b>Удаление тегов</b>
+                </div>
+                <div class="modal-body text-center">
+                    Удалить тег
+                    <span id="modalBodyRemoveTag" class="font-weight-bolder"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button id="btnSuccess" class="btn btn-sm btn-primary">
+                        Подтвердить
+                    </button>
+                    <button class="btn btn-sm btn-secondary" data-dismiss="modal">
+                        выход
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div  layout:fragment="content-script">
+<div layout:fragment="content-script">
     <script type="text/javascript" src="/js/admin/admin.js"></script>
     <script type="text/javascript" src="/js/admin/admin_tags.js"></script>
 </div>
