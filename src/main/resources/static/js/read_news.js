@@ -130,7 +130,7 @@ $(document).ready(function () {
             now.getHours() + ":" + now.getMinutes();
         let $description;
         $reportReasons.each(function () {
-            if($(this).is(":checked")){
+            if ($(this).is(":checked")) {
                 $description = ($(this).next()).text().trim();
             }
         });

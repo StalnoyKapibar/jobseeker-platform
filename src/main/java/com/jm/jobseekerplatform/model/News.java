@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.jm.jobseekerplatform.model.comments.Comment;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 
@@ -13,6 +14,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "news")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class News implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

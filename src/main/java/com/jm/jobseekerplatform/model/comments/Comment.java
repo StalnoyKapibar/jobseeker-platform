@@ -1,13 +1,19 @@
 package com.jm.jobseekerplatform.model.comments;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.reports.CommentReport;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name = "comments")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +33,10 @@ public class Comment implements Serializable {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Profile profile;
+
+    @JsonBackReference
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comment", orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<CommentReport> commentReport;
 
     public Comment() {
     }
@@ -87,5 +97,13 @@ public class Comment implements Serializable {
 
     public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public Set<CommentReport> getCommentReport() {
+        return commentReport;
+    }
+
+    public void setCommentReport(Set<CommentReport> commentReport) {
+        this.commentReport = commentReport;
     }
 }

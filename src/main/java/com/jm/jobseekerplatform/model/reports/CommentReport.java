@@ -1,5 +1,7 @@
 package com.jm.jobseekerplatform.model.reports;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.comments.Comment;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import javax.persistence.*;
@@ -9,14 +11,13 @@ import java.io.Serializable;
 @DiscriminatorValue("Comment")
 public class CommentReport extends Report implements Serializable {
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinTable(name = "reports_comment", joinColumns = {@JoinColumn(name = "report_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "comment_id", referencedColumnName = "id")})
+    @JsonManagedReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
     private Comment comment;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinTable(name = "reports_author", joinColumns = {@JoinColumn(name = "report_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "author_id", referencedColumnName = "id")})
+    @ManyToOne
+    @JoinColumn(name = "author_id")
     private Profile author;
 
     public CommentReport() {
