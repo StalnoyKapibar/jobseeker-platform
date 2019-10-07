@@ -18,36 +18,36 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping (value = "/api/comments")
+@RequestMapping(value = "/api/comments")
 public class CommentRestController {
     @Autowired
     private CommentService commentService;
     @Autowired
     private NewsService newsService;
 
-    @RequestMapping (value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Set<Comment>> getAllCommentsForNews(@PathVariable Long id) {
-       Set<Comment> commentList = new HashSet<>();
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<List<Comment>> getAllCommentsForNews(@PathVariable Long id) {
+        List<Comment> commentList = new ArrayList<>();
         News news = newsService.getById(id);
-          try{
-             commentList = news.getComments();
-          } catch (Exception e) {
-              e.printStackTrace();
-          }
+        try {
+            commentList = commentService.getAllCommentsForNews(news);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return new ResponseEntity<>(commentList, HttpStatus.OK);
     }
 
-    @RequestMapping (params = {"id"}, method = RequestMethod.GET)
+    @RequestMapping(params = {"id"}, method = RequestMethod.GET)
     public ResponseEntity<Comment> getComment(@RequestParam("id") Long id) {
         Comment comment = commentService.getById(id);
         return new ResponseEntity<Comment>(comment, HttpStatus.OK);
     }
 
-   @RequestMapping (value = "/update", params = {"id", "text", "dateTime"},
-                                               method = RequestMethod.PUT)
-    public  ResponseEntity<Comment> updateComment(@RequestParam("id") Long id,
-                                                  @RequestParam("text") String text,
-                                                  @RequestParam("dateTime") String dateTime) {
+    @RequestMapping(value = "/update", params = {"id", "text", "dateTime"},
+            method = RequestMethod.PUT)
+    public ResponseEntity<Comment> updateComment(@RequestParam("id") Long id,
+                                                 @RequestParam("text") String text,
+                                                 @RequestParam("dateTime") String dateTime) {
         Comment comment = commentService.getById(id);
         comment.setText(text);
         comment.setDateTime(dateTime);
@@ -55,28 +55,22 @@ public class CommentRestController {
         return new ResponseEntity<Comment>(comment, HttpStatus.OK);
     }
 
-    @RequestMapping (value = "/delete", params = {"newsId","id"}, method = RequestMethod.DELETE)
-    public ResponseEntity<Comment> deleteComment(@RequestParam("id") Long id, @RequestParam("newsId") Long newsId) {
-        /*News news = newsService.getById(newsId);
-        Set<Comment> comments = news.getComments();
-        Comment comment = commentService.getById(id);
-        comments.remove(comment);
-        newsService.update(news);*/
-       commentService.deleteById(id);
-       return new ResponseEntity<Comment>(HttpStatus.NO_CONTENT);
+    @RequestMapping(value = "/delete", params = {"id"}, method = RequestMethod.DELETE)
+    public ResponseEntity<Comment> deleteComment(@RequestParam("id") Long id) {
+        commentService.deleteById(id);
+        return new ResponseEntity<Comment>(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(value = "/insert", params = {"newsId", "text", "dateTime"},
-                                                  method = RequestMethod.POST)
+            method = RequestMethod.POST)
     public ResponseEntity<Void> createComment(@RequestParam("newsId") Long id,
                                               @RequestParam("text") String text,
                                               @RequestParam("dateTime") String dateTime,
                                               Authentication authentication) {
         News news = newsService.getById(id);
-        Profile profile =((User) authentication.getPrincipal()).getProfile();
+        Profile profile = ((User) authentication.getPrincipal()).getProfile();
         Comment comment = new Comment(text, news, profile, dateTime);
-        news.getComments().add(comment);
-        newsService.update(news);
+        commentService.add(comment);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 }

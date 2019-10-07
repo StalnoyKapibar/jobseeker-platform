@@ -63,10 +63,8 @@ $(document).ready(function () {
                 $deleteBtn.on('click', function (event) {
                     let confirmation = confirm("Вы действительно хотите удалить свой комментарий?");
                     $.ajax({
-                        url: "/api/comments/delete",
+                        url: "/api/comments/delete?id=" + data[i].id,
                         type: "DELETE",
-                        data: "newsId=" + $newsId + "&id=" + data[i].id,
-                        contentType: "application/x-www-form-urlencoded;charset=utf-8",
                         beforeSend: function (request) {
                             request.setRequestHeader($header, $token);
                         },
@@ -76,7 +74,6 @@ $(document).ready(function () {
                         }
                     });
                 });
-
                 let $reportBtn = $('#report_to_comment_' + data[i].id);
                 $reportBtn.on('click', function () {
                     $sendReportBtn.addClass("d-none");

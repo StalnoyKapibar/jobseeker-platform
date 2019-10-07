@@ -20,7 +20,7 @@ public class Comment implements Serializable {
     private String dateTime;
 
     @JsonManagedReference
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "news_id")
     private News news;
 

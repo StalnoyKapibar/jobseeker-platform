@@ -152,7 +152,7 @@ public class InitData {
                 newsService.update(newsList.get(i));
             }
             if (i >= 10 && i < 20) {
-               newsList.get(i).setAuthor(employerProfileService.getById(3L));
+                newsList.get(i).setAuthor(employerProfileService.getById(3L));
                 newsList.get(i).setTags(randomTags(2L));
                 newsService.update(newsList.get(i));
             }
@@ -569,10 +569,10 @@ public class InitData {
         City city;
         for (int i = 0, m = 0; i < seekerProfileService.getAll().size(); i++) {
             SeekerProfile seekerProfile = getRandomSeekerProfile();
-            while (!usedProfiles.add(seekerProfile.getId())){
-              seekerProfile = getRandomSeekerProfile();
+            while (!usedProfiles.add(seekerProfile.getId())) {
+                seekerProfile = getRandomSeekerProfile();
             }
-            for (int j = 0; j < 4; j++){
+            for (int j = 0; j < 4; j++) {
                 city = cities.get(rnd.nextInt(cities.size()));
                 point = city.getPoint();
                 jobExperiences.add(jobExperienceList.get(m++));
@@ -603,20 +603,10 @@ public class InitData {
         Profile profile3 = profileService.getById(10L);
         List<News> newsList = newsService.getAll();
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-       for(News n : newsList){
-           n.getComments().add(new Comment("Отличная новость", n, profile1, dateTime));
-           newsService.update(n);
-          /* n.getComments().add(new Comment("Плохая новость", n, profile2, dateTime));
-           newsService.update(n);
-           n.getComments().add(new Comment("Тупая новость", n, profile3, dateTime));
-           newsService.update(n);*/
-       }
-//            comment = new Comment("Отличная новость", n, profile1, dateTime);
-//            commentService.add(comment);
-//            comment = new Comment("Плохая новость", n, profile2, dateTime);
-//            commentService.add(comment);
-//            comment = new Comment("Тупая новость", n, profile3, dateTime);
-//            commentService.add(comment);
+        for (News n : newsList) {
+            n.getComments().add(new Comment("Отличная новость", n, profile1, dateTime));
+            newsService.update(n);
         }
     }
+}
 

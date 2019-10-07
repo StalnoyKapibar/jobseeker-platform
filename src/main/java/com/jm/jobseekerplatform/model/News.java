@@ -38,7 +38,7 @@ public class News implements Serializable {
     private Set<Tag> tags;
 
     @JsonBackReference
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "news", orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Comment> comments;
 
     public News() {
