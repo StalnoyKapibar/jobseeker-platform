@@ -1,0 +1,17 @@
+/* CSS */
+
+.mycss {
+	background: #F39C12;
+	color: #222;
+}
+
+.is-valid,
+.mycssBorder,
+.is-valid:hover,
+.form-control.is-valid {
+	border-color: #F39C12;
+}
+
+tr {
+	align: center;
+}

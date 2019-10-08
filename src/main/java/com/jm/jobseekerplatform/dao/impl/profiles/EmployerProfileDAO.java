@@ -28,4 +28,11 @@ public class EmployerProfileDAO extends AbstractDAO<EmployerProfile> {
                 .executeUpdate();
         return deletedCount;
     }
+
+	public EmployerProfile getEmployerProfileByVacancyID(long id) {
+		return entityManager.createQuery("SELECT v FROM EmployerProfile v JOIN v.vacancies r WHERE r.id =:param", EmployerProfile.class)
+				.setParameter("param", id)
+				.getSingleResult();
+	}
+
 }
