@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.reports.CommentReport;
+import com.jm.jobseekerplatform.model.users.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -55,7 +56,7 @@ public class Comment implements Serializable {
     public Comment(String text, News news, Profile profile, String dateTime) {
         this.text = text;
         this.news = news;
-        this.profile = profile;
+        this.profile= profile;
         this.dateTime = dateTime;
     }
 

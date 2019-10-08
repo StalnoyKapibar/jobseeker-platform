@@ -87,13 +87,10 @@ $(document).ready(function () {
     });
     $saveBtn.on('click', function (e) {
         let id = Number($editCommentId.val());
-        let now = new Date(Date.now());
-        let formatted = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDay() + " " +
-            now.getHours() + ":" + now.getMinutes();
         $.ajax({
             url: "/api/comments/update",
             type: "PUT",
-            data: "id=" + id + "&text=" + $editForm.val() + "&dateTime=" + formatted,
+            data: "id=" + id + "&text=" + $editForm.val(),
             contentType: "application/x-www-form-urlencoded;charset=utf-8",
             beforeSend: function (request) {
                 request.setRequestHeader($header, $token);
@@ -105,14 +102,11 @@ $(document).ready(function () {
     });
 
     $addBtn.on('click', function (e) {
-        let now = new Date(Date.now());
-        let formatted = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDay() + " " +
-            now.getHours() + ":" + now.getMinutes();
         let $commentText = $('#user_comment').val();
         $.ajax({
             url: "/api/comments/insert",
             type: "POST",
-            data: "newsId=" + $newsId + "&text=" + $commentText + "&dateTime=" + formatted,
+            data: "newsId=" + $newsId + "&text=" + $commentText,
             contentType: "application/x-www-form-urlencoded;charset=utf-8",
             beforeSend: function (request) {
                 request.setRequestHeader($header, $token);
@@ -125,9 +119,6 @@ $(document).ready(function () {
 
     $sendReportBtn.on('click', function (e) {
         let $id = Number($commentId.val());
-        let now = new Date(Date.now());
-        let formatted = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDay() + " " +
-            now.getHours() + ":" + now.getMinutes();
         let $description;
         $reportReasons.each(function () {
             if ($(this).is(":checked")) {
@@ -137,7 +128,7 @@ $(document).ready(function () {
         $.ajax({
             url: "/api/report/comments/add",
             type: "POST",
-            data: "id=" + $id + "&dateTime=" + formatted + "&description=" + $description,
+            data: "id=" + $id + "&description=" + $description,
             contentType: "application/x-www-form-urlencoded;charset=utf-8",
             beforeSend: function (request) {
                 request.setRequestHeader($header, $token);

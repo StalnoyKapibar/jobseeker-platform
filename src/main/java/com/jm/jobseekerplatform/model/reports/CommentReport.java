@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.comments.Comment;
 import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.users.User;
+
 import javax.persistence.*;
 import java.io.Serializable;
 

@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/report/comments/")
+@RequestMapping ("/api/report/comments/")
 public class CommentReportRestController {
 
     @Autowired
@@ -27,21 +29,27 @@ public class CommentReportRestController {
     @Autowired
     private CommentService commentService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping (value = "/", method = RequestMethod.GET)
     public ResponseEntity<List<CommentReport>> getAllCommentsReport(){
         List<CommentReport> commentReportList = commentReportService.getAll();
         return new ResponseEntity<>(commentReportList, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/add", params = {"id", "dateTime", "description"}, method = RequestMethod.POST)
+    @RequestMapping(value = "/add", params = {"id","description"}, method = RequestMethod.POST)
     public ResponseEntity<Void> addCommentReport(@RequestParam("id") Long id,
-                                                 @RequestParam("dateTime") String dateTime,
                                                  @RequestParam("description") String description,
                                                  Authentication authentication){
         Comment comment = commentService.getById(id);
         Profile author = ((User) authentication.getPrincipal()).getProfile();
-        CommentReport commentReport = new CommentReport(dateTime, description, comment, author);
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        CommentReport commentReport = new CommentReport(date, description, comment, author);
         commentReportService.add(commentReport);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/delete", params = {"id"}, method = RequestMethod.DELETE)
+    public ResponseEntity<CommentReport> deleteCommentReport(@RequestParam("id") Long id){
+        commentReportService.deleteById(id);
+        return new ResponseEntity<CommentReport>(HttpStatus.NO_CONTENT);
     }
 }

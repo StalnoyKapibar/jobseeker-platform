@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -43,13 +45,13 @@ public class CommentRestController {
         return new ResponseEntity<Comment>(comment, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/update", params = {"id", "text", "dateTime"},
+    @RequestMapping(value = "/update", params = {"id", "text"},
             method = RequestMethod.PUT)
     public ResponseEntity<Comment> updateComment(@RequestParam("id") Long id,
-                                                 @RequestParam("text") String text,
-                                                 @RequestParam("dateTime") String dateTime) {
+                                                 @RequestParam("text") String text) {
         Comment comment = commentService.getById(id);
         comment.setText(text);
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         comment.setDateTime(dateTime);
         commentService.update(comment);
         return new ResponseEntity<Comment>(comment, HttpStatus.OK);
@@ -61,14 +63,14 @@ public class CommentRestController {
         return new ResponseEntity<Comment>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/insert", params = {"newsId", "text", "dateTime"},
+    @RequestMapping(value = "/insert", params = {"newsId", "text"},
             method = RequestMethod.POST)
     public ResponseEntity<Void> createComment(@RequestParam("newsId") Long id,
                                               @RequestParam("text") String text,
-                                              @RequestParam("dateTime") String dateTime,
                                               Authentication authentication) {
         News news = newsService.getById(id);
-        Profile profile = ((User) authentication.getPrincipal()).getProfile();
+        Profile profile = ((User)authentication.getPrincipal()).getProfile();
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         Comment comment = new Comment(text, news, profile, dateTime);
         commentService.add(comment);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
