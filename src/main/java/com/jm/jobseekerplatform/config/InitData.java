@@ -599,8 +599,6 @@ public class InitData {
 
     private void initComments() {
         Profile profile1 = profileService.getById(8L);
-        Profile profile2 = profileService.getById(9L);
-        Profile profile3 = profileService.getById(10L);
         List<News> newsList = newsService.getAll();
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         for (News n : newsList) {
