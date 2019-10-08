@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.reports.CommentReport;
-import com.jm.jobseekerplatform.model.users.User;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;

@@ -1,8 +1,5 @@
 package com.jm.jobseekerplatform.model.reports;
 
-
-import com.jm.jobseekerplatform.model.profiles.Profile;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
