@@ -18,7 +18,6 @@ $(document).ready(function () {
         url: "/api/report/comments/",
         type: "GET",
         success: function (data) {
-            console.log(data);
             $.each(data, function (i, report) {
                 $reports.append(
                     '<tr><td class="text-center align-middle">' + (i + 1) + '</td>' +

@@ -14,7 +14,6 @@ $(document).ready(function () {
         url: "/api/comments/" + $newsId,
         type: "GET",
         success: function (data) {
-            console.log(data);
             $.each(data, function (i, comment) {
                 $('#user_comments').after('<div class="m-5"><div class="card-body"><div class="row">' +
                     '<div class="col-md-2"><img id="logo_' + data[i].id + '" ' +
