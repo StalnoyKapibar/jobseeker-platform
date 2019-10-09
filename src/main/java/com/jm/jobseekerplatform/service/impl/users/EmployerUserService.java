@@ -1,7 +1,9 @@
 package com.jm.jobseekerplatform.service.impl.users;
 
 import com.jm.jobseekerplatform.dao.EmployerUserDaoI;
+import com.jm.jobseekerplatform.dao.impl.profiles.EmployerProfileDAO;
 import com.jm.jobseekerplatform.dao.impl.users.EmployerUserDAO;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class EmployerUserService extends AbstractService<EmployerUser> {
     @Autowired
     private EmployerUserDAO employerUserDAO;
 
+	@Autowired
+	private EmployerProfileDAO employerProfileDAO;
+
     public Page<EmployerUser> findAll(Pageable pageable) {
         return employerUserDaoI.findAll(pageable);
     }
@@ -27,4 +32,9 @@ public class EmployerUserService extends AbstractService<EmployerUser> {
     public EmployerUser getByProfileId(Long employerProfileId) {
         return employerUserDAO.getByProfileId(employerProfileId);
     }
+
+	public EmployerProfile getEmployerProfileByVacancyID(long id) {
+		return employerProfileDAO.getEmployerProfileByVacancyID(id);
+	}
+
 }

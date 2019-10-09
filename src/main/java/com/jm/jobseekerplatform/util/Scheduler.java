@@ -39,4 +39,5 @@ public class Scheduler {
     public void updateMeetingStatus() {
         meetingService.updateMeetingsOnPassing();
     }
+
 }
