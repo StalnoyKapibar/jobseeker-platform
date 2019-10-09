@@ -174,4 +174,9 @@ public class AdminController {
         model.addAttribute("draftNews", draftNewsService.getAll());
         return "admin/admin_draft_news";
     }
+
+    @RequestMapping(value = "/admin/reports", method = RequestMethod.GET)
+    public String adminReportsPage(Model model) {
+        return "admin/admin_reports";
+    }
 }
