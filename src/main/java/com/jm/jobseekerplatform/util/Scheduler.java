@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @EnableScheduling
-@PropertySource("classpath:config/scheduler")
+@PropertySource("classpath:config/scheduler.properties")
 @Component("scheduler")
 public class Scheduler {
 
@@ -23,19 +23,19 @@ public class Scheduler {
     @Autowired
     MeetingService meetingService;
 
-    @Scheduled(cron = "${scheduler.deleteExpiryVacancies.cron}")
+    @Scheduled(cron = "${scheduler.properties.deleteExpiryVacancies.cron}")
     public void deleteExpiryVacancies() {
         vacancyService.deletePermanentBlockVacancies();
         vacancyService.deleteExpiryBlockVacancies();
     }
 
-    @Scheduled(cron = "${scheduler.deleteExpiryEmployerProfiles.cron}")
+    @Scheduled(cron = "${scheduler.properties.deleteExpiryEmployerProfiles.cron}")
     public void deleteExpiryEmployerProfiles() {
         employerProfileService.deletePermanentBlockEmployerProfiles();
         employerProfileService.deleteExpiryBlockEmployerProfiles();
     }
 
-    @Scheduled(cron = "${scheduler.updateMeetingStatus.cron}")
+    @Scheduled(cron = "${scheduler.properties.updateMeetingStatus.cron}")
     public void updateMeetingStatus() {
         meetingService.updateMeetingsOnPassing();
     }
