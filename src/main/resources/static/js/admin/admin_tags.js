@@ -3,9 +3,12 @@ $(document).ready(function () {
         $(this).hide();
     });
 
-    $("body").on("click", "#btnCreateNewTag", function () {
+    $("#btnCreateNewTag").click(function (event) {
+        event.preventDefault();
         let nameNewTag = $("#textNewTag").val();
-        if (!nameNewTag) return;
+        if (!nameNewTag) {
+            return;
+        }
         createNewTag(nameNewTag);
     });
 
@@ -18,8 +21,7 @@ $(document).ready(function () {
 function createNewTag(nameNewTag) {
     let token = $("meta[name='_csrf']").attr("content");
     let header = $("meta[name='_csrf_header']").attr("content");
-    let tagCheck = document.getElementById("tagCheck");
-    let newDataTag = {'name': nameNewTag, 'verified': tagCheck.checked};
+    let newDataTag = {'name': nameNewTag, 'verified': true};
 
     $.ajax({
         url: "/api/tags/createNewTagController/",
@@ -30,9 +32,11 @@ function createNewTag(nameNewTag) {
         method: "POST",
         data: JSON.stringify(newDataTag),
         success: function () {
+            window.location.reload();
             console.log('Новый тэг ' + nameNewTag + ' успешно записался');
         },
         error: function (error) {
+            $('#alert_modal').modal('show');
             console.log("Ошибка записи нового тэга " + error.toString());
         }
     });
@@ -76,6 +80,7 @@ function changeVerifiedTag(userId) {
             request.setRequestHeader(header, token);
         },
         success: function (data, status, jqXHR) {
+            window.location.reload();
         },
         error: function (error) {
             console.log(error);
