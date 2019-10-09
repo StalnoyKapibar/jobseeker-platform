@@ -14,25 +14,27 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/employer")
 public class EmployerUserRestController {
-    @Autowired
-    private EmployerUserService employerUserService;
 
-    @Autowired
-    private EmployerProfileService employerProfileService;
+	@Autowired
+	private EmployerUserService employerUserService;
 
-    @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity updateEmployer(@RequestBody EmployerUser employerUser) {
-        Long employerProfileId = employerUser.getProfile().getId();
-        EmployerProfile tmpEmployer = employerProfileService.getById(employerProfileId);
+	@Autowired
+	private EmployerProfileService employerProfileService;
 
-        employerUser.getProfile().setLogo(tmpEmployer.getLogo());
-        employerUser.getProfile().setReviews(tmpEmployer.getReviews());
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity updateEmployer(@RequestBody EmployerUser employerUser) {
+		Long employerProfileId = employerUser.getProfile().getId();
+		EmployerProfile tmpEmployer = employerProfileService.getById(employerProfileId);
 
-        employerProfileService.update(employerUser.getProfile());
-        employerUserService.update(employerUser);
+		employerUser.getProfile().setLogo(tmpEmployer.getLogo());
+		employerUser.getProfile().setReviews(tmpEmployer.getReviews());
+		employerUser.getProfile().setVacancies(tmpEmployer.getVacancies());
 
-        return new ResponseEntity(HttpStatus.OK);
-    }
+		employerProfileService.update(employerUser.getProfile());
+		employerUserService.update(employerUser);
+
+		return new ResponseEntity(HttpStatus.OK);
+	}
 
     @RequestMapping(value = "/editLogo", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<EmployerProfile> updateEmployerLogo(@RequestParam(value = "file", required = false) MultipartFile file,

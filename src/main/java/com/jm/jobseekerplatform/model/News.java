@@ -1,15 +1,18 @@
 package com.jm.jobseekerplatform.model;
 
-import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.jm.jobseekerplatform.model.comments.Comment;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "news")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class News implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,11 +34,12 @@ public class News implements Serializable {
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "news_tags",
-            joinColumns = @JoinColumn(name = "news_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Set<Tag> tags = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Tag> tags;
+
+    @JsonBackReference
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "news", orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Comment> comments;
 
     public News() {
     }
@@ -101,5 +105,13 @@ public class News implements Serializable {
 
     public void setNumberOfViews(Long numberOfViews) {
         this.numberOfViews = numberOfViews;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 }

@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.model.chats.ChatWithTopicVacancy;
+import com.jm.jobseekerplatform.model.comments.Comment;
 import com.jm.jobseekerplatform.model.profiles.AdminProfile;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
@@ -16,6 +17,7 @@ import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.*;
 import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatService;
+import com.jm.jobseekerplatform.service.impl.comments.CommentService;
 import com.jm.jobseekerplatform.service.impl.profiles.AdminProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
@@ -25,12 +27,14 @@ import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -105,6 +109,9 @@ public class InitData {
     @Autowired
     private StoredProcedureService storedProcedureService;
 
+    @Autowired
+    private CommentService commentService;
+
     private Faker faker = new Faker(new Locale("ru"));
 
     private Random rnd = new Random();
@@ -128,6 +135,7 @@ public class InitData {
         initNews();
         initJobExperience();
         initResumes();
+        initComments();
     }
 
     private void initNews() {
@@ -169,6 +177,7 @@ public class InitData {
                 newsService.update(newsList.get(i));
             }
         }
+
     }
 
     public void initReviews() {
@@ -434,7 +443,6 @@ public class InitData {
         tagService.add(new Tag("MySQL", verified));
         tagService.add(new Tag("Thymeleaf", verified));
         tagService.add(new Tag("OAuth2", verified));
-
     }
 
     public void initSeekerProfile() {
@@ -452,6 +460,7 @@ public class InitData {
         Set<Vacancy> vacancies = new HashSet<>(vacancyService.getAll());
 
         seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L), portfolios, vacancies, new HashSet<>()));
+
 
         portfolios.clear();
         portfolios.add(portfolioService.getById(3L));
@@ -560,10 +569,10 @@ public class InitData {
         City city;
         for (int i = 0, m = 0; i < seekerProfileService.getAll().size(); i++) {
             SeekerProfile seekerProfile = getRandomSeekerProfile();
-            while (!usedProfiles.add(seekerProfile.getId())){
-              seekerProfile = getRandomSeekerProfile();
+            while (!usedProfiles.add(seekerProfile.getId())) {
+                seekerProfile = getRandomSeekerProfile();
             }
-            for (int j = 0; j < 4; j++){
+            for (int j = 0; j < 4; j++) {
                 city = cities.get(rnd.nextInt(cities.size()));
                 point = city.getPoint();
                 jobExperiences.add(jobExperienceList.get(m++));
@@ -587,4 +596,15 @@ public class InitData {
             resumes.clear();
         }
     }
+
+    private void initComments() {
+        Profile profile1 = profileService.getById(8L);
+        List<News> newsList = newsService.getAll();
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        for (News n : newsList) {
+            n.getComments().add(new Comment("Отличная новость", n, profile1, dateTime));
+            newsService.update(n);
+        }
+    }
 }
+

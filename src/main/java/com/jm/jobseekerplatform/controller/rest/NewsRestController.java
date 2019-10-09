@@ -1,12 +1,19 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.dto.NewsDTO;
+import com.jm.jobseekerplatform.model.DraftNews;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.comments.Comment;
+import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.DraftNewsService;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
+import com.jm.jobseekerplatform.service.impl.comments.CommentService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +33,11 @@ import java.util.Set;
 @RequestMapping("/api/news")
 public class NewsRestController {
 
+    public static final int MIN_NUMBER_OF_VIEWS_FOR_VALIDATE = 10;
+
+    @Autowired
+    private DraftNewsService draftNewsService;
+
     @Autowired
     private NewsService newsService;
 
@@ -37,6 +49,9 @@ public class NewsRestController {
 
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private CommentService commentService;
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @PostMapping("/add")
@@ -51,24 +66,25 @@ public class NewsRestController {
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-    @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
-    @GetMapping("/delete/{newsId}")
+    @GetMapping ("/delete/{newsId}")
     public ResponseEntity deleteNews(@PathVariable("newsId") Long newsId) {
         newsService.deleteById(newsId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-    @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
     @GetMapping("/{newsId}")
-    @ResponseBody
-    public ResponseEntity<News> getNewsById(@PathVariable("newsId") Long newsId) {
-        return new ResponseEntity<>(newsService.getById(newsId), HttpStatus.OK);
+    public ResponseEntity<NewsDTO> getNewsById(@PathVariable("newsId") Long newsId) {
+        NewsDTO newsDTO = new NewsDTO();
+        News news = newsService.getById(newsId);
+        newsDTO.setNews(news);
+        newsDTO.setOnValidation(draftNewsService.isNewsOnValidation(newsId));
+        newsDTO.setNeedValidate(isNewsNeedValidate(news));
+        return new ResponseEntity<>(newsDTO, HttpStatus.OK);
     }
 
-    @RolesAllowed({"ROLE_EMPLOYER"})
-    @GetMapping("/")
-    @ResponseBody
+    @RolesAllowed ({"ROLE_EMPLOYER"})
+    @GetMapping ("/")
     public ResponseEntity<List<News>> getAllNewsByEmployerProfileId(@RequestParam("newsPageCount") int newsPageCount,
                                                                     Authentication authentication) {
         Sort sort = new Sort(Sort.Direction.DESC, "date");
@@ -78,8 +94,7 @@ public class NewsRestController {
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
 
-    @GetMapping("/all_seeker_news")
-    @ResponseBody
+    @GetMapping ("/all_seeker_news")
     public ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
                                                                   @RequestParam("newsPageCount") int newsPageCount) {
         Set<Subscription> subscriptions = seekerProfileService.getById(seekerProfileId).getSubscriptions();
@@ -87,19 +102,38 @@ public class NewsRestController {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
         Sort sort = new Sort(Sort.Direction.DESC, "date");
-        List<News> news = newsService.getAllBySubscription(subscriptions, PageRequest.of(newsPageCount, 10, sort)).getContent();
+        List<News> news = newsService.getAllBySubscription(subscriptions,
+                PageRequest.of(newsPageCount, 10, sort)).getContent();
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
 
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
-    @PostMapping("/editNews")
+    @PostMapping ("/editNews")
     public ResponseEntity editNews(@RequestParam("newsId") Long newsId,
                                    @RequestParam("newsHeadline") String newsHeadline,
                                    @RequestParam("newsDescription") String newsDescription) {
         News news = newsService.getById(newsId);
-        news.setHeadline(newsHeadline);
-        news.setDescription(newsDescription);
-        newsService.update(news);
+        //Если обновление новости требует последующей проверки администратором
+        if( isNewsNeedValidate(news) ) {
+            //Только одно обновление новости для проверки допустимо
+            if( draftNewsService.isNewsOnValidation(newsId) ) {
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+            DraftNews draftNews = new DraftNews();
+            draftNews.setHeadline(newsHeadline);
+            draftNews.setDescription(newsDescription);
+            draftNews.setOriginal(news);
+            draftNewsService.add(draftNews);
+        } else {
+            news.setHeadline(newsHeadline);
+            news.setDescription(newsDescription);
+            newsService.update(news);
+        }
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    private boolean isNewsNeedValidate(News news) {
+        return news.getNumberOfViews() != null ?
+                news.getNumberOfViews() >= MIN_NUMBER_OF_VIEWS_FOR_VALIDATE : false;
     }
 }

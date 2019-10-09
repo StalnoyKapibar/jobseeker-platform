@@ -11,7 +11,8 @@ let shrt_desc_check = false;
 let desc_check = false;
 
 $(document).ready(function () {
-    bootstrapValidate('#v_headline', 'regex:^[A-Za-z0-9А-Яа-я ()\\-]{3,100}$:Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов',
+    bootstrapValidate('#v_headline', 'regex:^[A-Za-z0-9А-Яа-я ()\\-]{3,100}$:' +
+        'Поле может содержать русские и латинские буквы, цифры, пробелы, круглые скобки от 3-х до 100 символов',
         function (isValid) {
             if (isValid) {
                 $('#v_headline').addClass('is-valid');
@@ -44,7 +45,6 @@ $(document).ready(function () {
         }
     });
 
-
     bootstrapValidate('#v_remote', 'required:', function (isValid) {
         if (isValid) {
             $('#v_remote').removeClass('is-invalid');
@@ -55,29 +55,29 @@ $(document).ready(function () {
         }
     });
 
-    bootstrapValidate('#v_salaryMin', 'regex:^[0-9]{0,100}$:Поле может содержать цифры от одного до 10 разрядов',
+    bootstrapValidate('#v_salaryMin', 'regex:^[0-9]{4,7}$:Поле может содержать цифры от 4 до 7 разрядов' +
+        ' или остаться пустым',
         function (isValid) {
             if (isValid) {
                 $('#v_salaryMin').addClass('is-valid');
                 salary_min_check = true;
             } else {
-                salary_min_check = false;
+                let check_salary = $('#v_salaryMin').val();
+                salary_min_check = check_salary.length < 1;
             }
+        });
 
-        }
-    );
-
-    bootstrapValidate('#v_salaryMax', 'regex:^[0-9]{0,100}$:Поле может содержать цифры от одного до 10 разрядов',
+    bootstrapValidate('#v_salaryMax', 'regex:^[0-9]{4,7}$:Поле может содержать цифры от 4 до 7 разрядов' +
+        ' или остаться пустым',
         function (isValid) {
             if (isValid) {
                 $('#v_salaryMax').addClass('is-valid');
                 salary_max_check = true;
             } else {
-                salary_max_check = false;
+                let check_salary = $('#v_salaryMax').val();
+                salary_max_check = check_salary.length < 1;
             }
-
-        }
-    );
+        });
 
     bootstrapValidate('#v_shortDescription', 'required:', function (isValid) {
         if (isValid) {
@@ -104,7 +104,9 @@ $(document).ready(function () {
                 ['font', ['bold', 'underline', 'clear']]
             ]
         } // set maximum height of editor
+
     });
+    $(".panel-heading").css('background-color', 'white');
 
     // Валидация поля подробного описания ( не менее 100 символов )
     $(".note-editor.note-frame").css("border", "1px solid #dc3545");
@@ -119,6 +121,7 @@ $(document).ready(function () {
             desc_check = false;
         }
     });
+    $(".panel-heading").css('background-color', 'white');
 });
 
 function tags_search() {
@@ -134,7 +137,11 @@ function tags_search() {
 
 function validateAndPreview() {
     let isValid = headline_check&&address_check&&remote_check
-        &&salary_min_check&&salary_max_check&&shrt_desc_check&&desc_check;
+        &&salary_min_check&&salary_max_check&&shrt_desc_check&&desc_check && minIsLCorrect();
+
+    if (!minIsLCorrect()){
+        window.alert("Неверно указаны промежутки заработной платы");
+    }
 
     if ($("#v_tagsWell").children().length < 2) {
         $("#v_form_group_tags").attr("class", "form-group has-feedback has-error");
@@ -228,7 +235,9 @@ function showTags() {
             async: false,
             success: function (data) {
                 $.each(data, function (key, value) {
-                    $("#tagsWell").append("<span class='label label-success' value='" + value.name + "' id='tagLabel_" + value.id + "' onclick='addTag(" + value.id + ",\"" + value.name + "\")'>" + value.name + "</span>");
+                    $("#tagsWell").append("<span class='label label-success' value='" +
+                        value.name + "' id='tagLabel_" + value.id + "' onclick='addTag(" + value.id + ",\"" +
+                        value.name + "\")'>" + value.name + "</span>");
                 });
                 flagTag = true;
             }
@@ -237,7 +246,8 @@ function showTags() {
 }
 
 function addTag(id, name) {
-    $("#v_tagsWell").append("<span class='label label-success' id='v_tagLabel_" + id + "' onclick='deleteTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
+    $("#v_tagsWell").append("<span class='label label-success' id='v_tagLabel_" + id +
+        "' onclick='deleteTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
     $("#tagLabel_" + id).remove();
 }
 
@@ -245,14 +255,16 @@ function addNewTag() {
     tagId--;
     let searchTag = $("#search_tags");
     let name = searchTag.val();
-    $("#v_tagsWell").append("<span class='label label-success' id='v_tagLabel_" + tagId + "' onclick='deleteTag(" + tagId + ",\"" + name + "\")'>" + name + "</span>");
+    $("#v_tagsWell").append("<span class='label label-success' id='v_tagLabel_" + tagId +
+        "' onclick='deleteTag(" + tagId + ",\"" + name + "\")'>" + name + "</span>");
 
     searchTag.val(""); // clear filter after adding tag
     tags_search(); // refresh visible tags with empty filter
 }
 
 function deleteTag(id, name) {
-    $("#tagsWell").append("<span class='label label-success' value='" + name + "'id='tagLabel_" + id + "' onclick='addTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
+    $("#tagsWell").append("<span class='label label-success' value='" + name + "'id='tagLabel_" + id +
+        "' onclick='addTag(" + id + ",\"" + name + "\")'>" + name + "</span>");
     $("#v_tagLabel_" + id).remove();
 }
 
@@ -270,11 +282,20 @@ function sendVacancy() {
         },
         success: function (data) {
             $("#vacancy_container").empty();
-            $("#vacancy_container").append("<div class='alert alert-success' role='alert'>Вакансия добавлена!<br/>Вы также можете <a href='/user'>посмотреть свой профиль</a></div>");
+            $("#vacancy_container").append("<div class='alert alert-success' role='alert'>Вакансия добавлена!" +
+                "<br/>Вы также можете <a href='/user'>посмотреть свой профиль</a></div>");
         },
         error: function (error) {
             console.log(error);
             alert(error.responseJSON.message);
         }
     });
+}
+
+function minIsLCorrect() {
+    if (parseInt($("#v_salaryMin").val()) <= parseInt($("#v_salaryMax").val()) ||
+        $('#v_salaryMin').val().length < 1 || $('#v_salaryMax').val().length < 1){
+        return true;
+    }
+    return false;
 }

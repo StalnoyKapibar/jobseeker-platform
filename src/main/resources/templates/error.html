@@ -14,7 +14,8 @@
             <div class="col-sm-4"></div>
             <div class="col-sm-4" align="center" style="color: #7295B1">
                 <span style="font-size: 25px">Ой, что-то пошло не так!</span><br>
-                <span th:text="${status}" style="font-size: 120px"></span>
+                <span th:text="${status}" style="font-size: 120px"></span><br>
+                <button type="button" class="btn btn-info" th:text="'Вернуться назад'" onclick="history.back()"></button>
             </div>
         </div>
     </div>
