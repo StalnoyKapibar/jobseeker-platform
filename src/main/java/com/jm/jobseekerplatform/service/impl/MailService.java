@@ -104,4 +104,17 @@ public class MailService {
         ctx.setVariable("subscriptionDate", new Date());
         sendEmail(address, subject, templateEngine.process("/emails/recoveryPassEmail.html", ctx));
     }
+
+	public void sendFeedBackEMailVacancy(String address, String seekerFullName, long seekerProfileID) {
+		String subject = "На вашу вакансию отозвались!";
+		String seekerProfileLink = "http://localhost:" + port + "/seeker/" + seekerProfileID;
+		String linkToChats = "http://localhost:" + port + "/employer/chats";
+		final Context ctx = new Context();
+		ctx.setVariable("name", address);
+		ctx.setVariable("seekerProfileLink", seekerProfileLink);
+		ctx.setVariable("seekerFullName", seekerFullName);
+		ctx.setVariable("linkToChat", linkToChats);
+		sendEmail(address, subject, templateEngine.process("/emails/feedBackEmailVacancy.html", ctx));
+	}
+
 }
