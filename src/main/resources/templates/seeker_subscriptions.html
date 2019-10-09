@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <title>SeekerProfile</title>
+    <script type="text/javascript" src="/js/seeker.js"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10" style="margin-top: 40px"><h1>Все подписки</h1></div>
+    </div>
+    <div class="row" style="margin-top: 30px">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+            <ul class="list-group list-group-flush">
+                <th:block th:each="subscription : ${seekerProfileSubscriptions}">
+                    <li class="list-group-item list-group-item-action" style="background-color: var(--sidebar-bg-color); border-color: #00a379">
+                        <div class="headLine">
+                            <span th:text="${subscription.getEmployerProfile().companyName}" style="color: var(--text-color)"></span>
+                        </div>
+                        <div class="companyData">
+                            <a style="text-decoration: none" th:href="@{subscription.getEmployerProfile().website}"
+                               th:text="${subscription.getEmployerProfile().website}"></a>
+                        </div>
+                        <div class="pull-right-subscriptions">
+                            <span class="btn btn-info btnOnVacancyPage"
+                                  th:onclick="'deleteSubscription(' + ${subscription.getEmployerProfile().id} + ',' +${seekerProfileId} + ')'">Отписаться
+                                <i class="fas fa-trash-alt"></i>
+                            </span>
+                            <span class="btn btn-info btnOnVacancyPage"
+                                  th:onclick="'window.location.href = \'' + @{/employer/{id}(id=${subscription.getEmployerProfile().id})} + '\''">
+                                Профиль компании
+                            </span>
+                        </div>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

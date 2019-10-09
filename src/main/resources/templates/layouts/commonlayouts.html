@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <th:block th:replace="fragments/commonfragments :: head"></th:block>
+    <link rel="stylesheet" href="/css/loader.css">
+</head>
+<body style="background-color: var(--bg-color)">
+<th:block th:replace="fragments/commonfragments :: nav"></th:block>
+<div class="container-fluid">
+    <div class="row">
+        <th:block th:replace="fragments/commonfragments :: sidebar"></th:block>
+        <div class="main-block chromeFix" layout:fragment="content"></div>
+    </div>
+</div>
+<div class="block" id="loader">
+    <div class="loader-inner box1"></div>
+    <div class="loader-inner box2"></div>
+    <div class="loader-inner box3"></div>
+</div>
+<script>
+    document.body.onload = function () {
+        let containerFluid = document.getElementsByClassName("container-fluid");
+        containerFluid[0].style.opacity = 0;
+        let loader = document.getElementById("loader");
+
+        let iterator = 0;
+        let interval = setInterval(function () {
+            if (iterator >= 1) {
+                clearInterval(interval);
+            }
+            iterator += 0.1;
+            containerFluid[0].style.opacity = iterator;
+        }, 100);
+
+        setTimeout(function () {
+            if (!loader.classList.contains('done')) {
+                loader.classList.add('done');
+            }
+        }, 500);
+    };
+</script>
+</body>
+</html>

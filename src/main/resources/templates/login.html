@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <title>Please sign in</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-4">
+            </div>
+            <div class="col-sm-4">
+                <form class="form-signin" method="post" action="/login">
+                    <h2 class="form-signin-heading">Please sign in</h2>
+                    <div th:if="${logout}" class="alert alert-success" role="alert">You have been signed out
+                    </div>
+                    <div th:if="${error != null}" class="alert alert-danger" role="alert">
+                        <h5 th:text="${error}"></h5>
+                    </div>
+                    <p>
+                        <label for="j_username" class="sr-only">Username</label>
+                        <input type="text" id="j_username" name="j_username" class="form-control"
+                               placeholder="User" required
+                               autofocus>
+                    </p>
+                    <p>
+                        <label for="j_password" class="sr-only">Password</label>
+                        <input type="password" id="j_password" name="j_password" class="form-control"
+                               placeholder="Password"
+                               required>
+                    </p>
+                    <input name="_csrf" type="hidden" th:value="${_csrf.token}"/>
+                    <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in
+                    </button>
+                </form>
+                <div sec:authorize="!isAuthenticated()" th:align="right">
+                    <a href="/recovery">Восстановить пароль</a><br>
+                    <a href="/registration">Зарегистрироваться</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

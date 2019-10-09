@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <meta name="description" content="Чат">
+    <title>Чат</title>
+    <link rel="stylesheet" th:href="@{/css/new_chat.css}"/>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid" style="margin-left: 20px ; width: 660px">
+        <div class="data_block" id="meetingId" th:text="${meeting.id}"></div>
+        <th:block
+                th:replace="fragments/chat-with-topic-fragment::chat-with-topic (${chatId}, ${topic}, ${profileId},
+                ${currentUserId}, ${membersId})"></th:block>
+        <div>
+            <div th:if="${isOwner}" class="text-center mb-2 mr-2 mt-1">
+                <button th:if="${meeting.status==meeting.status.NOT_CONFIRMED}"
+                        th:onclick="'editMeeting(' + ${meeting.id} + ')'"
+                        type="button" class="btn btn-dark">Назначить дату
+                </button>
+                <button th:if="${meeting.status==meeting.status.SCHEDUALED}" type="button" disabled="disabled"
+                        class="btn btn-warning disabled">Ожидание подверждения
+                </button>
+                <button th:if="${meeting.status==meeting.status.CONFIRMED_BY_USER}"
+                        th:onclick="'updateMeeting(' + ${meeting.id} + ')'" type="button"
+                        class="btn btn-dark">Подтвердить встречу
+                </button>
+                <button th:if="${meeting.status==meeting.status.CONFIRMED}" type="button" disabled="disabled"
+                        class="btn btn-success disabled">Встреча назначена
+                </button>
+                <button th:if="${meeting.status==meeting.status.PASSED}" type="button" disabled="disabled"
+                        class="btn btn-dark disabled">Встреча состоялась
+                </button>
+            </div>
+            <div th:if="not ${isOwner}" class="text-center mb-2 mr-2 mt-1">
+                <button th:if="${meeting.status==meeting.status.SCHEDUALED}"
+                        th:onclick="'confirmMeeting(' + ${meeting.id} + ')'" type="button" class="btn btn-dark">
+                    Подтвердить
+                </button>
+                <button th:if="${meeting.status==meeting.status.NOT_CONFIRMED}"
+                        type="button" disabled="disabled" class="btn btn-warning disabled">Встреча не назначена
+                </button>
+                <button th:if="${meeting.status==meeting.status.CONFIRMED_BY_USER}"
+                        type="button" disabled="disabled" class="btn btn-warning disabled">Ожидание подверждения
+                </button>
+                <button th:if="${meeting.status==meeting.status.CONFIRMED}" type="button" disabled="disabled"
+                        class="btn btn-success disabled">Встреча назначена
+                </button>
+                <button th:if="${meeting.status==meeting.status.PASSED}" type="button" disabled="disabled"
+                        class="btn btn-dark disabled">Встреча состоялась
+                </button>
+            </div>
+
+        </div>
+    </div>
+    <!-- Meeting model -->
+    <div id="meetingModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Управление встречей</h2>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input id="dateTimeLocal" type="datetime-local">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="sendMeetingEdition()">
+                        Сохранить
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="height: 150px"></div>
+    </div>
+
+    <script th:src="@{/js/responding.js}"></script>
+</div>
+</body>
+</html>

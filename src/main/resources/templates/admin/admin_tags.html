@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/adminlayouts" th:with="side='tag'">
+<head>
+    <title>Tag Page</title>
+</head>
+
+<div class="container-fluid" layout:fragment="content">
+    <div class="row">
+
+        <div class="adminTagForm">
+            <form class="form-inline">
+                <label for="textNewTag" id="labelTextNewTag">Введите новый тэг</label>
+                <input type="text" class="form-control mb-2" id="textNewTag" placeholder="New tag">
+                <input type="checkbox" class="form-check-input mb-2" id="tagCheck">
+                <button type="submit" class="btn btn-sm" id="btnCreateNewTag">
+                    Отправить
+                </button>
+            </form>
+        </div>
+
+        <br>
+        <br>
+
+        <table class="table table-striped" style="margin-left: 20%; margin-right: 20% ">
+            <thead class="" style="border-width: 0px;">
+            <tr style="font-weight: bold; ">
+                <th scope="col">Id</th>
+                <th scope="col">Имя</th>
+                <th scope="col">Утвердить</th>
+                <th scope="col">Удалить</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="tag,tagCount: ${tags}" style="font-weight: normal;">
+                <td th:text="${tag.getId()}"></td>
+                <td th:text="${tag.getName()}"></td>
+                <td>
+                    <div th:unless="${tag.getVerified()}">
+                        <button th:onclick="'changeVerifiedTag(' + ${tag.getId()} + ')'" type="button"
+                                class="btn btn-primary"> утвердить
+                        </button>
+                    </div>
+                </td>
+                <td>
+                    <button th:attr="data-id=${tag.id}, data-name=${tag.name}"
+                            data-toggle="modal" data-target="#tagRemovalModal"
+                            type="button" class="btn btn-danger">
+                        удалить
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--    модальное окно подтверждения для удаления тегов-->
+    <div class="modal fade" id="tagRemovalModal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <b>Удаление тегов</b>
+                </div>
+                <div class="modal-body text-center">
+                    Удалить тег
+                    <span id="modalBodyRemoveTag" class="font-weight-bolder"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button id="btnSuccess" class="btn btn-sm btn-primary">
+                        Подтвердить
+                    </button>
+                    <button class="btn btn-sm btn-secondary" data-dismiss="modal">
+                        выход
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="content-script">
+    <script type="text/javascript" src="/js/admin/admin.js"></script>
+    <script type="text/javascript" src="/js/admin/admin_tags.js"></script>
+</div>
+</body>
+</html>

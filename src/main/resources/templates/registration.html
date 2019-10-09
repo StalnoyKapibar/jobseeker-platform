@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+
+<head>
+    <title>Registration</title>
+    <style>
+        #success_message {
+            display: none;
+        }
+        #ups_message {
+            display: none;
+        }
+        #recovery_message{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <br>
+        <form class="card bg-light" style="margin-left: 20%; margin-right: 20%" id="contact_form"
+              onchange="alertForm()">
+            <div class="card-header" align="center">
+                <legend align="center">
+                    <h2><b>Регистрация</b></h2>
+                </legend>
+            </div>
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-10">
+                    <!-- Form Name -->
+                    <div class="card-body">
+                        <div class="form-group">
+                            <!--<label class="col-md-4 control-label">Логин (Email)</label>-->
+                            <div class="inputGroupContainer">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Введите Email"
+                                           name="user_email" id="user_email" th:value="${email}" required="required">
+                                    <div class="invalid-feedback " id="exists_warning">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <!--<label class="col-md-4 control-label">Пароль</label>-->
+                            <div class="inputGroupContainer">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                    </div>
+                                    <input type="password" class="form-control"
+                                           placeholder="Введите пароль от 6 до 20 символов"
+                                           name="user_password" id="user_password" required="required">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <!--<label class="col-md-4 control-label">Введите повторно</label>-->
+                            <div class="inputGroupContainer">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                    </div>
+                                    <input name="confirm_password" id="confirm_password"
+                                           placeholder="Введите пароль повторно" class="form-control"
+                                           type="password" required="required">
+                                    <div class="invalid-feedback ">
+                                        Пароли не совпадают
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <!--<label class="col-md-4 control-label">Вид аккаунта</label>-->
+                            <div class=" selectContainer">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-list"></i></span>
+                                    </div>
+                                    <select name="role" id="role" class="form-control selectpicker"
+                                            required="required">
+                                        <option value="">Выберите роль</option>
+                                        <option value="ROLE_SEEKER">Соискатель</option>
+                                        <option value="ROLE_EMPLOYER">Работодатель</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="alert alert-success" role="alert" id="success_message">
+                                Регистрация завершена
+                                успешно <i
+                                    class="fas fa-thumbs-up"></i><br/>
+                                На Ваш E-mail придет письмо с инструкцией по активации
+                                аккаунта.<br/>
+                                Вы также можете <a href="/">вернуться на главную страницу</a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="alert alert-danger" role="alert" id="recovery_message">
+                                      Вы уже зарегистрированы в нашей базе
+                                 <i class="fas fa-registered"></i>
+                                <hr>
+                                перейти на <a href="/login"> страницу входа</a>
+                                или <a href="/recovery"> востановить пароль</a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="alert alert-danger" role="alert" id="ups_message">
+                                Форма заполнена не верно<i
+                                    class="fas fa-exclamation-circle"></i><br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="form-group" align="center">
+                    <!--<label class=" control-label"></label>-->
+                    <button type="button" class="btn btn-warning"
+                            style="width: 250px;" onclick="validityForm()">
+                        Зарегистрироваться <i class="fas fa-paper-plane "></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
+    <script type="text/javascript" src="/js/registration.js"></script>
+</div>
+</body>
+</html>

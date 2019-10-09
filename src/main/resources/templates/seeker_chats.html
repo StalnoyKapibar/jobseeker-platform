@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <title>Seeker Chats</title>
+    <script type="text/javascript" th:src="@{/js/seeker_chats.js}"></script>
+    <script type="text/javascript" th:src="@{/js/date_status_format.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div th:insert="fragments/chat-sidebar-fragment.html"></div>
+    <div style="margin-right:17%">
+        <div class="container-fluid">
+            <div class="row" style="height: 40px"></div>
+            <div class="row">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6" align="center" style="color: #7295B1">
+                    <input type="hidden" id="seekerProfileId" th:value="${seekerProfileId}">
+                    <div class="list-group">
+                        <th:block th:each="chat : ${chats}">
+                            <a th:href="@{/private_chat/{id}(id=${chat.id})}"
+                               class="list-group-item list-group-item-action chatInfo">
+                                <th:block th:each="member :${chat.chatMembers}">
+                                    <div th:unless="${member.profile.id} eq ${seekerProfileId}">
+                                        <div class="chatImageInfo">
+                                            <img class="rounded-circle chatMemberPhoto"
+                                                 th:src="@{'data:image/png;base64,' + ${member.profile.encoderPhoto}}"
+                                                 name="photo" alt="" style="height: 60px;width: 60px">
+                                        </div>
+                                        <div class="chatMemberName">
+                                            <span th:text="${member.profile.fullName}"></span>
+                                        </div>
+                                    </div>
+                                </th:block>
+                                <div class="chatMessageInfo" th:id="'chatMessageData_' + ${chat.id}"></div>
+                            </a>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+</body>
+</html>

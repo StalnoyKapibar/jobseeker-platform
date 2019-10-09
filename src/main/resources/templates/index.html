@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <title>Hello</title>
+    <meta name="apiKey" th:content="${googleMapsApiKey}"/>
+    <script type="text/javascript" src="/js/index.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="main-block chromeFix" layout:fragment="content">
+            <div id="vacancyDiv" class="container-fluid" style="margin-top: 30px">
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10">
+                        <div class="search_area">
+                            <form class="form-inline" style="margin-bottom: 5px;">
+                                <input class="form-control mr-sm-2 form-search" id="search_box" type="search"
+                                       name="query" placeholder="Поиск вакансий по тегам..."
+                                       aria-label="Search" value="" autocomplete="off" style="width: 60%">
+                                <button type="button" onclick="searchResults()" class="btn btn-warning my-2 my-sm-0">
+                                    Поиск
+                                </button>
+                            </form>
+                            <input type="hidden" id="searchBoxId" value="">
+                            <div id="search_advice_wrapper"></div>
+                        </div>
+                        <div id="searchButtons" style="margin-bottom: 10px"></div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 30px">
+                    <div class="col-sm-1">
+                    </div>
+                    <div class="col-sm-10">
+                        <div id="allVacancies">
+                            <h4 th:text="${vacMess}"></h4>
+                            <ul class="list-group" id="vacanciesByPoint">
+                            </ul>
+                            <input id="isAVShow" type="hidden" value="0">
+                        </div>
+                        <div id="searchVacancies">
+                            <span id="searchHeader" style="color: #4177A3;"></span>
+                            <div class="list-group" id="searchResult">
+                                <ul id="searchList" class="list-group"></ul>
+                            </div>
+                        </div>
+                        <div sec:authorize="hasRole('ROLE_SEEKER')" id="viewedVac" class="container" style="padding-right: 0px; padding-left: 0px">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="height: 200px">
+                    <div class="col-sm-6"></div>
+                    <div class="col-sm-4">
+                        <div class="flagToScroll" style="margin-top: 30px">
+                            <input type="hidden" id="scrollPageCount" value="0">
+                        </div>
+                        <div th:each="fvac : ${favoriteVacancies}">
+                            <input type="hidden" class="favoriteVacancies" th:value="${fvac.id}">
+                        </div>
+                        <input type="hidden" id="seekerProfileId" th:value="${seekerProfileId}">
+                        <input type="hidden" id="seekerAuthority" th:value="${seekerAuthority}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div id="vacancyModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content card border-light">
+                        <div class="modal-header card-header">
+                            <h2><span id="VMHeadline"></span><br/></h2>
+                        </div>
+                        <div class="modal-body">
+                            <h6><span id="VMTags"></span><br></h6>
+                            <h6 style="white-space: pre">Город:  <span id="VMCity"></span></h6>
+                            <span id="VMRemote"> (Удаленная работа)</span><br/>
+                            <h6 style="white-space: pre; color: #dc3545">Зарплата:  <span id="VMSalary"></span></h6><br/>
+                            <div class="well well-sm">
+                                <span id="VMDescription"></span>
+                            </div>
+                        </div>
+						<div class="modal-footer" id="vacancyModalFooter"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

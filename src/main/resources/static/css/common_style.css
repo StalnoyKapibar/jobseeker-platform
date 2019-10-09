@@ -1,0 +1,538 @@
+:root {
+    --bg-color: #fff;
+    --navbar-bg-color: #00bc8c;
+    --sidebar-bg-color: #F3F4F6;
+    --card-color: #fff;
+    --text-color: #222;
+    --sidebar-text-color: #222;
+    --form-border-color: #F39C12;
+    --card-bg-color: #F3F4F6;
+    --card-header-bg-color: #ccc;
+    --review-voted-color: #222;
+    --review-voted-hoover: #222;
+    --review-voted-count-color: #999999;
+    --snackbar-background-color: #222;
+    --snackbar-color: #fff;
+}
+
+:root[theme='dark'] {
+    --bg-color: #222;
+    --navbar-bg-color: #00bc8c;
+    --sidebar-bg-color: #303030;
+    --card-color: #303030;
+    --text-color: white;
+    --sidebar-text-color: #fff;
+    --form-border-color: #222;
+    --card-bg-color: #303030;
+    --card-header-bg-color: #444;
+    --review-voted-color: #F39C12;
+    --review-voted-hoover: #F39C12;
+    --review-voted-count-color: silver;
+    --snackbar-background-color: #fff;
+    --snackbar-color: #222;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    height: calc(100%);
+}
+
+li {
+    list-style-type: none;
+}
+
+/*Navbar style*/
+.navbar {
+    background-color: var(--navbar-bg-color);
+    width: 100vw;
+    max-height: 35px;
+}
+.left-navbar{
+    padding-left: 5vw;
+}
+.right-navbar{
+    padding-right: 5vw;
+}
+.navbar-nav{
+    margin-left: 5vw;;
+}
+.dropdown{
+    margin-left: 5vw;
+    margin-right: 5vw;
+}
+.entry-form{
+    width: 330px;
+    top: 200%;
+}
+.loginHelp{
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.auth-user-data>ul>li:first-child{
+    margin-right:5vw;
+}
+
+.sidebar, .btn {
+    cursor: pointer;
+}
+
+/*Sidebar style*/
+.sidebar {
+    position: fixed;
+    top: 35px;
+    left: 0;
+    z-index: 100; /* Behind the navbar */
+}
+
+.sidebar ul {
+    padding: 0 20%;
+}
+
+.sidebar li {
+    margin-top: 20px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: var(--sidebar-text-color);
+    display: block;
+}
+
+.sidebar li :hover {
+    color: #F39C12;
+}
+
+/*Content style*/
+.main-block {
+    height: 135%;
+    margin-top: 60px;
+    width: 85%;
+    /*отступ от сайдбара */
+    position: relative;
+    right: -15%;
+}
+
+.container-fluid .modal-body {
+    background-color: var(--card-bg-color);
+}
+
+.container-fluid .modal-header {
+    background-color: var(--card-header-bg-color);
+}
+
+.container-fluid .modal-footer {
+    background-color: var(--card-header-bg-color);
+}
+
+.container-fluid .well {
+    background-color: white;
+}
+
+.container-fluid .search_area {
+    margin-top: 25px;
+}
+
+.container-fluid #search_advice_wrapper {
+    display: none;
+    width: 58%;
+    background-color: white;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    position: absolute;
+    z-index: 100;
+}
+
+.container-fluid #search_advice_wrapper .advice_variant {
+    cursor: pointer;
+    padding: 10px;
+    text-align: left;
+    background-color: var(--bg-color);
+}
+
+.container-fluid #search_advice_wrapper .advice_variant:hover {
+    background-color: #F39C12;
+}
+
+
+/*Vacancies list style*/
+
+.container-fluid .pull-right {
+    position: absolute;
+    left: 75%;
+    bottom: 5%;
+    cursor: pointer;
+}
+
+.container-fluid .pull-right-subscriptions {
+    position: absolute;
+    left: 55%;
+    top: 25%;
+    cursor: pointer;
+}
+
+.container-fluid .btnOnVacancyPage {
+    border-radius: 20px;
+}
+
+.container-fluid .salary {
+    position: absolute;
+    bottom: 5%;
+    font-size: 20px;
+    font-weight: bold;
+    color: #3498DB;
+}
+
+.container-fluid .vacancyTags {
+    position: absolute;
+    top: 5%;
+    left: 75%;
+}
+
+.container-fluid .btnClick {
+    background-color: #F39C12;
+    cursor: pointer;
+    margin: 3px;
+
+}
+
+.container-fluid .btnClick:hover {
+    background-color: lightseagreen;
+}
+
+.container-fluid .headLine {
+    font-size: 25px;
+    font-weight: bold;
+    padding-right: 30%;
+}
+
+.container-fluid .companyData {
+    font-size: 14px;
+    color: #777777;
+}
+
+.container-fluid .vacancyDescription {
+    padding: 0 30% 3% 0;
+}
+
+.container-fluid .fa-star {
+    color: teal;
+}
+
+.container-fluid .list-group-item {
+    padding-top: 0;
+    background-color: var(--card-color);
+}
+
+.container-fluid .clearfix:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+/*Seeker news style*/
+
+.container-fluid .btnNews {
+    position: absolute;
+    left: 75%;
+    bottom: 25%;
+    top: 30%;
+}
+
+.container-fluid #buttons button {
+    width: 200px;
+    margin-top: 5px;
+}
+
+.container-fluid #btnSubscribe i {
+    margin-left: 2%;
+}
+
+.container-fluid .seekerNewsDate {
+    position: absolute;
+    top: 10px;
+    left: 80%;
+    color: #777777;
+}
+
+.container-fluid .seekerNewsHeadLine {
+    font-size: 25px;
+    font-weight: 700;
+    padding-right: 30%;
+}
+
+.container-fluid .newsDescription {
+    font-size: 0.9em;
+    margin-bottom: 20px;
+    line-height: 1.6em;
+}
+
+.container-fluid .newsDescription .btn {
+    text-decoration: none;
+    font-size: 0.9em;
+    line-height: 1.6em;
+}
+
+.container-fluid .newsCard {
+    font-family: 'Open Sans', Arial, sans-serif;
+    overflow: hidden;
+    text-align: left;
+    font-size: 16px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+}
+
+.container-fluid .newsAction {
+    padding: 0 25px;
+    color: #999999;
+    font-size: 0.8em;
+    line-height: 50px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.container-fluid .comments_viewing {
+    color: #333333;
+}
+
+.container-fluid .dislike i {
+    color: crimson;
+}
+
+.container-fluid .newsAction div {
+    display: inline-block;
+    margin-right: 15px;
+    font-size: 1.2em;
+}
+
+.container-fluid .newsAction i {
+    margin-right: 5px;
+}
+
+.container-fluid .well {
+    background-color: var(--bg-color);
+}
+
+.container-fluid .empCard {
+    position: relative;
+    margin-left: 40px;
+    margin-top: 40px;
+}
+
+.container-fluid .empCard .card-body {
+    background-color: var(--card-bg-color);
+}
+
+.container-fluid .empCard .card-header {
+    background-color: var(--card-header-bg-color);
+}
+
+.container-fluid .empCard .card-footer {
+    background-color: var(--card-header-bg-color);
+}
+
+.container-fluid .reviewCard .card-body {
+    background-color: var(--card-bg-color);
+}
+
+.container-fluid .img-rounded {
+    margin: 10px;
+    border-radius: 8px;
+    width: 60%;
+    display: block;
+}
+
+.container-fluid .form-signin {
+    margin-top: 40px;
+}
+
+.container-fluid .btn-signin {
+    background-color: #F39C12;
+}
+
+.container-fluid .form-control {
+    border-color: var(--form-border-color);
+}
+
+.container-fluid {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    height: 100%;
+}
+
+.main-block {
+    height: 100%;
+}
+
+.input-group-prepend .input-group-text {
+    background-color: #F39C12;
+    color: #222;
+}
+
+.reviewVotes, .reviewVotesForEmployer {
+    position: absolute;
+    bottom: 0;
+    right: 5%;
+}
+
+.reviewVotes span, .reviewVotesForEmployer span {
+    margin-right: 10px;
+    font-size: 0.8em;
+    color: var(--review-voted-count-color);
+    cursor: pointer;
+}
+
+.reviewVotes span > i:hover {
+    color: var(--review-voted-hoover);
+}
+
+.reviewVotes i, .reviewVotesForEmployer i {
+    margin-right: 5px;
+}
+
+.voted {
+    color: var(--review-voted-color) !important;
+}
+
+.textReview {
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 0.8em;
+    line-height: 1.6em;
+}
+
+.readMoreReviewButton {
+    font-size: 0.8em;
+    line-height: 1.6em;
+}
+
+.reviewDate {
+    color: #999999;
+    font-size: 0.9em;
+}
+
+.seekerReviewName {
+    position: absolute;
+    bottom: -5px;
+}
+
+.editCardReview {
+    position: absolute;
+    right: 5%;
+    top: -5%;
+    color: #999999;
+    cursor: pointer;
+}
+
+.employerComplaint i {
+    font-size: 1.3em;
+    position: absolute;
+    right: 10px;
+    top: -10px;
+    color: var(--review-voted-color);
+    cursor: pointer;
+}
+
+/*.employerComplaint:hover{
+
+}*/
+
+.editCardReview:hover {
+    color: #777777;
+}
+
+/*Select style*/
+select {
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+#chat_alert > i {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+}
+
+.chatImageInfo {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
+.chatMessageDate {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    color: var(--review-voted-count-color);
+}
+
+.chatMessageText {
+    position: absolute;
+    top: 40px;
+    left: 90px;
+    color: var(--text-color);
+}
+
+.chatMemberName {
+    position: absolute;
+    top: 15px;
+    left: 90px;
+    font-weight: bold;
+    color: var(--text-color);
+
+}
+
+.chatInfo {
+    min-height: 80px;
+}
+
+#snackbar {
+    visibility: hidden;
+    min-width: 15%;
+    /*margin-left: -125px;*/
+    background: var(--snackbar-background-color);
+    color: var(--snackbar-color);
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    bottom: 0;
+    font-size: 17px;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 3.5s;
+    animation: fadein 0.5s, fadeout 0.5s 3.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 0; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 0; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 0; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 0; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+.w3-sidebar{
+    background-color: var(--sidebar-bg-color)!important;
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <title>Confirm registration</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-8">
+            <div th:if="${complete}">
+                <div class="alert alert-success">
+                    <h2 align="center"><i class="fas fa-thumbs-up"></i> Регистрация
+                        завершена!</h2>
+                    <h2 align="center">Теперь вы можете зайти под своей учетной записью по <a
+                            href="/login" class="alert-link">ссылке</a> или в меню вверху.</h2>
+                </div>
+            </div>
+            <div th:unless="${complete}">
+                <div class="alert alert-danger">
+                    <h2 align="center"><i class="fas fa-exclamation-circle"></i> Код подтверждения некорректен или истек
+                        срок действия!</h2>
+                    <h2 align="center"><a href="/" class="alert-link">Вернуться на главную
+                        страницу</a></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/commonlayouts}"
+      lang="en">
+<head>
+    <title>Добавление новости</title>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.css" rel="stylesheet">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
+    <script type="text/javascript" src="/js/news.js"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container" style="margin: 30px">
+        <div class="row">
+            <h1>Все новости</h1>
+        </div>
+        <div class="row" style="margin-top: 30px">
+            <div class="table-responsive">
+                <table id="employerProfileNews" class="table table-sm table-bordered"
+                       cellspacing="0"
+                       width="100%" style="background-color: var(--sidebar-bg-color); color: var(--text-color)">
+                    <thead align="center">
+                    <tr>
+                        <th>Headline</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody align="center" id="newsBodyTable">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Edit Modal -->
+            <div class="modal fade" id="editNewsModal">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Редактирование новости</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="container-fluid" align="center">
+                                <div id="alertModalWindow" class="alert alert-danger" style="display: none"></div>
+                                <div class="control-label">Заголовок</div>
+                                <div>
+                                    <div class="form-group">
+                                        <input type="hidden" id="NMId" name="NMId">
+                                        <input type="hidden" id="NMAuthorId" name="NMAuthorId">
+                                        <input class="form-control"
+                                               type="text"
+                                               name="NMHeadline" id="NMHeadline">
+                                    </div>
+                                </div>
+
+                                <div class="control-label">Описание</div>
+                                <div>
+                                    <div class="form-group">
+                                        <textarea rows="10" class="form-control" name="NMDescription"
+                                                  id="NMDescription"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" onclick="editModalNews()">Отправить
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Modal -->
+            <div class="modal fade" id="viewDescriptionModal">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Описание</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <textarea rows="10" class="form-control" name="NMViewDescription"
+                                          id="NMViewDescription" readonly></textarea>
+                            </div>
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="height: 200px">
+            <div class="col-sm-8">
+                <div class="flagToScroll">
+                    <input type="hidden" id="scrollEmployerNewsPageCount" th:value="'0'">
+                    <input type="hidden" id="employerProfileId" th:value="${employerProfileId}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
