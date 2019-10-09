@@ -97,6 +97,12 @@
                     Теги
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${side == 'report' ? 'active' : ''}" href="/admin/reports">
+                    <span data-feather="clipboard"></span>
+                    Жалобы
+                </a>
+            </li>
         </ul>
     </div>
 </th:block>
