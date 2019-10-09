@@ -21,8 +21,7 @@ $(document).ready(function () {
 function createNewTag(nameNewTag) {
     let token = $("meta[name='_csrf']").attr("content");
     let header = $("meta[name='_csrf_header']").attr("content");
-    let tagCheck = document.getElementById("tagCheck");
-    let newDataTag = {'name': nameNewTag, 'verified': tagCheck.checked};
+    let newDataTag = {'name': nameNewTag, 'verified': true};
 
     $.ajax({
         url: "/api/tags/createNewTagController/",
