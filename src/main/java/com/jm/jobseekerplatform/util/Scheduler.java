@@ -23,20 +23,21 @@ public class Scheduler {
     @Autowired
     MeetingService meetingService;
 
-    @Scheduled(cron = "${scheduler.properties.deleteExpiryVacancies.cron}")
+    @Scheduled(cron = "${scheduler.deleteExpiryVacancies.cron}")
     public void deleteExpiryVacancies() {
         vacancyService.deletePermanentBlockVacancies();
         vacancyService.deleteExpiryBlockVacancies();
     }
 
-    @Scheduled(cron = "${scheduler.properties.deleteExpiryEmployerProfiles.cron}")
+    @Scheduled(cron = "${scheduler.deleteExpiryEmployerProfiles.cron}")
     public void deleteExpiryEmployerProfiles() {
         employerProfileService.deletePermanentBlockEmployerProfiles();
         employerProfileService.deleteExpiryBlockEmployerProfiles();
     }
 
-    @Scheduled(cron = "${scheduler.properties.updateMeetingStatus.cron}")
+    @Scheduled(cron = "${scheduler.updateMeetingStatus.cron}")
     public void updateMeetingStatus() {
         meetingService.updateMeetingsOnPassing();
     }
+
 }
