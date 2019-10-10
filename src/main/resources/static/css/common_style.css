@@ -116,11 +116,11 @@ li {
         width: 250px;
     }
 
-        .sidebar.item-menu {
-            height: 50px;
-            overflow: hidden;
-            color: #F39C12;
-        }
+    .sidebar.item-menu {
+        height: 50px;
+        overflow: hidden;
+        color: #F39C12;
+    }
 
     .sidebar a {
         text-decoration: none;
