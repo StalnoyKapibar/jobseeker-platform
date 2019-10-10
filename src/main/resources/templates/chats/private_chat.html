@@ -16,8 +16,10 @@
 <div layout:fragment="content">
     <div th:insert="fragments/chat-sidebar-fragment.html"></div>
     <div class="container-fluid" style="margin-left: 20px ; width: 660px">
-        <h3 class="text-center mt-5">Тема чата: <span
-                th:text="${chatWithTopic.topic.typeName +' ' + chatWithTopic.topic.headline + ' от ' + chatWithTopic.topic.getCreatorProfile().getFullName()}"></span>
+        <h3 class="text-center mt-5">
+			Тема чата:
+			<span th:text="${chatWithTopic.topic.typeName + ' ' + chatWithTopic.topic.headline + ' от ' +
+			 								chatWithTopic.topic.getCreatorProfile().getFullName()}"></span>
         </h3>
         <div class="data_block" id="chatId" th:text="${chatWithTopic.id}"></div>
         <div class="data_block" id="profileId" th:text="${profileId}"></div>
@@ -31,8 +33,7 @@
                                 <textarea id="form7" class="privChat write_msg pl-3 mb-4 mt-3 md-textarea form-control" placeholder="Type a message"></textarea>
                             </div>
                             <button onclick="sendMessage()" class="msg_send_btn mr-1" type="button">
-                                <img style="filter: invert(1);"
-									 src="https://png.pngtree.com/svg/20170329/25907eee9d.png">
+                                <img style="filter: invert(1);" src="https://png.pngtree.com/svg/20170329/25907eee9d.png">
                             </button>
                             <div id="textInfo">shift+enter - отправить, enter - новая строка</div>
                         </div>
@@ -42,5 +43,8 @@
         </div>
     </div>
 </div>
+
+<button onclick="checkIsMessageWasReadByProfileId()">НАЖМИ</button>
+
 </body>
 </html>

@@ -130,8 +130,8 @@ public class ChatRestController {
     @GetMapping("{chatId:\\d+}")
     public HttpEntity getAllMessagesInChat(@PathVariable("chatId") Long chatId) {
         List<ChatMessage> chatMessageList = chatService.getById(chatId).getChatMessages();
-        Collections.sort(chatMessageList);
-        return new ResponseEntity<>(chatMessageList, HttpStatus.OK);
+		chatMessageList.sort((s1, s2) -> (int) (s2.getId() - s1.getId()));
+		return new ResponseEntity<>(chatMessageList, HttpStatus.OK);
     }
 
     @PutMapping("set_chat_read_by_profile_id")

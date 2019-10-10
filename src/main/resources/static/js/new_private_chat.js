@@ -103,18 +103,18 @@ function displayMessage(message) {
         $(".msg_history").append('<div class="special_msg text-center"><p>' + messageLog + '</p></div>')
     }
 
-//Вывод сообщений построчно:
+//Вывод исходящих сообщений построчно:
     function addYourMessage(message) {
         let date = messageDateFormat(message.date);
 
         $(".msg_history").append('' +
             '<div class="outgoing_msg">' +
-            '<div class="sent_msg">' +
-            '<ul id="insertUl"></ul>' +
-            '<span class="time_date">' + date + '</span>' +
-            '</div>' +
-            '</div>')
-        ;
+            	'<div class="sent_msg">' +
+            		'<ul id="insertUl"></ul>' +
+            		'<span class="time_date">' + date + '</span>' +
+            	'</div>' +
+            '</div>'
+		);
 
         let str = message.text;
         let urlLast =  $(".sent_msg:last").find('#insertUl');
@@ -128,16 +128,31 @@ function displayMessage(message) {
         }
     }
 
+//Вывод входящих сообщений построчно:
     function addForeignMessage(message) {
         var date = messageDateFormat(message.date);
-        $(".msg_history").append('<div class="incoming_msg">\n' +
-            '                            <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>\n' +
-            '                            <div class="received_msg">\n' +
-            '                                <div class="received_withd_msg">\n' +
-            '                                    <p>' + message.text + '</p>\n' +
-            '                                    <span class="time_date">' + date + '</span></div>\n' +
-            '                            </div>\n' +
-            '                        </div>');
+        $(".msg_history").append('' +
+			'<div class="incoming_msg">' +
+				'<div class="received_msg">' +
+					'<div class="incoming_msg_img">' +
+						'<img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">' +
+					'</div>' +
+					'<ul id="insertIncom"></ul>' +
+					'<span class="time_date">' + date + '</span>' +
+				'</div>' +
+            '</div>'
+		);
+
+		let str = message.text;
+		let urlLastIncom =  $(".incoming_msg:last").find('#insertIncom');
+		if(str.indexOf('\n') > 0) {
+			let arr = str.split('\n');
+			for (var i = 0; i < arr.length; i++) {
+				$(urlLastIncom).append('<li>' + arr[i] + '</li>');
+			}
+		} else {
+			$(urlLastIncom).append('<li>' + str + '</li>');
+		}
     }
 
 }

@@ -19,19 +19,33 @@ $(document).ready(function () {
             console.log(error);
             alert(error.toString());
         }
-    });
-
-
-});
+    })
+})
 
 function getLastMessage(chatId) {
     $.get("/api/chats/" + chatId, function (chatMessagesList) {
         if (chatMessagesList && chatMessagesList.length > 0) {
-            chatMessagesList.reverse();
-            var lastReceivedMessage = chatMessagesList[chatMessagesList.length - 1];
-            var date = messageDateFormat(lastReceivedMessage.date);
-            $('#chatMessageData_' + chatId).append('<div class="chatMessageText"><span>' + lastReceivedMessage.text +
-                '</span></div>' + '<div class="chatMessageDate"><span>' + date + '</span></div>');
+            let lastReceivedMessage = chatMessagesList[0];
+			let date = messageDateFormat(lastReceivedMessage.date);
+			let seekerProfileId = $('#seekerProfileId').val();
+			let profilrId = lastReceivedMessage.creatorProfile;
+			let newMess = "";
+
+            if (chatMessagesList[0].isReadByProfilesId.length == 1 && profilrId != seekerProfileId) {
+            	newMess = "Новое сообщение";
+			}
+
+            $('#chatMessageData_' + chatId).append('' +
+				'<div class="chatMessageText">' +
+					'<span>' + lastReceivedMessage.text + '</span>' +
+				'</div>' +
+				'<div class="chatMessageDate">' +
+					'<span>' + date + '</span>' +
+				'</div>' +
+				'<div class="chatMessageInfo">' +
+					'<span>' + newMess + '</span>' +
+				'</div>'
+			)
         }
-    });
+    })
 }
