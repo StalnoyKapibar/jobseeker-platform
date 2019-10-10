@@ -92,7 +92,7 @@ li {
     transition: width 0.5s;
     position: fixed;
     top: 35px;
-    z-index: 9999; /* Behind the navbar */
+    z-index: 9999; /*  Behind the navbar */
 }
 
     .sidebar ul {
