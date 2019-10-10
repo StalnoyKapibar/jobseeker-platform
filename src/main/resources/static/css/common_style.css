@@ -20,7 +20,7 @@
     --navbar-bg-color: #00bc8c;
     --sidebar-bg-color: #303030;
     --card-color: #303030;
-    --text-color: white;
+    --text-color: #fff;
     --sidebar-text-color: #222;
     --form-border-color: #222;
     --card-bg-color: #303030;
@@ -96,24 +96,24 @@ li {
 }
 
     .sidebar ul {
-        padding: 0 20%;
+        padding: 0;
         list-style-type: none;
         text-align: left;
     }
 
     .sidebar li {
         width: auto;
-        line-height: 50px;
-        padding-left: 40px;
+        line-height: 40px;
+        padding-left: 50px;
         margin-top: 20px;
     }
 
     .sidebar li :hover {
-        color: #0a0a0a;
+        color: var(--text-color);
     }
 
     .sidebar:hover {
-        width: 250px;
+        width: 220px;
     }
 
     .sidebar.item-menu {
