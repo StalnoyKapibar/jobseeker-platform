@@ -4,7 +4,7 @@
     --sidebar-bg-color: #F3F4F6;
     --card-color: #fff;
     --text-color: #222;
-    --sidebar-text-color: #222;
+    --sidebar-text-color: #fff;
     --form-border-color: #F39C12;
     --card-bg-color: #F3F4F6;
     --card-header-bg-color: #ccc;
@@ -21,7 +21,7 @@
     --sidebar-bg-color: #303030;
     --card-color: #303030;
     --text-color: white;
-    --sidebar-text-color: #fff;
+    --sidebar-text-color: #222;
     --form-border-color: #222;
     --card-bg-color: #303030;
     --card-header-bg-color: #444;
@@ -124,7 +124,7 @@ li {
 
     .sidebar a {
         text-decoration: none;
-        color: white;
+        color: var(--sidebar-text-color);
         display: block;
     }
     span.menu {
