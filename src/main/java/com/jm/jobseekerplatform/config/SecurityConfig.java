@@ -91,7 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .sessionManagement()
-                .maximumSessions(1).sessionRegistry(sessionRegistry());
+                .maximumSessions(-1).sessionRegistry(sessionRegistry());
     }
 
 }
