@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -295,6 +296,18 @@ public class InitData {
         seekerUser = new SeekerUser("seeker3@mail.ru", userService.encodePassword("seeker3".toCharArray()), LocalDateTime.now(), seekerProfileService.getById(10L));
         seekerUser.setConfirm(true);
         seekerUserService.add(seekerUser);
+
+        seekerUser = new SeekerUser("seeker4@mail.ru", userService.encodePassword("seeker4".toCharArray()), LocalDateTime.of(2019, Month.SEPTEMBER, 30, 10,10), seekerProfileService.getById(11L));
+        seekerUser.setConfirm(true);
+        seekerUserService.add(seekerUser);
+
+        seekerUser = new SeekerUser("seeker5@mail.ru", userService.encodePassword("seeker5".toCharArray()), LocalDateTime.now().minusDays(1L), seekerProfileService.getById(12L));
+        seekerUser.setConfirm(true);
+        seekerUserService.add(seekerUser);
+
+        seekerUser = new SeekerUser("seeker6@mail.ru", userService.encodePassword("seeker6".toCharArray()), LocalDateTime.now().minusDays(2L), seekerProfileService.getById(13L));
+        seekerUser.setConfirm(true);
+        seekerUserService.add(seekerUser);
     }
 
     public void initVacancies() {
@@ -424,6 +437,7 @@ public class InitData {
         portfolioService.add(new Portfolio("OverReal", "https://github.com/OverReal/", "Создавал 3d модели дл дополненной реальности"));
         portfolioService.add(new Portfolio("EpicGames", "https://github.com/Xbox6/EpicGames/", "Прикручивал Sockets. Использовал Java 8, Spring"));
         portfolioService.add(new Portfolio("BestBrowser", "https://github.com/BB1/BestBrowser/", " Использовал Java 8, Spring"));
+
     }
 
     public void initTags() {
@@ -471,6 +485,15 @@ public class InitData {
         portfolios.add(portfolioService.getById(5L));
         portfolios.add(portfolioService.getById(6L));
         seekerProfileService.add(new SeekerProfile("Семен", "Александрович", "Иванов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L), portfolios, vacancies, new HashSet<>()));
+
+        portfolios.clear();
+        seekerProfileService.add(new SeekerProfile("Петр", "Александрович", "Петров", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L), portfolios, vacancies, new HashSet<>()));
+
+        portfolios.clear();
+        seekerProfileService.add(new SeekerProfile("Игорь", "Александрович", "Кузнецов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+
+        portfolios.clear();
+        seekerProfileService.add(new SeekerProfile("Степан", "Александрович", "Степанов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L), portfolios, vacancies, new HashSet<>()));
     }
 
     private Set<Tag> randomTags(Long position) {
@@ -547,7 +570,7 @@ public class InitData {
     }
 
     private void initJobExperience() {
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 40; i++) {
             Date date = new Date();
             JobExperience jobExperience = new JobExperience(date,
                     new Date(date.getTime() + (24 * 60 * 60 * 1000)),//+1 день
