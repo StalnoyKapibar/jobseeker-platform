@@ -1,11 +1,8 @@
-var stompClient = null;
-
-var currentChatId;
-var currentProfileId;
-
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
-
+var stompClient = null;
+var currentChatId;
+var currentProfileId;
 var isNewMessages = false;
 
 //const messageForm = document.querySelector('#messageForm');
@@ -106,6 +103,7 @@ function displayMessage(message) {
 //Вывод исходящих сообщений построчно:
     function addYourMessage(message) {
         let date = messageDateFormat(message.date);
+		$.get("/api/chats/evictAllCacheValues", function () {});
 
         $(".msg_history").append('' +
             '<div class="outgoing_msg">' +
@@ -200,8 +198,6 @@ function sendMessage() {
         stompClient.send("/live/private_chat/" + currentChatId, {}, JSON.stringify(chatMessage));
         $(".write_msg").val("");
     }
-
-    //event.preventDefault();
 }
 
 function updateChatReadStatusOnServer(lastReadMessage, readerProfileId) {
