@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,6 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return passwordEncoder;
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
     @Override
@@ -81,6 +88,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/users/add", "/confirm_reg/*", "/js/**", "/vacancy/**").permitAll()
                 // всё, что касается админа только для админа и емплоера
                 .antMatchers("/admin/**", "api/resumes/**", "api/cities/**").access("hasAnyRole('ADMIN','EMPLOYER')").anyRequest().authenticated();
+
+        http
+                .sessionManagement()
+                .maximumSessions(-1).sessionRegistry(sessionRegistry());
     }
 
 }
