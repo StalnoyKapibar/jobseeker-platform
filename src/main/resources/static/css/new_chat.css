@@ -123,6 +123,11 @@ img {
     width: 6%;
 }
 
+incoming_msg {
+	display: inline-block;
+	width: 6%;
+}
+
 .received_msg {
     display: inline-block;
     padding: 0 0 0 10px;
@@ -157,16 +162,6 @@ img {
     width: 99%;
 }
 
-.sent_msg p {
-    background: rgb(0, 188, 140) none repeat scroll 0 0;
-    border-radius: 3px;
-    font-size: 14px;
-    margin: 0;
-    color: #fff;
-    padding: 5px 10px 5px 12px;
-    width: 100%;
-}
-
 #insertUl {
     background: rgb(0, 188, 140) none repeat scroll 0 0;
     border-radius: 3px;
@@ -176,7 +171,16 @@ img {
     width: 100%;
 }
 
-#insertUl li {
+#insertIncom {
+	background: rgb(67, 79, 88) none repeat scroll 0 0;
+	border-radius: 3px;
+	font-size: 14px;
+	color: #fff;
+	padding: 5px 10px 5px 12px;
+	width: 100%;
+}
+
+#insertUl li, #insertIncom li {
     white-space: normal;
     word-wrap: break-word;
 }
@@ -189,14 +193,19 @@ img {
 	resize: none;
 }
 
-.outgoing_msg {
+.outgoing_msg, .incoming_msg {
     overflow: hidden;
-    margin: 26px 0 26px;
+    margin: 26px 0 26px 0;
 }
 
 .sent_msg {
     float: right;
     width: 46%;
+}
+
+.received_msg {
+	float: left;
+	width: 46%;
 }
 
 .input_msg_write input {
@@ -223,7 +232,7 @@ img {
     height: 53px;
     position: absolute;
     right: 0;
-    top: 11px;
+    top: 16px;
     width: 53px;
 }
 

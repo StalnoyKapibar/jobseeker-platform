@@ -294,7 +294,7 @@ public class ChatWithTopicDAO extends AbstractDAO<ChatWithTopic> {
 
     /**
      * Методы <code>getByTopicIdCreatorProfileIdTopicType</code>, <code>getByTopicIdCreatorProfileIdChatType</code>
-     * и <code>getChatByTopicIdCreatorProfileId</code> дублируют функционал, однако используют разгную реализацию.
+     * и <code>getChatByTopicIdCreatorProfileId</code> дублируют функционал, однако используют разную реализацию.
      *
      * @see {@link com.jm.jobseekerplatform.dao.impl.chats.ChatWithTopicDAO#getChatByTopicIdCreatorProfileIdTopicType}
      */
