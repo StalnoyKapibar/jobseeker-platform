@@ -285,11 +285,13 @@ public class InitData {
         employerUser.setConfirm(true);
         employerUserService.add(employerUser);
 
-        seekerUser = new SeekerUser("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), seekerProfileService.getById(8L));
+        /*seekerUser = new SeekerUser("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), seekerProfileService.getById(8L));*/
+        seekerUser = new SeekerUser("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.of(2019, Month.OCTOBER, 1, 10, 10, 10), seekerProfileService.getById(8L));
         seekerUser.setConfirm(true);
         seekerUserService.add(seekerUser);
 
-        seekerUser = new SeekerUser("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.now(), seekerProfileService.getById(9L));
+        /*seekerUser = new SeekerUser("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.now(), seekerProfileService.getById(9L));*/
+        seekerUser = new SeekerUser("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.of(2019, Month.OCTOBER, 10, 10, 10, 10), seekerProfileService.getById(9L));
         seekerUser.setConfirm(true);
         seekerUserService.add(seekerUser);
 

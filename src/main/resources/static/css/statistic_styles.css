@@ -1,0 +1,23 @@
+/* Circle progress bar styles */
+.circle {
+    position: relative;
+}
+.circle canvas {
+    width: 50%;
+    margin-left: 25%;
+}
+.circle span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform:translate(-50%, -50%);
+    font-size: 36px;
+}
+/* Linear progress bar styles */
+.progress-bar{
+    transition: none;
+}
+/* Dynamic diagramm styles */
+canvas[id^="dynamic_"]{
+    margin-top: 40px;
+}
