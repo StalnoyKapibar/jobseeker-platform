@@ -7,17 +7,20 @@ $(document).ready(function (e) {
     $.ajax({
         url: "/api/admin/seekers/all",
         type: "GET",
+        async: false,
         success: function (data) {
-            allSeekers = data
+            allSeekers = data;
         }
     });
     $.ajax({
         url: "/api/admin/seekers/today",
         type: "GET",
-        success: function (data){
-          console.log(data);
+        async: false,
+        success: function (data) {
+
         }
-    });
+    })
+    console.log(allSeekers);
     let $allSeekersCircleProgressBar = $('#all_seekers');
     $allSeekersCircleProgressBar.attr('data-percent', allSeekers);
     let $allSeekersProgress = $("#seekers_progress_bar");

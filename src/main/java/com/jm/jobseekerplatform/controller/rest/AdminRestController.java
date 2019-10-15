@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -32,14 +33,8 @@ public class AdminRestController {
 
     @RequestMapping(value = "/seekers/today", method = RequestMethod.GET)
     public ResponseEntity<List<SeekerUser>> getSeekersFromToday(){
-        LocalDateTime startDate = LocalDateTime.now();
-        LocalDateTime endDate = startDate.minusDays(30L);
-        List<SeekerUser> seekerUserList = seekerUserService.getByDate(startDate, endDate);
+        LocalDateTime endDate = LocalDateTime.now().minusDays(30L);
+        List<SeekerUser> seekerUserList = seekerUserService.getByDate(endDate);
         return new ResponseEntity<>(seekerUserList, HttpStatus.OK);
     }
-    /*public ResponseEntity<SeekerUser> getSeekersFromToday(){
-        SeekerUser seekerUser = seekerUserService.getById(38L);
-        LocalDateTime dateTime = seekerUser.getDate();
-        return new ResponseEntity<>(seekerUser, HttpStatus.OK);
-    }*/
 }
