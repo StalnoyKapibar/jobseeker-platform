@@ -3,16 +3,30 @@ $(document).ready(function (e) {
     feather.replace();
     let $counter = $(".counter");
     /* Seekers */
-    let allSeekers = 50;
+    let allSeekers;
+    $.ajax({
+        url: "/api/admin/seekers/all",
+        type: "GET",
+        success: function (data) {
+            allSeekers = data
+        }
+    });
+    $.ajax({
+        url: "/api/admin/seekers/today",
+        type: "GET",
+        success: function (data){
+          console.log(data);
+        }
+    });
     let $allSeekersCircleProgressBar = $('#all_seekers');
     $allSeekersCircleProgressBar.attr('data-percent', allSeekers);
     let $allSeekersProgress = $("#seekers_progress_bar");
 
-    let todaySeekers = 10;
+    let todaySeekers = 1;
     $('#today_seekers').attr('data-count', todaySeekers);
     let $todaySeekersProgress = $("#today_seekers_progress");
 
-    let monthSeekers = 25;
+    let monthSeekers = 2;
     $('#month_seekers').attr('data-count', monthSeekers );
     let $monthSeekersProgress = $('#month_seekers_progress');
     /* Resumes */

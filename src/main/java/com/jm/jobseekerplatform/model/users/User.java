@@ -1,7 +1,9 @@
 package com.jm.jobseekerplatform.model.users;
 
 import com.fasterxml.jackson.annotation.*;
+import com.jm.jobseekerplatform.LocalDateTimeConverter;
 import com.jm.jobseekerplatform.model.profiles.Profile;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -37,6 +39,7 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
     private char[] password;
 
     @Column(name = "date", nullable = false)
+    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime date;
 
     @OneToOne(fetch = FetchType.EAGER, targetEntity = Profile.class)
