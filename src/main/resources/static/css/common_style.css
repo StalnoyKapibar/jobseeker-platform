@@ -48,6 +48,11 @@ li {
 }
 
 /*Navbar style*/
+
+.sidebar, .btn {
+    cursor: pointer;
+}
+
 .navbar {
     background-color: var(--navbar-bg-color);
     width: 100vw;

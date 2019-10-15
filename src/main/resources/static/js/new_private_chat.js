@@ -103,8 +103,6 @@ function displayMessage(message) {
 //Вывод исходящих сообщений построчно:
     function addYourMessage(message) {
         let date = messageDateFormat(message.date);
-		$.get("/api/chats/evictAllCacheValues", function () {});
-
         $(".msg_history").append('' +
             '<div class="outgoing_msg">' +
             	'<div class="sent_msg">' +

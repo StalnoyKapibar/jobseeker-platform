@@ -133,10 +133,9 @@ public class ChatRestController {
         return new ResponseEntity<>(chatWithTopic.getId().toString(), HttpStatus.OK);
     }
 
-	@GetMapping("evictAllCacheValues")
-	public void evictAllCacheValues() {
-		cacheManager.getCache("count").clear();
-	}
+    private void evictAllCacheValues() {
+        cacheManager.getCache("count").clear();
+    }
 
 	@Cacheable("count")
     @GetMapping("getCountUnReadMessageByUserId")
@@ -154,7 +153,7 @@ public class ChatRestController {
 		List<BigInteger> num = chatService.getProfileIDByChat(chatId);
 		if (num.size() == 1) {
 			Long temp = Long.parseLong(String.valueOf(num.get(0).longValue()));
-			if (temp != profId) {
+			if (!temp.equals(profId)) {
 				bool = true;
 			}
 		}
