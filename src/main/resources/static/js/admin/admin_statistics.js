@@ -1,6 +1,7 @@
 $(document).ready(function (e) {
     'use strict';
     feather.replace();
+
     function localDateTime(date) {
         return date.getFullYear().toString() + "-" + ((date.getMonth() + 1).toString().length == 2 ?
             (date.getMonth() + 1).toString() : "0" + (date.getMonth() + 1).toString()) + "-"
@@ -11,21 +12,24 @@ $(document).ready(function (e) {
             + (date.getSeconds().toString().length == 2 ? date.getSeconds().toString() : "0"
                 + date.getSeconds().toString());
     };
+
     function getStartDate(days) {
         let date = new Date();
         date.setDate(date.getDate() - days);
-        date.setHours(0,0,0,0);
+        date.setHours(0, 0, 0, 0);
         return date;
     };
+
     function getEndDate(days) {
         let date = new Date();
         date.setDate(date.getDate() - days);
-        if(days != 0){
-            date.setHours(23,59,59,59);
+        if (days != 0) {
+            date.setHours(23, 59, 59, 59);
         }
         return date;
     };
-    function getStatisticsByAllPeriod(name){
+
+    function getStatisticsByAllPeriod(name) {
         let result;
         $.ajax({
             url: "/api/admin/all/" + name,
@@ -37,7 +41,8 @@ $(document).ready(function (e) {
         });
         return result
     };
-    function getStatisticsByDatePeriod(name, start, end){
+
+    function getStatisticsByDatePeriod(name, start, end) {
         let result;
         let startDate = localDateTime(start);
         let endDate = localDateTime(end);
