@@ -34,25 +34,38 @@ function printEmployerNews() {
             }
             var trHTML = '';
             $.each(data, function (i, item) {
+                var bg = "#222";
+                if (item.numberOfViews == 1) {
+                    bg = "#F39C12";
+                }
                 var headline = '';
                 if (item.headline.length > 30) {
                     headline = item.headline.substr(0, 29) + ' ...';
                 } else headline = item.headline;
-                trHTML += '<tr class="newsTrBody">' +
-                    '<td>' + headline + '</td>' +
-                    '<td>' +
-                    '<button id = "newsDescription-' + item.id + '" style = "text-decoration: none" type = "button"' +
-                    'class = "btn btn-link" onclick = "newsDescription(' + item.id + ')"' +
-                    'value="' + item.description + '" data-toggle="modal"data-target="#viewDescriptionModal">Описание </button>' +
-                    '</td>' +
-                    '<td>' + getFormattedDate(new Date(item.date)) + '</td>' +
-                    '<td>' +
-                    '<button style="width: 120px" onclick="editNews(' + item.id + ')" type="button"' +
-                    'class="btn btn-primary" data-toggle="modal" data-target="#editNewsModal">Edit news </button>' +
-                    '<button style="width: 120px;margin-left: 5px" onclick="deleteNews(' + item.id + ')" type="button"' +
-                    'class="btn btn-primary"> Delete news </button>' +
-                    '</td>' +
-                    '</tr>';
+                trHTML += '' +
+                    '<tr class="newsTrBody" bgcolor="' + bg + '">' +
+                        '<td>' + headline + '</td>' +
+                        '<td>' +
+                            '<button id = "newsDescription-' + item.id +
+                                '" style = "text-decoration: none" type = "button"' +
+                                'class = "btn btn-link" onclick = "newsDescription(' + item.id + ')"' +
+                                'value="' + item.description +
+                                '" data-toggle="modal"data-target="#viewDescriptionModal">Описание ' +
+                            '</button>' +
+                        '</td>' +
+                        '<td>' +
+                            getFormattedDate(new Date(item.date)) +
+                        '</td>' +
+                        '<td>' +
+                            '<button style="width: 120px" onclick="editNews(' + item.id + ')" type="button"' +
+                                'class="btn btn-primary" data-toggle="modal" data-target="#editNewsModal">Edit news ' +
+                            '</button>' +
+                            '<button style="width: 120px;margin-left: 5px" onclick="deleteNews(' + item.id +
+                                ')" type="button" class="btn btn-primary"> Delete news ' +
+                            '</button>' +
+                        '</td>' +
+                    '</tr>'
+                ;
             });
             newsPageCount++;
             $('#scrollEmployerNewsPageCount').val(newsPageCount);
@@ -88,7 +101,6 @@ function deleteNews(newsId) {
             alert(error.toString());
         }
     })
-
 }
 
 function editNews(newsId) {
@@ -149,6 +161,7 @@ function getFormattedDate(dateObject){
 
 function newsDescription(newsId) {
     $("#NMViewDescription").summernote('code', $('#newsDescription-' + newsId).val());
+    $.get("/api/news/increaseViews?chatId=" + newsId, function () {})
 }
 
 function disableEditModalWindowElements() {

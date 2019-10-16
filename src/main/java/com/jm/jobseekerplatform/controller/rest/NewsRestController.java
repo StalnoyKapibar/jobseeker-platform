@@ -5,15 +5,11 @@ import com.jm.jobseekerplatform.model.DraftNews;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.comments.Comment;
-import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.DraftNewsService;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
-import com.jm.jobseekerplatform.service.impl.comments.CommentService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
-import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.security.RolesAllowed;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +44,6 @@ public class NewsRestController {
 
     @Autowired
     private TagService tagService;
-
-    @Autowired
-    private CommentService commentService;
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @PostMapping("/add")
@@ -83,6 +75,7 @@ public class NewsRestController {
         return new ResponseEntity<>(newsDTO, HttpStatus.OK);
     }
 
+    // Присваивание: 1 - абсолютно свежая новость, 2 - уже была на экране
     @RolesAllowed ({"ROLE_EMPLOYER"})
     @GetMapping ("/")
     public ResponseEntity<List<News>> getAllNewsByEmployerProfileId(@RequestParam("newsPageCount") int newsPageCount,
@@ -91,8 +84,29 @@ public class NewsRestController {
         Long employerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
         List<News> news = newsService.getAllByEmployerProfileId(employerProfileService.getById(employerProfileId),
                 PageRequest.of(newsPageCount, 10, sort)).getContent();
+        List<News> newsList = new ArrayList<>();
+        for (News n : news) {
+            if (n.getNumberOfViews() == null) {
+                n.setNumberOfViews(1L);
+            } else if (n.getNumberOfViews() == 1L) {
+                n.setNumberOfViews(2L);
+            }
+            newsList.add(n);
+        }
+        newsService.updateAll(newsList);
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
+
+    // Присваивание: 3 - Если открыл новость, значит прочитано полностью
+    @RolesAllowed ({"ROLE_EMPLOYER"})
+    @GetMapping ("/increaseViews")
+    public void increaseViewsByNewsId(@RequestParam("chatId") Long chatId) {
+        News news = newsService.getById(chatId);
+        if (news.getNumberOfViews() == 3L) return;
+        news.setNumberOfViews(3L);
+        newsService.update(news);
+    }
+
 
     @GetMapping ("/all_seeker_news")
     public ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,

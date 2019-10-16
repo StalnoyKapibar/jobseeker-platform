@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 
 @Service("newsService")
@@ -23,6 +24,10 @@ public class NewsService extends AbstractService<News> {
 
     @Autowired
     private NewsDaoI newsDaoI;
+
+    public void updateAll(List<News> newsList) {
+        newsDaoI.saveAll(newsList);
+    }
 
     public Page<News> getAllByEmployerProfileId(EmployerProfile employerProfile, Pageable pageable) {
         return newsDaoI.getAllByEmployerProfileId(employerProfile, pageable);
