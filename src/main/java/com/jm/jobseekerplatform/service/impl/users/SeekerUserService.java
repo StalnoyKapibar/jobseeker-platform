@@ -12,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -42,7 +40,7 @@ public class SeekerUserService extends AbstractService<SeekerUser> {
         return seekerProfileDAO.getSeekerProfileByResumeID(id);
     }
 
-    public List<SeekerUser> getByDate(LocalDateTime endDate){
-        return seekerUserDAO.getByDate(endDate);
+    public List<SeekerUser> getSeekerUsersByDatePeriod(LocalDateTime startDate, LocalDateTime endDate){
+        return seekerUserDaoI.getSeekerUsersByDatePeriod(startDate,endDate);
     }
 }

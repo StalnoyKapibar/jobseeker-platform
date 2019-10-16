@@ -12,6 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service("employerService")
 @Transactional
 public class EmployerUserService extends AbstractService<EmployerUser> {
@@ -36,5 +39,9 @@ public class EmployerUserService extends AbstractService<EmployerUser> {
 	public EmployerProfile getEmployerProfileByVacancyID(long id) {
 		return employerProfileDAO.getEmployerProfileByVacancyID(id);
 	}
+
+	public List<EmployerUser> getEmployerUsersByDatePeriod(LocalDateTime startDate, LocalDateTime endDate){
+        return employerUserDaoI.getEmployerUsersByDatePeriod(startDate, endDate);
+    }
 
 }

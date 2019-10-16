@@ -6,6 +6,7 @@ import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -29,6 +30,9 @@ public class Resume extends CreatedByProfileBase<SeekerProfile> implements Seria
     @Column(name = "salarymax")
     private Integer salaryMax;
 
+    @Column(name = "date", nullable = false)
+    private LocalDateTime date;
+
     @ManyToMany(cascade = CascadeType.MERGE)
     private Set<JobExperience> jobExperiences;
 
@@ -41,7 +45,7 @@ public class Resume extends CreatedByProfileBase<SeekerProfile> implements Seria
     public Resume() {
     }
 
-    public Resume(SeekerProfile creatorProfile, String headline, Set<Tag> tags, Integer salaryMin, Integer salaryMax, Set<JobExperience> jobExperiences, City city, Point coordinates) {
+    public Resume(SeekerProfile creatorProfile, String headline, Set<Tag> tags, Integer salaryMin, Integer salaryMax, Set<JobExperience> jobExperiences, City city, Point coordinates, LocalDateTime date) {
         super(creatorProfile, headline);
         this.headline = headline;
         this.tags = tags;
@@ -50,6 +54,7 @@ public class Resume extends CreatedByProfileBase<SeekerProfile> implements Seria
         this.jobExperiences = jobExperiences;
         this.city = city;
         this.coordinates = coordinates;
+        this.date = date;
     }
 
     @Override
@@ -123,4 +128,11 @@ public class Resume extends CreatedByProfileBase<SeekerProfile> implements Seria
         return "Резюме";
     }
 
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
 }

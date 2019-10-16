@@ -153,4 +153,7 @@ public class VacancyService extends AbstractService<Vacancy> {
         oldVacancy.setTags(tagService.matchTagsByName(vacancy.getTags()));
         return true;
     }
+    public List<Vacancy> getSumVacanciesByDatePeriod(Date startDate, Date endDate){
+        return vacancyDaoI.getSumVacanciesByDatePeriod(startDate, endDate);
+    }
 }

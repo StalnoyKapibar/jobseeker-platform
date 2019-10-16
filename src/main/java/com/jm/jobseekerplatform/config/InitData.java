@@ -611,7 +611,8 @@ public class InitData {
                                 * 100) + 100) * 1000), //salaryMax
                         jobExperiences,
                         city,
-                        point);
+                        point,
+                        LocalDateTime.now());
                 resumes.add(resume);
                 resumeService.add(resume);
                 jobExperiences.clear();
