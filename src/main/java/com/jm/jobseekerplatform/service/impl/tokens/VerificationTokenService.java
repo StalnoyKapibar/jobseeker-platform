@@ -27,4 +27,5 @@ public class VerificationTokenService extends BaseTokenService<VerificationToken
         profileService.checkedState(profile);
         abstractDAO.delete(token);
     }
+
 }
