@@ -1,6 +1,5 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -8,7 +7,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
@@ -21,9 +19,6 @@ public class MailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private TemplateEngine templateEngine;
