@@ -59,6 +59,18 @@ public class MailService {
         sendEmail(address, subject, templateEngine.process("/emails/regemail.html", ctx));
     }
 
+    public void sendFeedBackEMail(String address, String companyName, long employerProfileID) {
+        String subject = "На ваше резюме отозвались!";
+        String employerProfileLink = "http://localhost:" + port + "/employer/" + employerProfileID;
+        String linkToChats = "http://localhost:" + port + "/seeker/chats";
+        final Context ctx = new Context();
+        ctx.setVariable("name", address);
+        ctx.setVariable("employerProfileLink", employerProfileLink);
+        ctx.setVariable("company", companyName);
+        ctx.setVariable("linkToChat", linkToChats);
+        sendEmail(address, subject, templateEngine.process("/emails/feedBackEmail.html", ctx));
+    }
+
     // приглашение друга
     public void sendFriendInvitaionEmail(String address, String friendAddres) {
         String subject = address + " Приглашает вас попробовать нашу платформу";
@@ -92,4 +104,17 @@ public class MailService {
         ctx.setVariable("subscriptionDate", new Date());
         sendEmail(address, subject, templateEngine.process("/emails/recoveryPassEmail.html", ctx));
     }
+
+	public void sendFeedBackEMailVacancy(String address, String seekerFullName, long seekerProfileID) {
+		String subject = "На вашу вакансию отозвались!";
+		String seekerProfileLink = "http://localhost:" + port + "/seeker/" + seekerProfileID;
+		String linkToChats = "http://localhost:" + port + "/employer/chats";
+		final Context ctx = new Context();
+		ctx.setVariable("name", address);
+		ctx.setVariable("seekerProfileLink", seekerProfileLink);
+		ctx.setVariable("seekerFullName", seekerFullName);
+		ctx.setVariable("linkToChat", linkToChats);
+		sendEmail(address, subject, templateEngine.process("/emails/feedBackEmailVacancy.html", ctx));
+	}
+
 }

@@ -7,6 +7,9 @@ $(document).ready(function () {
     let $editCommentId = $('#edit_commentId');
     let $saveBtn = $('#save-comment');
     let $addBtn = $('#submit_comment');
+    let $reportReasons = $('input[id^="reportRadios"]');
+    let $sendReportBtn = $('#send_report');
+    let $commentId = $('#commentId');
     $.ajax({
         url: "/api/comments/" + $newsId,
         type: "GET",
@@ -27,7 +30,7 @@ $(document).ready(function () {
                 if ($currentProfileId == data[i].profile.id) {
                     $comments.after('<button type="button"' +
                         ' class="float-right btn text-white btn-info ml-3 mt-2"' +
-                        ' id="edit-comment_' + data[i].id + '" data-toggle="modal" data-target="#exampleModal"> ' +
+                        ' id="edit-comment_' + data[i].id + '" data-toggle="modal" data-target="#editModal"> ' +
                         '<i class="far fa-edit"></i><span> Редактировать</span></button>'
                     );
                     $comments.after('<button type="button" ' +
@@ -36,7 +39,8 @@ $(document).ready(function () {
                         ' <i class="far fa-trash-alt"></i><span> Удалить</span></button>');
                 } else {
                     $comments.after('<button type="button" ' +
-                        'class="float-right btn text-white btn-warning ml-3 mt-2"> ' +
+                        'class="float-right btn text-white btn-warning ml-3 mt-2" id = "report_to_comment_'
+                        + data[i].id + '" data-toggle="modal" data-target="#reportModal"> ' +
                         '<i class="fas fa-exclamation-triangle"></i><span>Пожаловаться</span></button>');
                 }
                 let $editBtn = $('#edit-comment_' + data[i].id);
@@ -69,19 +73,23 @@ $(document).ready(function () {
                         }
                     });
                 });
-
+                let $reportBtn = $('#report_to_comment_' + data[i].id);
+                $reportBtn.on('click', function () {
+                    $sendReportBtn.addClass("d-none");
+                    $reportReasons.each(function () {
+                        $(this).prop('checked', false);
+                    });
+                    $commentId.prop('value', data[i].id);
+                });
             });
         }
     });
     $saveBtn.on('click', function (e) {
         let id = Number($editCommentId.val());
-        let now = new Date(Date.now());
-        let formatted = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDay() + " " +
-            now.getHours() + ":" + now.getMinutes();
         $.ajax({
             url: "/api/comments/update",
             type: "PUT",
-            data: "id=" + id + "&text=" + $editForm.val() + "&dateTime=" + formatted,
+            data: "id=" + id + "&text=" + $editForm.val(),
             contentType: "application/x-www-form-urlencoded;charset=utf-8",
             beforeSend: function (request) {
                 request.setRequestHeader($header, $token);
@@ -93,14 +101,11 @@ $(document).ready(function () {
     });
 
     $addBtn.on('click', function (e) {
-        let now = new Date(Date.now());
-        let formatted = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDay() + " " +
-            now.getHours() + ":" + now.getMinutes();
         let $commentText = $('#user_comment').val();
         $.ajax({
             url: "/api/comments/insert",
             type: "POST",
-            data: "newsId=" + $newsId + "&text=" + $commentText + "&dateTime=" + formatted,
+            data: "newsId=" + $newsId + "&text=" + $commentText,
             contentType: "application/x-www-form-urlencoded;charset=utf-8",
             beforeSend: function (request) {
                 request.setRequestHeader($header, $token);
@@ -110,4 +115,37 @@ $(document).ready(function () {
             }
         });
     });
+
+    $sendReportBtn.on('click', function (e) {
+        let $id = Number($commentId.val());
+        let $description;
+        $reportReasons.each(function () {
+            if ($(this).is(":checked")) {
+                $description = ($(this).next()).text().trim();
+            }
+        });
+        $.ajax({
+            url: "/api/report/comments/add",
+            type: "POST",
+            data: "id=" + $id + "&description=" + $description,
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            beforeSend: function (request) {
+                request.setRequestHeader($header, $token);
+            },
+            success: function () {
+                location.reload();
+            }
+        });
+    });
+
+    showBtn();
+
+    function showBtn() {
+        $reportReasons.each(function () {
+            $(this).change(function () {
+                $sendReportBtn.removeClass("d-none");
+            });
+        });
+    }
+
 });
