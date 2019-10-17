@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.comments.Comment;
 import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
@@ -84,13 +85,21 @@ public class NewsRestController {
     @GetMapping ("/all_seeker_news")
     public ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
                                                                   @RequestParam("newsPageCount") int newsPageCount) {
+        SeekerProfile profile = seekerProfileService.getById(seekerProfileId);
         Set<Subscription> subscriptions = seekerProfileService.getById(seekerProfileId).getSubscriptions();
         if (subscriptions.size() == 0) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            Sort sort = new Sort(Sort.Direction.DESC, "date");
+            List<News> news = newsService.getAllByTags(profile,
+                    PageRequest.of(newsPageCount, 10, sort)).getContent();
+            return new ResponseEntity<>(news, HttpStatus.OK);
         }
         Sort sort = new Sort(Sort.Direction.DESC, "date");
-        List<News> news = newsService.getAllBySubscription(subscriptions,
+        List<News> subNews = newsService.getAllBySubscription(subscriptions,
                 PageRequest.of(newsPageCount, 10, sort)).getContent();
+        List<News> tagNews = newsService.getAllByTags(profile,
+                PageRequest.of(newsPageCount, 10, sort)).getContent();
+        List<News> news = new ArrayList<>(subNews);
+        news.addAll(tagNews);
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
 
