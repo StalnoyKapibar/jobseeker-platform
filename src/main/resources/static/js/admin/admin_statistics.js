@@ -380,6 +380,7 @@ $(document).ready(function (e) {
     }
 
     /* Diagram about tags in resumes */
+    let backgroundColors = ["#FF6F61", "#6B5B95", "#88B04B", "#955251", "#B565A7", "#009B77", "#DFCFBE", "#98B4D4", "#2A293E"];
     let $ctxResumes = $('#dynamic_resumes')[0].getContext('2d');
     var resumesChart = new Chart($ctxResumes, {
         type: 'doughnut',
@@ -387,10 +388,8 @@ $(document).ready(function (e) {
             labels: getSortedLabelsForDoughnutDiagram("resumes", 9),
             datasets: [{
                 data: getAllDataForSortedLabels("resumes", 9),
-                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#BADA55", "#7fe5f0", "#ff80ed",
-                    "#065535", "#420420"],
-                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774", "#bada55", "#7fe5f0",
-                    "#ff80ed", "#065535"]
+                backgroundColor: backgroundColors,
+                hoverBackgroundColor: backgroundColors
             }]
         },
         options: {
@@ -398,6 +397,22 @@ $(document).ready(function (e) {
             legend: {
                 position: 'bottom',
             },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        let allData = data.datasets[tooltipItem.datasetIndex].data;
+                        let tooltipLabel = data.labels[tooltipItem.index];
+                        let tooltipData = allData[tooltipItem.index];
+                        let total = 0;
+                        for (let i in allData) {
+                            total += allData[i];
+                        }
+                        let tooltipPercentage = Math.round((tooltipData / total) * 100);
+                        return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
+                    }
+                }
+            },
+
         }
     });
     /* Diagram about tags in vacancies */
@@ -408,16 +423,29 @@ $(document).ready(function (e) {
             labels: getSortedLabelsForDoughnutDiagram("resumes", 9),
             datasets: [{
                 data: getAllDataForSortedLabels("vacancies", 9),
-                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#bada55", "#7fe5f0",
-                    "#ff80ed", "#065535"],
-                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774", "#bada55", "#7fe5f0",
-                    "#ff80ed", "#065535"]
+                backgroundColor: backgroundColors,
+                hoverBackgroundColor: backgroundColors
             }]
         },
         options: {
             responsive: true,
             legend: {
                 position: 'bottom',
+            },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        let allData = data.datasets[tooltipItem.datasetIndex].data;
+                        let tooltipLabel = data.labels[tooltipItem.index];
+                        let tooltipData = allData[tooltipItem.index];
+                        let total = 0;
+                        for (let i in allData) {
+                            total += allData[i];
+                        }
+                        let tooltipPercentage = Math.round((tooltipData / total) * 100);
+                        return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
+                    }
+                }
             },
         }
     });
