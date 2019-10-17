@@ -320,7 +320,7 @@ $(document).ready(function (e) {
     });
 
     /* Doughnut diagrams about % tags in resumes and vacancies */
-    function setTagsLabelsForDoughnutDiagram() {
+    function getTagsLabelsForDoughnutDiagram() {
         let pieTagsLabels = [];
         $.ajax({
             url: "/api/admin/all/tags",
@@ -335,40 +335,62 @@ $(document).ready(function (e) {
         return pieTagsLabels;
     };
 
-    function setDataForDoughnutDiagram(name) {
-        let data = [];
-        let tagsName = setTagsLabelsForDoughnutDiagram();
+    function getStatisticsByTags(name, size) {
+        let result = new Array();
+        let tagsName = getTagsLabelsForDoughnutDiagram();
         for (let i = 0; i < tagsName.length; i++) {
-            data[i] = getStatisticsByTagName(name, tagsName[i]);
+            $.ajax({
+                url: "/api/admin/" + name + "/tag/" + tagsName[i],
+                type: "GET",
+                async: false,
+                success: function (data) {
+                    result.push({"name": tagsName[i], "value": data})
+                }
+            });
         }
-        return data;
+        result.sort(function (a, b) {
+            return b.value - a.value;
+        });
+        let othersSum = result[size].value;
+        if (tagsName.length >= size + 1) {
+            for (let i = 1; i < tagsName.length - (size - 2); i++) {
+                othersSum += result[result.length - 1].value;
+                result[size] = {"name": "Others", "value": othersSum};
+            }
+        }
+        return result.slice(0, size + 1);
     };
 
-    function getStatisticsByTagName(name, tagName) {
-        let result;
-        $.ajax({
-            url: "/api/admin/" + name + "/tag/" + tagName,
-            type: "GET",
-            async: false,
-            success: function (data) {
-                result = data;
-            }
-        });
+    function getSortedLabelsForDoughnutDiagram(name, size) {
+        let result = [];
+        let data = getStatisticsByTags(name, size);
+        for (let i = 0; i < data.length; i++) {
+            result[i] = data[i].name;
+        }
         return result;
-    };
+    }
+
+    function getAllDataForSortedLabels(name, size) {
+        let result = [];
+        let data = getStatisticsByTags(name, size);
+        for (let i = 0; i < data.length; i++) {
+            result[i] = data[i].value;
+        }
+        return result;
+    }
 
     /* Diagram about tags in resumes */
     let $ctxResumes = $('#dynamic_resumes')[0].getContext('2d');
     var resumesChart = new Chart($ctxResumes, {
         type: 'doughnut',
         data: {
-            labels: setTagsLabelsForDoughnutDiagram(),
+            labels: getSortedLabelsForDoughnutDiagram("resumes", 9),
             datasets: [{
-                data: setDataForDoughnutDiagram("resumes"),
-                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#bada55", "#7fe5f0", "#ff80ed",
-                    "#065535", "#420420", "#ffc0cb", "#c6e2ff", "#800080", "#ff7f50", "#000080"],
+                data: getAllDataForSortedLabels("resumes", 9),
+                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#BADA55", "#7fe5f0", "#ff80ed",
+                    "#065535", "#420420"],
                 hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774", "#bada55", "#7fe5f0",
-                    "#ff80ed", "#065535", "#420420", "#ffc0cb", "#c6e2ff", "#800080", "#ff7f50", "#000080"]
+                    "#ff80ed", "#065535"]
             }]
         },
         options: {
@@ -383,13 +405,13 @@ $(document).ready(function (e) {
     var vacanciesChart = new Chart($ctxVacancies, {
         type: 'doughnut',
         data: {
-            labels: setTagsLabelsForDoughnutDiagram(),
+            labels: getSortedLabelsForDoughnutDiagram("resumes", 9),
             datasets: [{
-                data: setDataForDoughnutDiagram("vacancies"),
+                data: getAllDataForSortedLabels("vacancies", 9),
                 backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#bada55", "#7fe5f0",
-                    "#ff80ed", "#065535", "#420420", "#ffc0cb", "#c6e2ff", "#800080", "#ff7f50", "#000080"],
+                    "#ff80ed", "#065535"],
                 hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774", "#bada55", "#7fe5f0",
-                    "#ff80ed", "#065535", "#420420", "#ffc0cb", "#c6e2ff", "#800080", "#ff7f50", "#000080"]
+                    "#ff80ed", "#065535"]
             }]
         },
         options: {
