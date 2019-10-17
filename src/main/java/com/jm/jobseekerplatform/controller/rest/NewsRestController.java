@@ -88,12 +88,13 @@ public class NewsRestController {
         for (News n : news) {
             if (n.getNumberOfViews() == null) {
                 n.setNumberOfViews(1L);
+                newsList.add(n);
             } else if (n.getNumberOfViews() == 1L) {
                 n.setNumberOfViews(2L);
+                newsList.add(n);
             }
-            newsList.add(n);
         }
-        newsService.updateAll(newsList);
+        if (newsList.size() > 0) newsService.updateAll(newsList);
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
 
