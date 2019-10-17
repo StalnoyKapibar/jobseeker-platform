@@ -95,10 +95,15 @@ public class ResumeService extends AbstractService<Resume> {
 
     public Page<Resume> getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(Map<String, Object>
                                                                                                      queryParamsMap,
-                                                                                   int pageNumber, int pageSize) {
+                                                                                             int pageNumber, int pageSize) {
         return dao.getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(queryParamsMap, pageNumber, pageSize);
     }
-    public List<Resume> getResumesByDatePeriod(LocalDateTime startDate, LocalDateTime endDate){
+
+    public List<Resume> getResumesByDatePeriod(LocalDateTime startDate, LocalDateTime endDate) {
         return resumeDaoI.getResumesByDatePeriod(startDate, endDate);
+    }
+
+    public Map<String, List<Resume>> getAllResumesByTagName(List<Tag> tags) {
+        return dao.getAllResumesByTagName(tags);
     }
 }

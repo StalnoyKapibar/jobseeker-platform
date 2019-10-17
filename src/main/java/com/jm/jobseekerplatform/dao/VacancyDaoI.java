@@ -13,9 +13,9 @@ import java.util.List;
 
 
 @Repository
-public interface VacancyDaoI extends JpaRepository<Vacancy,Long> {
+public interface VacancyDaoI extends JpaRepository<Vacancy, Long> {
 
-    @EntityGraph(value = "vacancy-all-nodes" , type= EntityGraph.EntityGraphType.FETCH)
+    @EntityGraph(value = "vacancy-all-nodes", type = EntityGraph.EntityGraphType.FETCH)
     Page<Vacancy> findAll(Pageable pageable);
 
     @Query(value = "SELECT distinct e FROM Vacancy e where e.creationDate between :startDate and :endDate")

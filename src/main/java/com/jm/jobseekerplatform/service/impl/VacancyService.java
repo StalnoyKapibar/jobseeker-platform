@@ -10,11 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -138,14 +134,14 @@ public class VacancyService extends AbstractService<Vacancy> {
         return dao.getVacanciesSortedByCityTagsViews(seekerId, city, limit, page);
     }
 
-    public boolean updateVacancy(Vacancy vacancy){
-        Vacancy oldVacancy= getById(vacancy.getId());
+    public boolean updateVacancy(Vacancy vacancy) {
+        Vacancy oldVacancy = getById(vacancy.getId());
         oldVacancy.setHeadline(vacancy.getHeadline());
         oldVacancy.setDescription(vacancy.getDescription());
         oldVacancy.setSalaryMax(vacancy.getSalaryMax());
         oldVacancy.setSalaryMin(vacancy.getSalaryMin());
-        oldVacancy.setCity(cityService.checkCityOrAdd(vacancy.getCity().getName(),vacancy.getCoordinates()));
-        Point point= vacancy.getCoordinates();
+        oldVacancy.setCity(cityService.checkCityOrAdd(vacancy.getCity().getName(), vacancy.getCoordinates()));
+        Point point = vacancy.getCoordinates();
         pointService.add(point);
         oldVacancy.setCoordinates(point);
         oldVacancy.setRemote(vacancy.getRemote());
@@ -153,7 +149,12 @@ public class VacancyService extends AbstractService<Vacancy> {
         oldVacancy.setTags(tagService.matchTagsByName(vacancy.getTags()));
         return true;
     }
-    public List<Vacancy> getSumVacanciesByDatePeriod(Date startDate, Date endDate){
+
+    public List<Vacancy> getSumVacanciesByDatePeriod(Date startDate, Date endDate) {
         return vacancyDaoI.getSumVacanciesByDatePeriod(startDate, endDate);
+    }
+
+    public Map<String, List<Vacancy>> getAllVacanciesByTagName(List<Tag> tags) {
+        return dao.getAllVacanciesByTagName(tags);
     }
 }

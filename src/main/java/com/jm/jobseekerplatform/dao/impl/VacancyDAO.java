@@ -6,10 +6,10 @@ import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 import org.hibernate.Session;
 import org.hibernate.annotations.QueryHints;
-import org.hibernate.query.Query;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Query;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
@@ -153,6 +153,20 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
                 .setParameter("id", id);
         vacancies.addAll(query.getResultList());
         return vacancies;
+    }
+
+    public Map<String, List<Vacancy>> getAllVacanciesByTagName(List<Tag> tags) {
+        Map<String, List<Vacancy>> listMap = new HashMap<>();
+        List<String> tagsName = new ArrayList<>();
+        for (Tag t : tags) {
+            tagsName.add(t.getName());
+        }
+        for (String tagName : tagsName) {
+            Query query = entityManager.createQuery("SELECT distinct v FROM Vacancy v JOIN v.tags vt where vt.name = :name", Vacancy.class);
+            query.setParameter("name", tagName);
+            listMap.put(tagName, query.getResultList());
+        }
+        return listMap;
     }
 }
 

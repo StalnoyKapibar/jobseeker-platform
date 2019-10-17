@@ -1,10 +1,12 @@
 package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.Resume;
+import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.service.impl.ResumeService;
+import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/admin")
@@ -34,6 +37,9 @@ public class AdminRestController {
 
     @Autowired
     private ResumeService resumeService;
+
+    @Autowired
+    private TagService tagService;
 
     @RequestMapping(value = "/all/seekers", method = RequestMethod.GET)
     public ResponseEntity<Integer> getSumSeekerUsersByAllPeriod() {
@@ -53,6 +59,11 @@ public class AdminRestController {
     @RequestMapping(value = "/all/resumes", method = RequestMethod.GET)
     public ResponseEntity<Integer> getSumResumesByAllPeriod() {
         return new ResponseEntity<>(resumeService.getAll().size(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/all/tags", method = RequestMethod.GET)
+    public ResponseEntity<List<Tag>> getAllTags() {
+        return new ResponseEntity<>(tagService.getAll(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/seekers", params = {"startDate", "endDate"}, method = RequestMethod.GET)
@@ -92,11 +103,23 @@ public class AdminRestController {
 
     @RequestMapping(value = "/resumes", params = {"startDate", "endDate"}, method = RequestMethod.GET)
     public ResponseEntity<Integer> getResumesUsersByDatePeriod(@RequestParam("startDate") String start,
-                                                                   @RequestParam("endDate") String end) {
+                                                               @RequestParam("endDate") String end) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        List<Resume> resumeList= resumeService.getResumesByDatePeriod(
+        List<Resume> resumeList = resumeService.getResumesByDatePeriod(
                 LocalDateTime.parse(start, formatter),
                 LocalDateTime.parse(end, formatter));
         return new ResponseEntity<>(resumeList.size(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/vacancies/tag/{tagName}", method = RequestMethod.GET)
+    public ResponseEntity<Integer> getSumVacanciesByTagName(@PathVariable("tagName") String tagName) {
+        Map<String, List<Vacancy>> stringListMap = vacancyService.getAllVacanciesByTagName(tagService.getAll());
+        return new ResponseEntity<>(stringListMap.get(tagName).size(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/resumes/tag/{tagName}", method = RequestMethod.GET)
+    public ResponseEntity<Integer> getSumResumesByTagName(@PathVariable("tagName") String tagName) {
+        Map<String, List<Resume>> stringListMap = resumeService.getAllResumesByTagName(tagService.getAll());
+        return new ResponseEntity<>(stringListMap.get(tagName).size(), HttpStatus.OK);
     }
 }

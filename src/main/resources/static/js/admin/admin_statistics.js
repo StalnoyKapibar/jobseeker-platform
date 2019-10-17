@@ -1,6 +1,10 @@
 $(document).ready(function (e) {
     'use strict';
     feather.replace();
+    window.onload = function () {
+        /* Show animation */
+        statisticAnimationProgress(1200);
+    };
 
     function localDateTime(date) {
         return date.getFullYear().toString() + "-" + ((date.getMonth() + 1).toString().length == 2 ?
@@ -115,9 +119,6 @@ $(document).ready(function (e) {
     $('#month_vacancies').attr('data-count', monthVacancies);
     let $monthVacanciesProgress = $('#month_vacancies_progress');
 
-    /* Show animation */
-    statisticAnimationProgress(1000);
-
     /* Animate circle, linear progress bar  with counting */
     function statisticAnimationProgress(duration) {
         allCircleProgressAnimation(duration);
@@ -200,138 +201,9 @@ $(document).ready(function (e) {
             });
         });
     };
-    /* Dynamic graphics */
-    let currentDateTime = new Date();
-    var daysNames = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
-    let currentNumberDay = currentDateTime.getDay();
-    /*let currentDate = currentDateTime.getDate();
-    let currentMonth = currentDateTime.getMonth();
-    let currentYear = currentDateTime.getUTCFullYear();*/
-    let currentLabels = [];
-    setLabels(currentLabels);
-    /* Diagramm about dynamic seekers */
-    let $ctxSeekers = $('#dynamic_seekers')[0].getContext('2d');
-    let seekersChart = new Chart($ctxSeekers, {
-        type: 'bar',
-        data: {
-            labels: currentLabels,
-            datasets: [{
-                data: [12, 19, 3, 5, 2, 3, 4],
-                backgroundColor: [
-                    'rgba(0, 123, 255, 1)',
-                    'rgba(23, 162, 184, 1)',
-                    'rgba(220, 53, 69, 1)',
-                    'rgba(40, 167, 69, 1)',
-                    'rgba(52, 58, 64, 1)',
-                    'rgba(108, 117, 125, 1)',
-                    'rgba(255, 193, 7, 1)'
-                ],
-                borderColor: [
-                    'rgba(0, 123, 255, 1)',
-                    'rgba(23, 162, 184, 1)',
-                    'rgba(220, 53, 69, 1)',
-                    'rgba(40, 167, 69, 1)',
-                    'rgba(52, 58, 64, 1)',
-                    'rgba(108, 117, 125, 1)',
-                    'rgba(255, 193, 7, 1)'
-                ],
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            },
-            legend: {
-                display: false,
-                labels: {
-                    fontColor: 'rgb(255, 99, 132)'
-                }
-            }
-        },
-    });
-    /* Diagramm about dynamic employers */
-    let $ctxEmployers = $('#dynamic_employers')[0].getContext('2d');
-    let employersChart = new Chart($ctxEmployers, {
-        type: 'bar',
-        data: {
-            labels: currentLabels,
-            datasets: [{
-                data: [12, 19, 3, 5, 2, 3, 4],
-                backgroundColor: [
-                    'rgba(0, 123, 255, 1)',
-                    'rgba(23, 162, 184, 1)',
-                    'rgba(220, 53, 69, 1)',
-                    'rgba(40, 167, 69, 1)',
-                    'rgba(52, 58, 64, 1)',
-                    'rgba(108, 117, 125, 1)',
-                    'rgba(255, 193, 7, 1)'
-                ],
-                borderColor: [
-                    'rgba(0, 123, 255, 1)',
-                    'rgba(23, 162, 184, 1)',
-                    'rgba(220, 53, 69, 1)',
-                    'rgba(40, 167, 69, 1)',
-                    'rgba(52, 58, 64, 1)',
-                    'rgba(108, 117, 125, 1)',
-                    'rgba(255, 193, 7, 1)'
-                ],
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            },
-            legend: {
-                display: false,
-                labels: {
-                    fontColor: 'rgb(255, 99, 132)'
-                }
-            }
-        },
-    });
-    /* Diagramm about tags in resumes */
-    let $ctxResumes = $('#dynamic_resumes')[0].getContext('2d');
-    var resumesChart = new Chart($ctxResumes, {
-        type: 'pie',
-        data: {
-            labels: [],
-            datasets: [{
-                data: [300, 50, 100, 40, 120],
-                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
-    /* Diagramm about tags in vacancies */
-    let $ctxVacancies = $('#dynamic_vacancies')[0].getContext('2d');
-    var vacanciesChart = new Chart($ctxVacancies, {
-        type: 'pie',
-        data: {
-            labels: [],
-            datasets: [{
-                data: [300, 50, 100, 40, 120],
-                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
 
-    function setLabels(labels) {
-        // currentLabels.push(daysNames[(currentNumberDay-1)] +" "+ currentYear.toString() + "-" + currentMonth.toString() + "-" + currentDate.toString());
+    /* Dynamic graphics */
+    function setLabelsX(labels) {
         currentLabels.push(daysNames[(currentNumberDay - 1)]);
         let step = currentNumberDay - 1;
         for (step; step > 0; step--) {
@@ -341,5 +213,190 @@ $(document).ready(function (e) {
             labels.unshift(daysNames[k - 1]);
         }
         return labels;
+    };
+
+    function setDataYForLastWeek(name) {
+        let dataY = [];
+        for (let i = 0; i < 7; i++) {
+            dataY[6 - i] = getStatisticsByDatePeriod(name, getStartDate(i), getEndDate(i));
+        }
+        return dataY;
     }
+
+    let currentDateTime = new Date();
+    var daysNames = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
+    let currentNumberDay = currentDateTime.getDay();
+    let currentLabels = [];
+    setLabelsX(currentLabels);
+    /* Diagramm about dynamic seekers by last week*/
+    let $ctxSeekers = $('#dynamic_seekers')[0].getContext('2d');
+    let seekersChart = new Chart($ctxSeekers, {
+        type: 'bar',
+        data: {
+            labels: currentLabels,
+            datasets: [{
+                data: setDataYForLastWeek("seekers"),
+                backgroundColor: [
+                    'rgba(0, 123, 255, 1)',
+                    'rgba(23, 162, 184, 1)',
+                    'rgba(220, 53, 69, 1)',
+                    'rgba(40, 167, 69, 1)',
+                    'rgba(52, 58, 64, 1)',
+                    'rgba(108, 117, 125, 1)',
+                    'rgba(255, 193, 7, 1)'
+                ],
+                borderColor: [
+                    'rgba(0, 123, 255, 1)',
+                    'rgba(23, 162, 184, 1)',
+                    'rgba(220, 53, 69, 1)',
+                    'rgba(40, 167, 69, 1)',
+                    'rgba(52, 58, 64, 1)',
+                    'rgba(108, 117, 125, 1)',
+                    'rgba(255, 193, 7, 1)'
+                ],
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 1,
+                    }
+                }]
+            },
+            legend: {
+                display: false,
+                labels: {
+                    fontColor: 'rgb(255, 99, 132)'
+                }
+            }
+        },
+    });
+    /* Diagramm about dynamic employers by last week */
+    let $ctxEmployers = $('#dynamic_employers')[0].getContext('2d');
+    let employersChart = new Chart($ctxEmployers, {
+        type: 'bar',
+        data: {
+            labels: currentLabels,
+            datasets: [{
+                data: setDataYForLastWeek("employers"),
+                backgroundColor: [
+                    'rgba(0, 123, 255, 1)',
+                    'rgba(23, 162, 184, 1)',
+                    'rgba(220, 53, 69, 1)',
+                    'rgba(40, 167, 69, 1)',
+                    'rgba(52, 58, 64, 1)',
+                    'rgba(108, 117, 125, 1)',
+                    'rgba(255, 193, 7, 1)'
+                ],
+                borderColor: [
+                    'rgba(0, 123, 255, 1)',
+                    'rgba(23, 162, 184, 1)',
+                    'rgba(220, 53, 69, 1)',
+                    'rgba(40, 167, 69, 1)',
+                    'rgba(52, 58, 64, 1)',
+                    'rgba(108, 117, 125, 1)',
+                    'rgba(255, 193, 7, 1)'
+                ],
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 1,
+                    }
+                }]
+            },
+            legend: {
+                display: false,
+                labels: {
+                    fontColor: 'rgb(255, 99, 132)'
+                }
+            }
+        },
+    });
+
+    /* Doughnut diagrams about % tags in resumes and vacancies */
+    function setTagsLabelsForDoughnutDiagram() {
+        let pieTagsLabels = [];
+        $.ajax({
+            url: "/api/admin/all/tags",
+            type: "GET",
+            async: false,
+            success: function (data) {
+                $.each(data, function (i, tag) {
+                    pieTagsLabels.push(data[i].name);
+                });
+            }
+        });
+        return pieTagsLabels;
+    };
+
+    function setDataForDoughnutDiagram(name) {
+        let data = [];
+        let tagsName = setTagsLabelsForDoughnutDiagram();
+        for (let i = 0; i < tagsName.length; i++) {
+            data[i] = getStatisticsByTagName(name, tagsName[i]);
+        }
+        return data;
+    };
+
+    function getStatisticsByTagName(name, tagName) {
+        let result;
+        $.ajax({
+            url: "/api/admin/" + name + "/tag/" + tagName,
+            type: "GET",
+            async: false,
+            success: function (data) {
+                result = data;
+            }
+        });
+        return result;
+    };
+
+    /* Diagram about tags in resumes */
+    let $ctxResumes = $('#dynamic_resumes')[0].getContext('2d');
+    var resumesChart = new Chart($ctxResumes, {
+        type: 'doughnut',
+        data: {
+            labels: setTagsLabelsForDoughnutDiagram(),
+            datasets: [{
+                data: setDataForDoughnutDiagram("resumes"),
+                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#bada55", "#7fe5f0", "#ff80ed",
+                    "#065535", "#420420", "#ffc0cb", "#c6e2ff", "#800080", "#ff7f50", "#000080"],
+                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774", "#bada55", "#7fe5f0",
+                    "#ff80ed", "#065535", "#420420", "#ffc0cb", "#c6e2ff", "#800080", "#ff7f50", "#000080"]
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'bottom',
+            },
+        }
+    });
+    /* Diagram about tags in vacancies */
+    let $ctxVacancies = $('#dynamic_vacancies')[0].getContext('2d');
+    var vacanciesChart = new Chart($ctxVacancies, {
+        type: 'doughnut',
+        data: {
+            labels: setTagsLabelsForDoughnutDiagram(),
+            datasets: [{
+                data: setDataForDoughnutDiagram("vacancies"),
+                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#bada55", "#7fe5f0",
+                    "#ff80ed", "#065535", "#420420", "#ffc0cb", "#c6e2ff", "#800080", "#ff7f50", "#000080"],
+                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774", "#bada55", "#7fe5f0",
+                    "#ff80ed", "#065535", "#420420", "#ffc0cb", "#c6e2ff", "#800080", "#ff7f50", "#000080"]
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'bottom',
+            },
+        }
+    });
 });

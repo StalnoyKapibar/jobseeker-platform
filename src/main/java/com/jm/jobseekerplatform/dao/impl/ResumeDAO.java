@@ -9,16 +9,15 @@ import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
+
 import javax.persistence.Query;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Repository("resumeDAO")
 public class ResumeDAO extends AbstractDAO<Resume> {
 
     @Autowired
-	private SeekerProfileService seekerProfileService;
+    private SeekerProfileService seekerProfileService;
 
     public Page<Resume> getAllResumes(int limit, int page) {
         page = (page == 0) ? page : --page;
@@ -27,12 +26,12 @@ public class ResumeDAO extends AbstractDAO<Resume> {
         int totalPages = getTotalPages(totalElements, limit);
         List<Resume> resumes = query.setFirstResult(page * limit).setMaxResults(limit).getResultList();
 
-		List<SeekerProfile> seeker = seekerProfileService.getAllSeekersById(resumes);
+        List<SeekerProfile> seeker = seekerProfileService.getAllSeekersById(resumes);
         return new ResumePageDTO(resumes, totalPages, seeker);
     }
 
     public Page<Resume> getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(Map<String,
-                                                    Object> queryParamsMap, int pageNumber, int pageSize) {
+            Object> queryParamsMap, int pageNumber, int pageSize) {
         String query = "select r from Resume r ";
         String queryCount = "select count(distinct r)  from Resume r ";
         StringBuilder whereQuery = new StringBuilder(query);
@@ -110,7 +109,7 @@ public class ResumeDAO extends AbstractDAO<Resume> {
                 .setMaxResults(limit)
                 .getResultList();
         List<SeekerProfile> seeker = seekerProfileService.getAllSeekersById(resumes);
-		return new ResumePageDTO(resumes, totalPages, seeker);
+        return new ResumePageDTO(resumes, totalPages, seeker);
     }
 
     private int getTotalPages(long totalElements, int limit) {
@@ -122,5 +121,19 @@ public class ResumeDAO extends AbstractDAO<Resume> {
         entityManager.createNativeQuery("delete from profile_resumes where profile_resumes.resumes_id = :id")
                 .setParameter("id", id).executeUpdate();
         entityManager.createQuery("delete from Resume where id = :id").setParameter("id", id).executeUpdate();
+    }
+
+    public Map<String, List<Resume>> getAllResumesByTagName(List<Tag> tags) {
+        Map<String, List<Resume>> listMap = new HashMap<>();
+        List<String> tagsName = new ArrayList<>();
+        for (Tag t : tags) {
+            tagsName.add(t.getName());
+        }
+        for (String tagName : tagsName) {
+            Query query = entityManager.createQuery("SELECT distinct r FROM Resume r JOIN r.tags rt where rt.name = :name", Resume.class);
+            query.setParameter("name", tagName);
+            listMap.put(tagName, query.getResultList());
+        }
+        return listMap;
     }
 }
