@@ -7,6 +7,7 @@ import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.comments.Comment;
 import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.DraftNewsService;
 import com.jm.jobseekerplatform.service.impl.NewsService;
@@ -17,6 +18,7 @@ import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -97,13 +99,21 @@ public class NewsRestController {
     @GetMapping ("/all_seeker_news")
     public ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
                                                                   @RequestParam("newsPageCount") int newsPageCount) {
+        SeekerProfile profile = seekerProfileService.getById(seekerProfileId);
         Set<Subscription> subscriptions = seekerProfileService.getById(seekerProfileId).getSubscriptions();
         if (subscriptions.size() == 0) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            Sort sort = new Sort(Sort.Direction.DESC, "date");
+            List<News> tagNews = newsService.getAllByTags(profile, PageRequest.of(newsPageCount, 10, sort))
+                    .getContent();
+            return new ResponseEntity<>(tagNews, HttpStatus.OK);
         }
         Sort sort = new Sort(Sort.Direction.DESC, "date");
-        List<News> news = newsService.getAllBySubscription(subscriptions,
+        List<News> subscriptionNews = newsService.getAllBySubscription(subscriptions,
                 PageRequest.of(newsPageCount, 10, sort)).getContent();
+        List<News> tagNews = newsService.getAllByTags(profile, PageRequest.of(newsPageCount, 10, sort))
+                .getContent();
+        List<News> news = new ArrayList<>(subscriptionNews);
+        news.addAll(tagNews);
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
 
