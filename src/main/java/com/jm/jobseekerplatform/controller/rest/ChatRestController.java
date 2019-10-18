@@ -24,14 +24,15 @@ import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
+import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -68,6 +69,9 @@ public class ChatRestController {
     @Autowired
     private SeekerUserService seekerUserService;
 
+    @Autowired
+	CacheManager cacheManager;
+
     @GetMapping("all")
     public HttpEntity getAllChats() {
         List<ChatInfoWithTopicDTO> chatsInfo = chatWithTopicService.getAllChatsInfoDTO();
@@ -103,6 +107,7 @@ public class ChatRestController {
             chat = new ChatWithTopicVacancy(seeker, chatMembers, vacancy);
             chatWithTopicService.add(chat);
         }
+		evictAllCacheValues();
         return chat.getId().toString();
     }
 
@@ -124,14 +129,43 @@ public class ChatRestController {
         }
         chatMessageService.add(chatMessage);
         chatService.addChatMessage(chatWithTopic.getId(), chatMessage);
+		evictAllCacheValues();
         return new ResponseEntity<>(chatWithTopic.getId().toString(), HttpStatus.OK);
+    }
+
+    private void evictAllCacheValues() {
+        cacheManager.getCache("count").clear();
+    }
+
+	@Cacheable("count")
+    @GetMapping("getCountUnReadMessageByUserId")
+    public int getCountUnReadMessageByUserId(Authentication authentication) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        Long profileId = ((User) authentication.getPrincipal()).getProfile().getId();
+        List<Object> num = chatService.getAllIdLastMessagesByUserId(userId, profileId);
+        int countNewMessage = num.size();
+        return countNewMessage;
+    }
+
+    @GetMapping("/getBooleanReadMessage")
+    public boolean getBooleanReadMessage(@RequestParam("chatId") Long chatId, @RequestParam("profId") Long profId) {
+        boolean bool = false;
+		List<BigInteger> num = chatService.getProfileIDByChat(chatId);
+		if (num.size() == 1) {
+			Long temp = Long.parseLong(String.valueOf(num.get(0).longValue()));
+			if (!temp.equals(profId)) {
+				bool = true;
+			}
+		}
+		return bool;
     }
 
     @GetMapping("{chatId:\\d+}")
     public HttpEntity getAllMessagesInChat(@PathVariable("chatId") Long chatId) {
         List<ChatMessage> chatMessageList = chatService.getById(chatId).getChatMessages();
-        Collections.sort(chatMessageList);
-        return new ResponseEntity<>(chatMessageList, HttpStatus.OK);
+		chatMessageList.sort((s1, s2) -> (int) (s2.getId() - s1.getId()));
+		evictAllCacheValues();
+		return new ResponseEntity<>(chatMessageList, HttpStatus.OK);
     }
 
     @PutMapping("set_chat_read_by_profile_id")
@@ -145,6 +179,7 @@ public class ChatRestController {
     public HttpEntity setMessageReadByProfileId(@RequestBody MessageReadDataDTO messageReadDataDTO) {
         chatMessageService.setMessageReadByProfileId(messageReadDataDTO.getReaderProfileId(),
                 messageReadDataDTO.getMessageId());
+		evictAllCacheValues();
         return new ResponseEntity(HttpStatus.OK);
     }
 

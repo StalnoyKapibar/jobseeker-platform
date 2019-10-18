@@ -8,6 +8,8 @@ import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -26,6 +28,9 @@ public class UserRestController {
     @Autowired
     private ProfileService profileService;
 
+    @Autowired
+    private SessionRegistry sessionRegistry;
+
     @GetMapping
     public List<User> getAllUsers() {
         return userService.getAll();
@@ -34,16 +39,27 @@ public class UserRestController {
     @RolesAllowed({"ROLE_ADMIN"})
     @GetMapping("/block/{id}/{periodInDays}")
     public ResponseEntity blockUser(@PathVariable("id") Long id,
-                                      @PathVariable Integer periodInDays) {
+                                    @PathVariable Integer periodInDays) {
         User user = userService.getById(id);
         user.setEnabled(false);
         userService.update(user);
 
+        List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
+        if (!allPrincipals.isEmpty()) {
+            allPrincipals.forEach(o -> {
+                User u = (User) o;
+                if(u.getId().equals(user.getId())) {
+                    List<SessionInformation> allSessions = sessionRegistry.getAllSessions(u, false);
+                    allSessions.forEach(SessionInformation::expireNow);
+                }
+            });
+        }
+
         Profile profile = user.getProfile();
-        if (periodInDays == 0){
+        if (periodInDays == 0) {
             profileService.blockPermanently(profile);
         }
-        if (periodInDays > 0 && periodInDays < 15){
+        if (periodInDays > 0 && periodInDays < 15) {
             profileService.blockTemporary(profile, periodInDays);
         }
 
@@ -73,10 +89,11 @@ public class UserRestController {
     @RequestMapping(method = RequestMethod.POST, value = "/addUserByAdmin/{check}")
     public void addNewUser(@RequestBody User user, @PathVariable boolean check) {
         if (userService.validateNewUser(user)) {
-            userService.addNewUserByAdmin(user,check);
+            userService.addNewUserByAdmin(user, check);
         }
     }
-//     проверка валидации user через ajax
+
+    //     проверка валидации user через ajax
     @RequestMapping(method = RequestMethod.GET, value = "/email/{email}")
     public ResponseEntity<Boolean> isExistEmail(@PathVariable String email) {
         return ResponseEntity.ok(userService.isExistEmail(email));
@@ -92,14 +109,16 @@ public class UserRestController {
     public void inviteFriend(@PathVariable String user, @PathVariable String friend) {
         mailService.sendFriendInvitaionEmail(user, friend);
     }
+
     //запрос на востановление пароля
     @RequestMapping(method = RequestMethod.GET, value = "/recovery/{email}")
     public ResponseEntity<Boolean> recoveryPassRequest(@PathVariable String email) {
         return ResponseEntity.ok(userService.recoveryPassRequest(email));
     }
+
     //востановление пароля
     @RequestMapping(method = RequestMethod.GET, value = "/password_reset/{token}/{password}")
     public void newPassword(@PathVariable String token, @PathVariable char[] password) {
-        userService.passwordReset(token,password);
+        userService.passwordReset(token, password);
     }
 }
