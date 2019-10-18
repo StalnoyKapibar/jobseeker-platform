@@ -2,7 +2,6 @@ package com.jm.jobseekerplatform.model.profiles;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.*;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -28,7 +27,7 @@ public class SeekerProfile extends Profile implements Serializable {
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Portfolio> portfolios;
 
-    @JsonManagedReference
+//    @JsonManagedReference // Пришлось отключить с этим регистрация не работает
     @ManyToMany(fetch = FetchType.EAGER )
     private Set<Vacancy> favoriteVacancy;
 
@@ -36,11 +35,11 @@ public class SeekerProfile extends Profile implements Serializable {
     @OrderBy("status, date desc")
     private Set<Meeting> meetings;
 
-    @JsonManagedReference
+//    @JsonManagedReference // Пришлось отключить с этим регистрация не работает
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Subscription> subscriptions;
 
-    @JsonManagedReference
+//    @JsonManagedReference // Пришлось отключить с этим регистрация не работает
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Resume> resumes;
 
