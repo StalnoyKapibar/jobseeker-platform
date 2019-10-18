@@ -312,43 +312,63 @@ public class InitData {
 
         seekerUser = new SeekerUser("seeker4@mail.ru", userService.encodePassword("seeker4".toCharArray()), LocalDateTime.of(2019, Month.SEPTEMBER, 30, 10,10), seekerProfileService.getById(11L));
         seekerUser.setConfirm(true);
+        seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
+        profileService.checkedState(seekerUser.getProfile());
 
         seekerUser = new SeekerUser("seeker5@mail.ru", userService.encodePassword("seeker5".toCharArray()), LocalDateTime.now().minusDays(1L), seekerProfileService.getById(12L));
         seekerUser.setConfirm(true);
+        seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
+        profileService.checkedState(seekerUser.getProfile());
 
         seekerUser = new SeekerUser("seeker6@mail.ru", userService.encodePassword("seeker6".toCharArray()), LocalDateTime.now().minusDays(2L), seekerProfileService.getById(13L));
         seekerUser.setConfirm(true);
+        seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
+        profileService.checkedState(seekerUser.getProfile());
 
         seekerUser = new SeekerUser("seeker7@mail.ru", userService.encodePassword("seeker7".toCharArray()), LocalDateTime.now().minusDays(3L), seekerProfileService.getById(14L));
         seekerUser.setConfirm(true);
+        seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
+        profileService.checkedState(seekerUser.getProfile());
 
         seekerUser = new SeekerUser("seeker8@mail.ru", userService.encodePassword("seeker8".toCharArray()), LocalDateTime.now().minusDays(32L), seekerProfileService.getById(15L));
         seekerUser.setConfirm(true);
+        seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
+        profileService.checkedState(seekerUser.getProfile());
 
         seekerUser = new SeekerUser("seeker9@mail.ru", userService.encodePassword("seeker9".toCharArray()), LocalDateTime.now().minusDays(1L), seekerProfileService.getById(16L));
         seekerUser.setConfirm(true);
+        seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
+        profileService.checkedState(seekerUser.getProfile());
 
         seekerUser = new SeekerUser("seeker10@mail.ru", userService.encodePassword("seeker10".toCharArray()), LocalDateTime.now().minusDays(2L), seekerProfileService.getById(17L));
         seekerUser.setConfirm(true);
+        seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
+        profileService.checkedState(seekerUser.getProfile());
 
         seekerUser = new SeekerUser("seeker11@mail.ru", userService.encodePassword("seeker11".toCharArray()), LocalDateTime.now().minusDays(4L), seekerProfileService.getById(18L));
         seekerUser.setConfirm(true);
+        seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
+        profileService.checkedState(seekerUser.getProfile());
 
         seekerUser = new SeekerUser("seeker12@mail.ru", userService.encodePassword("seeker12".toCharArray()), LocalDateTime.now().minusDays(4L), seekerProfileService.getById(19L));
         seekerUser.setConfirm(true);
+        seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
+        profileService.checkedState(seekerUser.getProfile());
 
         seekerUser = new SeekerUser("seeker13@mail.ru", userService.encodePassword("seeker13".toCharArray()), LocalDateTime.now().minusDays(5L), seekerProfileService.getById(20L));
         seekerUser.setConfirm(true);
+        seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
+        profileService.checkedState(seekerUser.getProfile());
     }
 
     public void initVacancies() {
