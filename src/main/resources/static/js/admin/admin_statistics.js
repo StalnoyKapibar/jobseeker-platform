@@ -68,53 +68,33 @@ $(document).ready(function (e) {
     let $counter = $(".counter");
 
     let allSeekers = getStatisticsByAllPeriod("seekers");
-    let $allSeekersCircleProgressBar = $('#all_seekers');
-    $allSeekersCircleProgressBar.attr('data-percent', allSeekers);
-    let $allSeekersProgress = $("#seekers_progress_bar");
-
     let todaySeekers = getStatisticsByDatePeriod("seekers", getStartDate(0), getEndDate(0));
     $('#today_seekers').attr('data-count', todaySeekers);
     let $todaySeekersProgress = $("#today_seekers_progress");
-
     let monthSeekers = getStatisticsByDatePeriod("seekers", getStartDate(30), getEndDate(0));
     $('#month_seekers').attr('data-count', monthSeekers);
     let $monthSeekersProgress = $('#month_seekers_progress');
     /* Resumes */
     let allResumes = getStatisticsByAllPeriod("resumes");
-    let $allResumesCircleProgressBar = $('#all_resumes');
-    $allResumesCircleProgressBar.attr('data-percent', allResumes);
-    let $allResumesProgress = $('#resumes_progress_bar');
-
     let todayResumes = getStatisticsByDatePeriod("resumes", getStartDate(0), getEndDate(0));
     $('#today_resumes').attr('data-count', todayResumes);
     let $todayResumesProgress = $('#today_resumes_progress');
-
     let monthResumes = getStatisticsByDatePeriod("resumes", getStartDate(30), getEndDate(0));
     $('#month_resumes').attr('data-count', monthResumes);
     let $monthResumesProgress = $('#month_resumes_progress');
     /* Employers */
     let allEmployers = getStatisticsByAllPeriod("employers");
-    let $allEmployersCircleProgressBar = $('#all_employers');
-    $allEmployersCircleProgressBar.attr('data-percent', allEmployers);
-    let $allEmployersProgress = $('#employers_progress_bar');
-
     let todayEmployers = getStatisticsByDatePeriod("employers", getStartDate(0), getEndDate(0));
     $('#today_employers').attr('data-count', todayEmployers);
     let $todayEmployersProgress = $('#today_employers_progress');
-
     let monthEmployers = getStatisticsByDatePeriod("employers", getStartDate(30), getEndDate(0));
     $('#month_employers').attr('data-count', monthEmployers);
     let $monthEmployersProgress = $('#month_employers_progress');
     /*Vacancies */
     let allVacancies = getStatisticsByAllPeriod("vacancies");
-    let $allVacanciesCircleProgressBar = $('#all_vacancies');
-    $allVacanciesCircleProgressBar.attr('data-percent', allVacancies);
-    let $allVacanciesProgress = $('#vacancies_progress_bar');
-
     let todayVacancies = getStatisticsByDatePeriod("vacancies", getStartDate(0), getEndDate(0));
     $('#today_vacancies').attr('data-count', todayVacancies);
     let $todayVacanciesProgress = $('#today_vacancies_progress');
-
     let monthVacancies = getStatisticsByDatePeriod("vacancies", getStartDate(30), getEndDate(0));
     $('#month_vacancies').attr('data-count', monthVacancies);
     let $monthVacanciesProgress = $('#month_vacancies_progress');
@@ -126,34 +106,43 @@ $(document).ready(function (e) {
         counterAnimation($counter, duration);
     };
     /* Circle progress bar */
-
     /* Using circle-progress.js plugin*/
     function allCircleProgressAnimation(duration) {
-        animateCircularProgressBar($allSeekersProgress, $allSeekersCircleProgressBar, allSeekers, duration);
-        animateCircularProgressBar($allResumesProgress, $allResumesCircleProgressBar, allResumes, duration);
-        animateCircularProgressBar($allEmployersProgress, $allEmployersCircleProgressBar, allEmployers, duration);
-        animateCircularProgressBar($allVacanciesProgress, $allVacanciesCircleProgressBar, allVacancies, duration);
+        animateCircularProgressBar(seekers_progress_bar, allSeekers, duration);
+        animateCircularProgressBar(resumes_progress_bar, allResumes, duration);
+        animateCircularProgressBar(employers_progress_bar, allEmployers, duration);
+        animateCircularProgressBar(vacancies_progress_bar, allVacancies, duration);
     };
 
-    function animateCircularProgressBar(progressBar, circle, value, duration) {
-        progressBar.each(function () {
-            progressBar.data('animate', true);
-            progressBar.find(circle).circleProgress({
-                startAngle: -Math.PI / 2,
-                value: 1,
-                size: 200,
-                thickness: 2,
-                fill: {
-                    color: '#ffbb33'
-                },
-                animation: {
-                    duration: duration,
-                    easing: "circleProgressEasing"
+    function animateCircularProgressBar(progress, sum, duration) {
+        var bar = new ProgressBar.Circle(progress, {
+            color: '#aaa',
+            strokeWidth: 1,
+            trailWidth: 1,
+            easing: 'easeInOut',
+            duration: duration,
+            text: {
+                autoStyleContainer: false
+            },
+            from: {color: '#FCC133', width: 1},
+            to: {color: '#FCC133', width: 1},
+            step: function (state, circle) {
+                circle.path.setAttribute('stroke', state.color);
+                circle.path.setAttribute('stroke-width', state.width);
+
+                var value = Math.round(circle.value() * sum);
+                if (value === 0) {
+                    circle.setText('');
+                } else {
+                    circle.setText(value);
                 }
-            }).on('circle-animation-progress', function (progress, stepValue) {
-                $(this).find('span').text((stepValue * value).toFixed(0));
-            }).stop();
+
+            }
         });
+        bar.text.style.fontSize = '45px';
+        bar.text.style.color = '#FFF';
+
+        bar.animate(1.0);  // Number from 0.0 to 1.0
     };
 
     /* Linear progress bar */
