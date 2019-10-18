@@ -259,43 +259,56 @@ public class InitData {
 
         user = new AdminUser("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), adminProfileService.getById(1L));
         user.setConfirm(true);
+        user.setEnabled(true);
         userService.add(user);
 
         employerUser = new EmployerUser("employer@mail.ru", userService.encodePassword("employer".toCharArray()), LocalDateTime.now(), employerProfileService.getById(2L));
         employerUser.setConfirm(true);
+        employerUser.setEnabled(true);
         employerUserService.add(employerUser);
 
         employerUser = new EmployerUser("employer2@mail.ru", userService.encodePassword("employer2".toCharArray()), LocalDateTime.now(), employerProfileService.getById(3L));
         employerUser.setConfirm(true);
+        employerUser.setEnabled(true);
         employerUserService.add(employerUser);
 
         employerUser = new EmployerUser("employer3@mail.ru", userService.encodePassword("employer3".toCharArray()), LocalDateTime.now(), employerProfileService.getById(4L));
         employerUser.setConfirm(true);
+        employerUser.setEnabled(true);
         employerUserService.add(employerUser);
 
         employerUser = new EmployerUser("employer4@mail.ru", userService.encodePassword("employer4".toCharArray()), LocalDateTime.now(), employerProfileService.getById(5L));
         employerUser.setConfirm(true);
+        employerUser.setEnabled(true);
         employerUserService.add(employerUser);
 
         employerUser = new EmployerUser("employer5@mail.ru", userService.encodePassword("employer5".toCharArray()), LocalDateTime.now(), employerProfileService.getById(6L));
         employerUser.setConfirm(true);
+        employerUser.setEnabled(true);
         employerUserService.add(employerUser);
 
         employerUser = new EmployerUser("employer6@mail.ru", userService.encodePassword("employer6".toCharArray()), LocalDateTime.now(), employerProfileService.getById(7L));
         employerUser.setConfirm(true);
+        employerUser.setEnabled(true);
         employerUserService.add(employerUser);
 
         seekerUser = new SeekerUser("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.of(2019, Month.OCTOBER, 1, 10, 10, 10), seekerProfileService.getById(8L));
         seekerUser.setConfirm(true);
+        seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
+        profileService.checkedState(seekerUser.getProfile());
 
         seekerUser = new SeekerUser("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.of(2019, Month.OCTOBER, 10, 10, 10, 10), seekerProfileService.getById(9L));
         seekerUser.setConfirm(true);
+        seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
+        profileService.checkedState(seekerUser.getProfile());
 
         seekerUser = new SeekerUser("seeker3@mail.ru", userService.encodePassword("seeker3".toCharArray()), LocalDateTime.now(), seekerProfileService.getById(10L));
         seekerUser.setConfirm(true);
+        seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
+        profileService.checkedState(seekerUser.getProfile());
 
         seekerUser = new SeekerUser("seeker4@mail.ru", userService.encodePassword("seeker4".toCharArray()), LocalDateTime.of(2019, Month.SEPTEMBER, 30, 10,10), seekerProfileService.getById(11L));
         seekerUser.setConfirm(true);
@@ -465,7 +478,6 @@ public class InitData {
         portfolioService.add(new Portfolio("OverReal", "https://github.com/OverReal/", "Создавал 3d модели дл дополненной реальности"));
         portfolioService.add(new Portfolio("EpicGames", "https://github.com/Xbox6/EpicGames/", "Прикручивал Sockets. Использовал Java 8, Spring"));
         portfolioService.add(new Portfolio("BestBrowser", "https://github.com/BB1/BestBrowser/", " Использовал Java 8, Spring"));
-
     }
 
     public void initTags() {

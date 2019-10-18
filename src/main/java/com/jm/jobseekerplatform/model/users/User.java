@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.model.users;
 
 import com.fasterxml.jackson.annotation.*;
+import com.jm.jobseekerplatform.model.State;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -55,7 +56,7 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
         this.email = email;
         this.password = password;
         this.date = date;
-        this.enabled = true;
+        this.enabled = false;
         this.confirm = false;
         this.profile = profile;
     }
