@@ -319,7 +319,7 @@ $(document).ready(function (e) {
         },
     });
 
-    /* Doughnut diagrams about % tags in resumes and vacancies */
+    /* diagrams about % tags in resumes and vacancies */
     function getTagsLabelsForDoughnutDiagram() {
         let pieTagsLabels = [];
         $.ajax({
@@ -380,73 +380,45 @@ $(document).ready(function (e) {
     }
 
     /* Diagram about tags in resumes */
-    let backgroundColors = ["#FF6F61", "#6B5B95", "#88B04B", "#955251", "#B565A7", "#009B77", "#DFCFBE", "#98B4D4", "#2A293E"];
-    let $ctxResumes = $('#dynamic_resumes')[0].getContext('2d');
-    var resumesChart = new Chart($ctxResumes, {
-        type: 'doughnut',
-        data: {
-            labels: getSortedLabelsForDoughnutDiagram("resumes", 9),
-            datasets: [{
-                data: getAllDataForSortedLabels("resumes", 9),
-                backgroundColor: backgroundColors,
-                hoverBackgroundColor: backgroundColors
-            }]
-        },
-        options: {
-            responsive: true,
-            legend: {
-                position: 'bottom',
-            },
-            tooltips: {
-                callbacks: {
-                    label: function (tooltipItem, data) {
-                        let allData = data.datasets[tooltipItem.datasetIndex].data;
-                        let tooltipLabel = data.labels[tooltipItem.index];
-                        let tooltipData = allData[tooltipItem.index];
-                        let total = 0;
-                        for (let i in allData) {
-                            total += allData[i];
-                        }
-                        let tooltipPercentage = Math.round((tooltipData / total) * 100);
-                        return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
-                    }
-                }
-            },
+    google.charts.load("visualization", "1", {packages: ["corechart"]});
+    google.charts.setOnLoadCallback(drawChart1);
 
-        }
-    });
+    function drawChart1() {
+        let tags = getSortedLabelsForDoughnutDiagram("resumes", 9);
+        let resumes = getAllDataForSortedLabels("resumes", 9);
+        let data = new google.visualization.DataTable();
+        data.addColumn('string', 'tags');
+        data.addColumn('number', 'resumes');
+        for (let i = 0; i < tags.length; i++)
+            data.addRow([tags[i], resumes[i]]);
+        let options = {
+            chartArea: {left: 20, top: 20, width: "100%", height: "100%"}
+        };
+        let chart = new google.visualization.PieChart(document.getElementById('donutchart_resumes'));
+        chart.draw(data, options);
+    }
+
     /* Diagram about tags in vacancies */
-    let $ctxVacancies = $('#dynamic_vacancies')[0].getContext('2d');
-    var vacanciesChart = new Chart($ctxVacancies, {
-        type: 'doughnut',
-        data: {
-            labels: getSortedLabelsForDoughnutDiagram("resumes", 9),
-            datasets: [{
-                data: getAllDataForSortedLabels("vacancies", 9),
-                backgroundColor: backgroundColors,
-                hoverBackgroundColor: backgroundColors
-            }]
-        },
-        options: {
-            responsive: true,
-            legend: {
-                position: 'bottom',
-            },
-            tooltips: {
-                callbacks: {
-                    label: function (tooltipItem, data) {
-                        let allData = data.datasets[tooltipItem.datasetIndex].data;
-                        let tooltipLabel = data.labels[tooltipItem.index];
-                        let tooltipData = allData[tooltipItem.index];
-                        let total = 0;
-                        for (let i in allData) {
-                            total += allData[i];
-                        }
-                        let tooltipPercentage = Math.round((tooltipData / total) * 100);
-                        return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
-                    }
-                }
-            },
-        }
+    google.load("visualization", "1", {packages: ["corechart"]});
+    google.setOnLoadCallback(drawChart2);
+
+    function drawChart2() {
+        let tags = getSortedLabelsForDoughnutDiagram("vacancies", 9);
+        let vacancies = getAllDataForSortedLabels("vacancies", 9);
+        let data = new google.visualization.DataTable();
+        data.addColumn('string', 'tags');
+        data.addColumn('number', 'vacancies');
+        for (let i = 0; i < tags.length; i++)
+            data.addRow([tags[i], vacancies[i]]);
+        let options = {
+            chartArea: {left: 20, top: 20, width: "100%", height: "100%"}
+        };
+        let chart = new google.visualization.PieChart(document.getElementById('donutchart_vacancies'));
+        chart.draw(data, options);
+    }
+
+    $(window).resize(function () {
+        drawChart1();
+        drawChart2();
     });
 });
