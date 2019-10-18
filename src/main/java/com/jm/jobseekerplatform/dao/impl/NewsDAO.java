@@ -24,7 +24,7 @@ public class NewsDAO extends AbstractDAO<News> {
                 .setParameter("id", newsId).executeUpdate();
     }
 
-    public Page<News> getBySubscription(Set<Subscription> subscriptions, Pageable pageable) {
+    public Page<News> getBySubscriptions(Iterable<Subscription> subscriptions, Pageable pageable) {
         Set<News> newsSet = new HashSet<>();
         for (Subscription s : subscriptions) {
             Query query = entityManager.createQuery("SELECT distinct n FROM News n " +
@@ -47,7 +47,7 @@ public class NewsDAO extends AbstractDAO<News> {
         return new PageImpl<>(news.subList(start, end), pageable, news.size());
     }
 
-    public Page<News> getByTags (SeekerProfile profile, Pageable pageable) {
+    public Page<News> getBySeekerProfileTags(SeekerProfile profile, Pageable pageable) {
         Set<News> tagNewsSet = new HashSet<>();
         Query query = entityManager.createQuery("SELECT distinct n FROM News n " +
                 "JOIN n.tags nt WHERE nt in :tags", News.class);

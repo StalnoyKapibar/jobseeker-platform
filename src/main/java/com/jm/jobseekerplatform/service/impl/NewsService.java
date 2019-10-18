@@ -33,11 +33,11 @@ public class NewsService extends AbstractService<News> {
         return newsDaoI.getAllBySeekerProfileId(employerProfiles, pageable);
     }
 
-    public Page<News> getAllBySubscription(Set<Subscription> subscriptions, Pageable pageable) {
-        return newsDAO.getBySubscription(subscriptions, pageable);
+    public Page<News> getAllBySubscriptions(Iterable<Subscription> subscriptions, Pageable pageable) {
+        return newsDAO.getBySubscriptions(subscriptions, pageable);
     }
 
-    public Page<News> getAllByTags(SeekerProfile profile, Pageable pageable) {
-        return newsDAO.getByTags(profile, pageable);
+    public Page<News> getAllBySeekerProfileTags(SeekerProfile profile, Pageable pageable) {
+        return newsDAO.getBySeekerProfileTags(profile, pageable);
     }
 }

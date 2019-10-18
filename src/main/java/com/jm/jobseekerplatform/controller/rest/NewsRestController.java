@@ -100,17 +100,17 @@ public class NewsRestController {
     public ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
                                                                   @RequestParam("newsPageCount") int newsPageCount) {
         SeekerProfile profile = seekerProfileService.getById(seekerProfileId);
-        Set<Subscription> subscriptions = seekerProfileService.getById(seekerProfileId).getSubscriptions();
+        Set<Subscription> subscriptions = profile.getSubscriptions();
         if (subscriptions.size() == 0) {
             Sort sort = new Sort(Sort.Direction.DESC, "date");
-            List<News> tagNews = newsService.getAllByTags(profile, PageRequest.of(newsPageCount, 10, sort))
+            List<News> tagNews = newsService.getAllBySeekerProfileTags(profile, PageRequest.of(newsPageCount, 10, sort))
                     .getContent();
             return new ResponseEntity<>(tagNews, HttpStatus.OK);
         }
         Sort sort = new Sort(Sort.Direction.DESC, "date");
-        List<News> subscriptionNews = newsService.getAllBySubscription(subscriptions,
+        List<News> subscriptionNews = newsService.getAllBySubscriptions(subscriptions,
                 PageRequest.of(newsPageCount, 10, sort)).getContent();
-        List<News> tagNews = newsService.getAllByTags(profile, PageRequest.of(newsPageCount, 10, sort))
+        List<News> tagNews = newsService.getAllBySeekerProfileTags(profile, PageRequest.of(newsPageCount, 10, sort))
                 .getContent();
         List<News> news = new ArrayList<>(subscriptionNews);
         news.addAll(tagNews);
