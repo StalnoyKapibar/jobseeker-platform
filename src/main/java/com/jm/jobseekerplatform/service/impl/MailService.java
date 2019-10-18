@@ -1,6 +1,5 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,10 +19,7 @@ import java.util.Date;
 public class MailService {
 
     @Autowired
-    private JavaMailSender javaMailSender;
-
-    @Autowired
-    private UserService userService;
+    private JavaMailSender javaMailSender; // WTF? Where is bean declared?
 
     @Autowired
     private TemplateEngine templateEngine;

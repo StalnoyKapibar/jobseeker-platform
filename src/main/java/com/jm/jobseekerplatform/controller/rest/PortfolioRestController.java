@@ -5,8 +5,6 @@ import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.service.impl.PortfolioService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,14 +22,12 @@ public class PortfolioRestController {
 
     @RequestMapping("/")
     public List<Portfolio> getAllEmployerProfiles() {
-        List<Portfolio> portfolios = portfolioService.getAll();
-        return portfolios;
+        return portfolioService.getAll();
     }
 
     @RequestMapping("/{portfolioId}")
-    public Portfolio getPorfolioById(@PathVariable Long portfolioId) {
-        Portfolio portfolio = portfolioService.getById(portfolioId);
-        return portfolio;
+    public Portfolio getPortfolioById(@PathVariable Long portfolioId) {
+        return portfolioService.getById(portfolioId);
     }
 
     @RequestMapping("/add/{id}")

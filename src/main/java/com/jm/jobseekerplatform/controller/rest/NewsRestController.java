@@ -5,15 +5,12 @@ import com.jm.jobseekerplatform.model.DraftNews;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.comments.Comment;
-import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.DraftNewsService;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.comments.CommentService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
-import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -133,7 +130,6 @@ public class NewsRestController {
     }
 
     private boolean isNewsNeedValidate(News news) {
-        return news.getNumberOfViews() != null ?
-                news.getNumberOfViews() >= MIN_NUMBER_OF_VIEWS_FOR_VALIDATE : false;
+        return news.getNumberOfViews() != null && news.getNumberOfViews() >= MIN_NUMBER_OF_VIEWS_FOR_VALIDATE;
     }
 }

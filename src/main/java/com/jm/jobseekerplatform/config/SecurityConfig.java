@@ -31,6 +31,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserService userService;
 
+    @Bean
+    public LoginSuccessHandler loginSuccessHandler() {
+        return new LoginSuccessHandler(userService);
+    }
+
+    @Bean
+    public LoginFailureHandler loginFailureHandler() {
+        return new LoginFailureHandler(userService);
+    }
+
     @Autowired
     private AuthErrorEntryPoint authErrorEntryPoint;
 
@@ -54,11 +64,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // указываем страницу с формой логина
                 .loginPage("/login")
                 //указываем логику обработки при логине
-                .successHandler(new LoginSuccessHandler(userService))
+                .successHandler(loginSuccessHandler())
                 // указываем action с формы логина
                 .loginProcessingUrl("/login")
                 // указываем логику обработки при неудачном логине
-                .failureHandler(new LoginFailureHandler(userService))
+                .failureHandler(loginFailureHandler())
                 // Указываем параметры логина и пароля с формы логина
                 .usernameParameter("j_username")
                 .passwordParameter("j_password")

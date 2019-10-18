@@ -1,8 +1,8 @@
 package com.jm.jobseekerplatform.service.impl;
 
+import com.jm.jobseekerplatform.dao.impl.users.UserDAO;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
-import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,14 +17,14 @@ import java.time.temporal.ChronoUnit;
 public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserService userService;
+    private UserDAO userDAO;
 
     @Autowired
     private ProfileService profileService;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userService.findByEmail(s);
+        User user = userDAO.findByEmail(s);
         if (user == null) {
             throw new UsernameNotFoundException("USER not found");
         } else if (!user.isEnabled() && user.getProfile().getExpiryBlock() != null) {
@@ -32,7 +32,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
                     .atZone(ZoneId.systemDefault()).toLocalDateTime());
             if (diff <= 0) {
                 user.setEnabled(true);
-                userService.update(user);
+                userDAO.update(user);
                 profileService.unblock(user.getProfile());
             }
         }

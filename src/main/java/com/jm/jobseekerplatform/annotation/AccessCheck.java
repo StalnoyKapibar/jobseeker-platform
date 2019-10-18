@@ -7,9 +7,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface LoggedUserAccessCheck {
+public @interface AccessCheck {
 
-    // id parameter name, like seekerProfileId
-    String value() default "id";
+    String value() default "";
 
 }

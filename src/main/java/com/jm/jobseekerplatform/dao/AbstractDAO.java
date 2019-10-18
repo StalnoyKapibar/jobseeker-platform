@@ -7,7 +7,6 @@ import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Repository("abstractDAO")
@@ -56,4 +55,5 @@ public abstract class AbstractDAO<T extends Serializable> {
                 + clazz.getName() +
                 " entity where entity.id in (:ids)", clazz).setParameter("ids", listId).getResultList();
     }
+
 }

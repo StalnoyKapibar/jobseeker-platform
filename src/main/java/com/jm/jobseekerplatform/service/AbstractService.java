@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.service;
 
+import com.jm.jobseekerplatform.annotation.AccessCheck;
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
-public abstract class AbstractService<T extends Serializable> {
+public abstract class AbstractService<T extends Serializable> implements Serializable {
 
     @Autowired
     protected AbstractDAO<T> abstractDAO;
@@ -18,6 +19,7 @@ public abstract class AbstractService<T extends Serializable> {
         abstractDAO.add(entity);
     }
 
+    @AccessCheck
     public void update(T entity) {
         abstractDAO.update(entity);
     }
@@ -34,6 +36,7 @@ public abstract class AbstractService<T extends Serializable> {
         return abstractDAO.getById(id);
     }
 
+    @AccessCheck
     public void delete(T entity) {
         abstractDAO.delete(entity);
     }
@@ -45,4 +48,5 @@ public abstract class AbstractService<T extends Serializable> {
     public List<T> getEntitiesByIdArray(ArrayList<Long> listId) {
         return abstractDAO.getEntitiesByIdArray(listId);
     }
+
 }

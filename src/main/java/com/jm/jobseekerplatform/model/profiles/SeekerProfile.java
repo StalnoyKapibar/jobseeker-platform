@@ -29,7 +29,7 @@ public class SeekerProfile extends Profile implements Serializable {
     private Set<Portfolio> portfolios;
 
     @JsonManagedReference
-    @ManyToMany(fetch = FetchType.EAGER )
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Vacancy> favoriteVacancy;
 
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "seekerProfile")
@@ -160,4 +160,5 @@ public class SeekerProfile extends Profile implements Serializable {
     public void setResumes(Set<Resume> resumes) {
         this.resumes = resumes;
     }
+
 }

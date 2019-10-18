@@ -1,14 +1,10 @@
 package com.jm.jobseekerplatform.aop;
 
-import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-
-import java.util.Collection;
 
 @Aspect
 @Component
@@ -18,9 +14,10 @@ public class NewsCounter {
     private NewsService newsService;
 
     @AfterReturning(pointcut = "execution(* com.jm.jobseekerplatform.controller.rest" +
-                    ".NewsRestController.getAllNewsBySeekerProfileId(..))",
-            returning = "retVal")
-    public void doAccessCheck(Object retVal) {
+            ".NewsRestController.getAllNewsBySeekerProfileId(..))", returning = "retVal")
+    public void incrementViews(Object retVal) {
+        // TODO: add method additionally to newsService.update() to increment update news views like newsService.incrementViews()
+/*
         ResponseEntity responseEntity = (ResponseEntity) retVal;
         Collection entityBody = (Collection) responseEntity.getBody();
 
@@ -33,5 +30,6 @@ public class NewsCounter {
             news.setNumberOfViews(totalViews + 1);
             newsService.update(news);
         });
+*/
     }
 }

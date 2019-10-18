@@ -1,20 +1,17 @@
 package com.jm.jobseekerplatform;
 
-import com.jm.jobseekerplatform.config.InitData;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
+/**
+ * Set 'com.jm.jobseekerplatform.init' property to 'true' in 'application.properties' for database init.
+ * Then set to 'false' after successful start.
+ */
 @SpringBootApplication
 public class JobseekerPlatformApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(JobseekerPlatformApplication.class, args);
-    }
-
-    //delete "//" to enable init userroles and users to base
-    //@Bean(initMethod = "initData")
-    public InitData initialData() {
-        return new InitData();
     }
 
 }

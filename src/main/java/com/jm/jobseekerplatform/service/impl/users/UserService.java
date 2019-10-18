@@ -84,7 +84,6 @@ public class UserService extends AbstractService<User> {
         }
     }
 
-
     public char[] encodePassword(char[] password) {
         return passwordEncoder.encode(String.valueOf(password)).toCharArray();
     }
@@ -159,9 +158,10 @@ public class UserService extends AbstractService<User> {
         } else if (userRole.equals("ROLE_EMPLOYER")) {
             newUser = new EmployerUser(userEmail, userPass, LocalDateTime.now(), null);
         } else if (userRole.equals("ROLE_ADMIN")) {
-            newUser = new AdminUser(userEmail, userPass, LocalDateTime.now(),  null);
+            newUser = new AdminUser(userEmail, userPass, LocalDateTime.now(), null);
         }
 
+        assert newUser != null;
         newUser.setConfirm(true);
         add(newUser);
 
@@ -196,4 +196,5 @@ public class UserService extends AbstractService<User> {
 
         return isCorrect;
     }
+
 }

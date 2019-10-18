@@ -1,6 +1,5 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.annotation.LoggedUserAccessCheck;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
@@ -65,7 +64,7 @@ public class SeekerProfileRestController {
         return seekerProfileService.getById(seekerProfileId);
     }
 
-    @LoggedUserAccessCheck
+    //    @AccessCheck
     @PostMapping(value = "/outFavoriteVacancy")
     public ResponseEntity outFavoriteVacancy(@RequestParam Long vacancyId, @RequestParam Long seekerProfileId) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
@@ -75,7 +74,7 @@ public class SeekerProfileRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @LoggedUserAccessCheck
+    //    @AccessCheck
     @PostMapping(value = "/inFavoriteVacancy")
     public ResponseEntity inFavoriteVacancy(@RequestParam Long vacancyId, @RequestParam Long seekerProfileId) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);

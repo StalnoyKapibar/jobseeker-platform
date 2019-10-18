@@ -12,7 +12,6 @@ import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.SubscriptionService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
-import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import com.jm.jobseekerplatform.service.impl.tokens.VerificationTokenService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
@@ -32,11 +31,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-
 
 @Controller
 public class MainController {
@@ -52,6 +48,7 @@ public class MainController {
 
     @Autowired
     private SeekerUserService seekerUserService;
+
     @Autowired
     private EmployerUserService employerUserService;
 
@@ -140,8 +137,8 @@ public class MainController {
     public String filterProfilePage(Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             Long id = ((User) authentication.getPrincipal()).getId();
-            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority ->
-                    ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
+            Set<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
                 EmployerUser employerUser = employerUserService.getById(id);
                 return "redirect:/employer/" + employerUser.getProfile().getId();
@@ -200,8 +197,7 @@ public class MainController {
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
                 isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(subscription);
                 hasResponded = vacancy.getMeetings()
-                        .stream().filter(meeting ->
-                                meeting.getSeekerProfile().getId().equals(id)).findFirst().isPresent();
+                        .stream().anyMatch(meeting -> meeting.getSeekerProfile().getId().equals(id));
                 model.addAttribute("isContain", isContain);
                 model.addAttribute("isSubscribe", isSubscribe);
                 model.addAttribute("seekerProfileId", profile.getId());
@@ -234,4 +230,5 @@ public class MainController {
         }
         return "password_reset";
     }
+
 }
