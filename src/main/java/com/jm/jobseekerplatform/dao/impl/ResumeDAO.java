@@ -123,17 +123,9 @@ public class ResumeDAO extends AbstractDAO<Resume> {
         entityManager.createQuery("delete from Resume where id = :id").setParameter("id", id).executeUpdate();
     }
 
-    public Map<String, List<Resume>> getAllResumesByTagName(List<Tag> tags) {
-        Map<String, List<Resume>> listMap = new HashMap<>();
-        List<String> tagsName = new ArrayList<>();
-        for (Tag t : tags) {
-            tagsName.add(t.getName());
-        }
-        for (String tagName : tagsName) {
-            Query query = entityManager.createQuery("SELECT distinct r FROM Resume r JOIN r.tags rt where rt.name = :name", Resume.class);
-            query.setParameter("name", tagName);
-            listMap.put(tagName, query.getResultList());
-        }
-        return listMap;
+    public List<Resume> getAllResumesByTagName(String tagName) {
+        Query query = entityManager.createQuery("SELECT distinct r FROM Resume r JOIN r.tags rt where rt.name = :name", Resume.class);
+        query.setParameter("name", tagName);
+        return query.getResultList();
     }
 }

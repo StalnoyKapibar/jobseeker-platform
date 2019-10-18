@@ -3,7 +3,7 @@ $(document).ready(function (e) {
     feather.replace();
     window.onload = function () {
         /* Show animation */
-        statisticAnimationProgress(1200);
+        statisticAnimationProgress(2000);
     };
 
     function localDateTime(date) {
@@ -345,6 +345,9 @@ $(document).ready(function (e) {
                 async: false,
                 success: function (data) {
                     result.push({"name": tagsName[i], "value": data})
+                },
+                error: function () {
+                    console.log("Hello");
                 }
             });
         }

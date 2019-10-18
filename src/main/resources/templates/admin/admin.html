@@ -5,10 +5,6 @@
       layout:decorator="layouts/adminlayouts" th:with="side='admin'">
 <head layout:fragment="head">
     <link href="/css/statistic_styles.css" rel="stylesheet">
-    <script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.2/dist/circle-progress.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript" src="/js/admin/admin_statistics.js"></script>
 </head>
 <body>
 <div class="container-fluid" layout:fragment="content">
@@ -213,6 +209,10 @@
 </div>
 
 <div layout:fragment="content-script">
+    <script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.2/dist/circle-progress.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="/js/admin/admin_statistics.js"></script>
 </div>
 </body>
 </html>

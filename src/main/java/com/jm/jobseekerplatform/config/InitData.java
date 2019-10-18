@@ -478,7 +478,7 @@ public class InitData {
         tagService.add(new Tag("Java Servlets", verified));
         tagService.add(new Tag("JSF", verified));
         tagService.add(new Tag("PostgreSQL", verified));
-        tagService.add(new Tag("Oracle Pl/SQL", verified));
+        tagService.add(new Tag("Oracle Pl_SQL", verified));
         tagService.add(new Tag("JMS", verified));
         tagService.add(new Tag("Azure", verified));
         tagService.add(new Tag("React", verified));

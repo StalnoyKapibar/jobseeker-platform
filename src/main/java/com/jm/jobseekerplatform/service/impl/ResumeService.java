@@ -103,7 +103,7 @@ public class ResumeService extends AbstractService<Resume> {
         return resumeDaoI.getResumesByDatePeriod(startDate, endDate);
     }
 
-    public Map<String, List<Resume>> getAllResumesByTagName(List<Tag> tags) {
-        return dao.getAllResumesByTagName(tags);
+    public List<Resume> getAllResumesByTagName(String tagName) {
+        return dao.getAllResumesByTagName(tagName);
     }
 }

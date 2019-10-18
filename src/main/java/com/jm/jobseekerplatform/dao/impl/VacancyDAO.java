@@ -155,18 +155,10 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         return vacancies;
     }
 
-    public Map<String, List<Vacancy>> getAllVacanciesByTagName(List<Tag> tags) {
-        Map<String, List<Vacancy>> listMap = new HashMap<>();
-        List<String> tagsName = new ArrayList<>();
-        for (Tag t : tags) {
-            tagsName.add(t.getName());
-        }
-        for (String tagName : tagsName) {
-            Query query = entityManager.createQuery("SELECT distinct v FROM Vacancy v JOIN v.tags vt where vt.name = :name", Vacancy.class);
-            query.setParameter("name", tagName);
-            listMap.put(tagName, query.getResultList());
-        }
-        return listMap;
+    public List<Vacancy> getAllVacanciesByTagName(String tagName) {
+        Query query = entityManager.createQuery("SELECT distinct v FROM Vacancy v JOIN v.tags vt where vt.name = :name", Vacancy.class);
+        query.setParameter("name", tagName);
+        return query.getResultList();
     }
 }
 
