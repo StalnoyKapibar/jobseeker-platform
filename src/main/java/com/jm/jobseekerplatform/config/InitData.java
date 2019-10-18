@@ -285,12 +285,10 @@ public class InitData {
         employerUser.setConfirm(true);
         employerUserService.add(employerUser);
 
-        /*seekerUser = new SeekerUser("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.now(), seekerProfileService.getById(8L));*/
         seekerUser = new SeekerUser("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.of(2019, Month.OCTOBER, 1, 10, 10, 10), seekerProfileService.getById(8L));
         seekerUser.setConfirm(true);
         seekerUserService.add(seekerUser);
 
-        /*seekerUser = new SeekerUser("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.now(), seekerProfileService.getById(9L));*/
         seekerUser = new SeekerUser("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.of(2019, Month.OCTOBER, 10, 10, 10, 10), seekerProfileService.getById(9L));
         seekerUser.setConfirm(true);
         seekerUserService.add(seekerUser);
@@ -308,6 +306,34 @@ public class InitData {
         seekerUserService.add(seekerUser);
 
         seekerUser = new SeekerUser("seeker6@mail.ru", userService.encodePassword("seeker6".toCharArray()), LocalDateTime.now().minusDays(2L), seekerProfileService.getById(13L));
+        seekerUser.setConfirm(true);
+        seekerUserService.add(seekerUser);
+
+        seekerUser = new SeekerUser("seeker7@mail.ru", userService.encodePassword("seeker7".toCharArray()), LocalDateTime.now().minusDays(3L), seekerProfileService.getById(14L));
+        seekerUser.setConfirm(true);
+        seekerUserService.add(seekerUser);
+
+        seekerUser = new SeekerUser("seeker8@mail.ru", userService.encodePassword("seeker8".toCharArray()), LocalDateTime.now().minusDays(32L), seekerProfileService.getById(15L));
+        seekerUser.setConfirm(true);
+        seekerUserService.add(seekerUser);
+
+        seekerUser = new SeekerUser("seeker9@mail.ru", userService.encodePassword("seeker9".toCharArray()), LocalDateTime.now().minusDays(1L), seekerProfileService.getById(16L));
+        seekerUser.setConfirm(true);
+        seekerUserService.add(seekerUser);
+
+        seekerUser = new SeekerUser("seeker10@mail.ru", userService.encodePassword("seeker10".toCharArray()), LocalDateTime.now().minusDays(2L), seekerProfileService.getById(17L));
+        seekerUser.setConfirm(true);
+        seekerUserService.add(seekerUser);
+
+        seekerUser = new SeekerUser("seeker11@mail.ru", userService.encodePassword("seeker11".toCharArray()), LocalDateTime.now().minusDays(4L), seekerProfileService.getById(18L));
+        seekerUser.setConfirm(true);
+        seekerUserService.add(seekerUser);
+
+        seekerUser = new SeekerUser("seeker12@mail.ru", userService.encodePassword("seeker12".toCharArray()), LocalDateTime.now().minusDays(4L), seekerProfileService.getById(19L));
+        seekerUser.setConfirm(true);
+        seekerUserService.add(seekerUser);
+
+        seekerUser = new SeekerUser("seeker13@mail.ru", userService.encodePassword("seeker13".toCharArray()), LocalDateTime.now().minusDays(5L), seekerProfileService.getById(20L));
         seekerUser.setConfirm(true);
         seekerUserService.add(seekerUser);
     }
@@ -496,6 +522,27 @@ public class InitData {
 
         portfolios.clear();
         seekerProfileService.add(new SeekerProfile("Степан", "Александрович", "Степанов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L), portfolios, vacancies, new HashSet<>()));
+
+        portfolios.clear();
+        seekerProfileService.add(new SeekerProfile("Владимир", "Александрович", "Стрельцов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+
+        portfolios.clear();
+        seekerProfileService.add(new SeekerProfile("Иван", "Александрович", "Кузнецов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+
+        portfolios.clear();
+        seekerProfileService.add(new SeekerProfile("Илья", "Александрович", "Кузнецов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+
+        portfolios.clear();
+        seekerProfileService.add(new SeekerProfile("Петр", "Александрович", "Петров", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+
+        portfolios.clear();
+        seekerProfileService.add(new SeekerProfile("Иван", "Александрович", "Власов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+
+        portfolios.clear();
+        seekerProfileService.add(new SeekerProfile("Арсен", "Александрович", "Петросян", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+
+        portfolios.clear();
+        seekerProfileService.add(new SeekerProfile("Магомед", "Александрович", "Асхаб", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
     }
 
     private Set<Tag> randomTags(Long position) {
@@ -572,7 +619,7 @@ public class InitData {
     }
 
     private void initJobExperience() {
-        for (int i = 0; i < 40; i++) {
+        for (int i = 0; i < 60; i++) {
             Date date = new Date();
             JobExperience jobExperience = new JobExperience(date,
                     new Date(date.getTime() + (24 * 60 * 60 * 1000)),//+1 день
@@ -612,7 +659,7 @@ public class InitData {
                         jobExperiences,
                         city,
                         point,
-                        LocalDateTime.now());
+                        LocalDateTime.now().minusDays(j));
                 resumes.add(resume);
                 resumeService.add(resume);
                 jobExperiences.clear();
