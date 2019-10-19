@@ -1,6 +1,7 @@
 package com.jm.jobseekerplatform.controller;
 
 import com.jm.jobseekerplatform.model.News;
+import com.jm.jobseekerplatform.model.SeekerCountNewsViews;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
@@ -8,6 +9,7 @@ import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.ResumeService;
+import com.jm.jobseekerplatform.service.impl.SeekerCountService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
@@ -23,7 +25,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.Set;
@@ -52,6 +53,9 @@ public class SeekerController {
 
     @Autowired
     private NewsService newsService;
+
+    @Autowired
+    SeekerCountService seekerCountService;
 
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
@@ -182,11 +186,20 @@ public class SeekerController {
 
     @GetMapping("/news/{newsId}")
     public String getSeekerSubscriptionNewsById(@PathVariable Long newsId, Model model,  Authentication authentication) {
+        News news = newsService.getById(newsId);
+        SeekerCountNewsViews scnv = seekerCountService.getSeekerCount(news);
+        if (scnv.getNumberViews() != 3L) {
+            scnv.setNumberViews(3L);
+            seekerCountService.update(scnv);
+        }
+
         News currentNews = newsService.getById(newsId);
         model.addAttribute("newsId", currentNews.getId());
         model.addAttribute("headline", currentNews.getHeadline());
         model.addAttribute("description", currentNews.getDescription());
         model.addAttribute("profileId", ((User) authentication.getPrincipal()).getProfile().getId());
+
         return "news_page";
     }
+
 }

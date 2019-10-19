@@ -7,10 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.Query;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,17 +21,14 @@ public class NewsDAO extends AbstractDAO<News> {
     }
 
     public Page<News> getBySubscription(Set<Subscription> subscriptions, Pageable pageable) {
-        Set<News> newsSet = new HashSet<>();
+        List<News> news = new ArrayList<>();
+
         for (Subscription s : subscriptions) {
-            Query query = entityManager.createQuery("SELECT distinct n FROM News n JOIN n.author na JOIN n.tags nt where na = :newsAuthor and nt in :tags", News.class);
-            query.setParameter("newsAuthor", s.getEmployerProfile())
-                    .setParameter("tags", s.getTags());
-
+            Query query = entityManager.createQuery("SELECT distinct n FROM News n JOIN n.author na JOIN n.tags nt where na = :newsAuthor and nt in :tags ORDER BY date DESC ", News.class);
+            query.setParameter("newsAuthor", s.getEmployerProfile()).setParameter("tags", s.getTags());
             List<News> newsList = query.getResultList();
-            newsSet.addAll(newsList);
+            news.addAll(newsList);
         }
-
-        List<News> news = new ArrayList<>(newsSet);
 
         int start = (int) pageable.getOffset();
         if (start > news.size()) {
@@ -43,4 +38,5 @@ public class NewsDAO extends AbstractDAO<News> {
 
         return new PageImpl<>(news.subList(start, end), pageable, news.size());
     }
+
 }

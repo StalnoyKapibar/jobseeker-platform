@@ -1,19 +1,16 @@
 package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.dto.NewsDTO;
-import com.jm.jobseekerplatform.model.DraftNews;
-import com.jm.jobseekerplatform.model.News;
-import com.jm.jobseekerplatform.model.Subscription;
-import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.comments.Comment;
-import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.dto.SeekerCountDTO;
+import com.jm.jobseekerplatform.model.*;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.DraftNewsService;
 import com.jm.jobseekerplatform.service.impl.NewsService;
+import com.jm.jobseekerplatform.service.impl.SeekerCountService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.comments.CommentService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
-import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -52,6 +50,9 @@ public class NewsRestController {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private SeekerCountService seekerCountService;
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @PostMapping("/add")
@@ -94,8 +95,34 @@ public class NewsRestController {
         return new ResponseEntity<>(news, HttpStatus.OK);
     }
 
+    // Проверка есть/нет такого-же id в создаваемой коллекции
+    public boolean checkedArr(Long ngetId, List<SeekerCountNewsViews> scnvList) {
+        for (int i = 0; i < scnvList.size(); i++) {
+            if (ngetId == scnvList.get(i).getNews().getId()) return false;
+        }
+        return true;
+    }
+
+    // Добавление в создаваемую коллекцию
+    public SeekerCountNewsViews addInSeekerCount(Long id, SeekerProfile seekerProfileNow, News n, Long num) {
+        SeekerCountNewsViews scnv = new SeekerCountNewsViews();
+        scnv.setId(id);
+        scnv.setDate(LocalDateTime.now());
+        scnv.setSeeker(seekerProfileNow);
+        scnv.setNews(n);
+        scnv.setNumberViews(num);
+        return scnv;
+    }
+
+    public SeekerCountDTO addInSeekerCountDTO(Long numberViews, News news) {
+        SeekerCountDTO seekerCountDTO = new SeekerCountDTO();
+        seekerCountDTO.setNews(news);
+        seekerCountDTO.setViewsNumber(numberViews);
+        return seekerCountDTO;
+    }
+
     @GetMapping ("/all_seeker_news")
-    public ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
+    public ResponseEntity<List<SeekerCountDTO>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
                                                                   @RequestParam("newsPageCount") int newsPageCount) {
         Set<Subscription> subscriptions = seekerProfileService.getById(seekerProfileId).getSubscriptions();
         if (subscriptions.size() == 0) {
@@ -104,7 +131,59 @@ public class NewsRestController {
         Sort sort = new Sort(Sort.Direction.DESC, "date");
         List<News> news = newsService.getAllBySubscription(subscriptions,
                 PageRequest.of(newsPageCount, 10, sort)).getContent();
-        return new ResponseEntity<>(news, HttpStatus.OK);
+
+        // Добавление просмотренных новостей
+        SeekerProfile seekerProfileNow = seekerProfileService.getById(seekerProfileId);
+        List<SeekerCountNewsViews> scnvList = new ArrayList<>();
+        List<SeekerCountDTO> scDto = new ArrayList<>();
+        List<SeekerCountNewsViews> bdList = seekerCountService.getAllSeekerCount(seekerProfileNow);
+        if (news.size() != 0) {
+            for (News n : news) {
+                if (bdList.size() != 0) {
+                    for (int i = 0; i < bdList.size(); i++) {
+                        Long dbNewsId = bdList.get(i).getNews().getId();
+                        Long dbView = bdList.get(i).getNumberViews();
+                        Long ngetId = n.getId();
+                        Long id = bdList.get(i).getId();
+                        if (ngetId == dbNewsId && dbView == 1L) {
+                            if (checkedArr(ngetId, scnvList)) {
+                                scnvList.add(addInSeekerCount(id, seekerProfileNow, n, 2L));
+                                scDto.add(addInSeekerCountDTO(2L, n));
+                            }
+                        } else if (ngetId == dbNewsId) {
+                            scDto.add(addInSeekerCountDTO(dbView, n));
+                            break;
+                        } else {
+                            boolean bool = true;
+                            for (int j = 0; j < bdList.size(); j++) {
+                                if (ngetId == bdList.get(j).getNews().getId()) {
+                                    bool = false;
+                                    break;
+                                }
+                            }
+                            if (bool && checkedArr(ngetId, scnvList)) {
+                                scnvList.add(addInSeekerCount(null, seekerProfileNow, n, 1L));
+                                scDto.add(addInSeekerCountDTO(1L, n));
+                            }
+                        }
+                    }
+                } else {
+                    scnvList.add(addInSeekerCount(null, seekerProfileNow, n, 1L));
+                    scDto.add(addInSeekerCountDTO(1L, n));
+                }
+            }
+            news.forEach(x -> {
+                Long totalViews = x.getNumberOfViews();
+                if (totalViews == null) totalViews = 0L;
+                x.setNumberOfViews(totalViews + 1);
+                newsService.update(x);
+            });
+        }
+        if (scnvList.size() > 0) {
+            seekerCountService.updateAllSeekerCount(scnvList);
+        }
+
+        return new ResponseEntity<>(scDto, HttpStatus.OK);
     }
 
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
