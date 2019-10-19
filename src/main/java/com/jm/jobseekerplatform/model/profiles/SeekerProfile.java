@@ -1,6 +1,5 @@
 package com.jm.jobseekerplatform.model.profiles;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.*;
 
 import javax.persistence.*;
@@ -28,7 +27,7 @@ public class SeekerProfile extends Profile implements Serializable {
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Portfolio> portfolios;
 
-    @JsonManagedReference
+    //    @JsonManagedReference // Пришлось отключить с этим регистрация не работает
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Vacancy> favoriteVacancy;
 
@@ -36,28 +35,18 @@ public class SeekerProfile extends Profile implements Serializable {
     @OrderBy("status, date desc")
     private Set<Meeting> meetings;
 
-    @JsonManagedReference
+    //    @JsonManagedReference // Пришлось отключить с этим регистрация не работает
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Subscription> subscriptions;
 
-    @JsonManagedReference
+    //    @JsonManagedReference // Пришлось отключить с этим регистрация не работает
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Resume> resumes;
 
     public SeekerProfile() {
     }
 
-    @Override
-    public String getFullName() {
-        return surname + " " + name + " " + patronymic;
-    }
-
-    @Override
-    public String getTypeName() {
-        return "Соискатель";
-    }
-
-    public SeekerProfile(String name, String patronymic, String surname){
+    public SeekerProfile(String name, String patronymic, String surname) {
         this.name = name;
         this.patronymic = patronymic;
         this.surname = surname;
@@ -74,6 +63,16 @@ public class SeekerProfile extends Profile implements Serializable {
         this.portfolios = portfolios;
         this.favoriteVacancy = favoriteVacancy;
         this.subscriptions = subscriptions;
+    }
+
+    @Override
+    public String getFullName() {
+        return surname + " " + name + " " + patronymic;
+    }
+
+    @Override
+    public String getTypeName() {
+        return "Соискатель";
     }
 
     @Override

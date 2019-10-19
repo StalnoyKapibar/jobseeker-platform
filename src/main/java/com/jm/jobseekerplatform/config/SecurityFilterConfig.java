@@ -22,12 +22,15 @@ public class SecurityFilterConfig {
         return registration;
     }
 
-//    @Bean
-//    public FilterRegistrationBean<SeekerApiAccessFilter> apiAccessFilterFilterRegistrationBean() {
-//        FilterRegistrationBean<SeekerApiAccessFilter> registrationBean = new FilterRegistrationBean<>();
-//        registrationBean.setFilter(new SeekerApiAccessFilter());
-//        registrationBean.addUrlPatterns("/api/seeker/*", "/api/seekerprofiles/*", "/api/seeker_vacancy_record/*");
-//        return registrationBean;
-//    }
+/*
+    // @AccessCheck annotation should replace this filter
+    @Bean
+    public FilterRegistrationBean<SeekerApiAccessFilter> apiAccessFilterFilterRegistrationBean() {
+        FilterRegistrationBean<SeekerApiAccessFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new SeekerApiAccessFilter());
+        registrationBean.addUrlPatterns("/api/seeker/*", "/api/seekerprofiles/*", "/api/seeker_vacancy_record/*");
+        return registrationBean;
+    }
+*/
 
 }

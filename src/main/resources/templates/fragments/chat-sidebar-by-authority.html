@@ -9,20 +9,23 @@
 <th:block th:fragment="seeker_chat_sidebar">
     <div class="w3-sidebar w3-bar-block w3-card" style="width:17%;right:0;">
         <h4 class="w3-bar-item">
-            <a th:href="@{/seeker/get_chats}">Мои чаты</a></h4>
+            <a th:href="@{/seeker/get_chats}">Мои чаты</a>
+		</h4>
         <span><b>&nbsp;Чаты по вакансиям</b></span>
         <th:block th:each="chat : ${chats}">
             <div th:if="${chat.topic.getTypeName()=='Вакансия'}">
-                <a th:href="@{/private_chat/{id}(id=${chat.id})}" class="w3-bar-item w3-button"> <span
-                        th:text="${chat.chatMembers[1].profile.fullName}"></span></a>
+                <a th:href="@{/private_chat/{id}(id=${chat.id})}" class="w3-bar-item w3-button">
+					<span th:text="${chat.chatMembers[1].profile.fullName}"></span>
+				</a>
             </div>
         </th:block>
         <br>
         <span><b>&nbsp;Чаты по резюме</b></span>
         <th:block th:each="chat : ${chats}">
             <div th:if="${chat.topic.getTypeName()=='Резюме'}">
-                <a th:href="@{/private_chat/{id}(id=${chat.id})}" class="w3-bar-item w3-button"> <span
-                        th:text="${chat.chatMembers[0].profile.fullName}"></span></a>
+                <a th:href="@{/private_chat/{id}(id=${chat.id})}" class="w3-bar-item w3-button">
+					<span th:text="${chat.chatMembers[0].profile.fullName}"></span>
+				</a>
             </div>
         </th:block>
     </div>
@@ -30,34 +33,37 @@
 
 <th:block th:fragment="employer_chat_sidebar">
     <div class="w3-sidebar w3-bar-block w3-card" style="width:17%;right:0;">
-        <h4 class="w3-bar-item">
-            <a th:href="@{/employer/get_chats}">Мои чаты</a></h4>
+		<h4 class="w3-bar-item">
+			<a th:href="@{/employer/get_chats}">Мои чаты</a>
+		</h4>
         <span><b>&nbsp;Чаты по вакансиям</b></span>
         <th:block th:each="chat : ${chats}">
             <div th:if="${chat.topic.getTypeName()=='Вакансия'}">
-                <a th:href="@{/private_chat/{id}(id=${chat.id})}" class="w3-bar-item w3-button"> <span
-                        th:text="${chat.chatMembers[0].profile.fullName}"></span></a>
+                <a th:href="@{/private_chat/{id}(id=${chat.id})}" class="w3-bar-item w3-button">
+					<span th:text="${chat.chatMembers[0].profile.fullName}"></span>
+				</a>
             </div>
         </th:block>
         <br>
         <span><b>&nbsp;Чаты по резюме</b></span>
         <th:block th:each="chat : ${chats}">
             <div th:if="${chat.topic.getTypeName()=='Резюме'}">
-                <a th:href="@{/private_chat/{id}(id=${chat.id})}" class="w3-bar-item w3-button"> <span
-                        th:text="${chat.chatMembers[1].profile.fullName}"></span></a>
+                <a th:href="@{/private_chat/{id}(id=${chat.id})}" class="w3-bar-item w3-button">
+					<span th:text="${chat.chatMembers[1].profile.fullName}"></span>
+				</a>
             </div>
         </th:block>
         <br>
         <span><b>&nbsp;Чаты по отзывам</b></span>
         <th:block th:each="chat : ${chats}">
             <div th:if="${chat.topic.getTypeName()=='Отзыв'}">
-                <a th:href="@{/private_chat/{id}(id=${chat.id})}" class="w3-bar-item w3-button"> <span
-                        th:text="${chat.chatMembers[1].profile.fullName}"></span></a>
+                <a th:href="@{/private_chat/{id}(id=${chat.id})}" class="w3-bar-item w3-button">
+					<span th:text="${chat.chatMembers[1].profile.fullName}"></span>
+				</a>
             </div>
         </th:block>
     </div>
 </th:block>
-
 
 </body>
 </html>

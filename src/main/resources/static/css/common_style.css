@@ -48,6 +48,11 @@ li {
 }
 
 /*Navbar style*/
+
+.sidebar, .btn {
+    cursor: pointer;
+}
+
 .navbar {
     background-color: var(--navbar-bg-color);
     width: 100vw;
@@ -199,7 +204,6 @@ li {
     background-color: #F39C12;
     cursor: pointer;
     margin: 3px;
-
 }
 
 .container-fluid .btnClick:hover {
@@ -463,11 +467,18 @@ select {
     top: 10px;
 }
 
+.chatMessageInfo {
+	position: static;
+    padding-right: 10px;
+	color: var(--red);
+}
+
 .chatMessageDate {
     position: absolute;
     top: 5px;
     right: 10px;
     color: var(--review-voted-count-color);
+	z-index: 2;
 }
 
 .chatMessageText {
@@ -475,6 +486,7 @@ select {
     top: 40px;
     left: 90px;
     color: var(--text-color);
+	z-index: 2;
 }
 
 .chatMemberName {
@@ -483,11 +495,10 @@ select {
     left: 90px;
     font-weight: bold;
     color: var(--text-color);
-
 }
 
 .chatInfo {
-    min-height: 80px;
+    min-height: 90px;
 }
 
 #snackbar {

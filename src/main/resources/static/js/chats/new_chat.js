@@ -90,23 +90,30 @@ function displayMessage(message) {
 
     function addYourMessage(message) {
         let date = messageDateFormat(message.date);
-        $(".msg_history").append('<div class="outgoing_msg">\n' +
-            '                            <div class="sent_msg">\n' +
-            '                                <p>' + message.text + '</p>\n' +
-            '                                <span class="time_date">' + date + '</span> </div>\n' +
-            '                        </div>');
+        $(".msg_history").append('' +
+			'<div class="outgoing_msg">\n' +
+				'<div class="sent_msg">\n' +
+					'<p>' + message.text + '</p>\n' +
+					'<span class="time_date">' + date + '</span>' +
+				'</div>\n' +
+            '</div>');
     }
 
     function addForeignMessage(message) {
         let date = messageDateFormat(message.date);
-        $(".msg_history").append('<div class="incoming_msg">\n' +
-            '                            <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>\n' +
-            '                            <div class="received_msg">\n' +
-            '                                <div class="received_withd_msg">\n' +
-            '                                    <p>' + message.text + '</p>\n' +
-            '                                    <span class="time_date">' + date + '</span></div>\n' +
-            '                            </div>\n' +
-            '                        </div>');
+        $(".msg_history").append('' +
+			'<div class="incoming_msg">\n' +
+            	'<div class="incoming_msg_img">' +
+					'<img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">' +
+				'</div>\n' +
+            	'<div class="received_msg">\n' +
+            		'<div class="received_withd_msg">\n' +
+            			'<p>' + message.text + '</p>\n' +
+            			'<span class="time_date">' + date + '</span>' +
+					'</div>\n' +
+            	'</div>\n' +
+            '</div>'
+		);
     }
 }
 
