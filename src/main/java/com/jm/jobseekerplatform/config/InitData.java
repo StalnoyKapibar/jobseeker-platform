@@ -26,8 +26,9 @@ import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 
-import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -37,7 +38,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-//@Component
 public class InitData {
 
     private static final String WEB_IMG_DIR = "src/main/resources/static/img";
@@ -115,8 +115,8 @@ public class InitData {
 
     private Random rnd = new Random();
 
-    @PostConstruct
-    public void initData() {
+    @EventListener(ContextRefreshedEvent.class)
+    public void init() {
         storedProcedureService.createSortVacancyProcedure();
 
         initCities();

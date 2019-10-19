@@ -10,6 +10,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,32 +28,25 @@ import java.util.stream.Collectors;
 /**
  * {@link org.springframework.beans.factory.config.BeanPostProcessor} implementation for AccessCheck annotations
  */
-public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor/*, Ordered*/ {
+public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor {
 
     private static final GrantedAuthority ADMIN_AUTHORITY = new SimpleGrantedAuthority("ROLE_ADMIN");
     private final Logger logger = LoggerFactory.getLogger(AccessCheckAnnotationBeanPostProcessor.class);
     private Map<String, Class> beanClassMap = new HashMap<>();
-    //    private Map<String, Class[]> beanInterfaceMap = new HashMap<>();
-    private Map<Class, String> entityMap = new HashMap<>();
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 //        logger.debug("Processing bean: {}", beanName);
-        boolean annotated = false;
         Class<?> beanClass = bean.getClass();
         for (Method method : ReflectionUtils.getAllDeclaredMethods(beanClass)) {
             if (method.isAnnotationPresent(AccessCheck.class)) {
                 beanClassMap.put(beanName, beanClass);
-//                beanInterfaceMap.put(beanName, ClassUtils.getAllInterfaces(bean));
-                annotated = true;
+                logger.debug("Before: {}  class: {}  interfaces: [{}]", beanName, bean.getClass().getSimpleName(),
+                        Arrays.stream(ClassUtils.getAllInterfaces(bean))
+                                .map(Class::getSimpleName)
+                                .collect(Collectors.joining(", ")));
                 break;
             }
-        }
-        if (annotated) {
-            logger.debug("Before: {}  class: {}  interfaces: [{}]", beanName, bean.getClass().getSimpleName(),
-                    Arrays.stream(ClassUtils.getAllInterfaces(bean))
-                            .map(Class::getSimpleName)
-                            .collect(Collectors.joining(", ")));
         }
         return bean;
     }
@@ -61,24 +55,11 @@ public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         Class<?> beanClass = beanClassMap.get(beanName);
         if (beanClass != null) {
-            logger.debug("Bean class: {}  interfaces: [{}]", beanClass.getName(),
-                    Arrays.stream(ClassUtils.getAllInterfaces(bean))
-                            .map(Class::getSimpleName)
-                            .collect(Collectors.joining(", ")));
-            logger.debug("Methods: [{}]", Arrays.stream(bean.getClass().getDeclaredMethods())
-                    .map(Method::getName)
-                    .collect(Collectors.joining(", ")));
 //            Object proxy = Proxy.newProxyInstance(bean.getClass().getClassLoader(), ClassUtils.getAllInterfaces(bean),
             Enhancer enhancer = new Enhancer();
             enhancer.setSuperclass(beanClass);
             enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> {
                 Method origMethod = ClassUtils.getMethodIfAvailable(beanClass, method.getName(), method.getParameterTypes());
-/*
-                logger.debug("Orig bean class: {}  methods: [{}]", beanClass, Arrays.stream(beanClass.getDeclaredMethods())
-                        .map(Method::getName)
-                        .collect(Collectors.joining(", ")));
-*/
-//                logger.debug("Proxying method: {}  orig: {}", method.getName(), origMethod != null ? origMethod.getName() : null);
                 if (origMethod != null) {
                     if (origMethod.isAnnotationPresent(AccessCheck.class)) {
                         logger.debug("Start proxy method: {}  bean: {}", method.getName(), beanName);
@@ -98,7 +79,7 @@ public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor
                     proxy.getClass().getSimpleName(), Arrays.stream(ClassUtils.getAllInterfaces(proxy))
                             .map(Class::getSimpleName)
                             .collect(Collectors.joining(", ")));
-            logger.debug("Methods: [{}]", Arrays.stream(proxy.getClass().getDeclaredMethods())
+            logger.debug("Proxy methods: [{}]", Arrays.stream(proxy.getClass().getDeclaredMethods())
                     .map(Method::getName)
                     .collect(Collectors.joining(", ")));
             return proxy;
@@ -107,20 +88,19 @@ public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor
         }
     }
 
-/*
-    @Override
-    public int getOrder() {
-        return HIGHEST_PRECEDENCE;
-    }
-*/
-
     private void doAccessCheck(Method method, Object[] args) {
         User loggedUser = getLoggedUser();
-        logger.debug("User: {}  profile id: {}", loggedUser, loggedUser.getProfile().getId());
+        logger.debug("User: {}  profile id: {}", loggedUser, loggedUser != null ? loggedUser.getProfile().getId() : null);
         if (!isAdmin(loggedUser) && method.getParameterCount() > 0) {
             Field field;
             Parameter param = method.getParameters()[0];
             Object arg = args[0];
+            if (loggedUser == null) {
+                String msg = String.format("User should be logged in to access to entity %s",
+                        arg.getClass().getSimpleName());
+                logger.warn(msg);
+                throw new AccessDeniedException(msg);
+            }
             logger.debug("Method: {}", method.getName());
             logger.debug("First param: {}  type: {}", param.getName(), param.getType().getSimpleName());
             logger.debug("First arg: {}  value: {}", arg.getClass().getSimpleName(), arg.toString());
@@ -133,7 +113,7 @@ public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor
                             loggedUser.getUsername(),
                             loggedUser.getId(),
                             accessedUser.getId());
-                    logger.debug(msg);
+                    logger.warn(msg);
                     throw new AccessDeniedException(msg);
                 }
                 logger.debug("User {} with id {} access allowed to user id {}",
@@ -147,7 +127,7 @@ public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor
                             loggedUser.getUsername(),
                             loggedUser.getProfile().getId(),
                             accessedProfile.getId());
-                    logger.debug(msg);
+                    logger.warn(msg);
                     throw new AccessDeniedException(msg);
                 }
                 logger.debug("User {} with profile id {} access allowed to profile id {}",
@@ -155,20 +135,25 @@ public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor
                         loggedUser.getProfile().getId(),
                         accessedProfile.getId());
             } else if ((field = ReflectionUtils.findField(arg.getClass(), null, Profile.class)) != null) {
-                logger.debug("Found field: {}  type: {}", field.getName(), field.getClass().getSimpleName());
+                logger.debug("Found field: {}  type: {}", field.getName(), field.getType().getSimpleName());
             } else {
                 String msg = String.format("User %s with profile id %d access denied to entity %s",
                         loggedUser.getUsername(),
                         loggedUser.getProfile().getId(),
                         arg.getClass().getSimpleName());
-                logger.debug(msg);
+                logger.warn(msg);
                 throw new AccessDeniedException(msg);
             }
         }
     }
 
     private User getLoggedUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            return (User) authentication.getPrincipal();
+        } else {
+            return null;
+        }
     }
 
     private boolean isAdmin(User user) {
