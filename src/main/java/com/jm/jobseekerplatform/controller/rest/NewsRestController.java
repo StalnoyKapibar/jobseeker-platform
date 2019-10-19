@@ -137,7 +137,13 @@ public class NewsRestController {
             Sort sort = new Sort(Sort.Direction.DESC, "date");
             List<News> tagNews = newsService.getAllBySeekerProfileTags(profile, PageRequest.of(newsPageCount, 10, sort))
                     .getContent();
-            return new ResponseEntity<>(tagNews, HttpStatus.OK);
+
+            List<SeekerCountDTO> scDto = new ArrayList<>();
+            for (News n : tagNews) {
+                scDto.add(addInSeekerCountDTO(2L, n));
+            }
+
+            return new ResponseEntity<>(scDto, HttpStatus.OK);
         }
         Sort sort = new Sort(Sort.Direction.DESC, "date");
         List<News> subscriptionNews = newsService.getAllBySubscriptions(subscriptions,
