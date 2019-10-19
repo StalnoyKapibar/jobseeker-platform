@@ -9,21 +9,18 @@
 
 <div class="container-fluid" layout:fragment="content">
     <div class="row">
-
         <div class="adminTagForm">
             <form class="form-inline">
                 <label for="textNewTag" id="labelTextNewTag">Введите новый тэг</label>
                 <input type="text" class="form-control mb-2" id="textNewTag" placeholder="New tag">
-                <input type="checkbox" class="form-check-input mb-2" id="tagCheck">
                 <button type="submit" class="btn btn-sm" id="btnCreateNewTag">
                     Отправить
                 </button>
             </form>
         </div>
-
         <br>
         <br>
-
+        <br>
         <table class="table table-striped" style="margin-left: 20%; margin-right: 20% ">
             <thead class="" style="border-width: 0px;">
             <tr style="font-weight: bold; ">
@@ -72,6 +69,19 @@
                     </button>
                     <button class="btn btn-sm btn-secondary" data-dismiss="modal">
                         выход
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="alert_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header alert alert-danger" style="margin-bottom : 0">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">
+                        Операция не выполнена! Тег с указанным именем уже существует, либо неверное имя тега.</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
             </div>
