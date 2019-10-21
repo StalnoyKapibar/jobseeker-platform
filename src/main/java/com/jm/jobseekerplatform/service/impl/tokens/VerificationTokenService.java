@@ -17,7 +17,7 @@ public class VerificationTokenService extends BaseTokenService<VerificationToken
 
     @Autowired
     public void setVerificationTokenDAO(VerificationTokenDAO verificationTokenDAO) {
-        super.baseTokenDAO = verificationTokenDAO;
+        baseTokenDAO = verificationTokenDAO;
     }
 
     public void completeRegistration(VerificationToken token) {
@@ -25,7 +25,7 @@ public class VerificationTokenService extends BaseTokenService<VerificationToken
         token.getUser().setEnabled(true);
         Profile profile = token.getUser().getProfile();
         profileService.checkedState(profile);
-        abstractDAO.delete(token);
+        baseTokenDAO.delete(token);
     }
 
 }

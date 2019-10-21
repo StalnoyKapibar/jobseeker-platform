@@ -4,7 +4,6 @@ import com.jm.jobseekerplatform.annotation.processor.AccessCheckAnnotationBeanPo
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
@@ -14,12 +13,11 @@ import org.springframework.context.annotation.PropertySource;
         "classpath:config/mail.properties",
         "classpath:config/cache.properties"
 })
-@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class AppConfig {
 
     /**
      * Set 'com.jm.jobseekerplatform.init' property to 'true' in 'application.properties' for database init.
-     * Then set to 'false' after successful start.
+     * Then set to 'false' after successful initial start.
      */
     @Bean
     @ConditionalOnProperty(value = "com.jm.jobseekerplatform.init", havingValue = "true")

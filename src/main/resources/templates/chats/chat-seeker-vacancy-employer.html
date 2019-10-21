@@ -21,7 +21,7 @@
                         th:onclick="'editMeeting(' + ${meeting.id} + ')'"
                         type="button" class="btn btn-dark">Назначить дату
                 </button>
-                <button th:if="${meeting.status==meeting.status.SCHEDUALED}" type="button" disabled="disabled"
+                <button th:if="${meeting.status==meeting.status.SCHEDULED}" type="button" disabled="disabled"
                         class="btn btn-warning disabled">Ожидание подверждения
                 </button>
                 <button th:if="${meeting.status==meeting.status.CONFIRMED_BY_USER}"
@@ -36,7 +36,7 @@
                 </button>
             </div>
             <div th:if="not ${isOwner}" class="text-center mb-2 mr-2 mt-1">
-                <button th:if="${meeting.status==meeting.status.SCHEDUALED}"
+                <button th:if="${meeting.status==meeting.status.SCHEDULED}"
                         th:onclick="'confirmMeeting(' + ${meeting.id} + ')'" type="button" class="btn btn-dark">
                     Подтвердить
                 </button>

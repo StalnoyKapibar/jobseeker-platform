@@ -4,6 +4,6 @@ import com.jm.jobseekerplatform.model.tokens.PasswordResetToken;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PasswordResetTokenDao extends BaseTokenDAO<PasswordResetToken> {
+public class PasswordResetTokenDAO extends BaseTokenDAO<PasswordResetToken> {
 
 }

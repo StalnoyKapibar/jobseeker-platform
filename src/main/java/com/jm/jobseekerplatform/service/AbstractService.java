@@ -15,6 +15,7 @@ public abstract class AbstractService<T extends Serializable> implements Seriali
     @Autowired
     protected AbstractDAO<T> abstractDAO;
 
+    @AccessCheck
     public void add(T entity) {
         abstractDAO.add(entity);
     }

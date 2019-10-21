@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.model.users;
 
 import com.fasterxml.jackson.annotation.*;
-import com.jm.jobseekerplatform.model.State;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -170,4 +169,18 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
         result = 31 * result + Arrays.hashCode(password);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password=" + "*SECURED*" +
+                ", date=" + date +
+                ", profile=" + profile +
+                ", enabled=" + enabled +
+                ", confirm=" + confirm +
+                '}';
+    }
+
 }

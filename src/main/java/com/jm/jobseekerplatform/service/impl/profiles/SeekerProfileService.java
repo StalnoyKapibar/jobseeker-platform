@@ -24,31 +24,31 @@ import java.util.Set;
 public class SeekerProfileService extends AbstractService<SeekerProfile> {
 
     @Autowired
-    private SeekerProfileDAO dao;
+    private SeekerProfileDAO seekerProfileDAO;
 
     @Autowired
     private SeekerUserService seekerUserService;
 
     public List<SeekerProfile> getAllSeekersById(List<Resume> resumes) {
-		List<Long> rez = new ArrayList<>();
+        List<Long> rez = new ArrayList<>();
         for (Resume resume : resumes) {
             SeekerProfile x = (SeekerProfile) Hibernate.unproxy(resume.getCreatorProfile());
             rez.add(x.getId());
         }
-        return dao.getAllSeekersById(rez);
+        return seekerProfileDAO.getAllSeekersById(rez);
     }
 
     public Set<SeekerProfile> getByTags(Set<Tag> tags, int limit) {
-        return dao.getByTags(tags, limit);
+        return seekerProfileDAO.getByTags(tags, limit);
     }
 
-	public Page<Resume> getPageSeekerResumesById(Set<Resume> resumeSet, Long id) {
+    public Page<Resume> getPageSeekerResumesById(Set<Resume> resumeSet, Long id) {
         List<Resume> resumeList = new ArrayList<>(resumeSet);
-		List<Long> longList = new ArrayList<>();
-		longList.add(id);
-		List<SeekerProfile> seekerProfile = dao.getAllSeekersById(longList);
-		return new ResumePageDTO(resumeList, seekerProfile);
-	}
+        List<Long> longList = new ArrayList<>();
+        longList.add(id);
+        List<SeekerProfile> seekerProfile = seekerProfileDAO.getAllSeekersById(longList);
+        return new ResumePageDTO(resumeList, seekerProfile);
+    }
 
     public void updatePhoto(long id, MultipartFile file) {
         SeekerUser seekerUser = seekerUserService.getByProfileId(id);

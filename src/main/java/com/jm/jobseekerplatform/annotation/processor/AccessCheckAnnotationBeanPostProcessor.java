@@ -19,11 +19,11 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * {@link org.springframework.beans.factory.config.BeanPostProcessor} implementation for AccessCheck annotations
@@ -41,10 +41,10 @@ public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor
         for (Method method : ReflectionUtils.getAllDeclaredMethods(beanClass)) {
             if (method.isAnnotationPresent(AccessCheck.class)) {
                 beanClassMap.put(beanName, beanClass);
-                logger.debug("Before: {}  class: {}  interfaces: [{}]", beanName, bean.getClass().getSimpleName(),
+                logger.trace("Before: {}  class: {}  interfaces: {}", beanName, bean.getClass().getSimpleName(),
                         Arrays.stream(ClassUtils.getAllInterfaces(bean))
                                 .map(Class::getSimpleName)
-                                .collect(Collectors.joining(", ")));
+                                .toArray());
                 break;
             }
         }
@@ -62,24 +62,25 @@ public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor
                 Method origMethod = ClassUtils.getMethodIfAvailable(beanClass, method.getName(), method.getParameterTypes());
                 if (origMethod != null) {
                     if (origMethod.isAnnotationPresent(AccessCheck.class)) {
-                        logger.debug("Start proxy method: {}  bean: {}", method.getName(), beanName);
-                        doAccessCheck(method, args);
+                        logger.trace("Enter proxy method: {}  bean: {}  caller: {}", method.getName(), beanName,
+                                Thread.currentThread().getStackTrace()[3].toString());
+                        checkAccess(beanClass, method, args);
                         Object retVal = method.invoke(bean, args);
-                        logger.debug("Stop proxy method: {}  bean: {}", method.getName(), beanName);
+                        logger.trace("Exit proxy method: {}  bean: {}  caller: {}", method.getName(), beanName,
+                                Thread.currentThread().getStackTrace()[3].toString());
                         return retVal;
                     }
                 }
                 return method.invoke(bean, args);
             });
             Object proxy = enhancer.create();
-            logger.debug("After: {}  class: {}  bean: {}  interfaces: [{}]  proxy: {}  interfaces: [{}]", beanName, beanClass.getSimpleName(),
-                    bean.getClass().getSimpleName(), Arrays.stream(ClassUtils.getAllInterfaces(bean))
-                            .map(Class::getSimpleName)
-                            .collect(Collectors.joining(", ")),
-                    proxy.getClass().getSimpleName(), Arrays.stream(ClassUtils.getAllInterfaces(proxy))
-                            .map(Class::getSimpleName)
-                            .collect(Collectors.joining(", ")));
-            logger.debug("Proxy methods: [{}]", Arrays.stream(proxy.getClass().getDeclaredMethods())
+            logger.trace("After: {}  class: {}  bean: {}  interfaces: {}  proxy: {}  interfaces: {}", beanName,
+                    beanClass.getSimpleName(),
+                    bean.getClass().getSimpleName(),
+                    Arrays.stream(ClassUtils.getAllInterfaces(bean)).map(Class::getSimpleName).toArray(),
+                    proxy.getClass().getSimpleName(),
+                    Arrays.stream(ClassUtils.getAllInterfaces(proxy)).map(Class::getSimpleName).toArray());
+            logger.trace("Proxy methods: [{}]", Arrays.stream(proxy.getClass().getDeclaredMethods())
                     .map(Method::getName)
                     .collect(Collectors.joining(", ")));
             return proxy;
@@ -88,54 +89,49 @@ public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor
         }
     }
 
-    private void doAccessCheck(Method method, Object[] args) {
+    private void checkAccess(Class<?> beanClass, Method method, Object[] args) {
         User loggedUser = getLoggedUser();
-        logger.debug("User: {}  profile id: {}", loggedUser, loggedUser != null ? loggedUser.getProfile().getId() : null);
-        if (!isAdmin(loggedUser) && method.getParameterCount() > 0) {
-            Field field;
-            Parameter param = method.getParameters()[0];
-            Object arg = args[0];
+        logger.trace("User: {}", loggedUser);
+        if (!isAdmin(loggedUser) && args != null && args.length > 0) {
+            Object arg = Stream.of(args)
+                    .filter(a -> !ClassUtils.isPrimitiveOrWrapper(a.getClass()))
+                    .findFirst()
+                    .orElse(args[0]);
             if (loggedUser == null) {
                 String msg = String.format("User should be logged in to access to entity %s",
                         arg.getClass().getSimpleName());
                 logger.warn(msg);
                 throw new AccessDeniedException(msg);
             }
-            logger.debug("Method: {}", method.getName());
-            logger.debug("First param: {}  type: {}", param.getName(), param.getType().getSimpleName());
-            logger.debug("First arg: {}  value: {}", arg.getClass().getSimpleName(), arg.toString());
-            field = ReflectionUtils.findField(arg.getClass(), null, Profile.class);
-            logger.debug("Profile field: {}", field != null ? field.getType().getSimpleName() : null);
-            if (arg instanceof User) {
-                User accessedUser = (User) arg;
-                if (!loggedUser.getId().equals(accessedUser.getId())) {
-                    String msg = String.format("User %s with id %d access denied to user id %d",
+            User userEntity;
+            Profile profileEntity;
+            if ((userEntity = getEntityByType(User.class, args)) != null) {
+                if (!loggedUser.getId().equals(userEntity.getId())) {
+                    String msg = String.format("User %s with user id %d access denied to user id %d",
                             loggedUser.getUsername(),
                             loggedUser.getId(),
-                            accessedUser.getId());
+                            userEntity.getId());
                     logger.warn(msg);
                     throw new AccessDeniedException(msg);
                 }
-                logger.debug("User {} with id {} access allowed to user id {}",
+                logger.debug("User {} with user id {} access allowed to user id {}",
                         loggedUser.getUsername(),
                         loggedUser.getId(),
-                        accessedUser.getId());
-            } else if (arg instanceof Profile) {
-                Profile accessedProfile = (Profile) arg;
-                if (!loggedUser.getProfile().getId().equals(accessedProfile.getId())) {
+                        userEntity.getId());
+            } else if ((profileEntity = getEntityByType(Profile.class, args)) != null) {
+                if (!loggedUser.getProfile().getId().equals(profileEntity.getId())) {
                     String msg = String.format("User %s with profile id %d access denied to profile id %d",
                             loggedUser.getUsername(),
                             loggedUser.getProfile().getId(),
-                            accessedProfile.getId());
+                            profileEntity.getId());
                     logger.warn(msg);
                     throw new AccessDeniedException(msg);
                 }
                 logger.debug("User {} with profile id {} access allowed to profile id {}",
                         loggedUser.getUsername(),
                         loggedUser.getProfile().getId(),
-                        accessedProfile.getId());
-            } else if ((field = ReflectionUtils.findField(arg.getClass(), null, Profile.class)) != null) {
-                logger.debug("Found field: {}  type: {}", field.getName(), field.getType().getSimpleName());
+                        profileEntity.getId());
+//            } else if () {
             } else {
                 String msg = String.format("User %s with profile id %d access denied to entity %s",
                         loggedUser.getUsername(),
@@ -147,10 +143,48 @@ public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor
         }
     }
 
+    private <T> T getEntityByType(Class<T> type, Object[] args) {
+        logger.trace("Looking for: {}", type.getSimpleName());
+        T entity = null;
+        for (Object arg : args) {
+            if (!ClassUtils.isPrimitiveOrWrapper(arg.getClass())) {
+                if (ClassUtils.isAssignableValue(type, arg)) {
+                    entity = (T) arg;
+                    logger.trace("Found ARG: {}  type: {}", arg.toString(), arg.getClass().getSimpleName());
+                    break;
+                } else {
+                    logger.trace("Arg: {}  fields: {}", arg.getClass().getSimpleName(),
+                            Arrays.stream(arg.getClass().getDeclaredFields())
+                                    .map(f -> f.getType().getSimpleName()) // + "(" + f.getType().getSuperclass().getSimpleName() + ")")
+                                    .toArray());
+//                    Field field = ReflectionUtils.findField(arg.getClass(), null, type);
+                    Field field = getFieldByType(type, arg);
+                    if (field != null) {
+                        field.setAccessible(true);
+                        entity = (T) ReflectionUtils.getField(field, arg);
+                        logger.trace("Found field {}: {}  type: {}", field.getName(), entity, field.getType().getSimpleName());
+                        break;
+                    }
+                }
+            }
+        }
+        return entity;
+    }
+
+    private Field getFieldByType(Class<?> type, Object obj) {
+        for (Field field : obj.getClass().getDeclaredFields()) {
+            if (ClassUtils.isAssignable(type, field.getType())) {
+                return field;
+            }
+        }
+        return null;
+    }
+
     private User getLoggedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
-            return (User) authentication.getPrincipal();
+            Object principal = authentication.getPrincipal();
+            return principal instanceof User ? (User) principal : null;
         } else {
             return null;
         }

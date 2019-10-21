@@ -21,6 +21,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -31,7 +32,7 @@ import java.util.regex.Pattern;
 public class UserService extends AbstractService<User> {
 
     @Autowired
-    private UserDAO dao;
+    private UserDAO userDAO;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -59,7 +60,7 @@ public class UserService extends AbstractService<User> {
     private Matcher matcher;
 
     public User findByEmail(String email) {
-        return dao.findByEmail(email);
+        return userDAO.findByEmail(email);
     }
 
     public User findUserByTokenValue(String token) {
@@ -88,7 +89,7 @@ public class UserService extends AbstractService<User> {
     }
 
     public boolean isExistEmail(String email) {
-        return dao.isExistEmail(email);
+        return userDAO.isExistEmail(email);
     }
 
     public void registerNewUser(User user) {
@@ -152,12 +153,16 @@ public class UserService extends AbstractService<User> {
         String userRole = user.getAuthority().getAuthority();
 
         User newUser = null;
-        if (userRole.equals("ROLE_SEEKER")) {
-            newUser = new SeekerUser(userEmail, userPass, LocalDateTime.now(), null);
-        } else if (userRole.equals("ROLE_EMPLOYER")) {
-            newUser = new EmployerUser(userEmail, userPass, LocalDateTime.now(), null);
-        } else if (userRole.equals("ROLE_ADMIN")) {
-            newUser = new AdminUser(userEmail, userPass, LocalDateTime.now(), null);
+        switch (userRole) {
+            case "ROLE_SEEKER":
+                newUser = new SeekerUser(userEmail, userPass, LocalDateTime.now(), null);
+                break;
+            case "ROLE_EMPLOYER":
+                newUser = new EmployerUser(userEmail, userPass, LocalDateTime.now(), null);
+                break;
+            case "ROLE_ADMIN":
+                newUser = new AdminUser(userEmail, userPass, LocalDateTime.now(), null);
+                break;
         }
 
         assert newUser != null;

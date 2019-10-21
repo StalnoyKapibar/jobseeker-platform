@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * Set 'com.jm.jobseekerplatform.init' property to 'true' in 'application.properties' for database init.
- * Then set to 'false' after successful start.
+ * Then set to 'false' after successful initial start.
  */
 @SpringBootApplication
 public class JobseekerPlatformApplication {

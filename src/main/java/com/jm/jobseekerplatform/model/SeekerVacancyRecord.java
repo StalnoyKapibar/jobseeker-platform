@@ -23,7 +23,8 @@ public class SeekerVacancyRecord implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     private Vacancy vacancy;
 
-    public SeekerVacancyRecord() {}
+    public SeekerVacancyRecord() {
+    }
 
     public SeekerVacancyRecord(LocalDateTime date, SeekerProfile seeker, Vacancy vacancy) {
         this.date = date;
@@ -58,4 +59,15 @@ public class SeekerVacancyRecord implements Serializable {
     public void setVacancy(Vacancy vacancy) {
         this.vacancy = vacancy;
     }
+
+    @Override
+    public String toString() {
+        return "SeekerVacancyRecord{" +
+                "id=" + id +
+                ", date=" + date +
+                ", seeker=" + seeker +
+                ", vacancy=" + vacancy +
+                '}';
+    }
+
 }
