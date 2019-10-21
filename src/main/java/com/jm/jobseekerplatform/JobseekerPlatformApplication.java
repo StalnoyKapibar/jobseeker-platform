@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 import com.jm.jobseekerplatform.config.InitData;
 
@@ -12,7 +13,7 @@ public class JobseekerPlatformApplication {
     }
 
     //delete "//" to enable init userroles and users to base
-    // @Bean(initMethod = "initData")
+   // @Bean(initMethod = "initData")
     public InitData initialData() {
         return new InitData();
     }

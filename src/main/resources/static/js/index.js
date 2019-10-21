@@ -268,16 +268,42 @@ function searchVac(pageCount, param) {
     });
 }
 
+function blockVacancy(vacancyId) {
+	$.get("/api/users/getuserrole", function(usrRole) {
+		if (usrRole === 'Администратор') {
+			$.ajax({
+				type : 'post',
+				url : "/api/vacancies/block/" + vacancyId,
+				contentType : 'application/json; charset=utf-8',
+				beforeSend : function(request) {
+					request.setRequestHeader(header, token);
+				},
+				data : periodInDays = "0"
+			})
+
+		}
+	});
+}
+
 function printVacancies(data) {
     var favoriteVacancies = [];
     $('.favoriteVacancies').each(function (key, value) {
         favoriteVacancies.push($(this).val())
     });
     var seekerProfileId = $('#seekerProfileId').val();
+    userRole = '';
+    adminButt='';
+    $.get("/api/users/getuserrole", function (usrRole) {
+    	if(usrRole==='Администратор'){
+    		eval('userRole = "admin"');
+    	}
+    
+   
     $.each(data, function (key, value) {
         var favVac = '';
         var vacancyTags = '';
         var minSalary = '';
+        var adminButt='';
         var seekerAuthority = $('#seekerAuthority').val();
         if (seekerAuthority) {
             $.each(favoriteVacancies, function (i, item) {
@@ -304,6 +330,12 @@ function printVacancies(data) {
                 vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
             }
         });
+        
+        if (userRole=='admin'){
+        	adminButt = '<span class="btn btn-outline-success btn-sm btnOnVacancyPage"' +
+            'onclick="blockVacancy(' + value.id + ');event.stopPropagation();">блок</span>';
+        }
+        
         $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
             ' data-target="#vacancyModal" onclick="showVacancy(\'' + value.id + '\')">' +
             '<div class="headLine"><span>' + value.headline + '</span>' + '   ' + favVac + '</div>' +
@@ -313,18 +345,10 @@ function printVacancies(data) {
             minSalary +
             '<div class="pull-right">' +
             '<span class="btn btn-outline-success btn-sm btnOnVacancyPage"' +
-            'onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span>');
-               $.get("/api/users/getuserrole", function (userRole) {
-    //     alert(userRole);
-        	if(userRole==='Администратор'){
-        		$('#searchList').append('<span class="btn btn-outline-success btn-sm btnOnVacancyPage"' +
-                    'onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span>');
-        	}
-               });
-        	$('#searchList').append('</div>' +
+            'onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span>'+adminButt+'</div>' +
             '</li>');
  
-
+    });
 
         function check_seeker_tags(tag) {
             var bool = false;

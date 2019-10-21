@@ -8,6 +8,8 @@ import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -101,5 +103,11 @@ public class UserRestController {
     @RequestMapping(method = RequestMethod.GET, value = "/password_reset/{token}/{password}")
     public void newPassword(@PathVariable String token, @PathVariable char[] password) {
         userService.passwordReset(token,password);
+    }
+    
+    @GetMapping("/getuserrole")
+    public String getUserRole(Authentication authentication){
+    	User currUser=(User) authentication.getPrincipal();
+    	return currUser.getProfile().getTypeName();
     }
 }
