@@ -268,7 +268,7 @@ function searchVac(pageCount, param) {
     });
 }
 
-function blockVacancy(vacancyId) {
+function blockVacancy(vacancyId,caller) {
 	$.get("/api/users/getuserrole", function(usrRole) {
 		if (usrRole === 'Администратор') {
 			$.ajax({
@@ -278,7 +278,16 @@ function blockVacancy(vacancyId) {
 				beforeSend : function(request) {
 					request.setRequestHeader(header, token);
 				},
-				data : periodInDays = "0"
+				data : periodInDays = "0",
+				success:function(){
+					caller.parents("li").remove(); //css("background-color","red");
+//					while (caller && caller.parentNode){
+//						caller = caller.parentNode;
+//						if (caller.tagName && carrent.tagName.toLowerCase() == "li"){
+//							caller.css("background-color","red");
+//						}
+//					}
+				}
 			})
 
 		}
@@ -333,7 +342,7 @@ function printVacancies(data) {
         
         if (userRole=='admin'){
         	adminButt = '<span class="btn btn-outline-success btn-sm btnOnVacancyPage"' +
-            'onclick="blockVacancy(' + value.id + ');event.stopPropagation();">блок</span>';
+            'onclick="blockVacancy(' + value.id + ',$(this));event.stopPropagation();">блок</span>';
         }
         
         $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +

@@ -1,3 +1,12 @@
+$(document).ready(function () {
+    $.get("/api/chats/getCountUnReadMessageByUserId", function (data) {
+        //Возвращает количество непрочитанных чатов (int)
+		if ($.isNumeric(data) && data > 0) {
+			$("#countNewMessage").text("Непрочитано чатов: " + data);
+		}
+    })
+});
+
 var currentUrl = window.location.href;
 if (!currentUrl.includes('chat')) {
 
@@ -15,7 +24,6 @@ if (!currentUrl.includes('chat')) {
     }
 
     function onMessageReceived(payload) {
-
         let message = JSON.parse(payload.body);
         let x = document.getElementById("snackbar");
         let mes = message.text;

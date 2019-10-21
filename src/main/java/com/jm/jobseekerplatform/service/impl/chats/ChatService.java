@@ -7,7 +7,6 @@ import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigInteger;
 import java.util.List;
 
@@ -31,4 +30,13 @@ public class ChatService extends AbstractService<Chat> {
     public List<BigInteger> getChatMembersIds(Long chatId) {
         return chatDAO.getChatMembersIds(chatId);
     }
+
+    public List<BigInteger> getProfileIDByChat(Long chatId) {
+        return chatDAO.getProfileIDByChatDAO(chatId);
+    }
+
+    public List<Object> getAllIdLastMessagesByUserId(Long userId, Long profileId) {
+        return chatDAO.getAllIdLastMessagesByUserIdDAO(userId, profileId);
+    }
+
 }
