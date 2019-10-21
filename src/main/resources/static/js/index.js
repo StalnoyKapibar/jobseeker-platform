@@ -313,8 +313,18 @@ function printVacancies(data) {
             minSalary +
             '<div class="pull-right">' +
             '<span class="btn btn-outline-success btn-sm btnOnVacancyPage"' +
-            'onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span>' + '</div>' +
+            'onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span>');
+               $.get("/api/users/getuserrole", function (userRole) {
+    //     alert(userRole);
+        	if(userRole==='Администратор'){
+        		$('#searchList').append('<span class="btn btn-outline-success btn-sm btnOnVacancyPage"' +
+                    'onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span>');
+        	}
+               });
+        	$('#searchList').append('</div>' +
             '</li>');
+ 
+
 
         function check_seeker_tags(tag) {
             var bool = false;
