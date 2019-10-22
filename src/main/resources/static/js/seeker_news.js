@@ -41,7 +41,7 @@ function printSeekerNews() {
                 var status = item.news.status;
                 description = item.news.description;
                 let bgcolor = "";
-                if (item.seekerStatus == "NEW") bgcolor = "#F39C12";
+                if (item.newsStatus == "NEW") bgcolor = "#F39C12";
                 cardHTML += '' +
                     '<div class="card newsCard empCard" id="newsCard_' + item.news.id + '" style="margin-top: 10px">' +
                         '<div class="card-body" style="background-color: ' + bgcolor + ' ">' +

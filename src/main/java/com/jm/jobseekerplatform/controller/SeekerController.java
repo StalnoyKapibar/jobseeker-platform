@@ -189,7 +189,7 @@ public class SeekerController {
     public String getSeekerSubscriptionNewsById(@PathVariable Long newsId, Model model,  Authentication authentication) {
         News news = newsService.getById(newsId);
         long seekerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
-        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);;
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
         seekerStatusNewsService.changeNewsStatus(news, seekerProfile);
 
         News currentNews = newsService.getById(newsId);
