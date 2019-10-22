@@ -20,6 +20,7 @@ public class Meeting implements Serializable {
 
     @ManyToOne
     @JoinColumn(name="vacancy_id")
+    @JsonIgnore
     private Vacancy vacancy;
 
     @Column(name = "meeting_date")
