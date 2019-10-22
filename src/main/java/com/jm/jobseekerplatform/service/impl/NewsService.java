@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.dao.impl.NewsDAO;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,7 +32,11 @@ public class NewsService extends AbstractService<News> {
         return newsDaoI.getAllBySeekerProfileId(employerProfiles, pageable);
     }
 
-    public Page<News> getAllBySubscription(Set<Subscription> subscriptions, Pageable pageable) {
-        return newsDAO.getBySubscription(subscriptions, pageable);
+    public Page<News> getAllBySeekerProfileTags(SeekerProfile profile, Pageable pageable) {
+        return newsDAO.getBySeekerProfileTags(profile, pageable);
+    }
+
+    public Page<News> getAllBySubscriptions(Iterable<Subscription> subscriptions, Pageable pageable) {
+        return newsDAO.getBySubscriptions(subscriptions, pageable);
     }
 }
