@@ -11,7 +11,7 @@ public class SeekerStatusNewsDTO {
     public SeekerStatusNewsDTO() {}
 
     public SeekerStatusNewsDTO(News news, NewsStatus newsStatus) {
-        this.news         = news;
+        this.news = news;
         this.newsStatus = newsStatus;
     }
 
