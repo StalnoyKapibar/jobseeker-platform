@@ -108,10 +108,10 @@ public class NewsRestController {
             return new ResponseEntity<>(tagNews, HttpStatus.OK);
         }
         Sort sort = new Sort(Sort.Direction.DESC, "date");
-        List<News> subscriptionNews = newsService.getAllBySubscriptions(subscriptions,
-                PageRequest.of(newsPageCount, 10, sort)).getContent();
         List<News> tagNews = newsService.getAllBySeekerProfileTags(profile, PageRequest.of(newsPageCount, 10, sort))
                 .getContent();
+        List<News> subscriptionNews = newsService.getAllBySubscriptions(subscriptions,
+                PageRequest.of(newsPageCount, 10, sort)).getContent();
         List<News> news = new ArrayList<>(subscriptionNews);
         news.addAll(tagNews);
         return new ResponseEntity<>(news, HttpStatus.OK);
