@@ -1,5 +1,5 @@
 package com.jm.jobseekerplatform.model;
 
-public enum SeekerStatus {
+public enum NewsStatus {
     NEW, VIEWED, READ
 }

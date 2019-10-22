@@ -24,15 +24,15 @@ public class SeekerStatusNews implements Serializable {
 
     @Column(name = "state", nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private SeekerStatus seekerStatus;
+    private NewsStatus newsStatus;
 
     public SeekerStatusNews() {}
 
-    public SeekerStatusNews(LocalDateTime date, SeekerProfile seeker, News news, SeekerStatus seekerStatus) {
+    public SeekerStatusNews(LocalDateTime date, SeekerProfile seeker, News news, NewsStatus newsStatus) {
         this.date   = date;
         this.news   = news;
         this.seeker = seeker;
-        this.seekerStatus = seekerStatus;
+        this.newsStatus = newsStatus;
     }
 
     public Long getId() {
@@ -67,11 +67,11 @@ public class SeekerStatusNews implements Serializable {
         this.news = news;
     }
 
-    public SeekerStatus getSeekerStatus() {
-        return seekerStatus;
+    public NewsStatus getNewsStatus() {
+        return newsStatus;
     }
 
-    public void setSeekerStatus(SeekerStatus seekerStatus) {
-        this.seekerStatus = seekerStatus;
+    public void setNewsStatus(NewsStatus newsStatus) {
+        this.newsStatus = newsStatus;
     }
 }

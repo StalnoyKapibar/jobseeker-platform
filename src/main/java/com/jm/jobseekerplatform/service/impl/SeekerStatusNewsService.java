@@ -4,7 +4,7 @@ import com.jm.jobseekerplatform.dao.SeekerStatusNewsDAOI;
 import com.jm.jobseekerplatform.dao.impl.SeekerStatusNewsDAO;
 import com.jm.jobseekerplatform.dto.SeekerStatusNewsDTO;
 import com.jm.jobseekerplatform.model.News;
-import com.jm.jobseekerplatform.model.SeekerStatus;
+import com.jm.jobseekerplatform.model.NewsStatus;
 import com.jm.jobseekerplatform.model.SeekerStatusNews;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.service.AbstractService;
@@ -23,16 +23,19 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
     @Autowired
     SeekerStatusNewsDAOI seekerStatusNewsDAOI;
 
+    @Autowired
+    private NewsService newsService;
+
     public void updateAllSeekerCount(List<SeekerStatusNews> list) {
         seekerStatusNewsDAOI.saveAll(list);
     }
 
-    public List<SeekerStatusNews> getAllSeekerCount(SeekerProfile seekerProfile) {
-        return seekerStatusNewsDAO.getAllSeekerCountDAO(seekerProfile);
+    public List<SeekerStatusNews> getAllSeekerStatusNews(SeekerProfile seekerProfile) {
+        return seekerStatusNewsDAO.getAllSeekerStatusNewsDAO(seekerProfile);
     }
 
-    public SeekerStatusNews getSeekerCount(News news) {
-        return seekerStatusNewsDAO.getSeekerCountDAO(news);
+    public SeekerStatusNews getSeekerStatusNews(News news) {
+        return seekerStatusNewsDAO.getSeekerStatusNewsDAO(news);
     }
 
     public void update(SeekerStatusNews seekerStatusNews) {
@@ -43,6 +46,13 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
     public List<SeekerStatusNewsDTO> addViewedNews(List<News> news,
                                                    SeekerProfile seekerProfile,
                                                    List<SeekerStatusNews> dbList) {
+        news.forEach(x -> {
+            Long totalViews = x.getNumberOfViews();
+            if (totalViews == null) totalViews = 0L;
+            x.setNumberOfViews(totalViews + 1);
+            newsService.update(x);
+        });
+
         List<SeekerStatusNews> scnvList = new ArrayList<>();
         List<SeekerStatusNewsDTO> scDto = new ArrayList<>();
         if (news.size() != 0) {
@@ -50,13 +60,13 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
                 if (dbList.size() != 0) {
                     for (int i = 0; i < dbList.size(); i++) {
                         Long dbNewsId = dbList.get(i).getNews().getId();
-                        SeekerStatus dbView = dbList.get(i).getSeekerStatus();
+                        NewsStatus dbView = dbList.get(i).getNewsStatus();
                         Long newsId = n.getId();
                         Long id = dbList.get(i).getId();
-                        if (newsId == dbNewsId && dbView.equals(SeekerStatus.NEW)) {
+                        if (newsId == dbNewsId && dbView.equals(NewsStatus.NEW)) {
                             if (checkListForMatches(newsId, scnvList)) {
-                                scnvList.add(addInSeekerCount(id, seekerProfile, n, SeekerStatus.VIEWED));
-                                scDto.add(addInSeekerCountDTO(SeekerStatus.VIEWED, n));
+                                scnvList.add(addInSeekerCount(id, seekerProfile, n, NewsStatus.VIEWED));
+                                scDto.add(addInSeekerCountDTO(NewsStatus.VIEWED, n));
                             }
                         } else if (newsId == dbNewsId) {
                             scDto.add(addInSeekerCountDTO(dbView, n));
@@ -70,14 +80,14 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
                                 }
                             }
                             if (bool && checkListForMatches(newsId, scnvList)) {
-                                scnvList.add(addInSeekerCount(null, seekerProfile, n, SeekerStatus.NEW));
-                                scDto.add(addInSeekerCountDTO(SeekerStatus.NEW, n));
+                                scnvList.add(addInSeekerCount(null, seekerProfile, n, NewsStatus.NEW));
+                                scDto.add(addInSeekerCountDTO(NewsStatus.NEW, n));
                             }
                         }
                     }
                 } else {
-                    scnvList.add(addInSeekerCount(null, seekerProfile, n, SeekerStatus.NEW));
-                    scDto.add(addInSeekerCountDTO(SeekerStatus.NEW, n));
+                    scnvList.add(addInSeekerCount(null, seekerProfile, n, NewsStatus.NEW));
+                    scDto.add(addInSeekerCountDTO(NewsStatus.NEW, n));
                 }
             }
         }
@@ -96,27 +106,27 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
     }
 
     // Добавление в создаваемую коллекцию
-    private SeekerStatusNews addInSeekerCount(Long id, SeekerProfile seekerProfile, News news, SeekerStatus seekerStatus) {
+    private SeekerStatusNews addInSeekerCount(Long id, SeekerProfile seekerProfile, News news, NewsStatus newsStatus) {
         SeekerStatusNews scnv = new SeekerStatusNews();
         scnv.setId(id);
         scnv.setDate(LocalDateTime.now());
         scnv.setSeeker(seekerProfile);
         scnv.setNews(news);
-        scnv.setSeekerStatus(seekerStatus);
+        scnv.setNewsStatus(newsStatus);
         return scnv;
     }
 
-    public SeekerStatusNewsDTO addInSeekerCountDTO(SeekerStatus seekerStatus, News news) {
+    public SeekerStatusNewsDTO addInSeekerCountDTO(NewsStatus newsStatus, News news) {
         SeekerStatusNewsDTO seekerStatusNewsDTO = new SeekerStatusNewsDTO();
         seekerStatusNewsDTO.setNews(news);
-        seekerStatusNewsDTO.setSeekerStatus(seekerStatus);
+        seekerStatusNewsDTO.setNewsStatus(newsStatus);
         return seekerStatusNewsDTO;
     }
 
     public void changeStatusViewedNews(News news) {
-        SeekerStatusNews scnv = getSeekerCount(news);
-        if (!scnv.getSeekerStatus().equals("READ")) {
-            scnv.setSeekerStatus(SeekerStatus.READ);
+        SeekerStatusNews scnv = getSeekerStatusNews(news);
+        if (!scnv.getNewsStatus().equals("READ")) {
+            scnv.setNewsStatus(NewsStatus.READ);
             update(scnv);
         }
     }

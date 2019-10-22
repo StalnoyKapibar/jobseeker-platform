@@ -12,13 +12,13 @@ import java.util.List;
 @Transactional
 public class SeekerStatusNewsDAO extends AbstractDAO<SeekerStatusNews> {
 
-    public List<SeekerStatusNews> getAllSeekerCountDAO(SeekerProfile seekerProfile) {
+    public List<SeekerStatusNews> getAllSeekerStatusNewsDAO(SeekerProfile seekerProfile) {
         return entityManager.createQuery("SELECT s FROM SeekerStatusNews s WHERE s.seeker = :id", clazz)
 				.setParameter("id", seekerProfile)
 				.getResultList();
     }
 
-    public SeekerStatusNews getSeekerCountDAO(News news) {
+    public SeekerStatusNews getSeekerStatusNewsDAO(News news) {
         return entityManager.createQuery("SELECT s FROM SeekerStatusNews s WHERE s.news = :newsId", clazz)
                 .setParameter("newsId", news)
                 .getSingleResult();

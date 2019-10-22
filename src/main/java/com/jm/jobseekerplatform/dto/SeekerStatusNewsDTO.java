@@ -1,18 +1,18 @@
 package com.jm.jobseekerplatform.dto;
 
 import com.jm.jobseekerplatform.model.News;
-import com.jm.jobseekerplatform.model.SeekerStatus;
+import com.jm.jobseekerplatform.model.NewsStatus;
 
 public class SeekerStatusNewsDTO {
 
     private News news;
-    private SeekerStatus seekerStatus;
+    private NewsStatus newsStatus;
 
     public SeekerStatusNewsDTO() {}
 
-    public SeekerStatusNewsDTO(News news, SeekerStatus seekerStatus) {
+    public SeekerStatusNewsDTO(News news, NewsStatus newsStatus) {
         this.news         = news;
-        this.seekerStatus = seekerStatus;
+        this.newsStatus = newsStatus;
     }
 
     public News getNews() {
@@ -23,12 +23,12 @@ public class SeekerStatusNewsDTO {
         this.news = news;
     }
 
-    public SeekerStatus getSeekerStatus() {
-        return seekerStatus;
+    public NewsStatus getNewsStatus() {
+        return newsStatus;
     }
 
-    public void setSeekerStatus(SeekerStatus seekerStatus) {
-        this.seekerStatus = seekerStatus;
+    public void setNewsStatus(NewsStatus newsStatus) {
+        this.newsStatus = newsStatus;
     }
 
 }

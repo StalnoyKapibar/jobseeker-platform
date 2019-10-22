@@ -3,7 +3,6 @@ package com.jm.jobseekerplatform.controller.rest;
 import com.jm.jobseekerplatform.dto.NewsDTO;
 import com.jm.jobseekerplatform.dto.SeekerStatusNewsDTO;
 import com.jm.jobseekerplatform.model.*;
-import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.DraftNewsService;
@@ -14,7 +13,6 @@ import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,7 +101,7 @@ public class NewsRestController {
                     .getContent();
             List<SeekerStatusNewsDTO> scDto = new ArrayList<>();
             for (News n : tagNews) {
-                scDto.add(seekerStatusNewsService.addInSeekerCountDTO(SeekerStatus.VIEWED, n));
+                scDto.add(seekerStatusNewsService.addInSeekerCountDTO(NewsStatus.VIEWED, n));
             }
             return new ResponseEntity<>(scDto, HttpStatus.OK);
         }
@@ -115,15 +113,8 @@ public class NewsRestController {
         List<News> news = new ArrayList<>(subscriptionNews);
         news.addAll(tagNews);
 
-        news.forEach(x -> {
-            Long totalViews = x.getNumberOfViews();
-            if (totalViews == null) totalViews = 0L;
-            x.setNumberOfViews(totalViews + 1);
-            newsService.update(x);
-        });
-
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
-        List<SeekerStatusNews> dbList = seekerStatusNewsService.getAllSeekerCount(seekerProfile);
+        List<SeekerStatusNews> dbList = seekerStatusNewsService.getAllSeekerStatusNews(seekerProfile);
         List<SeekerStatusNewsDTO> scDto = seekerStatusNewsService.addViewedNews(news, seekerProfile, dbList);
         return new ResponseEntity<>(scDto, HttpStatus.OK);
     }
