@@ -841,16 +841,16 @@ function blockEmployerProfile(period) {
     });
 }
 
-
 function addComplainReview() {
     var reviewId = $('#RMReviewId').val();
+    var employerProfileId = $('#employerProfileId').val();
     var chatMessage = {
         'text': $('#RMComplain').val(),
         'date': new Date()
     };
     $.ajax({
         type: 'post',
-        url: "/api/chats/add_complain_chat?reviewId=" + reviewId,
+        url: "/api/chats/add_complain_chat?reviewId=" + reviewId + "&employerProfileId=" + employerProfileId,
         contentType: 'application/json; charset=utf-8',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
