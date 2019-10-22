@@ -8,10 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.Query;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -55,4 +53,5 @@ public class NewsDAO extends AbstractDAO<News> {
         int end = (start + pageable.getPageSize()) > news.size() ? news.size() : (start + pageable.getPageSize());
         return new PageImpl<>(news.subList(start, end), pageable, news.size());
     }
+
 }
