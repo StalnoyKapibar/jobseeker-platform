@@ -27,45 +27,58 @@ function printSeekerNews() {
             }
             var cardHTML = '';
             $.each(data, function (i, item) {
-                var date = new Date(item.date.toString());
+                var date = new Date(item.news.date.toString());
                 var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
                 var month = date.getMonth() + 1;
                 month = month < 10 ? '0' + month : month;
                 // tags
                 let newsTags = "";
-                $.each(item.tags, (i, tag) =>  {
+                $.each(item.news.tags, (i, tag) =>  {
                     newsTags += '<span class="badge badge-pill badge-success btnClick text-dark">' +
                         '<h7>' + tag.name + '</h7></span>'
                 });
                 var description;
-                var numberOfViews = item.numberOfViews;
-                if (numberOfViews == null) {
-                    numberOfViews = 0;
-                }
-                    description = item.description;
-                cardHTML += '<div class="card newsCard empCard" id="newsCard_' + item.id + '" ' +
-                    'style="margin-top: 10px">' +
-                    '<div class="card-body">' +
-                    '<h4 class="card-title seekerNewsHeadLine">' + item.headline + '</h4>' +
-                    '<p class="card-text newsDescription" id="description_' + item.id + '">' +
-                    '<span id="newsDescription_' + item.id + '">' + description + '</span></p>' +
-                    '<p class="card-text seekerNewsDate">' + 'от: ' + day + '.' + month + '.' +
-                    date.getFullYear() + '</p>' +
-                    '<a href="/seeker/news/' + item.id + '" class="card-link">' + "Читать полностью" + '</a>' +
-                    '<a href="/employer/' + item.author.id + '" class="card-link">' + item.author.companyName + '</a>' +
-                    // tags
-                    '<div class="newsTags">' + newsTags + '</div>' +
-                    '</div>' +
-                    // Див с классом "newsAction" сделан для примера работы функционала карточки новости
-                    '<div class="card-footer newsAction">' +
-                    '<div class="views" id="views_' + item.id + '"><i class="far fa-eye"></i><span></span>'
-                    + numberOfViews + '</div>' +
-                    '<div class="like" id="like_' + item.id + '"><span id="newsLike_' + item.id + '" ' +
-                    'onclick="like(' + item.id + ')"><i class="far fa-heart"></i>623</span></div>' +
-                    '<div class="comments" id="comments_' + item.id + '"><span id="viewComments_' + item.id + '" ' +
-                    'onclick="printComments(' + item.id + ')"><i class="far fa-comments"></i>23</span></div>' +
-                    '</div>' +
-                    '</div>';
+                var status = item.news.status;
+                description = item.news.description;
+                let bgcolor = "";
+                if (item.newsStatus == "NEW") bgcolor = "#F39C12";
+                cardHTML += '' +
+                    '<div class="card newsCard empCard" id="newsCard_' + item.news.id + '" style="margin-top: 10px">' +
+                        '<div class="card-body" style="background-color: ' + bgcolor + ' ">' +
+                            '<h4 class="card-title seekerNewsHeadLine">' + item.news.headline + '</h4>' +
+                            '<p class="card-text newsDescription" id="description_' + item.news.id + '">' +
+                                '<span id="newsDescription_' + item.news.id + '">' + description + '</span>' +
+                            '</p>' +
+                            '<p class="card-text seekerNewsDate">' +
+                                'от: ' + day + '.' + month + '.' + date.getFullYear() +
+                            '</p>' +
+                            '<a href="/seeker/news/' + item.news.id + '" class="card-link">' +
+                                "Читать полностью" +
+                            '</a>' +
+                            '<a href="/employer/' + item.news.author.id + '" class="card-link">' +
+                                item.news.author.companyName +
+                            '</a>' +
+                            // tags
+                            '<div class="newsTags">' + newsTags + '</div>' +
+                        '</div>' +
+                        // Див с классом "newsAction" сделан для примера работы функционала карточки новости
+                        '<div class="card-footer newsAction">' +
+                            '<div class="views" id="views_' + item.news.id + '">' +
+                                '<i class="far fa-eye"></i><span></span>' + status +
+                            '</div>' +
+                            '<div class="like" id="like_' + item.news.id + '">' +
+                                '<span id="newsLike_' + item.news.id + '" onclick="like(' + item.news.id + ')">' +
+                                '<i class="far fa-heart"></i>623</span>' +
+                            '</div>' +
+                            '<div class="comments" id="comments_' + item.news.id + '">' +
+                                '<span id="viewComments_' + item.news.id + '" ' +
+                                            'onclick="printComments(' + item.news.id + ')">' +
+                                    '<i class="far fa-comments"></i>23' +
+                                '</span>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>'
+                ;
             });
             newsPageCount++;
             $('#scrollSeekerNewsPageCount').val(newsPageCount);
