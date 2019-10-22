@@ -64,7 +64,6 @@ public class SeekerProfileRestController {
         return seekerProfileService.getById(seekerProfileId);
     }
 
-    //    @AccessCheck
     @PostMapping(value = "/outFavoriteVacancy")
     public ResponseEntity outFavoriteVacancy(@RequestParam Long vacancyId, @RequestParam Long seekerProfileId) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
@@ -74,7 +73,6 @@ public class SeekerProfileRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    //    @AccessCheck
     @PostMapping(value = "/inFavoriteVacancy")
     public ResponseEntity inFavoriteVacancy(@RequestParam Long vacancyId, @RequestParam Long seekerProfileId) {
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
