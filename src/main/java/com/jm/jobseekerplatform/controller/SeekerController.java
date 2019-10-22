@@ -186,8 +186,10 @@ public class SeekerController {
 
     @GetMapping("/news/{newsId}")
     public String getSeekerSubscriptionNewsById(@PathVariable Long newsId, Model model,  Authentication authentication) {
+        News news = newsService.getById(newsId);
+        seekerStatusNewsService.changeNewsStatus(news);
+
         News currentNews = newsService.getById(newsId);
-        seekerStatusNewsService.changeStatusViewedNews(currentNews);
         model.addAttribute("newsId", currentNews.getId());
         model.addAttribute("headline", currentNews.getHeadline());
         model.addAttribute("description", currentNews.getDescription());

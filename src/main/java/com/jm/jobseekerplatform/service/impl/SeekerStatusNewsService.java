@@ -65,11 +65,11 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
                         Long id = dbList.get(i).getId();
                         if (newsId == dbNewsId && dbView.equals(NewsStatus.NEW)) {
                             if (checkListForMatches(newsId, scnvList)) {
-                                scnvList.add(addInSeekerCount(id, seekerProfile, n, NewsStatus.VIEWED));
-                                scDto.add(addInSeekerCountDTO(NewsStatus.VIEWED, n));
+                                scnvList.add(addInSeekerStatusNews(id, seekerProfile, n, NewsStatus.VIEWED));
+                                scDto.add(addInSeekerStatusNewsDTO(NewsStatus.VIEWED, n));
                             }
                         } else if (newsId == dbNewsId) {
-                            scDto.add(addInSeekerCountDTO(dbView, n));
+                            scDto.add(addInSeekerStatusNewsDTO(dbView, n));
                             break;
                         } else {
                             boolean bool = true;
@@ -80,14 +80,14 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
                                 }
                             }
                             if (bool && checkListForMatches(newsId, scnvList)) {
-                                scnvList.add(addInSeekerCount(null, seekerProfile, n, NewsStatus.NEW));
-                                scDto.add(addInSeekerCountDTO(NewsStatus.NEW, n));
+                                scnvList.add(addInSeekerStatusNews(null, seekerProfile, n, NewsStatus.NEW));
+                                scDto.add(addInSeekerStatusNewsDTO(NewsStatus.NEW, n));
                             }
                         }
                     }
                 } else {
-                    scnvList.add(addInSeekerCount(null, seekerProfile, n, NewsStatus.NEW));
-                    scDto.add(addInSeekerCountDTO(NewsStatus.NEW, n));
+                    scnvList.add(addInSeekerStatusNews(null, seekerProfile, n, NewsStatus.NEW));
+                    scDto.add(addInSeekerStatusNewsDTO(NewsStatus.NEW, n));
                 }
             }
         }
@@ -106,28 +106,28 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
     }
 
     // Добавление в создаваемую коллекцию
-    private SeekerStatusNews addInSeekerCount(Long id, SeekerProfile seekerProfile, News news, NewsStatus newsStatus) {
-        SeekerStatusNews scnv = new SeekerStatusNews();
-        scnv.setId(id);
-        scnv.setDate(LocalDateTime.now());
-        scnv.setSeeker(seekerProfile);
-        scnv.setNews(news);
-        scnv.setNewsStatus(newsStatus);
-        return scnv;
+    private SeekerStatusNews addInSeekerStatusNews(Long id, SeekerProfile seekerProfile, News news, NewsStatus newsStatus) {
+        SeekerStatusNews ssn = new SeekerStatusNews();
+        ssn.setId(id);
+        ssn.setDate(LocalDateTime.now());
+        ssn.setSeeker(seekerProfile);
+        ssn.setNews(news);
+        ssn.setNewsStatus(newsStatus);
+        return ssn;
     }
 
-    public SeekerStatusNewsDTO addInSeekerCountDTO(NewsStatus newsStatus, News news) {
+    public SeekerStatusNewsDTO addInSeekerStatusNewsDTO(NewsStatus newsStatus, News news) {
         SeekerStatusNewsDTO seekerStatusNewsDTO = new SeekerStatusNewsDTO();
         seekerStatusNewsDTO.setNews(news);
         seekerStatusNewsDTO.setNewsStatus(newsStatus);
         return seekerStatusNewsDTO;
     }
 
-    public void changeStatusViewedNews(News news) {
-        SeekerStatusNews scnv = getSeekerStatusNews(news);
-        if (!scnv.getNewsStatus().equals("READ")) {
-            scnv.setNewsStatus(NewsStatus.READ);
-            update(scnv);
+    public void changeNewsStatus(News news) {
+        SeekerStatusNews ssn = getSeekerStatusNews(news);
+        if (!ssn.getNewsStatus().equals(NewsStatus.READ)) {
+            ssn.setNewsStatus(NewsStatus.READ);
+            update(ssn);
         }
     }
 

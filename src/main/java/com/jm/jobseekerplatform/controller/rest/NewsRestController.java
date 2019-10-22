@@ -101,7 +101,7 @@ public class NewsRestController {
                     .getContent();
             List<SeekerStatusNewsDTO> scDto = new ArrayList<>();
             for (News n : tagNews) {
-                scDto.add(seekerStatusNewsService.addInSeekerCountDTO(NewsStatus.VIEWED, n));
+                scDto.add(seekerStatusNewsService.addInSeekerStatusNewsDTO(NewsStatus.VIEWED, n));
             }
             return new ResponseEntity<>(scDto, HttpStatus.OK);
         }
