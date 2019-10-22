@@ -139,8 +139,7 @@ public class MainController {
                     ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
                 EmployerUser employerUser = employerUserService.getById(id);
-                Long emplId = employerUser.getProfile().getId();
-                return "redirect:/employer/" + emplId;
+                return "redirect:/employer/" + employerUser.getProfile().getId();
             } else if (roles.contains("ROLE_SEEKER")) {
                 SeekerUser seekerUser = seekerUserService.getById(id);
                 return "redirect:/seeker/" + seekerUser.getProfile().getId();
