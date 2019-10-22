@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.config;
 
+import com.jm.jobseekerplatform.security.AuthErrorEntryPoint;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -31,8 +32,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private AuthErrorEntryPoint authErrorEntryPoint;
     private PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+
+    @Bean
+    public LoginSuccessHandler loginSuccessHandler() {
+        return new LoginSuccessHandler(userService);
+    }
+
+    @Bean
+    public LoginFailureHandler loginFailureHandler() {
+        return new LoginFailureHandler(userService);
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -57,11 +69,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // указываем страницу с формой логина
                 .loginPage("/login")
                 //указываем логику обработки при логине
-                .successHandler(new LoginSuccessHandler(userService))
+                .successHandler(loginSuccessHandler())
                 // указываем action с формы логина
                 .loginProcessingUrl("/login")
                 // указываем логику обработки при неудачном логине
-                .failureHandler(new LoginFailureHandler(userService))
+                .failureHandler(loginFailureHandler())
                 // Указываем параметры логина и пароля с формы логина
                 .usernameParameter("j_username")
                 .passwordParameter("j_password")
@@ -92,6 +104,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .sessionManagement()
                 .maximumSessions(-1).sessionRegistry(sessionRegistry());
+
+        // Сообщение об ошибки для неавторизованного доступа к API, вместо редиректа на страницу логина
+        http.exceptionHandling().authenticationEntryPoint(authErrorEntryPoint);
     }
 
 }

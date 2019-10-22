@@ -1,4 +1,5 @@
 ### DO NOT edit, rename or delete this file, just make copy w/o .sample extension and customize ###
+com.jm.jobseekerplatform.init=false
 server.port=7070
 google.maps.api.key=${googleMapsApiKey}
 logging.level.com.jm.jobseekerplatform=debug

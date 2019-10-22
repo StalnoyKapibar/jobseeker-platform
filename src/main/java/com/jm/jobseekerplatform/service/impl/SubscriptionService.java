@@ -10,12 +10,9 @@ import org.springframework.stereotype.Service;
 
 @Service("SubscriptionService")
 public class SubscriptionService extends AbstractService<Subscription> {
-    private final SubscriptionDAO subscriptionDAO;
 
     @Autowired
-    public SubscriptionService(SubscriptionDAO subscriptionDAO) {
-        this.subscriptionDAO = subscriptionDAO;
-    }
+    private SubscriptionDAO subscriptionDAO;
 
     public Subscription findBySeekerAndEmployer(SeekerProfile seekerProfile, EmployerProfile employerProfile) {
         return subscriptionDAO.findBySeekerAndEmployer(seekerProfile, employerProfile);
@@ -24,4 +21,5 @@ public class SubscriptionService extends AbstractService<Subscription> {
     public void deleteSubscription(Subscription subscription) {
         subscriptionDAO.deleteSubscription(subscription);
     }
+
 }

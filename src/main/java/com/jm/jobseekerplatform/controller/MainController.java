@@ -47,6 +47,7 @@ public class MainController {
 
     @Autowired
     private SeekerUserService seekerUserService;
+
     @Autowired
     private EmployerUserService employerUserService;
 
@@ -135,8 +136,8 @@ public class MainController {
     public String filterProfilePage(Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             Long id = ((User) authentication.getPrincipal()).getId();
-            Set<String> roles = authentication.getAuthorities().stream().map(grantedAuthority ->
-                    ((GrantedAuthority) grantedAuthority).getAuthority()).collect(Collectors.toSet());
+            Set<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toSet());
             if (roles.contains("ROLE_EMPLOYER")) {
                 EmployerUser employerUser = employerUserService.getById(id);
                 return "redirect:/employer/" + employerUser.getProfile().getId();
@@ -195,8 +196,7 @@ public class MainController {
                 isContain = ((SeekerProfile) profile).getFavoriteVacancy().contains(vacancy);
                 isSubscribe = ((SeekerProfile) profile).getSubscriptions().contains(subscription);
                 hasResponded = vacancy.getMeetings()
-                        .stream().filter(meeting ->
-                                meeting.getSeekerProfile().getId().equals(id)).findFirst().isPresent();
+                        .stream().anyMatch(meeting -> meeting.getSeekerProfile().getId().equals(id));
                 model.addAttribute("isContain", isContain);
                 model.addAttribute("isSubscribe", isSubscribe);
                 model.addAttribute("seekerProfileId", profile.getId());
@@ -229,4 +229,5 @@ public class MainController {
         }
         return "password_reset";
     }
+
 }

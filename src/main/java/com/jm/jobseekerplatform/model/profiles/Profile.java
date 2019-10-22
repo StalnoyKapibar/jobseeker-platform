@@ -1,17 +1,12 @@
 package com.jm.jobseekerplatform.model.profiles;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.State;
-import com.jm.jobseekerplatform.model.comments.Comment;
 import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Nick Dolgopolov (nick_kerch@mail.ru; https://github.com/Absent83/)
@@ -88,6 +83,10 @@ public abstract class Profile implements Serializable {
     public String toString() {
         return "Profile{" +
                 "id=" + id +
+                ", state=" + state +
+                ", logo=" + "*SKIPPED*" +
+                ", expiryBlock=" + expiryBlock +
                 '}';
     }
+
 }

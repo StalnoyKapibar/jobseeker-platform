@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "com.jm.jobseekerplatform.init",
+      "type": "java.lang.Boolean",
+      "description": "Set 'com.jm.jobseekerplatform.init' property to 'true' for database init.\nThen set to 'false' after successful start.",
+      "values": [
+        {
+          "value": true,
+          "description": "Database initial mode for first run only."
+        },
+        {
+          "value": false,
+          "description": "Normal mode run after database initialized."
+        }
+      ]
+    }
+  ]
+}

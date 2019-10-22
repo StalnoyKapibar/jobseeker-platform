@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
@@ -18,7 +19,7 @@ import java.util.Date;
 public class MailService {
 
     @Autowired
-    private JavaMailSender javaMailSender;
+    private JavaMailSender javaMailSender; // WTF? Where is bean declared?
 
     @Autowired
     private TemplateEngine templateEngine;

@@ -61,7 +61,7 @@ public class NewsRestController {
     }
 
     @RolesAllowed({"ROLE_EMPLOYER"})
-    @GetMapping ("/delete/{newsId}")
+    @GetMapping("/delete/{newsId}")
     public ResponseEntity deleteNews(@PathVariable("newsId") Long newsId) {
         newsService.deleteById(newsId);
         return new ResponseEntity(HttpStatus.OK);
@@ -78,8 +78,8 @@ public class NewsRestController {
         return new ResponseEntity<>(newsDTO, HttpStatus.OK);
     }
 
-    @RolesAllowed ({"ROLE_EMPLOYER"})
-    @GetMapping ("/")
+    @RolesAllowed({"ROLE_EMPLOYER"})
+    @GetMapping("/")
     public ResponseEntity<List<News>> getAllNewsByEmployerProfileId(@RequestParam("newsPageCount") int newsPageCount,
                                                                     Authentication authentication) {
         Sort sort = new Sort(Sort.Direction.DESC, "date");
@@ -120,15 +120,15 @@ public class NewsRestController {
     }
 
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
-    @PostMapping ("/editNews")
+    @PostMapping("/editNews")
     public ResponseEntity editNews(@RequestParam("newsId") Long newsId,
                                    @RequestParam("newsHeadline") String newsHeadline,
                                    @RequestParam("newsDescription") String newsDescription) {
         News news = newsService.getById(newsId);
         //Если обновление новости требует последующей проверки администратором
-        if( isNewsNeedValidate(news) ) {
+        if (isNewsNeedValidate(news)) {
             //Только одно обновление новости для проверки допустимо
-            if( draftNewsService.isNewsOnValidation(newsId) ) {
+            if (draftNewsService.isNewsOnValidation(newsId)) {
                 return new ResponseEntity(HttpStatus.BAD_REQUEST);
             }
             DraftNews draftNews = new DraftNews();

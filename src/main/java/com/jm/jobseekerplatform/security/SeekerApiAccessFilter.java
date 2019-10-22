@@ -52,7 +52,11 @@ public class SeekerApiAccessFilter implements Filter {
         if (!(isAdmin(loggedUser) || isOpenAccess(request))) {
             Long urlSeekerProfileId = null;
             Long bodySeekerProfileId = null;
-            logger.debug("Parameters: {}", Collections.list(request.getParameterNames()));
+            HttpServletRequest requestEff = request;
+            logger.debug("Parameters: {{}}", Collections.list(request.getParameterNames())
+                    .stream()
+                    .map(p -> p + ": " + requestEff.getParameter(p))
+                    .collect(Collectors.joining(", ")));
             if (request.getHeader(HttpHeaders.CONTENT_TYPE).contains(JSON_HEADER_VALUE) && request.getContentLength() > 0) {
                 if (!(request instanceof ReadTwiceHttpServletRequestWrapper)) {
                     request = new ReadTwiceHttpServletRequestWrapper(request);
@@ -63,8 +67,8 @@ public class SeekerApiAccessFilter implements Filter {
                         JsonNode seekerProfileIdNode = jsonNode.get(SEEKER_PROFILE_ID);
                         if (seekerProfileIdNode.isNumber()) {
                             bodySeekerProfileId = seekerProfileIdNode.asLong();
-                            logger.debug("Body seeker profile: logged id: {}  request id: {}",
-                                    loggedUser.getProfile().getId(), bodySeekerProfileId);
+                            logger.debug("Request body {}: {} (logged user profile id: {})", SEEKER_PROFILE_ID,
+                                    bodySeekerProfileId, loggedUser.getProfile().getId());
                         } else {
                             response.sendError(HttpStatus.BAD_REQUEST.value(), SEEKER_PROFILE_ID + "is not a number");
                             return;
@@ -79,8 +83,8 @@ public class SeekerApiAccessFilter implements Filter {
                 String seekerProfileIdStr = request.getParameter(SEEKER_PROFILE_ID);
                 if (NumberUtils.isParsable(seekerProfileIdStr)) {
                     urlSeekerProfileId = Long.parseLong(seekerProfileIdStr);
-                    logger.debug("Urlencoded seeker profile: logged id: {}  request id: {}",
-                            loggedUser.getProfile().getId(), urlSeekerProfileId);
+                    logger.debug("Request urlencoded {}: {} (logged user profile id: {})", SEEKER_PROFILE_ID,
+                            urlSeekerProfileId, loggedUser.getProfile().getId());
                 } else {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), SEEKER_PROFILE_ID + "is not a number");
                     return;

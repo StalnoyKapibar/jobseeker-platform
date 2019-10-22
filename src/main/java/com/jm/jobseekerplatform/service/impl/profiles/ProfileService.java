@@ -7,6 +7,7 @@ import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -18,17 +19,17 @@ import java.util.Date;
 public class ProfileService extends AbstractService<Profile> {
 
     @Autowired
-    private ProfileDAO dao;
+    protected ProfileDAO profileDAO;
 
     public void checkedState(Profile profile) {
         profile.setState(State.ACCESS);
-        dao.update(profile);
+        profileDAO.update(profile);
     }
 
     public void blockPermanently(Profile profile) {
         profile.setState(State.BLOCK_PERMANENT);
         profile.setExpiryBlock(null);
-        dao.update(profile);
+        profileDAO.update(profile);
     }
 
     public void blockTemporary(Profile profile, int periodInDays) {
@@ -38,18 +39,19 @@ public class ProfileService extends AbstractService<Profile> {
 
         profile.setState(State.BLOCK_TEMPORARY);
         profile.setExpiryBlock(expiryBlockDate);
-        dao.update(profile);
+        profileDAO.update(profile);
     }
 
     public void blockOwn(Profile profile) {
         profile.setState(State.BLOCK_OWN);
         profile.setExpiryBlock(null);
-        dao.update(profile);
+        profileDAO.update(profile);
     }
 
     public void unblock(Profile profile) {
         profile.setState(State.ACCESS);
         profile.setExpiryBlock(null);
-        dao.update(profile);
+        profileDAO.update(profile);
     }
+
 }

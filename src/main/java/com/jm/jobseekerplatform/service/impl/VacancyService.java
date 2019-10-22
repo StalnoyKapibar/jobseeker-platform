@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,7 +21,7 @@ import java.util.regex.Pattern;
 public class VacancyService extends AbstractService<Vacancy> {
 
     @Autowired
-    private VacancyDAO dao;
+    private VacancyDAO vacancyDAO;
 
     @Autowired
     private VacancyDaoI vacancyDaoI;
@@ -41,11 +39,11 @@ public class VacancyService extends AbstractService<Vacancy> {
     private Matcher matcher;
 
     public Set<Vacancy> getAllByEmployerProfileId(Long id, int limit) {
-        return dao.getAllByEmployerProfileId(id, limit);
+        return vacancyDAO.getAllByEmployerProfileId(id, limit);
     }
 
     public Set<Vacancy> getAllByEmployerProfileId(Long id) {
-        return dao.getAllByEmployerProfileId(id);
+        return vacancyDAO.getAllByEmployerProfileId(id);
     }
 
     public Page<Vacancy> findAll(Pageable pageable) {
@@ -53,17 +51,17 @@ public class VacancyService extends AbstractService<Vacancy> {
     }
 
     public Page<Vacancy> findAllByTags(Set<Tag> tags, Pageable pageable) {
-        return dao.getVacanciesByTag(tags, pageable.getPageSize(), pageable.getPageNumber());
+        return vacancyDAO.getVacanciesByTag(tags, pageable.getPageSize(), pageable.getPageNumber());
     }
 
     public Set<Vacancy> getByTags(Set<Tag> tags, int limit) {
-        return dao.getAllByTags(tags, limit);
+        return vacancyDAO.getAllByTags(tags, limit);
     }
 
     public void blockPermanently(Vacancy vacancy) {
         vacancy.setState(State.BLOCK_PERMANENT);
         vacancy.setExpiryBlock(null);
-        dao.update(vacancy);
+        vacancyDAO.update(vacancy);
     }
 
     public void blockTemporary(Vacancy vacancy, int periodInDays) {
@@ -73,27 +71,27 @@ public class VacancyService extends AbstractService<Vacancy> {
 
         vacancy.setState(State.BLOCK_TEMPORARY);
         vacancy.setExpiryBlock(expiryBlockDate);
-        dao.update(vacancy);
+        vacancyDAO.update(vacancy);
     }
 
     public void blockOwn(Vacancy vacancy) {
         vacancy.setState(State.BLOCK_OWN);
         vacancy.setExpiryBlock(null);
-        dao.update(vacancy);
+        vacancyDAO.update(vacancy);
     }
 
     public void unblock(Vacancy vacancy) {
         vacancy.setState(State.ACCESS);
         vacancy.setExpiryBlock(null);
-        dao.update(vacancy);
+        vacancyDAO.update(vacancy);
     }
 
     public int deletePermanentBlockVacancies() {
-        return dao.deletePermanentBlockVacancies();
+        return vacancyDAO.deletePermanentBlockVacancies();
     }
 
     public int deleteExpiryBlockVacancies() {
-        return dao.deleteExpiryBlockVacancies();
+        return vacancyDAO.deleteExpiryBlockVacancies();
     }
 
     public boolean validateVacancy(Vacancy vacancy) {
@@ -125,17 +123,17 @@ public class VacancyService extends AbstractService<Vacancy> {
         vacancy.setTags(matchedTags);
         City city = cityService.checkCityOrAdd(vacancy.getCity().getName(), point);
         vacancy.setCity(city);
-        dao.add(vacancy);
+        vacancyDAO.add(vacancy);
     }
 
     public Page<Vacancy> findVacanciesByPointWithLimitAndPaging(String currentCity, Point point, int limit, int page) {
         String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
-        return dao.getVacanciesSortByCity(city, limit, page);
+        return vacancyDAO.getVacanciesSortByCity(city, limit, page);
     }
 
     public Page<Vacancy> getVacanciesSortedByCityTagsViews(long seekerId, String currentCity, Point point, int limit, int page) {
         String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
-        return dao.getVacanciesSortedByCityTagsViews(seekerId, city, limit, page);
+        return vacancyDAO.getVacanciesSortedByCityTagsViews(seekerId, city, limit, page);
     }
 
     public boolean updateVacancy(Vacancy vacancy){
@@ -153,4 +151,5 @@ public class VacancyService extends AbstractService<Vacancy> {
         oldVacancy.setTags(tagService.matchTagsByName(vacancy.getTags()));
         return true;
     }
+
 }

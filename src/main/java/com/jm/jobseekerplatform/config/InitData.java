@@ -26,7 +26,8 @@ import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -37,11 +38,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-
-@Component
 public class InitData {
 
-    public static final String WEB_IMG_DIR = "src/main/resources/static/img";
+    private static final String WEB_IMG_DIR = "src/main/resources/static/img";
 
     @Autowired
     private UserService userService;
@@ -116,7 +115,8 @@ public class InitData {
 
     private Random rnd = new Random();
 
-    public void initData() {
+    @EventListener(ContextRefreshedEvent.class)
+    public void init() {
         storedProcedureService.createSortVacancyProcedure();
 
         initCities();
@@ -180,7 +180,7 @@ public class InitData {
 
     }
 
-    public void initReviews() {
+    private void initReviews() {
         SeekerProfile seekerProfile = seekerProfileService.getById(8L);
         EmployerReviews reviewOne = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Хорошая контора. Отличный коллектив, только директор придурковатый", new Date(),
                 4, seekerProfile);
@@ -251,7 +251,7 @@ public class InitData {
         employerProfileService.update(employerProfileSix);
     }
 
-    public void initUsers() {
+    private void initUsers() {
         User user;
         EmployerUser employerUser;
         SeekerUser seekerUser;
@@ -310,7 +310,7 @@ public class InitData {
         profileService.checkedState(seekerUser.getProfile());
     }
 
-    public void initVacancies() {
+    private void initVacancies() {
         String shortDescr = "Ищем талантливого разработчика, умеющего все и немного больше";
         String description = "Обязанности:<br>" +
                 "<br>" +
@@ -372,7 +372,7 @@ public class InitData {
         adminProfileService.add(adminProfile);
     }
 
-    public void initEmployerProfiles() {
+    private void initEmployerProfiles() {
         BufferedImage image = null;
         EmployerProfile employerProfile;
 
@@ -430,7 +430,7 @@ public class InitData {
         return image;
     }
 
-    public void initPortfolio() {
+    private void initPortfolio() {
         portfolioService.add(new Portfolio("Jobseeker-platform", "https://github.com/StalnoyKapibar/jobseeker-platform", "Создавал модели, сервисы. Использовал Java 8, Spring"));
         portfolioService.add(new Portfolio("SportGames", "https://github.com/romanX1/SportGames/", "Прикручивал Spring Security. Использовал Java 8, Spring"));
         portfolioService.add(new Portfolio("MusicEmulator", "https://github.com/musicX1/MusicEmulator/", "Прикручивал Spring Boot. Использовал Maven, Hibernate"));
@@ -439,7 +439,7 @@ public class InitData {
         portfolioService.add(new Portfolio("BestBrowser", "https://github.com/BB1/BestBrowser/", " Использовал Java 8, Spring"));
     }
 
-    public void initTags() {
+    private void initTags() {
         boolean verified = true;
         tagService.add(new Tag("Java 8", verified));
         tagService.add(new Tag("Spring Framework", verified));
@@ -458,7 +458,7 @@ public class InitData {
         tagService.add(new Tag("OAuth2", verified));
     }
 
-    public void initSeekerProfile() {
+    private void initSeekerProfile() {
         BufferedImage image = null;
         Set<Portfolio> portfolios = new HashSet<>();
         portfolios.add(portfolioService.getById(1L));
@@ -619,5 +619,6 @@ public class InitData {
             newsService.update(n);
         }
     }
+
 }
 

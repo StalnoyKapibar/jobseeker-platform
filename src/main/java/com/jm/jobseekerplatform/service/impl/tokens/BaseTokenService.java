@@ -9,11 +9,7 @@ import java.util.Date;
 
 public abstract class BaseTokenService<T extends BaseToken> extends AbstractService<T> {
 
-    protected final BaseTokenDAO<T> baseTokenDAO;
-
-    public BaseTokenService(BaseTokenDAO<T> baseTokenDAO) {
-        this.baseTokenDAO = baseTokenDAO;
-    }
+    protected BaseTokenDAO<T> baseTokenDAO;
 
     public Date calculateExpiryDate() {
         int periodInDays = 1;
@@ -38,7 +34,7 @@ public abstract class BaseTokenService<T extends BaseToken> extends AbstractServ
         Calendar calendar = Calendar.getInstance();
         boolean isNonExpired = (token.getExpiryDate().getTime() - calendar.getTime().getTime()) >= 0;
         if (!isNonExpired) {
-            abstractDAO.delete(token);
+            baseTokenDAO.delete(token);
         }
         return isNonExpired;
     }

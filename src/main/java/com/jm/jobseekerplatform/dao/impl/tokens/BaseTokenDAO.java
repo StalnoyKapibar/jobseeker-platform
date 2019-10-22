@@ -3,7 +3,6 @@ package com.jm.jobseekerplatform.dao.impl.tokens;
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.tokens.BaseToken;
 
-
 public class BaseTokenDAO<T extends BaseToken> extends AbstractDAO<T> {
 
     public T findByToken(String token) {
@@ -28,4 +27,5 @@ public class BaseTokenDAO<T extends BaseToken> extends AbstractDAO<T> {
                 .getResultList()
                 .stream().findFirst().orElse(null);
     }
+
 }

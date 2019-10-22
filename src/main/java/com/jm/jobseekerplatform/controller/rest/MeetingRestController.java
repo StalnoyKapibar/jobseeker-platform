@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
-
 @RestController
 @RequestMapping("/api/meetings")
 public class MeetingRestController {
@@ -57,4 +56,5 @@ public class MeetingRestController {
         toUpdate.setStatus(status);
         meetingService.updateMeeting(toUpdate);
     }
+
 }

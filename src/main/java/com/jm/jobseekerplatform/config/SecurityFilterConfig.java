@@ -4,11 +4,11 @@
 
 package com.jm.jobseekerplatform.config;
 
-import com.jm.jobseekerplatform.security.SeekerApiAccessFilter;
 import com.jm.jobseekerplatform.security.XSSFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import javax.servlet.Filter;
 
 @Configuration
@@ -22,12 +22,15 @@ public class SecurityFilterConfig {
         return registration;
     }
 
+/*
+    // @AccessCheck annotation should replace this filter
     @Bean
-    public FilterRegistrationBean<SeekerApiAccessFilter> filterRegistrationBean() {
+    public FilterRegistrationBean<SeekerApiAccessFilter> apiAccessFilterFilterRegistrationBean() {
         FilterRegistrationBean<SeekerApiAccessFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new SeekerApiAccessFilter());
         registrationBean.addUrlPatterns("/api/seeker/*", "/api/seekerprofiles/*", "/api/seeker_vacancy_record/*");
         return registrationBean;
     }
+*/
 
 }
