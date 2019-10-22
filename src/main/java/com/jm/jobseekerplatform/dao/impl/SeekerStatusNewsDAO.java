@@ -18,9 +18,10 @@ public class SeekerStatusNewsDAO extends AbstractDAO<SeekerStatusNews> {
 				.getResultList();
     }
 
-    public SeekerStatusNews getSeekerStatusNewsDAO(News news) {
-        return entityManager.createQuery("SELECT s FROM SeekerStatusNews s WHERE s.news = :newsId", clazz)
+    public SeekerStatusNews getSeekerStatusNewsDAO(News news, SeekerProfile seekerProfile) {
+        return entityManager.createQuery("SELECT s FROM SeekerStatusNews s WHERE s.news = :newsId AND s.seeker = :id", clazz)
                 .setParameter("newsId", news)
+                .setParameter("id", seekerProfile)
                 .getSingleResult();
     }
 

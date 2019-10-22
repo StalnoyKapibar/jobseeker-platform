@@ -4,6 +4,7 @@ import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.NewsService;
@@ -187,7 +188,9 @@ public class SeekerController {
     @GetMapping("/news/{newsId}")
     public String getSeekerSubscriptionNewsById(@PathVariable Long newsId, Model model,  Authentication authentication) {
         News news = newsService.getById(newsId);
-        seekerStatusNewsService.changeNewsStatus(news);
+        long seekerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);;
+        seekerStatusNewsService.changeNewsStatus(news, seekerProfile);
 
         News currentNews = newsService.getById(newsId);
         model.addAttribute("newsId", currentNews.getId());

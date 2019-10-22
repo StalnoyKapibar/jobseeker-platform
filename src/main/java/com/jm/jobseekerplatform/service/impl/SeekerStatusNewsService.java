@@ -34,8 +34,8 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
         return seekerStatusNewsDAO.getAllSeekerStatusNewsDAO(seekerProfile);
     }
 
-    public SeekerStatusNews getSeekerStatusNews(News news) {
-        return seekerStatusNewsDAO.getSeekerStatusNewsDAO(news);
+    public SeekerStatusNews getSeekerStatusNews(News news, SeekerProfile seekerProfile) {
+        return seekerStatusNewsDAO.getSeekerStatusNewsDAO(news, seekerProfile);
     }
 
     public void update(SeekerStatusNews seekerStatusNews) {
@@ -123,8 +123,8 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
         return seekerStatusNewsDTO;
     }
 
-    public void changeNewsStatus(News news) {
-        SeekerStatusNews ssn = getSeekerStatusNews(news);
+    public void changeNewsStatus(News news, SeekerProfile seekerProfile) {
+        SeekerStatusNews ssn = getSeekerStatusNews(news, seekerProfile);
         if (!ssn.getNewsStatus().equals(NewsStatus.READ)) {
             ssn.setNewsStatus(NewsStatus.READ);
             update(ssn);
