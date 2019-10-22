@@ -64,7 +64,7 @@ public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor
                     if (origMethod.isAnnotationPresent(AccessCheck.class)) {
                         logger.trace("Enter proxy method: {}  bean: {}  caller: {}", method.getName(), beanName,
                                 Thread.currentThread().getStackTrace()[3].toString());
-                        checkAccess(beanClass, method, args);
+                        checkAccess(args);
                         Object retVal = method.invoke(bean, args);
                         logger.trace("Exit proxy method: {}  bean: {}  caller: {}", method.getName(), beanName,
                                 Thread.currentThread().getStackTrace()[3].toString());
@@ -89,7 +89,7 @@ public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor
         }
     }
 
-    private void checkAccess(Class<?> beanClass, Method method, Object[] args) {
+    private void checkAccess(Object[] args) {
         User loggedUser = getLoggedUser();
         logger.trace("User: {}", loggedUser);
         if (!isAdmin(loggedUser) && args != null && args.length > 0) {
@@ -131,7 +131,6 @@ public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor
                         loggedUser.getUsername(),
                         loggedUser.getProfile().getId(),
                         profileEntity.getId());
-//            } else if () {
             } else {
                 String msg = String.format("User %s with profile id %d access denied to entity %s",
                         loggedUser.getUsername(),
@@ -157,7 +156,6 @@ public class AccessCheckAnnotationBeanPostProcessor implements BeanPostProcessor
                             Arrays.stream(arg.getClass().getDeclaredFields())
                                     .map(f -> f.getType().getSimpleName()) // + "(" + f.getType().getSuperclass().getSimpleName() + ")")
                                     .toArray());
-//                    Field field = ReflectionUtils.findField(arg.getClass(), null, type);
                     Field field = getFieldByType(type, arg);
                     if (field != null) {
                         field.setAccessible(true);
