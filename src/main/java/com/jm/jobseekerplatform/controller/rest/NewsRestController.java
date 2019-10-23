@@ -99,6 +99,7 @@ public class NewsRestController {
             Sort sort = new Sort(Sort.Direction.DESC, "date");
             List<News> tagNews = newsService.getAllBySeekerProfileTags(profile, PageRequest.of(newsPageCount, 10, sort))
                     .getContent();
+            seekerStatusNewsService.countNumberOfViews(tagNews);
             List<SeekerStatusNewsDTO> scDto = new ArrayList<>();
             for (News n : tagNews) {
                 scDto.add(seekerStatusNewsService.addInSeekerStatusNewsDTO(NewsStatus.VIEWED, n));
