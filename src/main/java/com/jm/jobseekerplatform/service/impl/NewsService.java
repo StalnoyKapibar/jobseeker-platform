@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Set;
 
 @Service("newsService")
@@ -33,11 +32,11 @@ public class NewsService extends AbstractService<News> {
         return newsDaoI.getAllBySeekerProfileId(employerProfiles, pageable);
     }
 
-    public Page<News> getAllBySubscriptions(Iterable<Subscription> subscriptions, Pageable pageable) {
-        return newsDAO.getBySubscriptions(subscriptions, pageable);
-    }
-
     public Page<News> getAllBySeekerProfileTags(SeekerProfile profile, Pageable pageable) {
         return newsDAO.getBySeekerProfileTags(profile, pageable);
+    }
+
+    public Page<News> getAllBySubscriptions(Iterable<Subscription> subscriptions, Pageable pageable) {
+        return newsDAO.getBySubscriptions(subscriptions, pageable);
     }
 }

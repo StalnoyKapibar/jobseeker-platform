@@ -1,31 +1,24 @@
 package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.dto.NewsDTO;
-import com.jm.jobseekerplatform.model.DraftNews;
-import com.jm.jobseekerplatform.model.News;
-import com.jm.jobseekerplatform.model.Subscription;
-import com.jm.jobseekerplatform.model.Tag;
-import com.jm.jobseekerplatform.model.comments.Comment;
-import com.jm.jobseekerplatform.model.profiles.Profile;
+import com.jm.jobseekerplatform.dto.SeekerStatusNewsDTO;
+import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.DraftNewsService;
 import com.jm.jobseekerplatform.service.impl.NewsService;
+import com.jm.jobseekerplatform.service.impl.SeekerStatusNewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
-import com.jm.jobseekerplatform.service.impl.comments.CommentService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
-import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.security.RolesAllowed;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +46,7 @@ public class NewsRestController {
     private TagService tagService;
 
     @Autowired
-    private CommentService commentService;
+    SeekerStatusNewsService seekerStatusNewsService;
 
     @RolesAllowed({"ROLE_EMPLOYER"})
     @PostMapping("/add")
@@ -97,24 +90,33 @@ public class NewsRestController {
     }
 
     @GetMapping ("/all_seeker_news")
-    public ResponseEntity<List<News>> getAllNewsBySeekerProfileId(@RequestParam("seekerProfileId") Long seekerProfileId,
-                                                                  @RequestParam("newsPageCount") int newsPageCount) {
+    public ResponseEntity<List<SeekerStatusNewsDTO>> getAllNewsBySeekerProfileId(
+                                                    @RequestParam("seekerProfileId") Long seekerProfileId,
+                                                    @RequestParam("newsPageCount") int newsPageCount) {
         SeekerProfile profile = seekerProfileService.getById(seekerProfileId);
         Set<Subscription> subscriptions = profile.getSubscriptions();
         if (subscriptions.size() == 0) {
             Sort sort = new Sort(Sort.Direction.DESC, "date");
             List<News> tagNews = newsService.getAllBySeekerProfileTags(profile, PageRequest.of(newsPageCount, 10, sort))
                     .getContent();
-            return new ResponseEntity<>(tagNews, HttpStatus.OK);
+            List<SeekerStatusNewsDTO> scDto = new ArrayList<>();
+            for (News n : tagNews) {
+                scDto.add(seekerStatusNewsService.addInSeekerStatusNewsDTO(NewsStatus.VIEWED, n));
+            }
+            return new ResponseEntity<>(scDto, HttpStatus.OK);
         }
         Sort sort = new Sort(Sort.Direction.DESC, "date");
-        List<News> subscriptionNews = newsService.getAllBySubscriptions(subscriptions,
-                PageRequest.of(newsPageCount, 10, sort)).getContent();
         List<News> tagNews = newsService.getAllBySeekerProfileTags(profile, PageRequest.of(newsPageCount, 10, sort))
                 .getContent();
+        List<News> subscriptionNews = newsService.getAllBySubscriptions(subscriptions,
+                PageRequest.of(newsPageCount, 10, sort)).getContent();
         List<News> news = new ArrayList<>(subscriptionNews);
         news.addAll(tagNews);
-        return new ResponseEntity<>(news, HttpStatus.OK);
+
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        List<SeekerStatusNews> dbList = seekerStatusNewsService.getAllSeekerStatusNews(seekerProfile);
+        List<SeekerStatusNewsDTO> scDto = seekerStatusNewsService.addViewedNews(news, seekerProfile, dbList);
+        return new ResponseEntity<>(scDto, HttpStatus.OK);
     }
 
     @PreAuthorize("principal.profile.id.equals(@newsService.getById(#newsId).author.id)")
