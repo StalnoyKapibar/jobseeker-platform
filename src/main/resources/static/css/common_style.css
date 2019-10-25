@@ -1,7 +1,7 @@
 :root {
     --bg-color: #fff;
     --navbar-bg-color: #00bc8c;
-    --sidebar-bg-color: #F3F4F6;
+    --sidebar-bg-color: #00bcaf;
     --card-color: #fff;
     --text-color: #222;
     --sidebar-text-color: #222;
@@ -18,7 +18,7 @@
 :root[theme='dark'] {
     --bg-color: #222;
     --navbar-bg-color: #00bc8c;
-    --sidebar-bg-color: #303030;
+    --sidebar-bg-color: #F39C12;
     --card-color: #303030;
     --text-color: white;
     --sidebar-text-color: #fff;
@@ -31,6 +31,7 @@
     --snackbar-background-color: #fff;
     --snackbar-color: #222;
 }
+
 * {
     margin: 0;
     padding: 0;
@@ -58,30 +59,37 @@ li {
     width: 100vw;
     max-height: 35px;
 }
-.left-navbar{
+
+.left-navbar {
     padding-left: 5vw;
 }
-.right-navbar{
+
+.right-navbar {
     padding-right: 5vw;
 }
-.navbar-nav{
+
+.navbar-nav {
     margin-left: 5vw;;
 }
-.dropdown{
+
+.dropdown {
     margin-left: 5vw;
     margin-right: 5vw;
 }
-.entry-form{
+
+.entry-form {
     width: 330px;
     top: 200%;
 }
-.loginHelp{
+
+.loginHelp {
     margin-top: 10px;
     margin-left: auto;
     margin-right: auto;
 }
-.auth-user-data>ul>li:first-child{
-    margin-right:5vw;
+
+.auth-user-data > ul > li:first-child {
+    margin-right: 5vw;
 }
 
 .sidebar, .btn {
@@ -90,18 +98,41 @@ li {
 
 /*Sidebar style*/
 .sidebar {
-    position: fixed;
+    width: 50px;
     top: 35px;
-    left: 0;
-    z-index: 100; /* Behind the navbar */
+    height: 100%;
+    background: var(--sidebar-bg-color);
+    white-space: nowrap;
+    transition: width 0.5s;
+    position: fixed;
+    z-index: 100;
 }
 
 .sidebar ul {
-    padding: 0 20%;
+    padding: 0;
+    list-style-type: none;
+    text-align: left;
 }
 
 .sidebar li {
-    margin-top: 20px;
+    width: auto;
+    height: 60px;
+    line-height: 50px;
+    padding-left: 14px;
+}
+
+.sidebar li:hover {
+    background: silver;
+}
+
+.sidebar:hover {
+    width: 250px;
+}
+
+.sidebar.item-menu {
+    height: 50px;
+    overflow: hidden;
+    color: var(--bg-color);
 }
 
 .sidebar a {
@@ -110,8 +141,9 @@ li {
     display: block;
 }
 
-.sidebar li :hover {
-    color: #F39C12;
+span.menu {
+    padding-left: 17px;
+    color: var(--bg-color);
 }
 
 /*Content style*/
@@ -468,9 +500,9 @@ select {
 }
 
 .chatMessageInfo {
-	position: static;
+    position: static;
     padding-right: 10px;
-	color: var(--red);
+    color: var(--red);
 }
 
 .chatMessageDate {
@@ -478,7 +510,7 @@ select {
     top: 5px;
     right: 10px;
     color: var(--review-voted-count-color);
-	z-index: 2;
+    z-index: 2;
 }
 
 .chatMessageText {
@@ -486,7 +518,7 @@ select {
     top: 40px;
     left: 90px;
     color: var(--text-color);
-	z-index: 2;
+    z-index: 2;
 }
 
 .chatMemberName {
@@ -525,25 +557,49 @@ select {
 
 /* Animations to fade the snackbar in and out */
 @-webkit-keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 0; opacity: 1;}
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 0;
+        opacity: 1;
+    }
 }
 
 @keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 0; opacity: 1;}
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 0;
+        opacity: 1;
+    }
 }
 
 @-webkit-keyframes fadeout {
-    from {bottom: 0; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
+    from {
+        bottom: 0;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }
 
 @keyframes fadeout {
-    from {bottom: 0; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
+    from {
+        bottom: 0;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }
 
-.w3-sidebar{
-    background-color: var(--sidebar-bg-color)!important;
+.w3-sidebar {
+    background-color: var(--sidebar-bg-color) !important;
 }
