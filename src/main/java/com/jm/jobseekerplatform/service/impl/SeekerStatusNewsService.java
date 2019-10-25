@@ -46,12 +46,7 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
     public List<SeekerStatusNewsDTO> addViewedNews(List<News> news,
                                                    SeekerProfile seekerProfile,
                                                    List<SeekerStatusNews> dbList) {
-        news.forEach(x -> {
-            Long totalViews = x.getNumberOfViews();
-            if (totalViews == null) totalViews = 0L;
-            x.setNumberOfViews(totalViews + 1);
-            newsService.update(x);
-        });
+        countNumberOfViews(news);
 
         List<SeekerStatusNews> scnvList = new ArrayList<>();
         List<SeekerStatusNewsDTO> scDto = new ArrayList<>();
@@ -114,6 +109,15 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
         ssn.setNews(news);
         ssn.setNewsStatus(newsStatus);
         return ssn;
+    }
+
+    public void countNumberOfViews(List<News> news) {
+        news.forEach(x -> {
+            Long totalViews = x.getNumberOfViews();
+            if (totalViews == null) totalViews = 0L;
+            x.setNumberOfViews(totalViews + 1);
+            newsService.update(x);
+        });
     }
 
     public SeekerStatusNewsDTO addInSeekerStatusNewsDTO(NewsStatus newsStatus, News news) {

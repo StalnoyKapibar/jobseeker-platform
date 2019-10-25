@@ -64,7 +64,7 @@ function printSeekerNews() {
                         // Див с классом "newsAction" сделан для примера работы функционала карточки новости
                         '<div class="card-footer newsAction">' +
                             '<div class="views" id="views_' + item.news.id + '">' +
-                                '<i class="far fa-eye"></i><span></span>' + status +
+                                '<i class="far fa-eye"></i><span></span>' + item.news.numberOfViews +
                             '</div>' +
                             '<div class="like" id="like_' + item.news.id + '">' +
                                 '<span id="newsLike_' + item.news.id + '" onclick="like(' + item.news.id + ')">' +

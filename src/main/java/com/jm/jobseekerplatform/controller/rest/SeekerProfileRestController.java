@@ -116,7 +116,7 @@ public class SeekerProfileRestController {
 
     @RolesAllowed("ROLE_SEEKER")
     @PostMapping(value = "/updateUserTags")
-    public ResponseEntity updateUserTags(@RequestParam String[] updatedTags) {
+    public void updateUserTags(@RequestBody String[] updatedTags) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
@@ -129,25 +129,20 @@ public class SeekerProfileRestController {
         seekerProfile.setTags(seekerProfileTags);
 
         seekerProfileService.update(seekerProfile);
-
-        return new ResponseEntity(HttpStatus.OK);
     }
 
     @RolesAllowed("ROLE_SEEKER")
     @PostMapping(value = "/removeTag")
-    public ResponseEntity removeTag(@RequestParam String tag) {
+    public void removeTag(@RequestBody String tag) {
+        String t = tag.replaceAll("[^A-Za-z0-9/ ]", "").trim();
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerUser.getProfile().getId());
-
         Set<Tag> seekerProfileTags = seekerProfile.getTags();
-        seekerProfileTags.removeIf(next -> next.getName().equals(tag));
-
+        seekerProfileTags.removeIf(next -> next.getName().equals(t));
         seekerProfile.setTags(seekerProfileTags);
         seekerProfileService.update(seekerProfile);
-
-        return new ResponseEntity(HttpStatus.OK);
     }
 
     @PostMapping("/update")
@@ -157,7 +152,14 @@ public class SeekerProfileRestController {
         updatedProfile.setSurname(seekerProfile.getSurname());
         updatedProfile.setPatronymic(seekerProfile.getPatronymic());
         updatedProfile.setDescription(seekerProfile.getDescription());
-        updatedProfile.setTags(seekerProfile.getTags());
+
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
+        SeekerProfile seekerProfile2 = seekerProfileService.getById(seekerUser.getProfile().getId());
+        Set<Tag> seekerProfileTags = seekerProfile2.getTags();
+
+        updatedProfile.setTags(seekerProfileTags);
         seekerProfileService.update(updatedProfile);
         return updatedProfile;
     }

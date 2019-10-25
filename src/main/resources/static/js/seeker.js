@@ -261,11 +261,11 @@ function removeTag(name) {
     $.ajax({
         type: 'post',
         url: "/api/seekerprofiles/removeTag",
-        data: "tag=" + name,
-        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        contentType: 'application/json; charset=utf-8',
         beforeSend: function (request) {
             request.setRequestHeader(header, token);
         },
+        data: JSON.stringify(name),
         success: function () {
             location.reload();
         },
@@ -286,11 +286,12 @@ $(document).on('show.bs.modal', '#selectionTagsModal', function () {
             }
             $.ajax({
                 type: 'post',
-                url: "/api/seekerprofiles/updateUserTags?updatedTags=" + tags,
+                url: "/api/seekerprofiles/updateUserTags",
                 contentType: 'application/json; charset=utf-8',
                 beforeSend: function (request) {
                     request.setRequestHeader(header, token);
                 },
+                data: JSON.stringify(tags),
                 success: function () {
                     location.reload();
                 },
@@ -301,3 +302,4 @@ $(document).on('show.bs.modal', '#selectionTagsModal', function () {
         }
     })
 });
+
