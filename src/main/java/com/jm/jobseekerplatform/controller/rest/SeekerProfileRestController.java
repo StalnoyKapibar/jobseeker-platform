@@ -116,7 +116,7 @@ public class SeekerProfileRestController {
 
     @RolesAllowed("ROLE_SEEKER")
     @PostMapping(value = "/updateUserTags")
-    public void updateUserTags(@RequestBody String[] updatedTags) {
+    public ResponseEntity updateUserTags(@RequestBody String[] updatedTags) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
@@ -129,11 +129,12 @@ public class SeekerProfileRestController {
         seekerProfile.setTags(seekerProfileTags);
 
         seekerProfileService.update(seekerProfile);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @RolesAllowed("ROLE_SEEKER")
     @PostMapping(value = "/removeTag")
-    public void removeTag(@RequestBody String tag) {
+    public ResponseEntity removeTag(@RequestBody String tag) {
         String t = tag.replaceAll("[^A-Za-z0-9/ ]", "").trim();
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
@@ -143,6 +144,7 @@ public class SeekerProfileRestController {
         seekerProfileTags.removeIf(next -> next.getName().equals(t));
         seekerProfile.setTags(seekerProfileTags);
         seekerProfileService.update(seekerProfile);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @PostMapping("/update")

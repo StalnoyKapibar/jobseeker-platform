@@ -282,6 +282,9 @@ $(document).on('show.bs.modal', '#selectionTagsModal', function () {
         let tags = [];
         if (btnTags.length !== 0) {
             for (let tag of btnTags) {
+// При несрабатывании кнопки ПОДТВЕРДИТЬ (в SEEKER -> профиль, кнопка добавление тэгов) раскомментировать одну из строк:
+//                tag.trim();
+//                tag.slice(0, -1);
                 tags.push(tag.textContent.toString());
             }
             $.ajax({
@@ -302,4 +305,3 @@ $(document).on('show.bs.modal', '#selectionTagsModal', function () {
         }
     })
 });
-
