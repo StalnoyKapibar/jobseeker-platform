@@ -114,7 +114,9 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
     public void countNumberOfViews(List<News> news) {
         news.forEach(x -> {
             Long totalViews = x.getNumberOfViews();
-            if (totalViews == null) totalViews = 0L;
+            if (totalViews == null) {
+                totalViews = 0L;
+            }
             x.setNumberOfViews(totalViews + 1);
             newsService.update(x);
         });
