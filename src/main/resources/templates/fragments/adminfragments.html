@@ -20,6 +20,7 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/c5edb0b5a3.js"></script>
     <link href="/css/dashboard.css" rel="stylesheet">
+    <script type="text/javascript" src="/js/employer_timer.js"></script>
 </th:block>
 
 <th:block th:fragment="nav">
@@ -114,6 +115,7 @@
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <script type="text/javascript" src="/js/employer_timer.js"></script>
 </th:block>
 
 <th:block th:fragment="admin_user_button(user)">
@@ -122,13 +124,14 @@
                 class="btn btn-success user_unblock adminEnableUserBtn"
                 th:style="${user.enabled} ? 'display:none' : ''"
                 th:attr="data-id=${user.id}"
-        >Разблокировать
+        >Разблокировать<br>
+            <span th:id="timeEndTheLock_ + ${user.id}"></span>
         </button>
         <div class="dropdown user_block" style="margin:0;" th:styleappend="${!user.enabled} ? 'display:none;' : ''">
             <button class="btn btn-danger dropdown-toggle" type="button"
                     data-toggle="dropdown">
-                Блокировать<span
-                    class="caret"></span></button>
+                Блокировать<span class="caret"></span>
+            </button>
             <div class="dropdown-menu">
                 <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=1,
                 data-email=${user.email}">На сутки</a>

@@ -195,4 +195,9 @@ public class UserService extends AbstractService<User> {
 
         return isCorrect;
     }
+
+    public User getUserByProfileId(EmployerProfile profileId) {
+        return dao.getUserByProfileIdDAO(profileId);
+    }
+
 }

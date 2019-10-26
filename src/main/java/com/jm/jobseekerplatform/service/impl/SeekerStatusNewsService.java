@@ -114,7 +114,9 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
     public void countNumberOfViews(List<News> news) {
         news.forEach(x -> {
             Long totalViews = x.getNumberOfViews();
-            if (totalViews == null) totalViews = 0L;
+            if (totalViews == null) {
+                totalViews = 0L;
+            }
             x.setNumberOfViews(totalViews + 1);
             newsService.update(x);
         });
@@ -129,7 +131,13 @@ public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
 
     public void changeNewsStatus(News news, SeekerProfile seekerProfile) {
         SeekerStatusNews ssn = getSeekerStatusNews(news, seekerProfile);
-        if (!ssn.getNewsStatus().equals(NewsStatus.READ)) {
+        if (ssn.getId() == null) {
+            ssn.setNews(news);
+            ssn.setDate(LocalDateTime.now());
+            ssn.setNewsStatus(NewsStatus.READ);
+            ssn.setSeeker(seekerProfile);
+            update(ssn);
+        } else if (ssn.getId() != null && !ssn.getNewsStatus().equals(NewsStatus.READ)) {
             ssn.setNewsStatus(NewsStatus.READ);
             update(ssn);
         }

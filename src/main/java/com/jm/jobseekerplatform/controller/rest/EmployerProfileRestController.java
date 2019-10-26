@@ -1,10 +1,11 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.dto.EmployerTimerDTO;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
-import org.json.JSONArray;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/employerprofiles")
@@ -28,6 +32,9 @@ public class EmployerProfileRestController {
 
     @Autowired
     VacancyService vacancyService;
+
+    @Autowired
+    UserService userService;
 
     @RequestMapping("/")
     public List<EmployerProfile> getAllEmployerProfiles() {
@@ -62,6 +69,27 @@ public class EmployerProfileRestController {
                               @RequestParam(value = "image") MultipartFile img) {
         employerProfileService.updatePhoto(id, img);
         return employerProfileService.getById(id).getEncoderPhoto();
+    }
+
+    @GetMapping("/employer_timer")
+    public List<EmployerTimerDTO> employerTimer() {
+
+        List<EmployerProfile> profiles = employerProfileService.getProfilesExpNotNull();
+        List<EmployerTimerDTO> EmployerTimerDTO = new ArrayList<>();
+
+        for (EmployerProfile ep : profiles) {
+            User user = userService.getUserByProfileId(ep);
+            Date expireDate = ep.getExpiryBlock();
+            LocalDateTime ldt = expireDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            LocalDateTime localDate = LocalDateTime.now();
+            Long diff = ChronoUnit.SECONDS.between(localDate, ldt);
+
+            EmployerTimerDTO tbDTO = new EmployerTimerDTO();
+            tbDTO.setUserId(user.getId());
+            tbDTO.setTime(diff);
+            EmployerTimerDTO.add(tbDTO);
+        }
+        return EmployerTimerDTO;
     }
 
 }
