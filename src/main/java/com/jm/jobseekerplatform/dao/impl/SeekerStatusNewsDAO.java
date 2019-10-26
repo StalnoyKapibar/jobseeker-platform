@@ -6,7 +6,6 @@ import com.jm.jobseekerplatform.model.SeekerStatusNews;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.NoResultException;
 import java.util.List;
 
@@ -21,10 +20,10 @@ public class SeekerStatusNewsDAO extends AbstractDAO<SeekerStatusNews> {
     }
 
     public SeekerStatusNews getSeekerStatusNewsDAO(News news, SeekerProfile seekerProfile) {
-
-        SeekerStatusNews ssn = null;
+        SeekerStatusNews ssn;
         try {
-            ssn = entityManager.createQuery("SELECT s FROM SeekerStatusNews s WHERE s.news = :newsId AND s.seeker = :id", clazz)
+            ssn = entityManager.createQuery("SELECT s FROM SeekerStatusNews s WHERE s.news = :newsId " +
+                    "AND s.seeker = :id", clazz)
                     .setParameter("newsId", news)
                     .setParameter("id", seekerProfile)
                     .getSingleResult();

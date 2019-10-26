@@ -1,8 +1,8 @@
 package com.jm.jobseekerplatform.dto;
 
-public class EmployerTimerDTO {
+public class UserTimerDTO {
     private Long userId;
-    private Long time;
+    private String time;
 
     public Long getUserId() {
         return userId;
@@ -12,11 +12,11 @@ public class EmployerTimerDTO {
         this.userId = userId;
     }
 
-    public Long getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Long time) {
+    public void setTime(String time) {
         this.time = time;
     }
 }

@@ -1,10 +1,11 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.dto.EmployerTimerDTO;
+import com.jm.jobseekerplatform.dto.UserTimerDTO;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +36,9 @@ public class EmployerProfileRestController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    EmployerUserService employerUserService;
 
     @RequestMapping("/")
     public List<EmployerProfile> getAllEmployerProfiles() {
@@ -72,24 +76,35 @@ public class EmployerProfileRestController {
     }
 
     @GetMapping("/employer_timer")
-    public List<EmployerTimerDTO> employerTimer() {
-
+    public List<UserTimerDTO> employerTimer() {
         List<EmployerProfile> profiles = employerProfileService.getProfilesExpNotNull();
-        List<EmployerTimerDTO> EmployerTimerDTO = new ArrayList<>();
-
+        List<UserTimerDTO> userTimerDTO = new ArrayList<>();
         for (EmployerProfile ep : profiles) {
-            User user = userService.getUserByProfileId(ep);
+            User user = employerUserService.getUserByEmployerProfile(ep);
             Date expireDate = ep.getExpiryBlock();
-            LocalDateTime ldt = expireDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-            LocalDateTime localDate = LocalDateTime.now();
-            Long diff = ChronoUnit.SECONDS.between(localDate, ldt);
-
-            EmployerTimerDTO tbDTO = new EmployerTimerDTO();
-            tbDTO.setUserId(user.getId());
-            tbDTO.setTime(diff);
-            EmployerTimerDTO.add(tbDTO);
+            userTimerDTO.add(createUserTimerDTO(expireDate, user));
         }
-        return EmployerTimerDTO;
+        return userTimerDTO;
+    }
+
+    public UserTimerDTO createUserTimerDTO(Date expireDate, User user) {
+        UserTimerDTO utDTO = new UserTimerDTO();
+        utDTO.setUserId(user.getId());
+        String str = expireDate.toString();
+        int count;
+        switch(str.length()) {
+            case (21):
+                count = 2;
+                break;
+            case (22):
+                count = 3;
+                break;
+            default:
+                count = 4;
+                break;
+        }
+        utDTO.setTime(str.substring(0, str.length() - count));
+        return utDTO;
     }
 
 }

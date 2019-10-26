@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.dao.impl.users;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
-import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import org.springframework.stereotype.Repository;
 
@@ -20,11 +19,6 @@ public class UserDAO extends AbstractDAO<User> {
                 .createQuery("SELECT CASE WHEN EXISTS (SELECT r FROM User r WHERE r.email = :param) THEN true ELSE false END FROM User")
                 .setParameter("param", email)
                 .getSingleResult();
-    }
-
-    public User getUserByProfileIdDAO(EmployerProfile profileId) {
-        return (User) entityManager.createQuery("SELECT u FROM User u WHERE u.profile = :profileId")
-                .setParameter("profileId", profileId).getSingleResult();
     }
 
 }
