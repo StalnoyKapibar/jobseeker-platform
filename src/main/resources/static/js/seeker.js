@@ -282,7 +282,7 @@ $(document).on('show.bs.modal', '#selectionTagsModal', function () {
         let tags = [];
         if (btnTags.length !== 0) {
             for (let tag of btnTags) {
-                tags.push(tag.textContent.toString());
+                tags.push(tag.textContent.toString().trim());
             }
             $.ajax({
                 type: 'post',
@@ -302,4 +302,3 @@ $(document).on('show.bs.modal', '#selectionTagsModal', function () {
         }
     })
 });
-

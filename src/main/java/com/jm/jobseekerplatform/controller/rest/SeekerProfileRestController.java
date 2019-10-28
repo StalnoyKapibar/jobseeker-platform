@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.controller.rest;
 
+import com.jm.jobseekerplatform.dto.UserTimerDTO;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
@@ -7,13 +8,12 @@ import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
-import com.jm.jobseekerplatform.service.impl.ImageService;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.SubscriptionService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
 import com.jm.jobseekerplatform.service.impl.profiles.SeekerProfileService;
-import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +22,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.security.RolesAllowed;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/seekerprofiles")
@@ -49,10 +45,7 @@ public class SeekerProfileRestController {
     private TagService tagService;
 
     @Autowired
-    private ImageService imageService;
-
-    @Autowired
-    private SeekerUserService seekerUserService;
+    EmployerProfileRestController employerProfileRestController;
 
     @RequestMapping("/")
     public List<SeekerProfile> getAllSeekerProfiles() {
@@ -116,7 +109,7 @@ public class SeekerProfileRestController {
 
     @RolesAllowed("ROLE_SEEKER")
     @PostMapping(value = "/updateUserTags")
-    public void updateUserTags(@RequestBody String[] updatedTags) {
+    public ResponseEntity updateUserTags(@RequestBody String[] updatedTags) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         SeekerUser seekerUser = (SeekerUser) authentication.getPrincipal();
@@ -129,11 +122,12 @@ public class SeekerProfileRestController {
         seekerProfile.setTags(seekerProfileTags);
 
         seekerProfileService.update(seekerProfile);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @RolesAllowed("ROLE_SEEKER")
     @PostMapping(value = "/removeTag")
-    public void removeTag(@RequestBody String tag) {
+    public ResponseEntity removeTag(@RequestBody String tag) {
         String t = tag.replaceAll("[^A-Za-z0-9/ ]", "").trim();
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
@@ -143,6 +137,7 @@ public class SeekerProfileRestController {
         seekerProfileTags.removeIf(next -> next.getName().equals(t));
         seekerProfile.setTags(seekerProfileTags);
         seekerProfileService.update(seekerProfile);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @PostMapping("/update")
@@ -168,6 +163,19 @@ public class SeekerProfileRestController {
     public String updateImage(@RequestParam long id, @RequestParam MultipartFile image) {
         seekerProfileService.updatePhoto(id, image);
         return seekerProfileService.getById(id).getEncoderPhoto();
+    }
+
+    @GetMapping("/seeker_timer")
+    public List<UserTimerDTO> seekerTimer() {
+        List<SeekerProfile> profiles = seekerProfileService.getProfilesExpNotNull();
+        List<UserTimerDTO> userTimerDTO = new ArrayList<>();
+
+        for (SeekerProfile sp : profiles) {
+            User user = seekerProfileService.getUserBySeekerProfile(sp);
+            Date expireDate = sp.getExpiryBlock();
+            userTimerDTO.add(employerProfileRestController.createUserTimerDTO(expireDate, user));
+        }
+        return userTimerDTO;
     }
 
 }

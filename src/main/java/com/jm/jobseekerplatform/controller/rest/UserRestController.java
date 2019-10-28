@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
@@ -121,4 +120,5 @@ public class UserRestController {
     public void newPassword(@PathVariable String token, @PathVariable char[] password) {
         userService.passwordReset(token, password);
     }
+
 }

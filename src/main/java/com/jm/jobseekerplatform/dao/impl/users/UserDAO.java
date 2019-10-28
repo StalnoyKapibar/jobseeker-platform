@@ -20,4 +20,5 @@ public class UserDAO extends AbstractDAO<User> {
                 .setParameter("param", email)
                 .getSingleResult();
     }
+
 }

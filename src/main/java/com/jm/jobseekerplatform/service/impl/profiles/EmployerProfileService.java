@@ -2,15 +2,15 @@ package com.jm.jobseekerplatform.service.impl.profiles;
 
 import com.jm.jobseekerplatform.dao.impl.profiles.EmployerProfileDAO;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
-import com.jm.jobseekerplatform.model.State;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
-import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.service.AbstractService;
 import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service("employerProfileService")
 @Transactional
@@ -42,4 +42,9 @@ public class EmployerProfileService extends AbstractService<EmployerProfile> {
             }
         }
     }
+
+    public List<EmployerProfile> getProfilesExpNotNull() {
+        return dao.getProfilesExpNotNullDAO();
+    }
+
 }

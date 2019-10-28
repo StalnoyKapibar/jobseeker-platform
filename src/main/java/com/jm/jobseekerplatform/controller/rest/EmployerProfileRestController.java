@@ -1,10 +1,12 @@
 package com.jm.jobseekerplatform.controller.rest;
 
-import com.jm.jobseekerplatform.model.Vacancy;
+import com.jm.jobseekerplatform.dto.UserTimerDTO;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.VacancyService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
-import org.json.JSONArray;
+import com.jm.jobseekerplatform.service.impl.users.EmployerUserService;
+import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/employerprofiles")
@@ -28,6 +33,12 @@ public class EmployerProfileRestController {
 
     @Autowired
     VacancyService vacancyService;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    EmployerUserService employerUserService;
 
     @RequestMapping("/")
     public List<EmployerProfile> getAllEmployerProfiles() {
@@ -62,6 +73,38 @@ public class EmployerProfileRestController {
                               @RequestParam(value = "image") MultipartFile img) {
         employerProfileService.updatePhoto(id, img);
         return employerProfileService.getById(id).getEncoderPhoto();
+    }
+
+    @GetMapping("/employer_timer")
+    public List<UserTimerDTO> employerTimer() {
+        List<EmployerProfile> profiles = employerProfileService.getProfilesExpNotNull();
+        List<UserTimerDTO> userTimerDTO = new ArrayList<>();
+        for (EmployerProfile ep : profiles) {
+            User user = employerUserService.getUserByEmployerProfile(ep);
+            Date expireDate = ep.getExpiryBlock();
+            userTimerDTO.add(createUserTimerDTO(expireDate, user));
+        }
+        return userTimerDTO;
+    }
+
+    public UserTimerDTO createUserTimerDTO(Date expireDate, User user) {
+        UserTimerDTO utDTO = new UserTimerDTO();
+        utDTO.setUserId(user.getId());
+        String str = expireDate.toString();
+        int count;
+        switch(str.length()) {
+            case (21):
+                count = 2;
+                break;
+            case (22):
+                count = 3;
+                break;
+            default:
+                count = 4;
+                break;
+        }
+        utDTO.setTime(str.substring(0, str.length() - count));
+        return utDTO;
     }
 
 }
