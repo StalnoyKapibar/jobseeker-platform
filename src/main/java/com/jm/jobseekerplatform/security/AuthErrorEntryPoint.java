@@ -23,7 +23,7 @@ public final class AuthErrorEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException {
 
-        logger.debug("Request URI: {}", request.getRequestURI());
+        logger.debug("Request URI: {}  message: {}", request.getRequestURI(), authException.getMessage());
         String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
         if (request.getRequestURI().contains("/api/") ||
                 (contentType != null && contentType.contains(JSON_HEADER_VALUE))) {
