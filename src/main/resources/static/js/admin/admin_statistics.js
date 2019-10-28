@@ -336,13 +336,15 @@ $(document).ready(function (e) {
                     result.push({"name": tagsName[i], "value": data})
                 },
                 error: function () {
-                    console.log("Hello");
+
                 }
             });
         }
+        console.log("All tags with all data" + " " + JSON.stringify(result));
         result.sort(function (a, b) {
             return b.value - a.value;
         });
+        console.log("Sorted by data" + " " + JSON.stringify(result));
         let othersSum = result[size].value;
         if (tagsName.length >= size + 1) {
             for (let i = 1; i < tagsName.length - (size - 2); i++) {
@@ -352,7 +354,7 @@ $(document).ready(function (e) {
         }
         return result.slice(0, size + 1);
     };
-
+    getStatisticsByTags("resumes", 9);
     function getSortedLabelsForDoughnutDiagram(name, size) {
         let result = [];
         let data = getStatisticsByTags(name, size);
@@ -372,7 +374,7 @@ $(document).ready(function (e) {
     }
 
     /* Diagram about tags in resumes */
-    google.charts.load("visualization", "1", {packages: ["corechart"]});
+    /*google.charts.load("visualization", "1", {packages: ["corechart"]});
     google.charts.setOnLoadCallback(drawChart1);
 
     function drawChart1() {
@@ -388,10 +390,10 @@ $(document).ready(function (e) {
         };
         let chart = new google.visualization.PieChart(document.getElementById('donutchart_resumes'));
         chart.draw(data, options);
-    }
+    }*/
 
     /* Diagram about tags in vacancies */
-    google.load("visualization", "1", {packages: ["corechart"]});
+   /* google.load("visualization", "1", {packages: ["corechart"]});
     google.setOnLoadCallback(drawChart2);
 
     function drawChart2() {
@@ -412,5 +414,5 @@ $(document).ready(function (e) {
     $(window).resize(function () {
         drawChart1();
         drawChart2();
-    });
+    });*/
 });
