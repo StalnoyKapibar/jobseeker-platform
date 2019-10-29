@@ -45,7 +45,8 @@ public class Resume extends CreatedByProfileBase<SeekerProfile> implements Seria
     public Resume() {
     }
 
-    public Resume(SeekerProfile creatorProfile, String headline, Set<Tag> tags, Integer salaryMin, Integer salaryMax, Set<JobExperience> jobExperiences, City city, Point coordinates, LocalDateTime date) {
+    public Resume(SeekerProfile creatorProfile, String headline, Set<Tag> tags, Integer salaryMin, Integer salaryMax,
+                  Set<JobExperience> jobExperiences, City city, Point coordinates, LocalDateTime date) {
         super(creatorProfile, headline);
         this.headline = headline;
         this.tags = tags;

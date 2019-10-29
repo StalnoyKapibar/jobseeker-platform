@@ -124,7 +124,8 @@ public class ResumeDAO extends AbstractDAO<Resume> {
     }
 
     public List<Resume> getAllResumesByTagName(String tagName) {
-        Query query = entityManager.createQuery("SELECT distinct r FROM Resume r JOIN r.tags rt where rt.name = :name", Resume.class);
+        Query query = entityManager.createQuery(
+                "SELECT distinct r FROM Resume r JOIN r.tags rt where rt.name = :name", Resume.class);
         query.setParameter("name", tagName);
         return query.getResultList();
     }

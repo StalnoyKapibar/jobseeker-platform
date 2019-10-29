@@ -625,24 +625,33 @@ public class InitData {
 
         portfolios.clear();
         seekerProfileService.add(new SeekerProfile("Иван", "Александрович", "Кузнецов",
-                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L),
+                portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
         seekerProfileService.add(new SeekerProfile("Илья", "Александрович", "Кузнецов",
-                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L),
+                portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
         seekerProfileService.add(new SeekerProfile("Петр", "Александрович", "Петров",
-                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L),
+                portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
-        seekerProfileService.add(new SeekerProfile("Иван", "Александрович", "Власов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+        seekerProfileService.add(new SeekerProfile("Иван", "Александрович", "Власов",
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L),
+                portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
-        seekerProfileService.add(new SeekerProfile("Арсен", "Александрович", "Петросян", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+        seekerProfileService.add(new SeekerProfile("Арсен", "Александрович", "Петросян",
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L),
+                portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
-        seekerProfileService.add(new SeekerProfile("Магомед", "Александрович", "Асхаб", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+        seekerProfileService.add(new SeekerProfile("Магомед", "Александрович", "Асхаб",
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L),
+                portfolios, vacancies, new HashSet<>()));
     }
 
     private Set<Tag> randomTags(Long position) {
