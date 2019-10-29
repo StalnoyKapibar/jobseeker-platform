@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.dao.impl.profiles.EmployerProfileDAO;
 import com.jm.jobseekerplatform.dao.impl.users.EmployerUserDAO;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,10 @@ public class EmployerUserService extends AbstractService<EmployerUser> {
 
 	public List<EmployerUser> getEmployerUsersByDatePeriod(LocalDateTime startDate, LocalDateTime endDate){
         return employerUserDaoI.getEmployerUsersByDatePeriod(startDate, endDate);
+    }
+
+    public User getUserByEmployerProfile(EmployerProfile employerProfile) {
+        return employerProfileDAO.getUserByEmployerProfileDAO(employerProfile);
     }
 
 }

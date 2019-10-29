@@ -4,10 +4,12 @@ import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.NewsService;
 import com.jm.jobseekerplatform.service.impl.ResumeService;
+import com.jm.jobseekerplatform.service.impl.SeekerStatusNewsService;
 import com.jm.jobseekerplatform.service.impl.TagService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatWithTopicService;
 import com.jm.jobseekerplatform.service.impl.profiles.EmployerProfileService;
@@ -52,6 +54,9 @@ public class SeekerController {
 
     @Autowired
     private NewsService newsService;
+
+    @Autowired
+    SeekerStatusNewsService seekerStatusNewsService;
 
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
@@ -182,6 +187,11 @@ public class SeekerController {
 
     @GetMapping("/news/{newsId}")
     public String getSeekerSubscriptionNewsById(@PathVariable Long newsId, Model model,  Authentication authentication) {
+        News news = newsService.getById(newsId);
+        long seekerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
+        SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        seekerStatusNewsService.changeNewsStatus(news, seekerProfile);
+
         News currentNews = newsService.getById(newsId);
         model.addAttribute("newsId", currentNews.getId());
         model.addAttribute("headline", currentNews.getHeadline());

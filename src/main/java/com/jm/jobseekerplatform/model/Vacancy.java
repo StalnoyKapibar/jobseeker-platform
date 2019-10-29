@@ -1,10 +1,8 @@
 package com.jm.jobseekerplatform.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.jm.jobseekerplatform.model.createdByProfile.CreatedByEmployerProfileBase;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -57,7 +55,7 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     @Column(name = "expiry_block")
     private Date expiryBlock;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vacancy")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Meeting> meetings;
 
     public Vacancy() {

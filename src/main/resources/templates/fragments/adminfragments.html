@@ -124,13 +124,14 @@
                 class="btn btn-success user_unblock adminEnableUserBtn"
                 th:style="${user.enabled} ? 'display:none' : ''"
                 th:attr="data-id=${user.id}"
-        >Разблокировать
+        >Разблокировать<br>
+            <span th:id="timeEndTheLock_ + ${user.id}"></span>
         </button>
         <div class="dropdown user_block" style="margin:0;" th:styleappend="${!user.enabled} ? 'display:none;' : ''">
             <button class="btn btn-danger dropdown-toggle" type="button"
                     data-toggle="dropdown">
-                Блокировать<span
-                    class="caret"></span></button>
+                Блокировать<span class="caret"></span>
+            </button>
             <div class="dropdown-menu">
                 <a class="dropdown-item user_block_operation" th:attr="data-id=${user.id}, data-period=1,
                 data-email=${user.email}">На сутки</a>

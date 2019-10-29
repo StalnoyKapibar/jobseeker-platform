@@ -1,9 +1,9 @@
 package com.jm.jobseekerplatform.dao.impl.profiles;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
-import com.jm.jobseekerplatform.model.Resume;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.Tag;
+import com.jm.jobseekerplatform.model.users.User;
 import org.springframework.stereotype.Repository;
 import java.util.*;
 
@@ -30,4 +30,14 @@ public class SeekerProfileDAO extends AbstractDAO<SeekerProfile> {
                 .setParameter("param", id)
                 .getSingleResult();
     }
+
+    public List<SeekerProfile> getProfilesExpNotNullDAO() {
+        return entityManager.createQuery("SELECT sp FROM SeekerProfile sp WHERE sp.expiryBlock != null", SeekerProfile.class).getResultList();
+    }
+
+    public User getUserBySeekerProfileDAO(SeekerProfile seekerProfile) {
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.profile = :profile", User.class)
+                .setParameter("profile", seekerProfile).getSingleResult();
+    }
+
 }

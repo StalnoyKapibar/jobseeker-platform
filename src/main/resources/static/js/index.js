@@ -296,25 +296,38 @@ function printVacancies(data) {
             if (seekerAuthority) {
                 var bool = check_seeker_tags(item);
                 if (bool == true) {
-                    vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7><i class="fas fa-tag"></i></span>';
+                    vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre" ><h7 onclick="removeOneTag(this.innerHTML)">' + item.name + '</h7><i class="fas fa-tag"></i></span>';
                 } else {
-                    vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
+                    vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7 onclick="addOneTag(this.innerHTML)">' + item.name + '</h7></span>';
                 }
             } else {
-                vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '   </h7></span>';
+                vacancyTags += '<span class="badge badge-pill badge-success btnClick text-dark" style="white-space: pre"><h7>' + item.name + '</h7></span>';
             }
         });
-        $('#searchList').append('<li class="list-group-item clearfix" data-toggle="modal"' +
-            ' data-target="#vacancyModal" onclick="showVacancy(\'' + value.id + '\')">' +
-            '<div class="headLine"><span>' + value.headline + '</span>' + '   ' + favVac + '</div>' +
-            '<div class="vacancyTags">' + vacancyTags + '</div>' +
-            '<div class="companyData"><span>Компания: ' + value.creatorProfile + '</span><br><span>Город: ' + value.city + '</span></div>' +
-            '<div class="vacancyDescription"><span>' + value.shortDescription + '</span></div>' +
-            minSalary +
-            '<div class="pull-right">' +
-            '<span class="btn btn-outline-success btn-sm btnOnVacancyPage"' +
-            'onclick="window.location.href =\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии</span>' + '</div>' +
-            '</li>');
+        $('#searchList').append('' +
+            '<li class="list-group-item clearfix">' +
+                '<div class="headLine" data-toggle="modal" data-target="#vacancyModal" onclick="showVacancy(\'' +
+                        value.id + '\')">' +
+                    '<span>' + value.headline + '</span>' + '   ' + favVac +
+                '</div>' +
+                '<div class="vacancyTags">' + vacancyTags + '</div>' +
+                '<div class="companyData" data-toggle="modal" data-target="#vacancyModal" onclick="showVacancy(\'' +
+                        value.id + '\')">' +
+                    '<span>Компания: ' + value.creatorProfile + '</span>' +
+                    '<br><span>Город: ' + value.city + '</span>' +
+                '</div>' +
+                '<div class="vacancyDescription" data-toggle="modal" data-target="#vacancyModal" ' +
+                        'onclick="showVacancy(\'' + value.id + '\')">' +
+                    '<span>' + value.shortDescription + '</span>' +
+                '</div>' +
+                        minSalary +
+                '<div class="pull-right">' +
+                    '<span class="btn btn-outline-success btn-sm btnOnVacancyPage" onclick="window.location.href ' +
+                        '=\'/vacancy/' + value.id + '\';event.stopPropagation();">На страницу вакансии' +
+                    '</span>' +
+                '</div>' +
+            '</li>')
+        ;
 
         function check_seeker_tags(tag) {
             var bool = false;
@@ -328,6 +341,45 @@ function printVacancies(data) {
             return bool;
         }
     });
+}
+
+function addOneTag(name) {
+    let tags = [];
+    tags.push(name);
+    $.ajax({
+        type: 'post',
+        url: "/api/seekerprofiles/updateUserTags",
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        data: JSON.stringify(tags),
+        success: function () {
+            location.reload();
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    })
+}
+
+function removeOneTag(name) {
+    $.ajax({
+        type: 'post',
+        url: "/api/seekerprofiles/removeTag",
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        data: JSON.stringify(name),
+        success: function () {
+            location.reload();
+        },
+        error: function (error) {
+            console.log(error);
+            alert(error.toString());
+        }
+    })
 }
 
 function inFavorite(vacancyId, seekerProfileId) {
