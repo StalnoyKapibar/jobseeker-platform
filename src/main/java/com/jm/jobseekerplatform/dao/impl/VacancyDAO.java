@@ -53,6 +53,13 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         return getAllByEmployerProfileId(id, Integer.MAX_VALUE);
     }
 
+	/*
+	 * public void deleteVacancy(Long id) {
+	 * entityManager.createQuery("DELETE FROM Vacancy v WHERE v.id=id").
+	 * executeUpdate();
+	 * }
+	 */
+    
     public int deletePermanentBlockVacancies() {
         int deletedCount = entityManager.createQuery("DELETE FROM Vacancy v WHERE v.state = 'BLOCK_PERMANENT'").executeUpdate();
         return deletedCount;

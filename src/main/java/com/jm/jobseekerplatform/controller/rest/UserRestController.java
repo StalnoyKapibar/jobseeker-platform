@@ -1,16 +1,20 @@
 package com.jm.jobseekerplatform.controller.rest;
 
 import com.jm.jobseekerplatform.model.profiles.Profile;
-import com.jm.jobseekerplatform.service.impl.MailService;
 import com.jm.jobseekerplatform.model.users.User;
+import com.jm.jobseekerplatform.service.impl.MailService;
 import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
 import com.jm.jobseekerplatform.service.impl.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
@@ -47,7 +51,7 @@ public class UserRestController {
         if (!allPrincipals.isEmpty()) {
             allPrincipals.forEach(o -> {
                 User u = (User) o;
-                if(u.getId().equals(user.getId())) {
+                if (u.getId().equals(user.getId())) {
                     List<SessionInformation> allSessions = sessionRegistry.getAllSessions(u, false);
                     allSessions.forEach(SessionInformation::expireNow);
                 }
@@ -115,10 +119,18 @@ public class UserRestController {
         return ResponseEntity.ok(userService.recoveryPassRequest(email));
     }
 
-    //востановление пароля
+    // востановление пароля
     @RequestMapping(method = RequestMethod.GET, value = "/password_reset/{token}/{password}")
     public void newPassword(@PathVariable String token, @PathVariable char[] password) {
         userService.passwordReset(token, password);
     }
 
+    @GetMapping("/get-user-authority")
+    public GrantedAuthority getUserAuthority(Authentication authentication) {
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            User currUser = (User) authentication.getPrincipal();
+            return currUser.getAuthority();
+        }
+        return null;
+    }
 }

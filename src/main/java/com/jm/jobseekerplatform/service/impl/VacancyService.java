@@ -87,6 +87,10 @@ public class VacancyService extends AbstractService<Vacancy> {
         vacancy.setExpiryBlock(null);
         dao.update(vacancy);
     }
+    
+    public void deleteVacancy(Long id) {
+    	dao.deleteById(id);
+    }
 
     public int deletePermanentBlockVacancies() {
         return dao.deletePermanentBlockVacancies();
