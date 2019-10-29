@@ -2,9 +2,10 @@ package com.jm.jobseekerplatform.dao.impl.profiles;
 
 import com.jm.jobseekerplatform.dao.AbstractDAO;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.users.User;
 import org.springframework.stereotype.Repository;
-
 import java.util.Date;
+import java.util.List;
 
 @Repository("employerProfileDAO")
 public class EmployerProfileDAO extends AbstractDAO<EmployerProfile> {
@@ -34,5 +35,14 @@ public class EmployerProfileDAO extends AbstractDAO<EmployerProfile> {
 				.setParameter("param", id)
 				.getSingleResult();
 	}
+
+	public List<EmployerProfile> getProfilesExpNotNullDAO() {
+        return entityManager.createQuery("SELECT ep FROM EmployerProfile ep WHERE ep.expiryBlock != null", EmployerProfile.class).getResultList();
+    }
+
+    public User getUserByEmployerProfileDAO(EmployerProfile employerProfile) {
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.profile = :profile", User.class)
+                .setParameter("profile", employerProfile).getSingleResult();
+    }
 
 }

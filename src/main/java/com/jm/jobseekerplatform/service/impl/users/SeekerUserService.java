@@ -36,4 +36,5 @@ public class SeekerUserService extends AbstractService<SeekerUser> {
     public SeekerProfile getSeekerProfileByResumeID(long id) {
         return seekerProfileDAO.getSeekerProfileByResumeID(id);
     }
+
 }

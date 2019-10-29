@@ -3,9 +3,11 @@ package com.jm.jobseekerplatform.service.impl.profiles;
 import com.jm.jobseekerplatform.dao.impl.profiles.SeekerProfileDAO;
 import com.jm.jobseekerplatform.dto.ResumePageDTO;
 import com.jm.jobseekerplatform.model.Resume;
+import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
+import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.hibernate.Hibernate;
 import com.jm.jobseekerplatform.service.impl.users.SeekerUserService;
@@ -64,4 +66,13 @@ public class SeekerProfileService extends AbstractService<SeekerProfile> {
             }
         }
     }
+
+    public List<SeekerProfile> getProfilesExpNotNull() {
+        return dao.getProfilesExpNotNullDAO();
+    }
+
+    public User getUserBySeekerProfile(SeekerProfile sekerProfile) {
+        return dao.getUserBySeekerProfileDAO(sekerProfile);
+    }
+
 }
