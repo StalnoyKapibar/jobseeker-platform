@@ -141,7 +141,8 @@ public class InitData {
 
     private void initNews() {
         for (int i = 0; i < 60; i++) {
-            News news = new News(faker.witcher().witcher(), faker.lorem().characters(), null, LocalDateTime.now());
+            News news = new News(faker.witcher().witcher(), faker.lorem().characters(),
+                    null, LocalDateTime.now());
             newsService.add(news);
         }
 
@@ -183,24 +184,30 @@ public class InitData {
 
     public void initReviews() {
         SeekerProfile seekerProfile = seekerProfileService.getById(8L);
-        EmployerReviews reviewOne = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Хорошая контора. Отличный коллектив, только директор придурковатый", new Date(),
+        EmployerReviews reviewOne = new EmployerReviews(seekerProfile, seekerProfile.getFullName(),
+                "Хорошая контора. Отличный коллектив, только директор придурковатый", new Date(),
                 4, seekerProfile);
 
-        EmployerReviews reviewTwo = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Неадекватное руководство. Уволился через месяц", new Date(),
+        EmployerReviews reviewTwo = new EmployerReviews(seekerProfile, seekerProfile.getFullName(),
+                "Неадекватное руководство. Уволился через месяц", new Date(),
                 1, seekerProfile);
 
         seekerProfile = seekerProfileService.getById(9L);
-        EmployerReviews reviewThree = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Очень низкие зарплаты, уволился через полгода", new Date(),
+        EmployerReviews reviewThree = new EmployerReviews(seekerProfile, seekerProfile.getFullName(),
+                "Очень низкие зарплаты, уволился через полгода", new Date(),
                 2, seekerProfile);
 
-        EmployerReviews reviewFour = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Неадекватное руководство. Уволился через месяц", new Date(),
+        EmployerReviews reviewFour = new EmployerReviews(seekerProfile, seekerProfile.getFullName(),
+                "Неадекватное руководство. Уволился через месяц", new Date(),
                 1, seekerProfile);
 
         seekerProfile = seekerProfileService.getById(10L);
-        EmployerReviews reviewFive = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Хорошая контора. Отличный коллектив", new Date(),
+        EmployerReviews reviewFive = new EmployerReviews(seekerProfile, seekerProfile.getFullName(),
+                "Хорошая контора. Отличный коллектив", new Date(),
                 4, seekerProfile);
 
-        EmployerReviews reviewSix = new EmployerReviews(seekerProfile, seekerProfile.getFullName(), "Все нравилось,но уволился через месяц", new Date(),
+        EmployerReviews reviewSix = new EmployerReviews(seekerProfile, seekerProfile.getFullName(),
+                "Все нравилось,но уволился через месяц", new Date(),
                 3, seekerProfile);
 
         Set<EmployerReviews> reviewsOne = new HashSet<>();
@@ -257,114 +264,137 @@ public class InitData {
         EmployerUser employerUser;
         SeekerUser seekerUser;
 
-        user = new AdminUser("admin@mail.ru", userService.encodePassword("admin".toCharArray()), LocalDateTime.now(), adminProfileService.getById(1L));
+        user = new AdminUser("admin@mail.ru", userService.encodePassword("admin".toCharArray()),
+                LocalDateTime.now(), adminProfileService.getById(1L));
         user.setConfirm(true);
         user.setEnabled(true);
         userService.add(user);
 
-        employerUser = new EmployerUser("employer@mail.ru", userService.encodePassword("employer".toCharArray()), LocalDateTime.now(), employerProfileService.getById(2L));
+        employerUser = new EmployerUser("employer@mail.ru", userService.encodePassword(
+                "employer".toCharArray()), LocalDateTime.now(), employerProfileService.getById(2L));
         employerUser.setConfirm(true);
         employerUser.setEnabled(true);
         employerUserService.add(employerUser);
 
-        employerUser = new EmployerUser("employer2@mail.ru", userService.encodePassword("employer2".toCharArray()), LocalDateTime.now(), employerProfileService.getById(3L));
+        employerUser = new EmployerUser("employer2@mail.ru", userService.encodePassword(
+                "employer2".toCharArray()),
+                LocalDateTime.now(), employerProfileService.getById(3L));
         employerUser.setConfirm(true);
         employerUser.setEnabled(true);
         employerUserService.add(employerUser);
 
-        employerUser = new EmployerUser("employer3@mail.ru", userService.encodePassword("employer3".toCharArray()), LocalDateTime.now(), employerProfileService.getById(4L));
+        employerUser = new EmployerUser("employer3@mail.ru", userService.encodePassword(
+                "employer3".toCharArray()), LocalDateTime.now(), employerProfileService.getById(4L));
         employerUser.setConfirm(true);
         employerUser.setEnabled(true);
         employerUserService.add(employerUser);
 
-        employerUser = new EmployerUser("employer4@mail.ru", userService.encodePassword("employer4".toCharArray()), LocalDateTime.now(), employerProfileService.getById(5L));
+        employerUser = new EmployerUser("employer4@mail.ru", userService.encodePassword(
+                "employer4".toCharArray()), LocalDateTime.now(), employerProfileService.getById(5L));
         employerUser.setConfirm(true);
         employerUser.setEnabled(true);
         employerUserService.add(employerUser);
 
-        employerUser = new EmployerUser("employer5@mail.ru", userService.encodePassword("employer5".toCharArray()), LocalDateTime.now(), employerProfileService.getById(6L));
+        employerUser = new EmployerUser("employer5@mail.ru", userService.encodePassword(
+                "employer5".toCharArray()), LocalDateTime.now(), employerProfileService.getById(6L));
         employerUser.setConfirm(true);
         employerUser.setEnabled(true);
         employerUserService.add(employerUser);
 
-        employerUser = new EmployerUser("employer6@mail.ru", userService.encodePassword("employer6".toCharArray()), LocalDateTime.now(), employerProfileService.getById(7L));
+        employerUser = new EmployerUser("employer6@mail.ru", userService.encodePassword(
+                "employer6".toCharArray()), LocalDateTime.now(), employerProfileService.getById(7L));
         employerUser.setConfirm(true);
         employerUser.setEnabled(true);
         employerUserService.add(employerUser);
 
-        seekerUser = new SeekerUser("seeker@mail.ru", userService.encodePassword("seeker".toCharArray()), LocalDateTime.of(2019, Month.OCTOBER, 1, 10, 10, 10), seekerProfileService.getById(8L));
+        seekerUser = new SeekerUser("seeker@mail.ru", userService.encodePassword(
+                "seeker".toCharArray()), LocalDateTime.of(
+                        2019, Month.OCTOBER, 1, 10, 10, 10),
+                seekerProfileService.getById(8L));
         seekerUser.setConfirm(true);
         seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
         profileService.checkedState(seekerUser.getProfile());
 
-        seekerUser = new SeekerUser("seeker2@mail.ru", userService.encodePassword("seeker2".toCharArray()), LocalDateTime.of(2019, Month.OCTOBER, 10, 10, 10, 10), seekerProfileService.getById(9L));
+        seekerUser = new SeekerUser("seeker2@mail.ru", userService.encodePassword(
+                "seeker2".toCharArray()), LocalDateTime.of(2019, Month.OCTOBER, 10, 10, 10, 10), seekerProfileService.getById(9L));
         seekerUser.setConfirm(true);
         seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
         profileService.checkedState(seekerUser.getProfile());
 
-        seekerUser = new SeekerUser("seeker3@mail.ru", userService.encodePassword("seeker3".toCharArray()), LocalDateTime.now(), seekerProfileService.getById(10L));
+        seekerUser = new SeekerUser("seeker3@mail.ru", userService.encodePassword(
+                "seeker3".toCharArray()), LocalDateTime.now(), seekerProfileService.getById(10L));
         seekerUser.setConfirm(true);
         seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
         profileService.checkedState(seekerUser.getProfile());
 
-        seekerUser = new SeekerUser("seeker4@mail.ru", userService.encodePassword("seeker4".toCharArray()), LocalDateTime.of(2019, Month.SEPTEMBER, 30, 10,10), seekerProfileService.getById(11L));
+        seekerUser = new SeekerUser("seeker4@mail.ru", userService.encodePassword(
+                "seeker4".toCharArray()), LocalDateTime.of(2019, Month.SEPTEMBER, 30, 10,10), seekerProfileService.getById(11L));
         seekerUser.setConfirm(true);
         seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
         profileService.checkedState(seekerUser.getProfile());
 
-        seekerUser = new SeekerUser("seeker5@mail.ru", userService.encodePassword("seeker5".toCharArray()), LocalDateTime.now().minusDays(1L), seekerProfileService.getById(12L));
+        seekerUser = new SeekerUser("seeker5@mail.ru", userService.encodePassword(
+                "seeker5".toCharArray()), LocalDateTime.now().minusDays(1L), seekerProfileService.getById(12L));
         seekerUser.setConfirm(true);
         seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
         profileService.checkedState(seekerUser.getProfile());
 
-        seekerUser = new SeekerUser("seeker6@mail.ru", userService.encodePassword("seeker6".toCharArray()), LocalDateTime.now().minusDays(2L), seekerProfileService.getById(13L));
+        seekerUser = new SeekerUser("seeker6@mail.ru", userService.encodePassword(
+                "seeker6".toCharArray()), LocalDateTime.now().minusDays(2L), seekerProfileService.getById(13L));
         seekerUser.setConfirm(true);
         seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
         profileService.checkedState(seekerUser.getProfile());
 
-        seekerUser = new SeekerUser("seeker7@mail.ru", userService.encodePassword("seeker7".toCharArray()), LocalDateTime.now().minusDays(3L), seekerProfileService.getById(14L));
+        seekerUser = new SeekerUser("seeker7@mail.ru", userService.encodePassword(
+                "seeker7".toCharArray()), LocalDateTime.now().minusDays(3L), seekerProfileService.getById(14L));
         seekerUser.setConfirm(true);
         seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
         profileService.checkedState(seekerUser.getProfile());
 
-        seekerUser = new SeekerUser("seeker8@mail.ru", userService.encodePassword("seeker8".toCharArray()), LocalDateTime.now().minusDays(32L), seekerProfileService.getById(15L));
+        seekerUser = new SeekerUser("seeker8@mail.ru", userService.encodePassword(
+                "seeker8".toCharArray()), LocalDateTime.now().minusDays(32L), seekerProfileService.getById(15L));
         seekerUser.setConfirm(true);
         seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
         profileService.checkedState(seekerUser.getProfile());
 
-        seekerUser = new SeekerUser("seeker9@mail.ru", userService.encodePassword("seeker9".toCharArray()), LocalDateTime.now().minusDays(1L), seekerProfileService.getById(16L));
+        seekerUser = new SeekerUser("seeker9@mail.ru", userService.encodePassword(
+                "seeker9".toCharArray()), LocalDateTime.now().minusDays(1L), seekerProfileService.getById(16L));
         seekerUser.setConfirm(true);
         seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
         profileService.checkedState(seekerUser.getProfile());
 
-        seekerUser = new SeekerUser("seeker10@mail.ru", userService.encodePassword("seeker10".toCharArray()), LocalDateTime.now().minusDays(2L), seekerProfileService.getById(17L));
+        seekerUser = new SeekerUser("seeker10@mail.ru", userService.encodePassword(
+                "seeker10".toCharArray()), LocalDateTime.now().minusDays(2L), seekerProfileService.getById(17L));
         seekerUser.setConfirm(true);
         seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
         profileService.checkedState(seekerUser.getProfile());
 
-        seekerUser = new SeekerUser("seeker11@mail.ru", userService.encodePassword("seeker11".toCharArray()), LocalDateTime.now().minusDays(4L), seekerProfileService.getById(18L));
+        seekerUser = new SeekerUser("seeker11@mail.ru", userService.encodePassword(
+                "seeker11".toCharArray()), LocalDateTime.now().minusDays(4L), seekerProfileService.getById(18L));
         seekerUser.setConfirm(true);
         seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
         profileService.checkedState(seekerUser.getProfile());
 
-        seekerUser = new SeekerUser("seeker12@mail.ru", userService.encodePassword("seeker12".toCharArray()), LocalDateTime.now().minusDays(4L), seekerProfileService.getById(19L));
+        seekerUser = new SeekerUser("seeker12@mail.ru", userService.encodePassword(
+                "seeker12".toCharArray()), LocalDateTime.now().minusDays(4L), seekerProfileService.getById(19L));
         seekerUser.setConfirm(true);
         seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
         profileService.checkedState(seekerUser.getProfile());
 
-        seekerUser = new SeekerUser("seeker13@mail.ru", userService.encodePassword("seeker13".toCharArray()), LocalDateTime.now().minusDays(5L), seekerProfileService.getById(20L));
+        seekerUser = new SeekerUser("seeker13@mail.ru", userService.encodePassword(
+                "seeker13".toCharArray()), LocalDateTime.now().minusDays(5L), seekerProfileService.getById(20L));
         seekerUser.setConfirm(true);
         seekerUser.setEnabled(true);
         seekerUserService.add(seekerUser);
@@ -391,7 +421,10 @@ public class InitData {
                 "Лояльное отношение к сотрудникам<br>" +
                 "Дружный коллектив<br>" +
                 "Дополнительная информация:<br>" +
-                "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!";
+                "Мы ищем талантливых специалистов! Если Вы уверены в себе и хотите заниматься любимым " +
+                "делом профессионально, пишите нам! Мы хотим видеть людей, готовых работать над серьезными " +
+                "проектами и добиваться отличных результатов. Мы предлагаем интересную работу в дружном и " +
+                "профессиональном коллективе, в котором ценится работа каждого. Вы можете стать частью нашей команды!";
 
         Vacancy vacancy;
         Point point;
@@ -444,9 +477,11 @@ public class InitData {
             e.printStackTrace();
         }
 
-        String description = "Мы продуктовая компания, которая разрабатывает высокотехнологичные продукты в области электротранспорта, роботизации, автоматизации и биотехнологий.\n" +
+        String description = "Мы продуктовая компания, которая разрабатывает высокотехнологичные продукты " +
+                "в области электротранспорта, роботизации, автоматизации и биотехнологий.\n" +
                 "В России базируется отдел исследований и разработок. \n" +
-                "Стек: Java8, J2ee, Spring. Клиентская часть: ES6, React, React Native. Облака AWS, Docker, NodeJS (+ Express/Koa/Hapi).\n" +
+                "Стек: Java8, J2ee, Spring. Клиентская часть: ES6, React, React Native. Облака AWS, Docker, " +
+                "NodeJS (+ Express/Koa/Hapi).\n" +
                 "Миссия - улучшать жизнь людей с помощью технологий.\n" +
                 "Что мы предлагаем:\n" +
                 "- Футуристические в масштабах планеты проекты. \n" +
@@ -458,7 +493,8 @@ public class InitData {
                 "- Официальное оформление по ТК РФ. \n" +
                 "Ждем кандидатов с сильным техническим бэкграундом, которые разделяют нашу миссию! ";
 
-        employerProfile = new EmployerProfile("Рога и копыта", "www.roga.ru", description, imageService.resizeLogoEmployer(image));
+        employerProfile = new EmployerProfile("Рога и копыта", "www.roga.ru",
+                description, imageService.resizeLogoEmployer(image));
         employerProfile.setState(State.ACCESS);
         employerProfileService.add(employerProfile);
 
@@ -468,13 +504,16 @@ public class InitData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        employerProfile = new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image));
+        employerProfile = new EmployerProfile("Вектор", "www.vector.ru", "Мы хотим ни " +
+                "много ни мало изменить микро-бизнес в России. Поэтому наша цель - создать качественное решение и " +
+                "показать предпринимателям, что их бизнес может больше!", imageService.resizeLogoEmployer(image));
         employerProfile.setState(State.ACCESS);
         employerProfileService.add(employerProfile);
 
         for (long i = 0L; i <= 3L; i++) {
             image = getBufferedImage();
-            employerProfile = new EmployerProfile(faker.company().name(), faker.company().url(), faker.company().bs(), imageService.resizeLogoEmployer(image));
+            employerProfile = new EmployerProfile(faker.company().name(), faker.company().url(), faker.company().bs(),
+                    imageService.resizeLogoEmployer(image));
             employerProfile.setState(State.ACCESS);
             employerProfileService.add(employerProfile);
         }
@@ -492,12 +531,24 @@ public class InitData {
     }
 
     public void initPortfolio() {
-        portfolioService.add(new Portfolio("Jobseeker-platform", "https://github.com/StalnoyKapibar/jobseeker-platform", "Создавал модели, сервисы. Использовал Java 8, Spring"));
-        portfolioService.add(new Portfolio("SportGames", "https://github.com/romanX1/SportGames/", "Прикручивал Spring Security. Использовал Java 8, Spring"));
-        portfolioService.add(new Portfolio("MusicEmulator", "https://github.com/musicX1/MusicEmulator/", "Прикручивал Spring Boot. Использовал Maven, Hibernate"));
-        portfolioService.add(new Portfolio("OverReal", "https://github.com/OverReal/", "Создавал 3d модели дл дополненной реальности"));
-        portfolioService.add(new Portfolio("EpicGames", "https://github.com/Xbox6/EpicGames/", "Прикручивал Sockets. Использовал Java 8, Spring"));
-        portfolioService.add(new Portfolio("BestBrowser", "https://github.com/BB1/BestBrowser/", " Использовал Java 8, Spring"));
+        portfolioService.add(new Portfolio("Jobseeker-platform",
+                "https://github.com/StalnoyKapibar/jobseeker-platform",
+                "Создавал модели, сервисы. Использовал Java 8, Spring"));
+        portfolioService.add(new Portfolio("SportGames",
+                "https://github.com/romanX1/SportGames/",
+                "Прикручивал Spring Security. Использовал Java 8, Spring"));
+        portfolioService.add(new Portfolio("MusicEmulator",
+                "https://github.com/musicX1/MusicEmulator/",
+                "Прикручивал Spring Boot. Использовал Maven, Hibernate"));
+        portfolioService.add(new Portfolio("OverReal",
+                "https://github.com/OverReal/",
+                "Создавал 3d модели дл дополненной реальности"));
+        portfolioService.add(new Portfolio("EpicGames",
+                "https://github.com/Xbox6/EpicGames/",
+                "Прикручивал Sockets. Использовал Java 8, Spring"));
+        portfolioService.add(new Portfolio("BestBrowser",
+                "https://github.com/BB1/BestBrowser/",
+                " Использовал Java 8, Spring"));
     }
 
     public void initTags() {
@@ -533,39 +584,56 @@ public class InitData {
 
         Set<Vacancy> vacancies = new HashSet<>(vacancyService.getAll());
 
-        seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L), portfolios, vacancies, new HashSet<>()));
+        seekerProfileService.add(new SeekerProfile("Вася", "Игоревич", "Пупкин",
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L),
+                portfolios, vacancies, new HashSet<>()));
 
 
         portfolios.clear();
         portfolios.add(portfolioService.getById(3L));
         portfolios.add(portfolioService.getById(4L));
-        seekerProfileService.add(new SeekerProfile("Иван", "Игоревич", "Петров", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+        seekerProfileService.add(new SeekerProfile("Иван", "Игоревич", "Петров",
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L),
+                portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
         portfolios.add(portfolioService.getById(5L));
         portfolios.add(portfolioService.getById(6L));
-        seekerProfileService.add(new SeekerProfile("Семен", "Александрович", "Иванов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L), portfolios, vacancies, new HashSet<>()));
+        seekerProfileService.add(new SeekerProfile("Семен", "Александрович", "Иванов",
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L),
+                portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
-        seekerProfileService.add(new SeekerProfile("Петр", "Александрович", "Петров", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L), portfolios, vacancies, new HashSet<>()));
+        seekerProfileService.add(new SeekerProfile("Петр", "Александрович", "Петров",
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(0L),
+                portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
-        seekerProfileService.add(new SeekerProfile("Игорь", "Александрович", "Кузнецов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+        seekerProfileService.add(new SeekerProfile("Игорь", "Александрович", "Кузнецов",
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L),
+                portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
-        seekerProfileService.add(new SeekerProfile("Степан", "Александрович", "Степанов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L), portfolios, vacancies, new HashSet<>()));
+        seekerProfileService.add(new SeekerProfile("Степан", "Александрович", "Степанов",
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(10L),
+                portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
-        seekerProfileService.add(new SeekerProfile("Владимир", "Александрович", "Стрельцов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+        seekerProfileService.add(new SeekerProfile("Владимир", "Александрович", "Стрельцов",
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L),
+                portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
-        seekerProfileService.add(new SeekerProfile("Иван", "Александрович", "Кузнецов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+        seekerProfileService.add(new SeekerProfile("Иван", "Александрович", "Кузнецов",
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
-        seekerProfileService.add(new SeekerProfile("Илья", "Александрович", "Кузнецов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+        seekerProfileService.add(new SeekerProfile("Илья", "Александрович", "Кузнецов",
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
-        seekerProfileService.add(new SeekerProfile("Петр", "Александрович", "Петров", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
+        seekerProfileService.add(new SeekerProfile("Петр", "Александрович", "Петров",
+                "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
 
         portfolios.clear();
         seekerProfileService.add(new SeekerProfile("Иван", "Александрович", "Власов", "Ищу крутую команду", imageService.resizePhotoSeeker(image), randomTags(5L), portfolios, vacancies, new HashSet<>()));
