@@ -347,10 +347,10 @@ $(document).ready(function (e) {
         result.sort(function (a, b) {
             return b.value - a.value;
         });
-        let othersSum = result[size].value;
+        let othersSum = 0;
         if (tagsName.length >= size + 1) {
-            for (let i = 1; i < tagsName.length - (size - 2); i++) {
-                othersSum += result[result.length - 1].value;
+            for (let i = size; i < tagsName.length; i++) {
+                othersSum += result[i].value;
                 result[size] = {"name": "Others", "value": othersSum};
             }
         }
@@ -375,6 +375,7 @@ $(document).ready(function (e) {
         return result;
     }
 
+    getStatisticsByTags("vacancies", 9);
     /* Diagram about tags in resumes */
     google.charts.load("visualization", "1", {packages: ["corechart"]});
     google.charts.setOnLoadCallback(drawChart1);
