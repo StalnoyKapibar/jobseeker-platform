@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Repository("resumeDAO")
@@ -129,4 +130,13 @@ public class ResumeDAO extends AbstractDAO<Resume> {
         query.setParameter("name", tagName);
         return query.getResultList();
     }
+
+    public List<Resume> getResumesByDatePeriod(LocalDateTime startDate, LocalDateTime endDate) {
+        return entityManager.createQuery(
+                "SELECT distinct e FROM Resume e where e.date between :startDate and :endDate", Resume.class)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
+    }
+
 }

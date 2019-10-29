@@ -56,13 +56,13 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         return getAllByEmployerProfileId(id, Integer.MAX_VALUE);
     }
 
-	/*
-	 * public void deleteVacancy(Long id) {
-	 * entityManager.createQuery("DELETE FROM Vacancy v WHERE v.id=id").
-	 * executeUpdate();
-	 * }
-	 */
-    
+    /*
+     * public void deleteVacancy(Long id) {
+     * entityManager.createQuery("DELETE FROM Vacancy v WHERE v.id=id").
+     * executeUpdate();
+     * }
+     */
+
     public int deletePermanentBlockVacancies() {
         int deletedCount = entityManager.createQuery("DELETE FROM Vacancy v WHERE v.state = 'BLOCK_PERMANENT'")
                 .executeUpdate();
@@ -179,5 +179,15 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         query.setParameter("name", tagName);
         return query.getResultList();
     }
+
+    public List<Vacancy> getSumVacanciesByDatePeriod(Date startDate, Date endDate) {
+        return entityManager.createQuery(
+                "SELECT distinct e FROM Vacancy e where e.creationDate between :startDate and :endDate",
+                Vacancy.class)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
+    }
+
 }
 

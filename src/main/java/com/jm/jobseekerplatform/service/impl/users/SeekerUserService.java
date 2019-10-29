@@ -41,7 +41,7 @@ public class SeekerUserService extends AbstractService<SeekerUser> {
     }
 
     public List<SeekerUser> getSeekerUsersByDatePeriod(LocalDateTime startDate, LocalDateTime endDate){
-        return seekerUserDaoI.getSeekerUsersByDatePeriod(startDate,endDate);
+        return seekerUserDAO.getSeekerUsersByDatePeriod(startDate,endDate);
     }
 
 }

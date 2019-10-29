@@ -16,7 +16,4 @@ public interface SeekerUserDaoI extends JpaRepository<SeekerUser, Long> {
 
     Page<SeekerUser> findAll(Pageable pageable);
 
-    @Query(value = "SELECT distinct e FROM SeekerUser e where e.date between :startDate and :endDate")
-    List<SeekerUser> getSeekerUsersByDatePeriod(LocalDateTime startDate, LocalDateTime endDate);
-
 }

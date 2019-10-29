@@ -1,6 +1,5 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.ResumeDaoI;
 import com.jm.jobseekerplatform.dao.impl.ResumeDAO;
 import com.jm.jobseekerplatform.model.City;
 import com.jm.jobseekerplatform.model.Point;
@@ -24,9 +23,6 @@ public class ResumeService extends AbstractService<Resume> {
 
     @Autowired
     private ResumeDAO dao;
-
-    @Autowired
-    private ResumeDaoI resumeDaoI;
 
     @Autowired
     private TagService tagService;
@@ -93,14 +89,14 @@ public class ResumeService extends AbstractService<Resume> {
         dao.deleteResumeById(id);
     }
 
-    public Page<Resume> getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(Map<String, Object>
-                                                                                                     queryParamsMap,
-                                                                                             int pageNumber, int pageSize) {
-        return dao.getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(queryParamsMap, pageNumber, pageSize);
+    public Page<Resume> getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(Map<String,
+            Object> queryParamsMap, int pageNumber, int pageSize) {
+        return dao.getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(queryParamsMap,
+                pageNumber, pageSize);
     }
 
     public List<Resume> getResumesByDatePeriod(LocalDateTime startDate, LocalDateTime endDate) {
-        return resumeDaoI.getResumesByDatePeriod(startDate, endDate);
+        return dao.getResumesByDatePeriod(startDate, endDate);
     }
 
     public List<Resume> getAllResumesByTagName(String tagName) {

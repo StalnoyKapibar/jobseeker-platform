@@ -12,9 +12,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface EmployerUserDaoI extends JpaRepository<EmployerUser,Long> {
+public interface EmployerUserDaoI extends JpaRepository<EmployerUser, Long> {
+
     Page<EmployerUser> findAll(Pageable pageable);
 
-    @Query(value = "SELECT distinct e FROM EmployerUser e where e.date between :startDate and :endDate")
-    List<EmployerUser> getEmployerUsersByDatePeriod(LocalDateTime startDate, LocalDateTime endDate);
 }

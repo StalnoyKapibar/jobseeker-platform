@@ -42,7 +42,7 @@ public class EmployerUserService extends AbstractService<EmployerUser> {
 	}
 
 	public List<EmployerUser> getEmployerUsersByDatePeriod(LocalDateTime startDate, LocalDateTime endDate){
-        return employerUserDaoI.getEmployerUsersByDatePeriod(startDate, endDate);
+        return employerUserDAO.getEmployerUsersByDatePeriod(startDate, endDate);
     }
 
     public User getUserByEmployerProfile(EmployerProfile employerProfile) {
