@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -194,6 +195,18 @@ public class UserService extends AbstractService<User> {
         }
 
         return isCorrect;
+    }
+
+    public List<User> getUserByEmail(String email) {
+        return dao.getUserByEmailDAO(email);
+    }
+
+    public List<User> getEmployerUserByName(String name) {
+        return dao.getEmployerUserByNameDAO(name);
+    }
+
+    public List<User> getSeekerUserByName(String name) {
+        return dao.getSeekerUserByNameDAO(name);
     }
 
 }
