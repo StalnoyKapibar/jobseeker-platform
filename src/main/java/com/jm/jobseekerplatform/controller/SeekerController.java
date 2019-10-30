@@ -155,7 +155,7 @@ public class SeekerController {
                                   Model model, Authentication authentication) {
         long seekerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
         if (seekerProfileId == ((SeekerProfile) Hibernate.unproxy(resumeService.getById(resumeId)
-                                                                    .getCreatorProfile())).getId()) {
+                .getCreatorProfile())).getId()) {
             model.addAttribute("resumeID", resumeId);
             model.addAttribute("userRole", ((User) authentication.getPrincipal()).getAuthority());
             return "resume/single_resume";
@@ -176,7 +176,7 @@ public class SeekerController {
     public String editResume(@PathVariable("resumeId") Long resumeId, Authentication authentication, Model model) {
         long seekerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
         if (seekerProfileId == ((SeekerProfile) Hibernate.unproxy(resumeService.getById(resumeId)
-                                                                    .getCreatorProfile())).getId()) {
+                .getCreatorProfile())).getId()) {
             model.addAttribute("oldResume", resumeService.getById(resumeId));
             model.addAttribute("googleMapsApiKey", googleMapsApiKey);
             return "resume/edit_resume";
@@ -186,17 +186,18 @@ public class SeekerController {
     }
 
     @GetMapping("/news/{newsId}")
-    public String getSeekerSubscriptionNewsById(@PathVariable Long newsId, Model model,  Authentication authentication) {
+    public String getSeekerSubscriptionNewsById(@PathVariable Long newsId, Model model, Authentication authentication) {
         News news = newsService.getById(newsId);
         long seekerProfileId = ((User) authentication.getPrincipal()).getProfile().getId();
         SeekerProfile seekerProfile = seekerProfileService.getById(seekerProfileId);
+        String seekerFullName = seekerProfile.getName() + " " + seekerProfile.getSurname();
         seekerStatusNewsService.changeNewsStatus(news, seekerProfile);
-
         News currentNews = newsService.getById(newsId);
         model.addAttribute("newsId", currentNews.getId());
         model.addAttribute("headline", currentNews.getHeadline());
         model.addAttribute("description", currentNews.getDescription());
-        model.addAttribute("profileId", ((User) authentication.getPrincipal()).getProfile().getId());
+        model.addAttribute("profileId", seekerProfileId);
+        model.addAttribute("currentProfileFullName", seekerFullName);
         return "news_page";
     }
 }

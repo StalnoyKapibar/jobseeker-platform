@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.News;
+import com.jm.jobseekerplatform.model.Reply;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.reports.CommentReport;
 import javax.persistence.*;
@@ -37,6 +38,10 @@ public class Comment implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "comment", orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<CommentReport> commentReport;
 
+    @JsonBackReference
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comment", orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Reply> replies;
+
     public Comment() {
     }
 
@@ -56,6 +61,14 @@ public class Comment implements Serializable {
         this.news = news;
         this.profile= profile;
         this.dateTime = dateTime;
+    }
+
+    public Set<Reply> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(Set<Reply> replies) {
+        this.replies = replies;
     }
 
     public Long getId() {

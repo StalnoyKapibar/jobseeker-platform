@@ -13,14 +13,16 @@ $(document).ready(function () {
     $.ajax({
         url: "/api/comments/" + $newsId,
         type: "GET",
+        async: false,
         success: function (data) {
+            console.log(data);
             $.each(data, function (i, comment) {
-                $('#user_comments').after('<div class="m-5"><div class="card-body"><div class="row">' +
+                $('#user_comments').after('<div class="m-5" id="comment_block_' + data[i].id + '"><div class="card-body"><div class="row">' +
                     '<div class="col-md-2"><img id="logo_' + data[i].id + '" ' +
                     'class="img img-rounded img-fluid mb-2 ml-4" alt="">' +
                     '<p class="text-secondary text-center">' + data[i].dateTime + '</p></div>' +
-                    '<div class="col-md-10"><p class="pl-3"><strong>' + data[i].profile.name +
-                    '</strong></p><div class="form-group basic-textarea">' +
+                    '<div class="col-md-10"><p class="pl-3"><strong>' + data[i].profile.name + " " +
+                    data[i].profile.surname + '</strong></p><div class="form-group basic-textarea">' +
                     '<textarea class="form-control z-depth-1 pl-3" style="background: none; border: none;" ' +
                     'id="comment_' + data[i].id + '"  rows="3" disabled>' + data[i].text + '</textarea></div>' +
                     ' </div></div></div></div>');
@@ -31,17 +33,21 @@ $(document).ready(function () {
                     $comments.after('<button type="button"' +
                         ' class="float-right btn text-white btn-info ml-3 mt-2"' +
                         ' id="edit-comment_' + data[i].id + '" data-toggle="modal" data-target="#editModal"> ' +
-                        '<i class="far fa-edit"></i><span> Редактировать</span></button>'
+                        '<i class="far fa-edit mr-2"></i><span> Редактировать</span></button>'
                     );
                     $comments.after('<button type="button" ' +
                         'class="float-right btn text-white btn-danger ml-3 mt-2" ' +
                         'id="delete-comment_' + data[i].id + '">' +
-                        ' <i class="far fa-trash-alt"></i><span> Удалить</span></button>');
+                        ' <i class="far fa-trash-alt mr-2"></i><span> Удалить</span></button>');
                 } else {
                     $comments.after('<button type="button" ' +
                         'class="float-right btn text-white btn-warning ml-3 mt-2" id = "report_to_comment_'
                         + data[i].id + '" data-toggle="modal" data-target="#reportModal"> ' +
-                        '<i class="fas fa-exclamation-triangle"></i><span>Пожаловаться</span></button>');
+                        '<i class="fas fa-exclamation-triangle mr-2"></i><span>Пожаловаться</span></button>');
+                    $comments.after('<button type="button" ' +
+                        'class="float-right btn text-white btn-primary ml-3 mt-2" id = "reply_to_comment_'
+                        + data[i].id + '" > ' +
+                        '<i class="fas fa-reply mr-2"></i><span>Ответить</span></button>');
                 }
                 let $editBtn = $('#edit-comment_' + data[i].id);
                 $editBtn.on('click', function (event) {
@@ -81,39 +87,54 @@ $(document).ready(function () {
                     });
                     $commentId.prop('value', data[i].id);
                 });
+                let $replyBtn = $('#reply_to_comment_' + data[i].id);
+                $replyBtn.on('click', function () {
+                    $('#comment_block_' + data[i].id).after('<div class="m-5"><div class="card-body">' +
+                        '<div class="row">' + '<div class="col-md-2"><img class="img img-rounded img-fluid d-block" ' +
+                        'alt="" src="https://image.ibb.co/jw55Ex/def_face.jpg"/></div>' +
+                        '<div class="comment_area-body col-md-10"><div class="mt-3">' +
+                        '<div class="form-group basic-textarea rounded-corners">' +
+                        '<textarea class="form-control z-depth-1 pl-3" style="background: none;" rows="3">'
+                        + data[i].profile.name + " " + data[i].profile.surname + "," + '</textarea></div>' +
+                        ' </div></div></div></div></div>')
+                });
             });
         }
     });
     $saveBtn.on('click', function (e) {
         let id = Number($editCommentId.val());
-        $.ajax({
-            url: "/api/comments/update",
-            type: "PUT",
-            data: "id=" + id + "&text=" + $editForm.val(),
-            contentType: "application/x-www-form-urlencoded;charset=utf-8",
-            beforeSend: function (request) {
-                request.setRequestHeader($header, $token);
-            },
-            success: function () {
-                location.reload();
-            }
-        });
+        if ($editForm.val()) {
+            $.ajax({
+                url: "/api/comments/update",
+                type: "PUT",
+                data: "id=" + id + "&text=" + $editForm.val(),
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                beforeSend: function (request) {
+                    request.setRequestHeader($header, $token);
+                },
+                success: function () {
+                    location.reload();
+                }
+            });
+        }
     });
 
     $addBtn.on('click', function (e) {
         let $commentText = $('#user_comment').val();
-        $.ajax({
-            url: "/api/comments/insert",
-            type: "POST",
-            data: "newsId=" + $newsId + "&text=" + $commentText,
-            contentType: "application/x-www-form-urlencoded;charset=utf-8",
-            beforeSend: function (request) {
-                request.setRequestHeader($header, $token);
-            },
-            success: function () {
-                location.reload();
-            }
-        });
+        if ($commentText) {
+            $.ajax({
+                url: "/api/comments/insert",
+                type: "POST",
+                data: "newsId=" + $newsId + "&text=" + $commentText,
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                beforeSend: function (request) {
+                    request.setRequestHeader($header, $token);
+                },
+                success: function () {
+                    location.reload();
+                }
+            });
+        }
     });
 
     $sendReportBtn.on('click', function (e) {
@@ -147,5 +168,6 @@ $(document).ready(function () {
             });
         });
     }
+
 
 });
