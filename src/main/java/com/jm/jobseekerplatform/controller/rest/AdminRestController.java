@@ -111,11 +111,6 @@ public class AdminRestController {
         return new ResponseEntity<>(resumeList.size(), HttpStatus.OK);
     }
 
-   /* @RequestMapping(value = "/vacancies/tag/{tagName}", method = RequestMethod.GET)
-    public ResponseEntity<Integer> getSumVacanciesByTagName(@PathVariable("tagName") String tagName) {
-        return new ResponseEntity<>(vacancyService.getAllVacanciesByTagName(tagName).size(), HttpStatus.OK);
-    }*/
-
     @RequestMapping(value = "/vacancies/tag", params = {"tagName"}, method = RequestMethod.GET)
     public ResponseEntity<Integer> getSumVacanciesByTagName(@RequestParam("tagName") String tagName) {
         return new ResponseEntity<>(vacancyService.getAllVacanciesByTagName(tagName).size(), HttpStatus.OK);
