@@ -10,11 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -87,6 +83,10 @@ public class VacancyService extends AbstractService<Vacancy> {
         vacancy.setExpiryBlock(null);
         dao.update(vacancy);
     }
+    
+    public void deleteVacancy(Long id) {
+    	dao.deleteById(id);
+    }
 
     public int deletePermanentBlockVacancies() {
         return dao.deletePermanentBlockVacancies();
@@ -138,19 +138,27 @@ public class VacancyService extends AbstractService<Vacancy> {
         return dao.getVacanciesSortedByCityTagsViews(seekerId, city, limit, page);
     }
 
-    public boolean updateVacancy(Vacancy vacancy){
-        Vacancy oldVacancy= getById(vacancy.getId());
+    public boolean updateVacancy(Vacancy vacancy) {
+        Vacancy oldVacancy = getById(vacancy.getId());
         oldVacancy.setHeadline(vacancy.getHeadline());
         oldVacancy.setDescription(vacancy.getDescription());
         oldVacancy.setSalaryMax(vacancy.getSalaryMax());
         oldVacancy.setSalaryMin(vacancy.getSalaryMin());
-        oldVacancy.setCity(cityService.checkCityOrAdd(vacancy.getCity().getName(),vacancy.getCoordinates()));
-        Point point= vacancy.getCoordinates();
+        oldVacancy.setCity(cityService.checkCityOrAdd(vacancy.getCity().getName(), vacancy.getCoordinates()));
+        Point point = vacancy.getCoordinates();
         pointService.add(point);
         oldVacancy.setCoordinates(point);
         oldVacancy.setRemote(vacancy.getRemote());
         oldVacancy.setShortDescription(vacancy.getShortDescription());
         oldVacancy.setTags(tagService.matchTagsByName(vacancy.getTags()));
         return true;
+    }
+
+    public List<Vacancy> getSumVacanciesByDatePeriod(Date startDate, Date endDate) {
+        return vacancyDaoI.getSumVacanciesByDatePeriod(startDate, endDate);
+    }
+
+    public List<Vacancy> getAllVacanciesByTagName(String tagName) {
+        return dao.getAllVacanciesByTagName(tagName);
     }
 }
