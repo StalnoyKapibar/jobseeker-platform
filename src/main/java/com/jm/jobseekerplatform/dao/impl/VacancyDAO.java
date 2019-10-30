@@ -62,7 +62,7 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
 
         Query query = (Query) entityManager.createQuery(
                 "select v from Vacancy v join v.city c join CityDistance cd on c=cd.to " +
-                "where cd.from.name=:city and v.state='ACCESS' order by cd.distance", Vacancy.class);
+                        "where cd.from.name=:city and v.state='ACCESS' order by cd.distance", Vacancy.class);
 
         long totalElements = (Long) entityManager.createQuery(
                 "select count(v) from Vacancy v where v.state='ACCESS'")
@@ -78,7 +78,7 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     public Page<Vacancy> getVacanciesByTag(Set<Tag> tags, int limit, int page) {
         Query query = (Query) entityManager.createQuery(
                 "select v.id, count(v.id) as c from Vacancy v join v.tags t where v.state='ACCESS' " +
-                "and t in (:tags) group by (v.id) order by c desc")
+                        "and t in (:tags) group by (v.id) order by c desc")
                 .setParameter("tags", tags);
         return getVacancies(query, tags, limit, page);
     }
