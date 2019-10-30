@@ -332,9 +332,10 @@ $(document).ready(function (e) {
         let tagsName = getTagsLabelsForDoughnutDiagram();
         for (let i = 0; i < tagsName.length; i++) {
             $.ajax({
-                url: "/api/admin/" + name + "/tag/" + tagsName[i],
+                url: "/api/admin/" + name + "/tag",
                 type: "GET",
                 async: false,
+                data: "tagName=" + encodeURIComponent(tagsName[i]),
                 success: function (data) {
                     result.push({"name": tagsName[i], "value": data});
 
