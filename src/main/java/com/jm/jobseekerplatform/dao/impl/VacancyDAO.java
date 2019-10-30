@@ -16,20 +16,6 @@ import java.util.*;
 @Repository("vacancyDAO")
 public class VacancyDAO extends AbstractDAO<Vacancy> {
 
-    //language=SQL
-    private final static String query_for_find_vacancies_sorted_by_city =
-            "select v from Vacancy v join v.city c join CityDistance cd on c=cd.to " +
-                    "where cd.from.name=:city and v.state='ACCESS' order by cd.distance";
-
-    //language=SQL
-    private final static String query_for_find_vacancies_by_tags =
-            "select v.id, count(v.id) as c from Vacancy v join v.tags t where v.state='ACCESS' " +
-                    "and t in (:tags) group by (v.id) order by c desc";
-
-    //language=SQL
-    private final static String SQL_getAllByEmployerProfileId = "SELECT v FROM Vacancy v " +
-            "WHERE v.creatorProfile.id = :param";
-
     public Set<Vacancy> getAllByTags(Set<Tag> tags, int limit) {
         Set<Vacancy> vacancies = new HashSet<>();
         vacancies.addAll(entityManager
@@ -44,7 +30,8 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         Set<Vacancy> vacancies = new HashSet<>();
 
         vacancies.addAll(entityManager
-                .createQuery(SQL_getAllByEmployerProfileId, Vacancy.class)
+                .createQuery("SELECT v FROM Vacancy v " +
+                        "WHERE v.creatorProfile.id = :param", Vacancy.class)
                 .setParameter("param", id)
                 .setMaxResults(limit)
                 .getResultList());
@@ -55,13 +42,6 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     public Set<Vacancy> getAllByEmployerProfileId(Long id) {
         return getAllByEmployerProfileId(id, Integer.MAX_VALUE);
     }
-
-    /*
-     * public void deleteVacancy(Long id) {
-     * entityManager.createQuery("DELETE FROM Vacancy v WHERE v.id=id").
-     * executeUpdate();
-     * }
-     */
 
     public int deletePermanentBlockVacancies() {
         int deletedCount = entityManager.createQuery("DELETE FROM Vacancy v WHERE v.state = 'BLOCK_PERMANENT'")
@@ -80,7 +60,9 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     public Page<Vacancy> getVacanciesSortByCity(String city, int limit, int page) {
         page = (page == 0) ? page : --page;
 
-        Query query = (Query) entityManager.createQuery(query_for_find_vacancies_sorted_by_city, Vacancy.class);
+        Query query = (Query) entityManager.createQuery(
+                "select v from Vacancy v join v.city c join CityDistance cd on c=cd.to " +
+                "where cd.from.name=:city and v.state='ACCESS' order by cd.distance", Vacancy.class);
 
         long totalElements = (Long) entityManager.createQuery(
                 "select count(v) from Vacancy v where v.state='ACCESS'")
@@ -94,7 +76,9 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
     }
 
     public Page<Vacancy> getVacanciesByTag(Set<Tag> tags, int limit, int page) {
-        Query query = (Query) entityManager.createQuery(query_for_find_vacancies_by_tags)
+        Query query = (Query) entityManager.createQuery(
+                "select v.id, count(v.id) as c from Vacancy v join v.tags t where v.state='ACCESS' " +
+                "and t in (:tags) group by (v.id) order by c desc")
                 .setParameter("tags", tags);
         return getVacancies(query, tags, limit, page);
     }
@@ -158,10 +142,6 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
                 .setHint(QueryHints.FETCHGRAPH, entityManager.getEntityGraph("vacancy-all-nodes")).getResultList();
     }
 
-    public void updateVacancy(Vacancy vacancy) {
-
-    }
-
     public List<Vacancy> getTrackedByEmployerProfileId(Long id) {
         List<Vacancy> vacancies = new ArrayList<>();
         Query query = entityManager.unwrap(Session.class)
@@ -178,15 +158,6 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
                 "where vt.name = :name", Vacancy.class);
         query.setParameter("name", tagName);
         return query.getResultList();
-    }
-
-    public List<Vacancy> getSumVacanciesByDatePeriod(Date startDate, Date endDate) {
-        return entityManager.createQuery(
-                "SELECT distinct e FROM Vacancy e where e.creationDate between :startDate and :endDate",
-                Vacancy.class)
-                .setParameter("startDate", startDate)
-                .setParameter("endDate", endDate)
-                .getResultList();
     }
 
 }

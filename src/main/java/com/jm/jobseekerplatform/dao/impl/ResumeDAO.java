@@ -131,12 +131,4 @@ public class ResumeDAO extends AbstractDAO<Resume> {
         return query.getResultList();
     }
 
-    public List<Resume> getResumesByDatePeriod(LocalDateTime startDate, LocalDateTime endDate) {
-        return entityManager.createQuery(
-                "SELECT distinct e FROM Resume e where e.date between :startDate and :endDate", Resume.class)
-                .setParameter("startDate", startDate)
-                .setParameter("endDate", endDate)
-                .getResultList();
-    }
-
 }

@@ -155,7 +155,7 @@ public class VacancyService extends AbstractService<Vacancy> {
     }
 
     public List<Vacancy> getSumVacanciesByDatePeriod(Date startDate, Date endDate) {
-        return dao.getSumVacanciesByDatePeriod(startDate, endDate);
+        return vacancyDaoI.getSumVacanciesByDatePeriod(startDate, endDate);
     }
 
     public List<Vacancy> getAllVacanciesByTagName(String tagName) {

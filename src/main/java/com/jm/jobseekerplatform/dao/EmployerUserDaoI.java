@@ -16,4 +16,7 @@ public interface EmployerUserDaoI extends JpaRepository<EmployerUser, Long> {
 
     Page<EmployerUser> findAll(Pageable pageable);
 
+    @Query( "SELECT distinct e FROM EmployerUser e where e.date between :startDate and :endDate")
+    List<EmployerUser> getEmployerUsersByDatePeriod(LocalDateTime startDate, LocalDateTime endDate);
+
 }

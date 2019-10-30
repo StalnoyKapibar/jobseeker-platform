@@ -16,12 +16,4 @@ public class EmployerUserDAO extends AbstractDAO<EmployerUser> {
                 .setParameter("employerProfileId", employerProfileId).getSingleResult();
     }
 
-    public List<EmployerUser> getEmployerUsersByDatePeriod(LocalDateTime startDate, LocalDateTime endDate) {
-        return entityManager.createQuery(
-                "SELECT distinct e FROM EmployerUser e where e.date between :startDate and :endDate",
-                EmployerUser.class)
-                .setParameter("startDate", startDate)
-                .setParameter("endDate", endDate)
-                .getResultList();
-    }
 }

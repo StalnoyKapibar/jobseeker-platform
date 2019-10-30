@@ -16,11 +16,4 @@ public class SeekerUserDAO extends AbstractDAO<SeekerUser> {
                 .setParameter("seekerProfileId", seekerProfileId).getSingleResult();
     }
 
-    public List<SeekerUser> getSeekerUsersByDatePeriod(LocalDateTime startDate, LocalDateTime endDate) {
-        return entityManager.createQuery(
-                "SELECT distinct e FROM SeekerUser e where e.date between :startDate and :endDate", SeekerUser.class)
-                .setParameter("startDate", startDate)
-                .setParameter("endDate", endDate)
-                .getResultList();
-    }
 }

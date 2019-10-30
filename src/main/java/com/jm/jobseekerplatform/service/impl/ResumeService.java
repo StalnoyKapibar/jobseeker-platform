@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
+import com.jm.jobseekerplatform.dao.ResumeDaoI;
 import com.jm.jobseekerplatform.dao.impl.ResumeDAO;
 import com.jm.jobseekerplatform.model.City;
 import com.jm.jobseekerplatform.model.Point;
@@ -26,6 +27,9 @@ public class ResumeService extends AbstractService<Resume> {
 
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private ResumeDaoI resumeDaoI;
 
     @Autowired
     private PointService pointService;
@@ -96,7 +100,7 @@ public class ResumeService extends AbstractService<Resume> {
     }
 
     public List<Resume> getResumesByDatePeriod(LocalDateTime startDate, LocalDateTime endDate) {
-        return dao.getResumesByDatePeriod(startDate, endDate);
+        return resumeDaoI.getResumesByDatePeriod(startDate, endDate);
     }
 
     public List<Resume> getAllResumesByTagName(String tagName) {
