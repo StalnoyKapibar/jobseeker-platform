@@ -4,6 +4,7 @@
       layout:decorator="layouts/adminlayouts" th:with="side='seek'">
 <head>
 </head>
+
 <body>
 <div class="container-fluid" layout:fragment="content">
     <br/>
@@ -118,7 +119,7 @@
     </nav>
 </div>
 
-<div class="container-fluid" layout:fragment="content-script">
+<div class="container-fluid" layout:fragment="content-script" id="bottom">
     <script src="/js/admin.js"></script>
     <script src="/js/admin/admin_seekers.js"></script>
     <script src="/js/admin/admin_seeker_search.js"></script>

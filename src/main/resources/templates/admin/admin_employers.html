@@ -52,10 +52,8 @@
     </div>
     <br>
     <div class="row">
-        <div class="table-responsive">
-            <table id="employerTable" class="table table-striped table-sm table-bordered sort-order"
-                   cellspacing="0"
-                   width="100%">
+        <div class="table-responsive"  id="employerTable">
+            <table class="table table-striped table-sm table-bordered sort-order" cellspacing="0" width="100%">
                 <thead align="center">
                 <tr>
                     <th>Id</th>
@@ -119,7 +117,7 @@
         </ul>
     </nav>
 </div>
-<div class="container-fluid" layout:fragment="content-script">
+<div class="container-fluid" layout:fragment="content-script" id="bottom">
     <script src="/js/admin.js"></script>
     <script src="/js/admin/admin_employers.js"></script>
     <script src="/js/admin/admin_employer_search.js"></script>
