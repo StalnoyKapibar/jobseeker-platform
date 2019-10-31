@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.impl.CityDistanceDAO;
+import com.jm.jobseekerplatform.dao.interfaces.CityDistanceDao;
 import com.jm.jobseekerplatform.model.City;
 import com.jm.jobseekerplatform.model.CityDistance;
 import com.jm.jobseekerplatform.service.AbstractService;
@@ -13,7 +13,7 @@ import java.util.List;
 public class CityDistanceService extends AbstractService<CityDistance> {
 
     @Autowired
-    private CityDistanceDAO cityDistanceDAO;
+    private CityDistanceDao cityDistanceDao;
 
     @Autowired
     private CityService cityService;
@@ -26,9 +26,9 @@ public class CityDistanceService extends AbstractService<CityDistance> {
         for (City toCity : cities) {
             float distance = pointService.getDistance(toCity.getPoint(), fromCity.getPoint());
             CityDistance cityDistance = new CityDistance(fromCity, toCity, distance);
-            cityDistanceDAO.add(cityDistance);
+            cityDistanceDao.save(cityDistance);
             if (distance != 0) {
-                cityDistanceDAO.add(new CityDistance(toCity, fromCity, distance));
+                cityDistanceDao.save(new CityDistance(toCity, fromCity, distance));
             }
         }
         return fromCity;

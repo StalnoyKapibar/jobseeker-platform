@@ -1,8 +1,7 @@
 package com.jm.jobseekerplatform.service.impl.users;
 
-import com.jm.jobseekerplatform.dao.SeekerUserDaoI;
-import com.jm.jobseekerplatform.dao.impl.profiles.SeekerProfileDAO;
-import com.jm.jobseekerplatform.dao.impl.users.SeekerUserDAO;
+import com.jm.jobseekerplatform.dao.interfaces.profiles.SeekerProfileDao;
+import com.jm.jobseekerplatform.dao.interfaces.users.SeekerUserDao;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
 import com.jm.jobseekerplatform.service.AbstractService;
@@ -20,28 +19,25 @@ import java.util.List;
 public class SeekerUserService extends AbstractService<SeekerUser> {
 
     @Autowired
-    private SeekerUserDaoI seekerUserDaoI;
+    private SeekerUserDao seekerUserDao;
 
     @Autowired
-    private SeekerUserDAO seekerUserDAO;
-
-    @Autowired
-    private SeekerProfileDAO seekerProfileDAO;
+    private SeekerProfileDao seekerProfileDao;
 
     public Page<SeekerUser> findAll(Pageable pageable) {
-        return seekerUserDaoI.findAll(pageable);
+        return seekerUserDao.findAll(pageable);
     }
 
     public SeekerUser getByProfileId(Long seekerProfileId) {
-        return seekerUserDAO.getByProfileId(seekerProfileId);
+        return seekerUserDao.findByProfileId(seekerProfileId);
     }
 
     public SeekerProfile getSeekerProfileByResumeID(long id) {
-        return seekerProfileDAO.getSeekerProfileByResumeID(id);
+        return seekerProfileDao.findByResumeId(id);
     }
 
     public List<SeekerUser> getSeekerUsersByDatePeriod(LocalDateTime startDate, LocalDateTime endDate){
-        return seekerUserDaoI.getSeekerUsersByDatePeriod(startDate,endDate);
+        return seekerUserDao.getSeekerUsersByDatePeriod(startDate,endDate);
     }
 
 }

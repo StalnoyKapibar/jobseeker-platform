@@ -1,7 +1,7 @@
 package com.jm.jobseekerplatform.service.impl;
 
 import com.jm.jobseekerplatform.dao.VacancyDaoI;
-import com.jm.jobseekerplatform.dao.impl.VacancyDAO;
+import com.jm.jobseekerplatform.dao.interfaces.VacancyDao;
 import com.jm.jobseekerplatform.model.*;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class VacancyService extends AbstractService<Vacancy> {
 
     @Autowired
-    private VacancyDAO dao;
+    private VacancyDao vacancyDao;
 
     @Autowired
     private VacancyDaoI vacancyDaoI;
@@ -37,11 +37,11 @@ public class VacancyService extends AbstractService<Vacancy> {
     private Matcher matcher;
 
     public Set<Vacancy> getAllByEmployerProfileId(Long id, int limit) {
-        return dao.getAllByEmployerProfileId(id, limit);
+        return vacancyDao.getAllByEmployerProfileId(id, limit);
     }
 
     public Set<Vacancy> getAllByEmployerProfileId(Long id) {
-        return dao.getAllByEmployerProfileId(id);
+        return vacancyDao.getAllByEmployerProfileId(id);
     }
 
     public Page<Vacancy> findAll(Pageable pageable) {
@@ -49,17 +49,17 @@ public class VacancyService extends AbstractService<Vacancy> {
     }
 
     public Page<Vacancy> findAllByTags(Set<Tag> tags, Pageable pageable) {
-        return dao.getVacanciesByTag(tags, pageable.getPageSize(), pageable.getPageNumber());
+        return vacancyDao.getVacanciesByTag(tags, pageable.getPageSize(), pageable.getPageNumber());
     }
 
     public Set<Vacancy> getByTags(Set<Tag> tags, int limit) {
-        return dao.getAllByTags(tags, limit);
+        return vacancyDao.getAllByTags(tags, limit);
     }
 
     public void blockPermanently(Vacancy vacancy) {
         vacancy.setState(State.BLOCK_PERMANENT);
         vacancy.setExpiryBlock(null);
-        dao.update(vacancy);
+        vacancyDao.update(vacancy);
     }
 
     public void blockTemporary(Vacancy vacancy, int periodInDays) {
@@ -69,31 +69,31 @@ public class VacancyService extends AbstractService<Vacancy> {
 
         vacancy.setState(State.BLOCK_TEMPORARY);
         vacancy.setExpiryBlock(expiryBlockDate);
-        dao.update(vacancy);
+        vacancyDao.update(vacancy);
     }
 
     public void blockOwn(Vacancy vacancy) {
         vacancy.setState(State.BLOCK_OWN);
         vacancy.setExpiryBlock(null);
-        dao.update(vacancy);
+        vacancyDao.update(vacancy);
     }
 
     public void unblock(Vacancy vacancy) {
         vacancy.setState(State.ACCESS);
         vacancy.setExpiryBlock(null);
-        dao.update(vacancy);
+        vacancyDao.update(vacancy);
     }
     
     public void deleteVacancy(Long id) {
-    	dao.deleteById(id);
+    	vacancyDao.deleteById(id);
     }
 
     public int deletePermanentBlockVacancies() {
-        return dao.deletePermanentBlockVacancies();
+        return vacancyDao.deletePermanentBlockVacancies();
     }
 
     public int deleteExpiryBlockVacancies() {
-        return dao.deleteExpiryBlockVacancies();
+        return vacancyDao.deleteExpiryBlockVacancies();
     }
 
     public boolean validateVacancy(Vacancy vacancy) {
@@ -125,17 +125,17 @@ public class VacancyService extends AbstractService<Vacancy> {
         vacancy.setTags(matchedTags);
         City city = cityService.checkCityOrAdd(vacancy.getCity().getName(), point);
         vacancy.setCity(city);
-        dao.add(vacancy);
+        vacancyDao.add(vacancy);
     }
 
     public Page<Vacancy> findVacanciesByPointWithLimitAndPaging(String currentCity, Point point, int limit, int page) {
         String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
-        return dao.getVacanciesSortByCity(city, limit, page);
+        return vacancyDao.getVacanciesSortByCity(city, limit, page);
     }
 
     public Page<Vacancy> getVacanciesSortedByCityTagsViews(long seekerId, String currentCity, Point point, int limit, int page) {
         String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
-        return dao.getVacanciesSortedByCityTagsViews(seekerId, city, limit, page);
+        return vacancyDao.getVacanciesSortedByCityTagsViews(seekerId, city, limit, page);
     }
 
     public boolean updateVacancy(Vacancy vacancy) {
@@ -159,6 +159,6 @@ public class VacancyService extends AbstractService<Vacancy> {
     }
 
     public List<Vacancy> getAllVacanciesByTagName(String tagName) {
-        return dao.getAllVacanciesByTagName(tagName);
+        return vacancyDao.getAllVacanciesByTagName(tagName);
     }
 }

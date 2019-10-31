@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl.tokens;
 
-import com.jm.jobseekerplatform.dao.impl.tokens.BaseTokenDAO;
+import com.jm.jobseekerplatform.dao.interfaces.tokens.BaseTokenDao;
 import com.jm.jobseekerplatform.model.tokens.BaseToken;
 import com.jm.jobseekerplatform.service.AbstractService;
 
@@ -9,10 +9,10 @@ import java.util.Date;
 
 public abstract class BaseTokenService<T extends BaseToken> extends AbstractService<T> {
 
-    protected final BaseTokenDAO<T> baseTokenDAO;
+    protected final BaseTokenDao<T> baseTokenDao;
 
-    public BaseTokenService(BaseTokenDAO<T> baseTokenDAO) {
-        this.baseTokenDAO = baseTokenDAO;
+    public BaseTokenService(BaseTokenDao<T> baseTokenDAO) {
+        this.baseTokenDao = baseTokenDAO;
     }
 
     public Date calculateExpiryDate() {
@@ -23,22 +23,22 @@ public abstract class BaseTokenService<T extends BaseToken> extends AbstractServ
     }
 
     public T findByToken(String token) {
-        return baseTokenDAO.findByToken(token);
+        return baseTokenDao.findByToken(token);
     }
 
     public T findTokenByUserId(Long userId) {
-        return baseTokenDAO.findTokenByUserId(userId);
+        return baseTokenDao.findTokenByUserId(userId);
     }
 
     public boolean existsTokenByUserId(Long userID) {
-        return baseTokenDAO.existsTokenByUserId(userID);
+        return baseTokenDao.existsTokenByUserId(userID);
     }
 
     public boolean tokenIsNonExpired(T token) {
         Calendar calendar = Calendar.getInstance();
         boolean isNonExpired = (token.getExpiryDate().getTime() - calendar.getTime().getTime()) >= 0;
         if (!isNonExpired) {
-            abstractDAO.delete(token);
+            abstractDao.delete(token);
         }
         return isNonExpired;
     }

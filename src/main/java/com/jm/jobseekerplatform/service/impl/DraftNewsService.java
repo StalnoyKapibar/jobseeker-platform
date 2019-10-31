@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.DraftNewsDaoI;
+import com.jm.jobseekerplatform.dao.interfaces.DraftNewsDao;
 import com.jm.jobseekerplatform.model.DraftNews;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.service.AbstractService;
@@ -12,23 +12,23 @@ import java.util.List;
 @Service
 public class DraftNewsService extends AbstractService<DraftNews> {
     @Autowired
-    private DraftNewsDaoI draftNewsDaoI;
+    private DraftNewsDao draftNewsDao;
 
     @Autowired
     private NewsService newsService;
 
     public boolean isNewsOnValidation(long newsId) {
-        return draftNewsDaoI.getOnValidation(newsId) > 0;
+        return draftNewsDao.getOnValidation(newsId) > 0;
     }
 
     public List<DraftNews> findAllActive() {
-        return draftNewsDaoI.findAllActive();
+        return draftNewsDao.findAllByIsValidIsNullOrderByIdDesc();
     }
 
     public void approveDraft(long draftId) {
-        DraftNews draft = draftNewsDaoI.getOne(draftId);
+        DraftNews draft = draftNewsDao.getOne(draftId);
         draft.setValid(true);
-        draftNewsDaoI.save(draft);
+        draftNewsDao.save(draft);
 
         News news = draft.getOriginal();
         news.setHeadline(draft.getHeadline());
@@ -37,8 +37,8 @@ public class DraftNewsService extends AbstractService<DraftNews> {
     }
 
     public void rejectDraft(long draftId) {
-        DraftNews draft = draftNewsDaoI.getOne(draftId);
+        DraftNews draft = draftNewsDao.getOne(draftId);
         draft.setValid(false);
-        draftNewsDaoI.save(draft);
+        draftNewsDao.save(draft);
     }
 }

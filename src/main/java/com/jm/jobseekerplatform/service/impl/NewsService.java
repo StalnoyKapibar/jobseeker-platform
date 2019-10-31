@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.NewsDaoI;
-import com.jm.jobseekerplatform.dao.impl.NewsDAO;
+import com.jm.jobseekerplatform.dao.interfaces.NewsDao;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.Subscription;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
@@ -12,31 +11,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Set;
 
 @Service("newsService")
 @Transactional
 public class NewsService extends AbstractService<News> {
 
     @Autowired
-    private NewsDAO newsDAO;
-
-    @Autowired
-    private NewsDaoI newsDaoI;
+    private NewsDao newsDao;
 
     public Page<News> getAllByEmployerProfileId(EmployerProfile employerProfile, Pageable pageable) {
-        return newsDaoI.getAllByEmployerProfileId(employerProfile, pageable);
-    }
-
-    public Page<News> getAllBySeekerProfileId(Set<EmployerProfile> employerProfiles, Pageable pageable) {
-        return newsDaoI.getAllBySeekerProfileId(employerProfiles, pageable);
+        return newsDao.getAllByEmployerProfileId(employerProfile, pageable);
     }
 
     public Page<News> getAllBySeekerProfileTags(SeekerProfile profile, Pageable pageable) {
-        return newsDAO.getBySeekerProfileTags(profile, pageable);
+        return newsDao.getBySeekerProfileTags(profile, pageable);
     }
 
     public Page<News> getAllBySubscriptions(Iterable<Subscription> subscriptions, Pageable pageable) {
-        return newsDAO.getBySubscriptions(subscriptions, pageable);
+        return newsDao.getBySubscriptions(subscriptions, pageable);
     }
 }

@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.impl.JobExperienceDAO;
+import com.jm.jobseekerplatform.dao.interfaces.JobExperienceDao;
 import com.jm.jobseekerplatform.model.JobExperience;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.Set;
 public class JobExperienceService extends AbstractService<JobExperience> {
 
     @Autowired
-    private JobExperienceDAO jobExperienceDAO;
+    private JobExperienceDao jobExperienceDao;
 
     public Set<JobExperience> validateJobExperiences(Set<JobExperience> jobExperiences) {
         for (JobExperience jobExperience : jobExperiences) {
@@ -27,15 +27,15 @@ public class JobExperienceService extends AbstractService<JobExperience> {
                 continue;
             }
             if (jobExperience.getId() == null) {
-                jobExperienceDAO.add(jobExperience);
+                jobExperienceDao.save(jobExperience);
             } else {
-                jobExperienceDAO.update(jobExperience);
+                jobExperienceDao.save(jobExperience);
             }
         }
         return jobExperiences;
     }
 
     public Set<BigInteger> getAllExperiencesIdForResume(Long id) {
-        return jobExperienceDAO.getAllExperiencesIdForResume(id);
+        return jobExperienceDao.getAllExperiencesIdForResume(id);
     }
 }

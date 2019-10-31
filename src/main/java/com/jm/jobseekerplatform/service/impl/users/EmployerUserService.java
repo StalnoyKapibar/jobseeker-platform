@@ -1,8 +1,7 @@
 package com.jm.jobseekerplatform.service.impl.users;
 
-import com.jm.jobseekerplatform.dao.EmployerUserDaoI;
-import com.jm.jobseekerplatform.dao.impl.profiles.EmployerProfileDAO;
-import com.jm.jobseekerplatform.dao.impl.users.EmployerUserDAO;
+import com.jm.jobseekerplatform.dao.interfaces.profiles.EmployerProfileDao;
+import com.jm.jobseekerplatform.dao.interfaces.users.EmployerUserDao;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.User;
@@ -21,32 +20,28 @@ import java.util.List;
 public class EmployerUserService extends AbstractService<EmployerUser> {
 
     @Autowired
-    private EmployerUserDaoI employerUserDaoI;
-
-    @Autowired
-    private EmployerUserDAO employerUserDAO;
+    private EmployerUserDao employerUserDao;
 
 	@Autowired
-	private EmployerProfileDAO employerProfileDAO;
+	private EmployerProfileDao employerProfileDao;
 
     public Page<EmployerUser> findAll(Pageable pageable) {
-        return employerUserDaoI.findAll(pageable);
+        return employerUserDao.findAll(pageable);
     }
 
     public EmployerUser getByProfileId(Long employerProfileId) {
-        return employerUserDAO.getByProfileId(employerProfileId);
+        return employerUserDao.findByProfileId(employerProfileId);
     }
 
 	public EmployerProfile getEmployerProfileByVacancyID(long id) {
-		return employerProfileDAO.getEmployerProfileByVacancyID(id);
+		return employerProfileDao.findByVacancyId(id);
 	}
 
 	public List<EmployerUser> getEmployerUsersByDatePeriod(LocalDateTime startDate, LocalDateTime endDate){
-        return employerUserDaoI.getEmployerUsersByDatePeriod(startDate, endDate);
+        return employerUserDao.getEmployerUsersByDatePeriod(startDate, endDate);
     }
 
     public User getUserByEmployerProfile(EmployerProfile employerProfile) {
-        return employerProfileDAO.getUserByEmployerProfileDAO(employerProfile);
+        return employerProfileDao.findByEmployerProfile(employerProfile);
     }
-
 }

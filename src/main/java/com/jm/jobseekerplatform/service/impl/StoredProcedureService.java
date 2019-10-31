@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.impl.StoredProcedureDAO;
+import com.jm.jobseekerplatform.dao.impl.StoredProcedureDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class StoredProcedureService {
     @Autowired
-    StoredProcedureDAO storedProcedureDAO;
+    StoredProcedureDao storedProcedureDao;
 
     public void createSortVacancyProcedure() {
-        storedProcedureDAO.createSortVacancyProcedure();
+        storedProcedureDao.createSortVacancyProcedure();
     }
 }

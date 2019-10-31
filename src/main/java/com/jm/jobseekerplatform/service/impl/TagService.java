@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.impl.TagDAO;
+import com.jm.jobseekerplatform.dao.interfaces.TagDao;
 import com.jm.jobseekerplatform.model.Tag;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +13,14 @@ import java.util.*;
 public class TagService extends AbstractService<Tag> {
 
     @Autowired
-    private TagDAO dao;
+    private TagDao tagDao;
 
     public Tag findByName(String name) {
-        return dao.findByName(name);
+        return tagDao.findByName(name);
     }
 
     public List<Tag> getBySearchParam(String param) {
-        return dao.getBySearchParam(param);
+        return tagDao.getBySearchParam(param);
     }
 
     /**
@@ -34,7 +34,7 @@ public class TagService extends AbstractService<Tag> {
         for (Tag formTag : formTags) {
             if (!foundedTags.contains(formTag)) {
                 Tag newTag = new Tag(formTag.getName(), verified);
-                dao.add(newTag);
+                tagDao.save(newTag);
                 createdTags.add(newTag);
             }
         }
@@ -65,23 +65,23 @@ public class TagService extends AbstractService<Tag> {
         Set<String> tagsName = new HashSet<>();
         inputTagsName.forEach(curTag -> tagsName.add(curTag.getName()));
         // find set tags name in db
-        List<Tag> findedTags = dao.getTagsByNames(tagsName);
+        List<Tag> findedTags = tagDao.findAllByName(tagsName);
 
         return findedTags;
     }
 
     public Set<Tag> getTagsByStringNames(Set<String> inputTagsName){
-        return new HashSet<>(dao.getTagsByNames(inputTagsName));
+        return new HashSet<>(tagDao.findAllByName(inputTagsName));
     }
 
     public List<Tag> getVerified() {
         boolean verified = true;
-        return dao.getVerified(verified);
+        return tagDao.findAllByVerified(verified);
     }
 
     public List<Tag> getUnverified() {
         boolean verified = false;
-        return dao.getVerified(verified);
+        return tagDao.findAllByVerified(verified);
     }
 
     public List<Tag> getSortedAll(){
@@ -92,11 +92,11 @@ public class TagService extends AbstractService<Tag> {
 
     @Override
     public void deleteById(Long id) {
-        dao.deleteById(id);
+        tagDao.deleteById(id);
     }
 
     public void createNewTagService(Tag tag) {
-        dao.createNewTagDAO(tag);
+        tagDao.save(tag);
     }
 
 }

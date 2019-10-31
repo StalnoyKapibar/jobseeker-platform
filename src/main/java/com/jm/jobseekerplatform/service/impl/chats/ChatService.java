@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl.chats;
 
-import com.jm.jobseekerplatform.dao.impl.chats.ChatDAO;
+import com.jm.jobseekerplatform.dao.interfaces.chats.ChatDao;
 import com.jm.jobseekerplatform.model.chats.Chat;
 import com.jm.jobseekerplatform.model.chats.ChatMessage;
 import com.jm.jobseekerplatform.service.AbstractService;
@@ -15,7 +15,7 @@ import java.util.List;
 public class ChatService extends AbstractService<Chat> {
 
     @Autowired
-    private ChatDAO chatDAO;
+    private ChatDao chatDAO;
 
     public void addChatMessage(Long chatId, ChatMessage chatMessage) {
         Chat chat = getById(chatId);

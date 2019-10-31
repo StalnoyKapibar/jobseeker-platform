@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.ResumeDaoI;
-import com.jm.jobseekerplatform.dao.impl.ResumeDAO;
+import com.jm.jobseekerplatform.dao.interfaces.ResumeDao;
 import com.jm.jobseekerplatform.model.City;
 import com.jm.jobseekerplatform.model.Point;
 import com.jm.jobseekerplatform.model.Resume;
@@ -23,13 +22,10 @@ import java.util.regex.Pattern;
 public class ResumeService extends AbstractService<Resume> {
 
     @Autowired
-    private ResumeDAO dao;
+    private ResumeDao resumeDao;
 
     @Autowired
     private TagService tagService;
-
-    @Autowired
-    private ResumeDaoI resumeDaoI;
 
     @Autowired
     private PointService pointService;
@@ -38,16 +34,16 @@ public class ResumeService extends AbstractService<Resume> {
     private CityService cityService;
 
     public Page<Resume> getAllResumes(int limit, int page) {
-        return dao.getAllResumes(limit, page);
+        return resumeDao.getAllResumes(limit, page);
     }
 
     public Page<Resume> findAllByTags(Set<Tag> tags, Pageable pageable) {
-        return dao.getResumesByTag(tags, pageable.getPageSize(), pageable.getPageNumber());
+        return resumeDao.findAllByTags(tags, pageable.getPageSize(), pageable.getPageNumber());
     }
 
     public Page<Resume> findResumesByPoint(String currentCity, Point point, int limit, int page) {
         String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
-        return dao.getResumesSortByCity(city, limit, page);
+        return resumeDao.getResumesSortByCity(city, limit, page);
     }
 
     public void addResume(Resume resume) {
@@ -58,7 +54,7 @@ public class ResumeService extends AbstractService<Resume> {
         resume.setTags(matchedTags);
         resume.setCoordinates(point);
         resume.setCity(city);
-        dao.add(resume);
+        resumeDao.save(resume);
     }
 
     public void updateResume(Resume resume) {
@@ -69,7 +65,7 @@ public class ResumeService extends AbstractService<Resume> {
         resume.setCoordinates(point);
         resume.setTags(matchedTags);
         resume.setCity(city);
-        dao.update(resume);
+        resumeDao.save(resume);
     }
 
     public boolean validateResume(Resume resume) {
@@ -90,20 +86,20 @@ public class ResumeService extends AbstractService<Resume> {
     }
 
     public void deleteByResumeId(Long id) {
-        dao.deleteResumeById(id);
+        resumeDao.deleteById(id);
     }
 
     public Page<Resume> getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(Map<String,
             Object> queryParamsMap, int pageNumber, int pageSize) {
-        return dao.getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(queryParamsMap,
+        return resumeDao.getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(queryParamsMap,
                 pageNumber, pageSize);
     }
 
     public List<Resume> getResumesByDatePeriod(LocalDateTime startDate, LocalDateTime endDate) {
-        return resumeDaoI.getResumesByDatePeriod(startDate, endDate);
+        return resumeDao.getResumesByDatePeriod(startDate, endDate);
     }
 
     public List<Resume> getAllResumesByTagName(String tagName) {
-        return dao.getAllResumesByTagName(tagName);
+        return resumeDao.findAllByTagsContains(tagName);
     }
 }

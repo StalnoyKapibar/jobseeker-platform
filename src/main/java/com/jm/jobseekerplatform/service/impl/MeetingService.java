@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.impl.MeetingDAO;
+import com.jm.jobseekerplatform.dao.interfaces.MeetingDao;
 import com.jm.jobseekerplatform.model.Meeting;
 import com.jm.jobseekerplatform.model.Status;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,28 +14,28 @@ import java.util.List;
 @Transactional
 public class MeetingService {
     @Autowired
-    private MeetingDAO dao;
+    private MeetingDao meetingDao;
 
     public void addMeeting(Meeting meeting){
-        dao.add(meeting);
+        meetingDao.save(meeting);
     }
 
     public Meeting getMeetingById(Long id){
-        return dao.getById(id);
+        return meetingDao.getOne(id);
     }
 
     public void updateMeeting(Meeting toUpdate) {
-        dao.update(toUpdate);
+        meetingDao.save(toUpdate);
     }
 
     public void updateMeetingsOnPassing() {
-        List<Meeting> meetings = dao.getAllWihoutPassed();
+        List<Meeting> meetings = meetingDao.findAllByStatus_PassedIsNot();
         if (meetings != null) {
             LocalDateTime dateTime = LocalDateTime.now();
             for (Meeting meeting : meetings) {
                 if (dateTime.isAfter(meeting.getDate())) {
                     meeting.setStatus(Status.PASSED);
-                    dao.update(meeting);
+                    meetingDao.save(meeting);
                 }
             }
         }

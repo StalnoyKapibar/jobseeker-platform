@@ -1,5 +1,5 @@
 package com.jm.jobseekerplatform.service.impl;
-import com.jm.jobseekerplatform.dao.impl.PointDAO;
+import com.jm.jobseekerplatform.dao.interfaces.PointDao;
 import com.jm.jobseekerplatform.model.Point;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import static java.lang.Math.*;
 public class PointService extends AbstractService<Point> {
 
     @Autowired
-    private PointDAO dao;
+    private PointDao pointDao;
 
     final float EARTH_RADIUS = (float) 6371.;
 

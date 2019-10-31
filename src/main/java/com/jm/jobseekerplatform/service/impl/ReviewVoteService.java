@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.impl.ReviewVoteDAO;
+import com.jm.jobseekerplatform.dao.interfaces.ReviewVoteDao;
 import com.jm.jobseekerplatform.model.ReviewVote;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,17 +12,17 @@ import java.util.List;
 public class ReviewVoteService extends AbstractService<ReviewVote> {
 
     @Autowired
-    private ReviewVoteDAO reviewVoteDAO;
+    private ReviewVoteDao reviewVoteDao;
 
     public List<ReviewVote> getAllReviewVotesByEmployerProfileAndSeekerProfileId(Long seekerProfileId, Long employerProfileId) {
-        return reviewVoteDAO.getAllReviewVotesByEmployerProfileAndSeekerProfileId(seekerProfileId, employerProfileId);
+        return reviewVoteDao.findAllByEmployerProfileIdAndSeekerProfileId(seekerProfileId, employerProfileId);
     }
 
     public ReviewVote getByReviewAndSeekerProfileId(Long reviewId, Long seekerProfileId) {
-        return reviewVoteDAO.getByReviewAndSeekerProfileId(reviewId, seekerProfileId);
+        return reviewVoteDao.findByReviewIdAndSeekerProfileId(reviewId, seekerProfileId);
     }
 
     public void deleteByReviewId(Long reviewId) {
-        reviewVoteDAO.deleteByReviewId(reviewId);
+        reviewVoteDao.deleteByReviewId(reviewId);
     }
 }

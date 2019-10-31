@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl.profiles;
 
-import com.jm.jobseekerplatform.dao.impl.profiles.ProfileDAO;
+import com.jm.jobseekerplatform.dao.interfaces.profiles.ProfileDao;
 import com.jm.jobseekerplatform.model.State;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.service.AbstractService;
@@ -18,17 +18,17 @@ import java.util.Date;
 public class ProfileService extends AbstractService<Profile> {
 
     @Autowired
-    private ProfileDAO dao;
+    private ProfileDao profileDao;
 
     public void checkedState(Profile profile) {
         profile.setState(State.ACCESS);
-        dao.update(profile);
+        profileDao.save(profile);
     }
 
     public void blockPermanently(Profile profile) {
         profile.setState(State.BLOCK_PERMANENT);
         profile.setExpiryBlock(null);
-        dao.update(profile);
+        profileDao.save(profile);
     }
 
     public void blockTemporary(Profile profile, int periodInDays) {
@@ -38,18 +38,18 @@ public class ProfileService extends AbstractService<Profile> {
 
         profile.setState(State.BLOCK_TEMPORARY);
         profile.setExpiryBlock(expiryBlockDate);
-        dao.update(profile);
+        profileDao.save(profile);
     }
 
     public void blockOwn(Profile profile) {
         profile.setState(State.BLOCK_OWN);
         profile.setExpiryBlock(null);
-        dao.update(profile);
+        profileDao.save(profile);
     }
 
     public void unblock(Profile profile) {
         profile.setState(State.ACCESS);
         profile.setExpiryBlock(null);
-        dao.update(profile);
+        profileDao.save(profile);
     }
 }

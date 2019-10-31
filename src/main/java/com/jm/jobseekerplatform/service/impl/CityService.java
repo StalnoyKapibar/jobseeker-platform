@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.impl.CityDAO;
+import com.jm.jobseekerplatform.dao.interfaces.CityDao;
 import com.jm.jobseekerplatform.model.City;
 import com.jm.jobseekerplatform.model.Point;
 import com.jm.jobseekerplatform.service.AbstractService;
@@ -8,14 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 @Service
 public class CityService extends AbstractService<City> {
 
     @Autowired
-    private CityDAO cityDAO;
+    private CityDao cityDao;
 
     @Autowired
     private PointService pointService;
@@ -24,12 +23,12 @@ public class CityService extends AbstractService<City> {
     private CityDistanceService cityDistanceService;
 
     public City checkCityOrGetNearest(String currentCity, Point currentPoint) {
-        City city = cityDAO.findCityByName(currentCity);
+        City city = cityDao.findCityByName(currentCity);
         if (city!=null) {
             return city;
         } else {
             TreeMap<Float, City> sortedCity = new TreeMap<>();
-            List<City> cityList = cityDAO.getAll();
+            List<City> cityList = cityDao.findAll();
             for (City c : cityList) {
                 float distance = pointService.getDistance(currentPoint, c.getPoint());
                 sortedCity.put(distance, c);
@@ -39,7 +38,7 @@ public class CityService extends AbstractService<City> {
     }
 
     public City checkCityOrAdd(String currentCity, Point currentPoint) {
-        City city = cityDAO.findCityByName(currentCity);
+        City city = cityDao.findCityByName(currentCity);
         if (city!=null) {
             return city;
         } else {
@@ -49,15 +48,15 @@ public class CityService extends AbstractService<City> {
 
     public City initCity(String cityName, Point point) {
         City city = new City(cityName, point);
-        cityDAO.add(city);
+        cityDao.save(city);
         return cityDistanceService.initCityDistances(city);
     }
 
     public City getCityByName(String cityName){
-        return cityDAO.findCityByName(cityName);
+        return cityDao.findCityByName(cityName);
     }
 
     public List<City> getAllCities() {
-        return cityDAO.getAllCities();
+        return cityDao.findAll();
     }
 }

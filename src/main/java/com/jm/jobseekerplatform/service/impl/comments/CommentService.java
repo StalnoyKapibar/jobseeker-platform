@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl.comments;
 
-import com.jm.jobseekerplatform.dao.impl.CommentDAO;
+import com.jm.jobseekerplatform.dao.interfaces.CommentDao;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.comments.Comment;
 import com.jm.jobseekerplatform.service.AbstractService;
@@ -14,9 +14,9 @@ import java.util.List;
 @Transactional
 public class CommentService extends AbstractService<Comment> {
     @Autowired
-    private CommentDAO commentDAO;
+    private CommentDao commentDao;
 
     public List<Comment> getAllCommentsForNews(News news) {
-        return commentDAO.getAllCommentsForNews(news);
+        return commentDao.findAllByNews(news);
     }
 }

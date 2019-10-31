@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl.users;
 
-import com.jm.jobseekerplatform.dao.impl.users.UserDAO;
+import com.jm.jobseekerplatform.dao.interfaces.users.UserDao;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.tokens.PasswordResetToken;
@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 public class UserService extends AbstractService<User> {
 
     @Autowired
-    private UserDAO dao;
+    private UserDao userDao;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -59,7 +59,7 @@ public class UserService extends AbstractService<User> {
     private Matcher matcher;
 
     public User findByEmail(String email) {
-        return dao.findByEmail(email);
+        return userDao.findByEmail(email);
     }
 
     public User findUserByTokenValue(String token) {
@@ -89,7 +89,7 @@ public class UserService extends AbstractService<User> {
     }
 
     public boolean isExistEmail(String email) {
-        return dao.isExistEmail(email);
+        return userDao.isExistEmail(email);
     }
 
     public void registerNewUser(User user) {

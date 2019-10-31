@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.impl.SeekerVacancyRecordDAO;
+import com.jm.jobseekerplatform.dao.interfaces.SeekerVacancyRecordDao;
 import com.jm.jobseekerplatform.dto.ViewedVacanciesDTO;
 import com.jm.jobseekerplatform.model.SeekerVacancyRecord;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
@@ -13,14 +13,14 @@ import java.util.List;
 public class SeekerHistoryService extends AbstractService<SeekerVacancyRecord> {
 
     @Autowired
-    SeekerVacancyRecordDAO seekerVacancyRecordDAO;
+    SeekerVacancyRecordDao seekerVacancyRecordDao;
 
     public List<ViewedVacanciesDTO> getViewedVacanciesBySeeker(Long seekerId) {
-        return seekerVacancyRecordDAO.getViewedVacanciesBySeeker(seekerId);
+        return seekerVacancyRecordDao.findAllBySeeker_Id(seekerId);
     }
 
     public List<ViewedVacanciesDTO> getNumberOfViewsOffAllVacanciesByTagForSeeker(SeekerProfile seekerProfile) {
-        return seekerVacancyRecordDAO.getNumberOfViewsOffAllVacanciesByTagForSeeker(seekerProfile);
+        return seekerVacancyRecordDao.getNumberOfViewsOffAllVacanciesByTagForSeeker(seekerProfile);
     }
 
 }

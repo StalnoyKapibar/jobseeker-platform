@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl.profiles;
 
-import com.jm.jobseekerplatform.dao.impl.profiles.EmployerProfileDAO;
+import com.jm.jobseekerplatform.dao.interfaces.profiles.EmployerProfileDao;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.service.AbstractService;
@@ -17,17 +17,17 @@ import java.util.List;
 public class EmployerProfileService extends AbstractService<EmployerProfile> {
 
     @Autowired
-    private EmployerProfileDAO dao;
+    private EmployerProfileDao employerProfileDao;
 
     @Autowired
     private EmployerUserService employerUserService;
 
     public int deletePermanentBlockEmployerProfiles() {
-        return dao.deletePermanentBlockEmployerProfiles();
+        return employerProfileDao.deleteByState_BlockPermanent();
     }
 
     public int deleteExpiryBlockEmployerProfiles() {
-        return dao.deleteExpiryBlockEmployerProfiles();
+        return employerProfileDao.deleteExpiryBlockEmployerProfiles();
     }
 
     public void updatePhoto(long id, MultipartFile file) {
@@ -44,7 +44,7 @@ public class EmployerProfileService extends AbstractService<EmployerProfile> {
     }
 
     public List<EmployerProfile> getProfilesExpNotNull() {
-        return dao.getProfilesExpNotNullDAO();
+        return employerProfileDao.findAllByExpiryBlockIsNotNull();
     }
 
 }

@@ -1,6 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.impl.EmployerReviewsDAO;
+import com.jm.jobseekerplatform.dao.interfaces.EmployerReviewsDao;
 import com.jm.jobseekerplatform.model.EmployerReviews;
 import com.jm.jobseekerplatform.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmployerReviewsService extends AbstractService<EmployerReviews> {
 
     @Autowired
-    private EmployerReviewsDAO employerReviewsDAO;
+    private EmployerReviewsDao employerReviewsDao;
 
     @Override
     public void deleteById(Long reviewId) {
-        employerReviewsDAO.deleteById(reviewId);
+        employerReviewsDao.deleteById(reviewId);
     }
 }

@@ -1,7 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
-import com.jm.jobseekerplatform.dao.SeekerStatusNewsDAOI;
-import com.jm.jobseekerplatform.dao.impl.SeekerStatusNewsDAO;
+import com.jm.jobseekerplatform.dao.interfaces.SeekerStatusNewsDao;
 import com.jm.jobseekerplatform.dto.SeekerStatusNewsDTO;
 import com.jm.jobseekerplatform.model.News;
 import com.jm.jobseekerplatform.model.NewsStatus;
@@ -18,28 +17,25 @@ import java.util.List;
 public class SeekerStatusNewsService extends AbstractService<SeekerStatusNews> {
 
     @Autowired
-    SeekerStatusNewsDAO seekerStatusNewsDAO;
-
-    @Autowired
-    SeekerStatusNewsDAOI seekerStatusNewsDAOI;
+    SeekerStatusNewsDao seekerStatusNewsDao;
 
     @Autowired
     private NewsService newsService;
 
     public void updateAllSeekerCount(List<SeekerStatusNews> list) {
-        seekerStatusNewsDAOI.saveAll(list);
+        seekerStatusNewsDao.saveAll(list);
     }
 
     public List<SeekerStatusNews> getAllSeekerStatusNews(SeekerProfile seekerProfile) {
-        return seekerStatusNewsDAO.getAllSeekerStatusNewsDAO(seekerProfile);
+        return seekerStatusNewsDao.getAllSeekerStatusNewsDAO(seekerProfile);
     }
 
     public SeekerStatusNews getSeekerStatusNews(News news, SeekerProfile seekerProfile) {
-        return seekerStatusNewsDAO.getSeekerStatusNewsDAO(news, seekerProfile);
+        return seekerStatusNewsDao.getSeekerStatusNewsDAO(news, seekerProfile);
     }
 
     public void update(SeekerStatusNews seekerStatusNews) {
-        seekerStatusNewsDAO.update(seekerStatusNews);
+        seekerStatusNewsDao.save(seekerStatusNews);
     }
 
     // Добавление статуса просмотренным новостям
