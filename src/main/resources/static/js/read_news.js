@@ -33,14 +33,6 @@ $(document).ready(function () {
                             '<textarea class="form-control z-depth-1 pl-3" style="background: none; border: none;" ' +
                             'id="comment_' + data.content[i].id + '"  rows="3" disabled>' + data.content[i].text + '</textarea></div>' +
                             ' </div></div></div></div>');
-                       /* $('#comment_block_' + data.content[i].id).after('<div class="m-5" class="d-none"><div class="card-body">' +
-                            '<div class="row">' + '<div class="col-md-2"><img class="img img-rounded img-fluid d-block" ' +
-                            'alt="" src="https://image.ibb.co/jw55Ex/def_face.jpg"/></div>' +
-                            '<div class="comment_area-body col-md-10"><div class="mt-3">' +
-                            '<div class="form-group basic-textarea rounded-corners">' +
-                            '<div class="form-control z-depth-1 pl-3" style="height: 100px;" contenteditable="true">'
-                            + data.content[i].profile.name + " " + data.content[i].profile.surname + "," + '</div></div>' +
-                            ' </div></div></div></div></div>');*/
                         let $logo = $('#logo_' + data.content[i].id);
                         $logo.attr("src", "https://image.ibb.co/jw55Ex/def_face.jpg");
                         let $comments = $('#comment_' + data.content[i].id);
@@ -104,10 +96,35 @@ $(document).ready(function () {
                         });
                         let $replyBtn = $('#reply_to_comment_' + data.content[i].id);
                         $replyBtn.on('click', function () {
-                            $(this).toggleClass("d-none");
-                            if ($(this).hasClass("d-none") == true) {
-
+                            $(this).children().remove();
+                            $(this).removeClass("btn-primary");
+                            $(this).addClass("btn-secondary");
+                            $(this).append('<i class="fas fa-times mr-2"></i><span>Отмена</span>');
+                            if($('#comment_block_' + data.content[i].id).next().is('.reply')){
+                                $('#comment_block_' + data.content[i].id).next().remove();
+                                $(this).children().remove();
+                                $(this).removeClass("btn-secondary");
+                                $(this).addClass("btn-primary");
+                                $(this).append('<i class="fas fa-reply mr-2"></i><span>Ответить</span>');
                             }
+                            else {
+                                $('#comment_block_' + data.content[i].id).after('<div class="m-5 reply">' +
+                                    '<div class="card-body p-0"><div class="row"><div class="col-md-2">' +
+                                    '<img class="img img-rounded img-fluid d-block" alt="" ' +
+                                    'src="https://image.ibb.co/jw55Ex/def_face.jpg"/></div>' +
+                                    '<div class="comment_area-body col-md-10"><div class="mt-3">' +
+                                    '<div class="form-group basic-textarea rounded-corners">' +
+                                    '<div class="form-control z-depth-1 pl-3" style="height: 100px;"' +
+                                    ' contenteditable="true">' + data.content[i].profile.name + " "
+                                    + data.content[i].profile.surname + "," + '</div></div></div></div></div></div>' +
+                                    '<button type="button" class="float-right btn btn-outline-primary' +
+                                    ' ml-3 mr-2" id="reply_to_comment' + data.content[i].id + '">' +
+                                    '<i class="far fa-comment-dots mr-2"></i><span>Отправить</span></button</div>');
+                            }
+                            let $sendReplyToComment = $('#reply_to_comment' + data.content[i].id);
+                            $sendReplyToComment.on('click', function () {
+                                console.log('Sending reply');
+                            })
                         });
                     });
                     pageNumber++;
