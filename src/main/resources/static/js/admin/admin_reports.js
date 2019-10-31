@@ -21,7 +21,7 @@ $(document).ready(function () {
             $.each(data, function (i, report) {
                 $reports.append(
                     '<tr><td class="text-center align-middle">' + (i + 1) + '</td>' +
-                    '<td class="text-center align-middle">' + data[i].dateTime + '</td>' +
+                    '<td class="text-center align-middle">' + datetimeFormatter(new Date(data[i].dateTime)) + '</td>' +
                     '<td class="text-center align-middle" style=" word-wrap: break-word;">'
                     + data[i].description + '</td>' +
                     '<td class="text-center align-middle"><button class="btn btn-primary" data-toggle="modal" ' +
@@ -37,11 +37,11 @@ $(document).ready(function () {
                     $reportHeader.text("Жалоба на комментарий №" + (i + 1));
                     $reportAuthor.prop("value", data[i].author.name);
                     $authorProfile.prop("href", "/seeker/" + data[i].author.id);
-                    $reportDate.prop("value", data[i].dateTime);
+                    $reportDate.prop("value", datetimeFormatter(new Date(data[i].dateTime)));
                     $reportCause.prop("value", data[i].description);
                     $reportCommentAuthor.prop("value", data[i].comment.profile.name);
                     $commentAuthorProfile.prop("href", "/seeker/" + data[i].comment.profile.id);
-                    $reportCommentDate.prop("value", data[i].comment.dateTime);
+                    $reportCommentDate.prop("value", datetimeFormatter(new Date(data[i].comment.dateTime)));
                     $reportComment.prop("value", data[i].comment.text);
                 });
                 $reportNewsBtn.on('click', function () {
@@ -68,4 +68,9 @@ $(document).ready(function () {
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
+
+    function datetimeFormatter(date) {
+        return date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear() + " " +
+            date.getHours() + ":" + date.getMinutes();
+    }
 });

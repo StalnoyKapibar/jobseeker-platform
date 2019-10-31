@@ -24,18 +24,23 @@ $(document).ready(function () {
                     }
                     console.log(data);
                     $.each(data.content, function (i, comment) {
-                        let date = new Date(data.content[i].dateTime);
-                        let datestring = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear() + " " +
-                            date.getHours() + ":" + date.getMinutes();
                         $('#user_comments').after('<div class="m-5" id="comment_block_' + data.content[i].id + '"><div class="card-body"><div class="row">' +
                             '<div class="col-md-2"><img id="logo_' + data.content[i].id + '" ' +
                             'class="img img-rounded img-fluid mb-2 ml-4" alt="">' +
-                            '<p class="text-secondary text-center">' + datestring + '</p></div>' +
+                            '<p class="text-secondary text-center">' + datetimeFormatter(new Date(data.content[i].dateTime)) + '</p></div>' +
                             '<div class="col-md-10"><p class="pl-3"><strong>' + data.content[i].profile.name + " " +
                             data.content[i].profile.surname + '</strong></p><div class="form-group basic-textarea">' +
                             '<textarea class="form-control z-depth-1 pl-3" style="background: none; border: none;" ' +
                             'id="comment_' + data.content[i].id + '"  rows="3" disabled>' + data.content[i].text + '</textarea></div>' +
                             ' </div></div></div></div>');
+                       /* $('#comment_block_' + data.content[i].id).after('<div class="m-5" class="d-none"><div class="card-body">' +
+                            '<div class="row">' + '<div class="col-md-2"><img class="img img-rounded img-fluid d-block" ' +
+                            'alt="" src="https://image.ibb.co/jw55Ex/def_face.jpg"/></div>' +
+                            '<div class="comment_area-body col-md-10"><div class="mt-3">' +
+                            '<div class="form-group basic-textarea rounded-corners">' +
+                            '<div class="form-control z-depth-1 pl-3" style="height: 100px;" contenteditable="true">'
+                            + data.content[i].profile.name + " " + data.content[i].profile.surname + "," + '</div></div>' +
+                            ' </div></div></div></div></div>');*/
                         let $logo = $('#logo_' + data.content[i].id);
                         $logo.attr("src", "https://image.ibb.co/jw55Ex/def_face.jpg");
                         let $comments = $('#comment_' + data.content[i].id);
@@ -99,14 +104,10 @@ $(document).ready(function () {
                         });
                         let $replyBtn = $('#reply_to_comment_' + data.content[i].id);
                         $replyBtn.on('click', function () {
-                            $('#comment_block_' + data.content[i].id).after('<div class="m-5"><div class="card-body">' +
-                                '<div class="row">' + '<div class="col-md-2"><img class="img img-rounded img-fluid d-block" ' +
-                                'alt="" src="https://image.ibb.co/jw55Ex/def_face.jpg"/></div>' +
-                                '<div class="comment_area-body col-md-10"><div class="mt-3">' +
-                                '<div class="form-group basic-textarea rounded-corners">' +
-                                '<div class="form-control z-depth-1 pl-3" style="height: 100px;" contenteditable="true">'
-                                + data.content[i].profile.name + " " + data.content[i].profile.surname + "," + '</div></div>' +
-                                ' </div></div></div></div></div>')
+                            $(this).toggleClass("d-none");
+                            if ($(this).hasClass("d-none") == true) {
+
+                            }
                         });
                     });
                     pageNumber++;
@@ -114,6 +115,7 @@ $(document).ready(function () {
             });
         }
     });
+
     $saveBtn.on('click', function (e) {
         let id = Number($editCommentId.val());
         if ($editForm.val()) {
@@ -133,7 +135,6 @@ $(document).ready(function () {
     });
 
     $addBtn.on('click', function (e) {
-        //let $commentText = $('#user_comment').val();
         let $commentText = $('#user_comment').text();
         if ($commentText) {
             $.ajax({
@@ -159,18 +160,23 @@ $(document).ready(function () {
                 $description = ($(this).next()).text().trim();
             }
         });
-        $.ajax({
-            url: "/api/report/comments/add",
-            type: "POST",
-            data: "id=" + $id + "&description=" + $description,
-            contentType: "application/x-www-form-urlencoded;charset=utf-8",
-            beforeSend: function (request) {
-                request.setRequestHeader($header, $token);
-            },
-            success: function () {
-                location.reload();
-            }
-        });
+        if ($id && $description) {
+            $.ajax({
+                url: "/api/report/comments/add",
+                type: "POST",
+                data: "id=" + $id + "&description=" + $description,
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                beforeSend: function (request) {
+                    request.setRequestHeader($header, $token);
+                },
+                success: function () {
+                    location.reload();
+                }
+            });
+        } else {
+            return;
+        }
+
     });
 
     showBtn();
@@ -181,6 +187,11 @@ $(document).ready(function () {
                 $sendReportBtn.removeClass("d-none");
             });
         });
+    }
+
+    function datetimeFormatter(date) {
+        return date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear() + " " +
+            date.getHours() + ":" + date.getMinutes();
     }
 
 
