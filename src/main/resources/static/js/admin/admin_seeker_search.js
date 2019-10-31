@@ -91,7 +91,7 @@ function searchSeeker(string) {
                         '<td>' + seekerUser.id + '</td>' +
                         '<td>' + insert + '</td>' +
                         '<td>' + seekerUser.email + '</td>' +
-                        '<td>' + seekerUser.date.format("yyyy-mm-dd") + '</td>' +
+                        '<td>' + seekerUser.date + '</td>' +
                         '<td>' +
                             '<button onclick="editEmployer(' + seekerUser.id + ')" type="button"' +
                                     'class="btn btn-primary">' +

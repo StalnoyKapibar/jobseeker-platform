@@ -86,25 +86,25 @@ function searchEmployer(string) {
                     '</div>'
                 ;
 
-            button += '' +
-                '<tr style="height: ' + heightNum + 'px">' +
-                    '<td>' + employerUser.id + '</td>' +
-                    '<td>' + insert + '</td>' +
-                    '<td>' + employerUser.email + '</td>' +
-                    '<td>' + employerUser.date.format("yyyy-mm-dd") + '</td>' +
-                    '<td>' +
-                        '<button onclick="editEmployer(' + employerUser.id + ')" type="button"' +
-                                'class="btn btn-primary">' +
-                            'Edit Employer' +
-                        '</button>' +
-                        '<button onclick="deleteEmployer(' + employerUser.id + ')" type="button"' +
-                                'class="btn btn-primary" style="margin-left: 5px">' +
-                            'Delete Employer' +
-                        '</button>' +
-                    '</td>' +
-                '<tr>'
-            ;
-});
+                button += '' +
+                    '<tr style="height: ' + heightNum + 'px">' +
+                        '<td>' + employerUser.id + '</td>' +
+                        '<td>' + insert + '</td>' +
+                        '<td>' + employerUser.email + '</td>' +
+                        '<td>' + employerUser.date + '</td>' +
+                        '<td>' +
+                            '<button onclick="editEmployer(' + employerUser.id + ')" type="button"' +
+                                    'class="btn btn-primary">' +
+                                'Edit Employer' +
+                            '</button>' +
+                            '<button onclick="deleteEmployer(' + employerUser.id + ')" type="button"' +
+                                    'class="btn btn-primary" style="margin-left: 5px">' +
+                                'Delete Employer' +
+                            '</button>' +
+                        '</td>' +
+                    '<tr>'
+                ;
+            });
 
             button += '</tbody></table>';
             $("#employerTable").append(button);
