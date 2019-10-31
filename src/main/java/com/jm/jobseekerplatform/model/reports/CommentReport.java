@@ -5,6 +5,7 @@ import com.jm.jobseekerplatform.model.comments.Comment;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @DiscriminatorValue("Comment")
@@ -22,13 +23,13 @@ public class CommentReport extends Report implements Serializable {
     public CommentReport() {
     }
 
-    public CommentReport(String dateTime, String description, Comment comment, Profile author) {
+    public CommentReport(LocalDateTime dateTime, String description, Comment comment, Profile author) {
         super(dateTime, description);
         this.comment = comment;
         this.author = author;
     }
 
-    public CommentReport(String dateTime, String description, Comment comment) {
+    public CommentReport(LocalDateTime dateTime, String description, Comment comment) {
         super(dateTime, description);
         this.comment = comment;
     }

@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.model.reports;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reports")
@@ -12,8 +13,8 @@ public abstract class Report implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "date_time")
-    private String dateTime;
+    @Column(name = "date")
+    private LocalDateTime dateTime;
 
     @Column(name = "description", nullable = false)
     private String description;
@@ -21,7 +22,7 @@ public abstract class Report implements Serializable {
     public Report() {
     }
 
-    public Report(String dateTime, String description) {
+    public Report(LocalDateTime dateTime, String description) {
         this.dateTime = dateTime;
         this.description = description;
     }
@@ -34,11 +35,11 @@ public abstract class Report implements Serializable {
         this.id = id;
     }
 
-    public String getDateTime() {
+    public LocalDateTime getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(String dateTime) {
+    public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 

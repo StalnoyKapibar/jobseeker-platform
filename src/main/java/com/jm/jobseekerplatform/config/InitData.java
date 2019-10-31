@@ -782,7 +782,7 @@ public class InitData {
     private void initComments() {
         Profile profile1 = profileService.getById(8L);
         List<News> newsList = newsService.getAll();
-        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        LocalDateTime dateTime = LocalDateTime.now();
         for (News n : newsList) {
             n.getComments().add(new Comment("Отличная новость", n, profile1, dateTime));
             newsService.update(n);
