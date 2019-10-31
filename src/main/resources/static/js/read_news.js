@@ -24,24 +24,26 @@ $(document).ready(function () {
                     }
                     console.log(data);
                     $.each(data.content, function (i, comment) {
-                        $('#user_comments').after('<div class="m-5" id="comment_block_' + data.content[i].id + '"><div class="card-body"><div class="row">' +
+                        $('#user_comments').after('<div class="m-5" ' +
+                            'id="comment_block_' + data.content[i].id + '"><div class="card-body"><div class="row">' +
                             '<div class="col-md-2"><img id="logo_' + data.content[i].id + '" ' +
                             'class="img img-rounded img-fluid mb-2 ml-4" alt="">' +
-                            '<p class="text-secondary text-center">' + datetimeFormatter(new Date(data.content[i].dateTime)) + '</p></div>' +
+                            '<p class="text-secondary text-center">'
+                            + datetimeFormatter(new Date(data.content[i].dateTime)) + '</p></div>' +
                             '<div class="col-md-10"><p class="pl-3"><strong>' + data.content[i].profile.name + " " +
                             data.content[i].profile.surname + '</strong></p><div class="form-group basic-textarea">' +
                             '<textarea class="form-control z-depth-1 pl-3" style="background: none; border: none;" ' +
-                            'id="comment_' + data.content[i].id + '"  rows="3" disabled>' + data.content[i].text + '</textarea></div>' +
-                            ' </div></div></div></div>');
+                            'id="comment_' + data.content[i].id + '"  rows="3" disabled>' + data.content[i].text + '' +
+                            '</textarea></div></div></div></div></div>');
                         let $logo = $('#logo_' + data.content[i].id);
                         $logo.attr("src", "https://image.ibb.co/jw55Ex/def_face.jpg");
                         let $comments = $('#comment_' + data.content[i].id);
                         if ($currentProfileId == data.content[i].profile.id) {
                             $comments.after('<button type="button"' +
                                 ' class="float-right btn text-white btn-info ml-3 mt-2"' +
-                                ' id="edit-comment_' + data.content[i].id + '" data-toggle="modal" data-target="#editModal"> ' +
-                                '<i class="far fa-edit mr-2"></i><span> Редактировать</span></button>'
-                            );
+                                ' id="edit-comment_' + data.content[i].id + '" data-toggle="modal" ' +
+                                'data-target="#editModal"> <i class="far fa-edit mr-2"></i>' +
+                                '<span> Редактировать</span></button>');
                             $comments.after('<button type="button" ' +
                                 'class="float-right btn text-white btn-danger ml-3 mt-2" ' +
                                 'id="delete-comment_' + data.content[i].id + '">' +
@@ -100,14 +102,13 @@ $(document).ready(function () {
                             $(this).removeClass("btn-primary");
                             $(this).addClass("btn-secondary");
                             $(this).append('<i class="fas fa-times mr-2"></i><span>Отмена</span>');
-                            if($('#comment_block_' + data.content[i].id).next().is('.reply')){
+                            if ($('#comment_block_' + data.content[i].id).next().is('.reply')) {
                                 $('#comment_block_' + data.content[i].id).next().remove();
                                 $(this).children().remove();
                                 $(this).removeClass("btn-secondary");
                                 $(this).addClass("btn-primary");
                                 $(this).append('<i class="fas fa-reply mr-2"></i><span>Ответить</span>');
-                            }
-                            else {
+                            } else {
                                 $('#comment_block_' + data.content[i].id).after('<div class="m-5 reply">' +
                                     '<div class="card-body p-0"><div class="row"><div class="col-md-2">' +
                                     '<img class="img img-rounded img-fluid d-block" alt="" ' +
