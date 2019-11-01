@@ -7,6 +7,7 @@ import com.jm.jobseekerplatform.model.profiles.Profile;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "replies")
@@ -20,7 +21,7 @@ public class Reply implements Serializable {
     private String text;
 
     @Column(name ="date_time")
-    private String dateTime;
+    private LocalDateTime dateTime;
 
     @Column(name ="level")
     private Long level;
@@ -37,7 +38,7 @@ public class Reply implements Serializable {
     public Reply() {
     }
 
-    public Reply(String text, String dateTime, Long level, Profile profile, Comment comment) {
+    public Reply(String text, LocalDateTime dateTime, Long level, Profile profile, Comment comment) {
         this.text = text;
         this.dateTime = dateTime;
         this.level = level;
@@ -61,11 +62,11 @@ public class Reply implements Serializable {
         this.text = text;
     }
 
-    public String getDateTime() {
+    public LocalDateTime getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(String dateTime) {
+    public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 
