@@ -1,10 +1,8 @@
 package com.jm.jobseekerplatform;
 
+import com.jm.jobseekerplatform.config.InitData;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import com.jm.jobseekerplatform.config.InitData;
 
 @SpringBootApplication
 public class JobseekerPlatformApplication {
