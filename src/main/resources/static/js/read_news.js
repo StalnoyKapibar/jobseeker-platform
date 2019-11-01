@@ -11,6 +11,7 @@ $(document).ready(function () {
     let $sendReportBtn = $('#send_report');
     let $commentId = $('#commentId');
     let pageNumber = 0;
+    let totalPages;
     $(window).scroll(function () {
         if ($(document).height() - $(window).height() === $(window).scrollTop()) {
             $.ajax({
@@ -22,9 +23,9 @@ $(document).ready(function () {
                     if (data.content.length === 0) {
                         return
                     }
-                    console.log(data);
+                    totalPages = data.totalPages;
                     $.each(data.content, function (i, comment) {
-                        $('#user_comments').after('<div class="m-5" ' +
+                        $('#user_comments').after('<div class="m-5 comment-block" ' +
                             'id="comment_block_' + data.content[i].id + '"><div class="card-body"><div class="row">' +
                             '<div class="col-md-2"><img id="logo_' + data.content[i].id + '" ' +
                             'class="img img-rounded img-fluid mb-2 ml-4" alt="">' +
@@ -38,23 +39,57 @@ $(document).ready(function () {
                         let $logo = $('#logo_' + data.content[i].id);
                         $logo.attr("src", "https://image.ibb.co/jw55Ex/def_face.jpg");
                         let $comments = $('#comment_' + data.content[i].id);
+                        let $commentBlock = $('#comment_block_' + data.content[i].id);
+                        $commentBlock.append('<div class="btn-group  w-100 d-flex flex-row">' +
+                            '<div class="ml-5 btn-group-left_' + data.content[i].id + '"></div>' +
+                            '<div class="mr-5  ml-auto btn-group-right_' + data.content[i].id + '"></div></div>');
+                        $('.btn-group-left_' + data.content[i].id).append('<button type="button" ' +
+                            'class="btn text-primary mt-2 mr-3 dropdown-toggle" id = "replies_for_comment_'
+                            + data.content[i].id + '"> ' +
+                            '<i class="far fa-comment-dots mr-2"></i>' +
+                            '<span id="count_replies_for_comment_' + data.content[i].id + '"></span></button>');
+                        let $countForRepliesForComment = $('#count_replies_for_comment_' + data.content[i].id);
+                        let repliesForComment = getAllRepliesForComment(data.content[i].id);
+                        let $showRepliesForComment = $('#replies_for_comment_' + data.content[i].id);
+                        if (repliesForComment.length != 0) {
+                            $countForRepliesForComment.text(repliesForComment.length);
+                            $showRepliesForComment.on('click', function () {
+                                for (let j = 0; j < repliesForComment.length; j++) {
+                                    $commentBlock.after('<div class="m-5 w-100 reply-block" ' +
+                                        'id="reply_block_' + repliesForComment[j].id + '"><div class="card-body">' +
+                                        '<div class="row">' +
+                                        '<div class="col-md-2"><img class="img img-rounded img-fluid mb-2 ml-4" ' +
+                                        'alt="" src="https://image.ibb.co/jw55Ex/def_face.jpg">' +
+                                        '<p class="text-secondary text-center">'
+                                        + datetimeFormatter(new Date(repliesForComment[j].dateTime)) + '</p></div>' +
+                                        '<div class="col-md-10"><p class="pl-3"><strong>' +
+                                        repliesForComment[j].profile.name + " " +
+                                        repliesForComment[j].profile.surname + '</strong></p><div ' +
+                                        'class="form-group basic-textarea">' +
+                                        '<textarea class="form-control z-depth-1 pl-3" style="background: none; border: none;" ' +
+                                        'id="reply_' + repliesForComment[j].id + '"  rows="3" disabled>' +
+                                        repliesForComment[j].text + '' +
+                                        '</textarea></div></div></div></div></div></div>');
+                                }
+                            });
+                        }
                         if ($currentProfileId == data.content[i].profile.id) {
-                            $comments.after('<button type="button"' +
-                                ' class="float-right btn text-white btn-info ml-3 mt-2"' +
+                            $('.btn-group-right_' + data.content[i].id).append('<button type="button"' +
+                                ' class="btn text-white btn-info ml-3 mt-2"' +
                                 ' id="edit-comment_' + data.content[i].id + '" data-toggle="modal" ' +
                                 'data-target="#editModal"> <i class="far fa-edit mr-2"></i>' +
                                 '<span> Редактировать</span></button>');
-                            $comments.after('<button type="button" ' +
-                                'class="float-right btn text-white btn-danger ml-3 mt-2" ' +
+                            $('.btn-group-right_' + data.content[i].id).append('<button type="button" ' +
+                                'class="btn text-white btn-danger ml-3 mt-2" ' +
                                 'id="delete-comment_' + data.content[i].id + '">' +
                                 ' <i class="far fa-trash-alt mr-2"></i><span> Удалить</span></button>');
                         } else {
-                            $comments.after('<button type="button" ' +
-                                'class="float-right btn text-white btn-warning ml-3 mt-2" id = "report_to_comment_'
+                            $('.btn-group-right_' + data.content[i].id).append('<button type="button" ' +
+                                'class="btn text-white btn-warning ml-3 mt-2" id = "report_to_comment_'
                                 + data.content[i].id + '" data-toggle="modal" data-target="#reportModal"> ' +
                                 '<i class="fas fa-exclamation-triangle mr-2"></i><span>Пожаловаться</span></button>');
-                            $comments.after('<button type="button" ' +
-                                'class="float-right btn text-white btn-primary ml-3 mt-2" id = "reply_to_comment_'
+                            $('.btn-group-right_' + data.content[i].id).append('<button type="button" ' +
+                                'class="btn text-white btn-primary ml-3 mt-2" id = "reply_to_comment_'
                                 + data.content[i].id + '" > ' +
                                 '<i class="fas fa-reply mr-2"></i><span>Ответить</span></button>');
                         }
@@ -99,38 +134,56 @@ $(document).ready(function () {
                         let $replyBtn = $('#reply_to_comment_' + data.content[i].id);
                         $replyBtn.on('click', function () {
                             $(this).children().remove();
-                            $(this).removeClass("btn-primary");
-                            $(this).addClass("btn-secondary");
-                            $(this).append('<i class="fas fa-times mr-2"></i><span>Отмена</span>');
-                            if ($('#comment_block_' + data.content[i].id).next().is('.reply')) {
-                                $('#comment_block_' + data.content[i].id).next().remove();
+                            $(this).removeClass("btn-primary").addClass("btn-secondary").append('<i class="fas fa-times' +
+                                ' mr-2"></i><span>Отмена</span>');
+                            if ($commentBlock.next().is('.reply')) {
+                                $commentBlock.next().remove();
                                 $(this).children().remove();
-                                $(this).removeClass("btn-secondary");
-                                $(this).addClass("btn-primary");
-                                $(this).append('<i class="fas fa-reply mr-2"></i><span>Ответить</span>');
+                                $(this).removeClass("btn-secondary").addClass("btn-primary").append('<i class="fas ' +
+                                    'fa-reply mr-2"></i><span>Ответить</span>');
                             } else {
-                                $('#comment_block_' + data.content[i].id).after('<div class="m-5 reply">' +
-                                    '<div class="card-body p-0"><div class="row"><div class="col-md-2">' +
+                                $commentBlock.after('<div class="reply mx-5">' +
+                                    '<div class="card-body p-0 mx-5"><div class="row"><div class="col-md-2">' +
                                     '<img class="img img-rounded img-fluid d-block" alt="" ' +
                                     'src="https://image.ibb.co/jw55Ex/def_face.jpg"/></div>' +
                                     '<div class="comment_area-body col-md-10"><div class="mt-3">' +
-                                    '<div class="form-group basic-textarea rounded-corners">' +
-                                    '<div class="form-control z-depth-1 pl-3" style="height: 100px;"' +
-                                    ' contenteditable="true">' + data.content[i].profile.name + " "
-                                    + data.content[i].profile.surname + "," + '</div></div></div></div></div></div>' +
-                                    '<button type="button" class="float-right btn btn-outline-primary' +
-                                    ' ml-3 mr-2" id="reply_to_comment' + data.content[i].id + '">' +
-                                    '<i class="far fa-comment-dots mr-2"></i><span>Отправить</span></button</div>');
+                                    '<div class="form-group basic-textarea rounded-corners"><span class="text-primary"' +
+                                    ' id="comment_author_name_' + data.content[i].id + '"></span>' +
+                                    '<textarea class="form-control z-depth-1 pl-3 mt-2" style="min-height: 100px;"' +
+                                    ' contenteditable="true"></textarea></div></div></div></div></div>' +
+                                    '<div class="btn-group d-flex flex-row justify-content-end"><div class="mr-5">' +
+                                    '<button type="button" class="btn btn-outline-primary' +
+                                    ' ml-3" id="reply_to_comment' + data.content[i].id + '">' +
+                                    '<i class="far fa-comment-dots mr-2"></i><span>Отправить</span></button></div>' +
+                                    '</div></div>');
+                                let commentAuthorName = data.content[i].profile.name + " " +
+                                    data.content[i].profile.surname;
+                                $('#comment_author_name_' + data.content[i].id).text(commentAuthorName + ",");
                             }
                             let $sendReplyToComment = $('#reply_to_comment' + data.content[i].id);
                             $sendReplyToComment.on('click', function () {
-                                console.log('Sending reply');
+                                $.ajax({
+                                    url: "/api/reply/add",
+                                    type: "POST",
+                                    data: "commentId=" + data.content[i].id +
+                                        "&text=" + $('#reply_text_' + data.content[i].id).text(),
+                                    contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                                    beforeSend: function (request) {
+                                        request.setRequestHeader($header, $token);
+                                    },
+                                    success: function () {
+                                        location.reload();
+                                    }
+                                });
                             })
                         });
                     });
                     pageNumber++;
                 }
             });
+            if (pageNumber === totalPages) {
+                $('.comment-block').last().removeClass("m-5").addClass("ml-5 mt-5 mr-5").css({marginBottom: "15vh"});
+            }
         }
     });
 
@@ -210,6 +263,19 @@ $(document).ready(function () {
     function datetimeFormatter(date) {
         return date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear() + " " +
             date.getHours() + ":" + date.getMinutes();
+    }
+
+    function getAllRepliesForComment(commentId) {
+        let result;
+        $.ajax({
+            url: "/api/reply/" + commentId,
+            type: "GET",
+            async: false,
+            success: function (data) {
+                result = data;
+            }
+        });
+        return result;
     }
 
 
