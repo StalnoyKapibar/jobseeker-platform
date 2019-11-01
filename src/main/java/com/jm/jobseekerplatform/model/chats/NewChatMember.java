@@ -44,10 +44,26 @@ public class NewChatMember {
         this.timestamp = timestamp;
     }
 
-    public NewChatMember(Profile participant, Long chatId, Date timestamp) {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
+    }
+
+    public NewChatMember(Profile participant, Long chatId) {
         this.participant = participant;
         this.chatId = chatId;
-        this.timestamp = timestamp;
+        this.timestamp = new Date();
     }
 
     public NewChatMember() {

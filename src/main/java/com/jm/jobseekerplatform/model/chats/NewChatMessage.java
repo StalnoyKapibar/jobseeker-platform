@@ -31,10 +31,50 @@ public class NewChatMessage {
     public NewChatMessage() {
     }
 
-    public NewChatMessage(Long chatId, Profile mOwner, String message, Date mTimestamp) {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
+    }
+
+    public Profile getmOwner() {
+        return mOwner;
+    }
+
+    public void setmOwner(Profile mOwner) {
+        this.mOwner = mOwner;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Date getmTimestamp() {
+        return mTimestamp;
+    }
+
+    public void setmTimestamp(Date mTimestamp) {
+        this.mTimestamp = mTimestamp;
+    }
+
+    public NewChatMessage(Long chatId, Profile mOwner, String message) {
         this.chatId = chatId;
         this.mOwner = mOwner;
         this.message = message;
-        this.mTimestamp = mTimestamp;
+        this.mTimestamp = new Date();
     }
 }

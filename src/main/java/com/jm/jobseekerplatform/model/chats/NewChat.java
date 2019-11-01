@@ -10,8 +10,8 @@ import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Inheritance
@@ -38,13 +38,21 @@ public class NewChat implements Serializable {
     @OneToMany
     @JoinColumn(name = "chat_id", referencedColumnName = "id")
     @JsonIgnore
-    private List<NewChatMember> chatMembers;
+    private Set<NewChatMember> chatMembers;
 
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = org.hibernate.annotations.FetchMode.SELECT)
     @JoinColumn(name = "chat_id", referencedColumnName = "id")
     @JsonIgnore
     private List<NewChatMessage> chatMessages;
+
+    //при использовании конструктора создатель чата в участники не пишется. Поэтому его нужно добавить в Set участников
+    public NewChat(String title, ReferenceType referenceType, Profile creatorProfile, Set<NewChatMember> chatMembers) {
+        this.title = title;
+        this.referenceType = referenceType;
+        this.creatorProfile = creatorProfile;
+        this.chatMembers = chatMembers;
+    }
 
     public Long getId() {
         return id;
@@ -76,16 +84,16 @@ public class NewChat implements Serializable {
 
     public void setCreatorProfile(Profile creatorProfile) {
         // создателя чата сразу же добавляем в участники этого чата
-        NewChatMember newChatMember = new NewChatMember(creatorProfile, this.id, new Date());
+        NewChatMember newChatMember = new NewChatMember(creatorProfile, this.id);
         this.chatMembers.add(newChatMember);
         this.creatorProfile = creatorProfile;
     }
 
-    public List<NewChatMember> getChatMembers() {
+    public Set<NewChatMember> getChatMembers() {
         return chatMembers;
     }
 
-    public void setChatMembers(List<NewChatMember> chatMembers) {
+    public void setChatMembers(Set<NewChatMember> chatMembers) {
         this.chatMembers = chatMembers;
     }
 
@@ -98,7 +106,7 @@ public class NewChat implements Serializable {
     }
 
     public void addChatMessage(String message, Profile mOwner) {
-        NewChatMessage chatMessage = new NewChatMessage(this.id, mOwner, message, new Date());
+        NewChatMessage chatMessage = new NewChatMessage(this.id, mOwner, message);
         this.chatMessages.add(chatMessage);
     }
 
