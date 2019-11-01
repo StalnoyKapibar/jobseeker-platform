@@ -181,9 +181,9 @@ $(document).ready(function () {
                     pageNumber++;
                 }
             });
-            if (pageNumber === totalPages) {
+            /*if (pageNumber === totalPages) {
                 $('.comment-block').last().removeClass("m-5").addClass("ml-5 mt-5 mr-5").css({marginBottom: "15vh"});
-            }
+            }*/
         }
     });
 
