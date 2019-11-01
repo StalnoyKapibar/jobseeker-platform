@@ -34,7 +34,7 @@ public class SearchRestController {
 
     private List<User> buildListUsers(String string, GrantedAuthority USER_AUTHORITY) {
         List<User> users;
-        if(emailVerification(string)) {
+        if (emailVerification(string)) {
             users = userService.getUserByEmail(string);
             return createListUsers(users, USER_AUTHORITY);
         } else {
