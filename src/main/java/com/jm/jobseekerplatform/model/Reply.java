@@ -23,8 +23,8 @@ public class Reply implements Serializable {
     @Column(name ="date_time")
     private LocalDateTime dateTime;
 
-    @Column(name ="level")
-    private Long level;
+    @Column(name ="address")
+    private Long address;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
@@ -38,10 +38,17 @@ public class Reply implements Serializable {
     public Reply() {
     }
 
-    public Reply(String text, LocalDateTime dateTime, Long level, Profile profile, Comment comment) {
+    public Reply(String text, LocalDateTime dateTime, Long address, Profile profile, Comment comment) {
         this.text = text;
         this.dateTime = dateTime;
-        this.level = level;
+        this.address = address;
+        this.profile = profile;
+        this.comment = comment;
+    }
+
+    public Reply(String text, LocalDateTime dateTime, Profile profile, Comment comment) {
+        this.text = text;
+        this.dateTime = dateTime;
         this.profile = profile;
         this.comment = comment;
     }
@@ -70,12 +77,12 @@ public class Reply implements Serializable {
         this.dateTime = dateTime;
     }
 
-    public Long getLevel() {
-        return level;
+    public Long getAddress() {
+        return address;
     }
 
-    public void setLevel(Long level) {
-        this.level = level;
+    public void setAddress(Long address) {
+        this.address = address;
     }
 
     public Profile getProfile() {

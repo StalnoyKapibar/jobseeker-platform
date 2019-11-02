@@ -32,12 +32,30 @@ public class ReplyRestController {
         Comment comment = commentService.getById(id);
         Profile profile = ((User) authentication.getPrincipal()).getProfile();
         LocalDateTime dateTime = LocalDateTime.now();
-        replyService.add(new Reply(text, dateTime, 1L, profile, comment));
+        replyService.add(new Reply(text, dateTime,  profile, comment));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<List<Reply>> getAllRepliesForComment(@PathVariable("id") Long id){
         return new ResponseEntity<>(replyService.getAllRepliesForComment(commentService.getById(id)), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/insert", params = {"commentId", "text", "addressId"}, method = RequestMethod.POST)
+    public ResponseEntity<Void> addReplyOnReply(@RequestParam("commentId") Long id,
+                                                @RequestParam("text") String text,
+                                                @RequestParam("addressId") Long address,
+                                                Authentication authentication){
+        Comment comment = commentService.getById(id);
+        Profile profile = ((User) authentication.getPrincipal()).getProfile();
+        LocalDateTime dateTime = LocalDateTime.now();
+        replyService.add(new Reply(text, dateTime, address, profile, comment));
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/delete", params = {"id"}, method = RequestMethod.DELETE)
+    public ResponseEntity<Void> deleteReply(@RequestParam("id") Long id){
+        replyService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
