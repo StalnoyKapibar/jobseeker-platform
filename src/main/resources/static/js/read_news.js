@@ -52,7 +52,7 @@ $(document).ready(function () {
                             data.content[i].profile.surname;
                         let $countForRepliesForComment = $('#count_replies_for_comment_' + data.content[i].id);
                         let repliesForComment = getAllRepliesForComment(data.content[i].id);
-                        console.log(JSON.stringify(repliesForComment));
+                        console.log(repliesForComment);
                         let $showRepliesForComment = $('#replies_for_comment_' + data.content[i].id);
                         if (repliesForComment.length != 0) {
                             $('.btn-group-left_' + data.content[i].id).children(".btn").addClass("dropdown-toggle").removeClass("d-none");
@@ -64,26 +64,58 @@ $(document).ready(function () {
                                     $('#reply_block_for_' + data.content[i].id).children().remove();
                                 } else {
                                     for (let j = 0; j < repliesForComment.length; j++) {
-                                        $('#reply_block_for_' + data.content[i].id).append('<div  class="reply-on-comment"' +
-                                            'id="reply_' + repliesForComment[j].id + '"><div class="card-body">' +
-                                            '<div class="row">' +
-                                            '<div class="col-md-2"><img class="img img-rounded img-fluid mb-2 ml-4" ' +
-                                            'alt="" src="https://image.ibb.co/jw55Ex/def_face.jpg">' +
-                                            '<p class="text-secondary text-center">'
-                                            + datetimeFormatter(new Date(repliesForComment[j].dateTime)) + '</p></div>' +
-                                            '<div class="col-md-10"><p class="pl-3"><strong>' +
-                                            repliesForComment[j].profile.name + " " +
-                                            repliesForComment[j].profile.surname + '</strong></p><div ' +
-                                            'class="form-group basic-textarea">' +
-                                            '<div class="form-control z-depth-1 pl-3"' +
-                                            ' style="background: none; border: none;" ' +
-                                            'id="reply_' + repliesForComment[j].id + '"><p><span class="text-primary">'
-                                            + commentAuthorName + "," + '</span>' + " " + repliesForComment[j].text + ''
-                                            + '</p></div></div></div></div></div></div>' +
-                                            '<div class="btn-group  w-100 d-flex flex-row">' +
-                                            '<div class="ml-5 btn-group-left-for-reply_' + repliesForComment[j].id + '">' +
-                                            '</div><div class="mr-5  ml-auto btn-group-right-for-reply_' +
-                                            repliesForComment[j].id + '"></div></div></div>');
+                                        if(repliesForComment[j].level == 1){
+                                            $('#reply_block_for_' + data.content[i].id).append('<div  class="reply-on-comment"' +
+                                                'id="reply_' + repliesForComment[j].id + '"></div>');
+                                        }
+                                        if(repliesForComment[j].address == null){
+                                            $('#reply_' + repliesForComment[j].id).append('<div class="card-body">' +
+                                                '<div class="row">' +
+                                                '<div class="col-md-2"><img class="img img-rounded img-fluid mb-2 ml-4" ' +
+                                                'alt="" src="https://image.ibb.co/jw55Ex/def_face.jpg">' +
+                                                '<p class="text-secondary text-center">'
+                                                + datetimeFormatter(new Date(repliesForComment[j].dateTime)) + '</p></div>' +
+                                                '<div class="col-md-10"><p class="pl-3"><strong>' +
+                                                repliesForComment[j].profile.name + " " +
+                                                repliesForComment[j].profile.surname + '</strong></p><div ' +
+                                                'class="form-group basic-textarea">' +
+                                                '<div class="form-control z-depth-1 pl-3"' +
+                                                ' style="background: none; border: none;" ' +
+                                                'id="reply' + repliesForComment[j].id + '"><p><span class="text-primary">'
+                                                + commentAuthorName + "," + '</span>' + " " + repliesForComment[j].text + ''
+                                                + '</p></div></div>' +
+                                                '<div class="btn-group  w-100 d-flex flex-row">' +
+                                                '<div class="ml-5 btn-group-left-for-reply_' + repliesForComment[j].id + '">' +
+                                                '</div><div class="mr-5  ml-auto btn-group-right-for-reply_' +
+                                                repliesForComment[j].id + '"></div></div></div></div></div>');
+                                        }
+                                       else if(repliesForComment[j].address != null && repliesForComment[j].level > 1){
+                                            let x = repliesForComment[j].level - 1;
+                                            if(!($('#reply_' + repliesForComment[j].address).hasClass("nested-level-" + x))){
+                                                $('#reply_' + repliesForComment[j].address).addClass("nested-level-" + x);
+                                            }
+                                            while (x < repliesForComment[j].level){
+                                                $('#reply_' + repliesForComment[j].address + '.nested-level-' + x).append('<div  class="m-5 w-100 border-left nested-level-' + (x + 1) + '" id="reply_' + repliesForComment[j].id + '"><div class="card-body">' +
+                                                    '<div class="row">' +
+                                                    '<div class="col-md-2"><img class="img img-rounded img-fluid mb-2 ml-4" ' +
+                                                    'alt="" src="https://image.ibb.co/jw55Ex/def_face.jpg">' +
+                                                    '<p class="text-secondary text-center">'
+                                                    + datetimeFormatter(new Date(repliesForComment[j].dateTime)) + '</p></div>' +
+                                                    '<div class="col-md-10"><p class="pl-3"><strong>' +
+                                                    repliesForComment[j].profile.name + " " +
+                                                    repliesForComment[j].profile.surname + '</strong></p><div ' +
+                                                    'class="form-group basic-textarea">' +
+                                                    '<div class="form-control z-depth-1 pl-3"' +
+                                                    ' style="background: none; border: none;" ' +
+                                                    'id="reply' + repliesForComment[j].id + '"><p><span class="text-primary">'+  +'</span>' + " " + repliesForComment[j].text + ''
+                                                    + '</p></div></div>' +
+                                                    '<div class="btn-group  w-100 d-flex flex-row">' +
+                                                    '<div class="ml-5 btn-group-left-for-reply_' + repliesForComment[j].id + '">' +
+                                                    '</div><div class="mr-5  ml-auto btn-group-right-for-reply_' +
+                                                    repliesForComment[j].id + '"></div></div></div></div></div></div>');
+                                                x++;
+                                            }
+                                        }
                                         $('.btn-group-left-for-reply_' + repliesForComment[j].id).append(
                                             '<button type="button" ' +
                                             'class="btn d-none text-primary mt-2 mr-3" id = "replies_for_reply_'
@@ -101,9 +133,9 @@ $(document).ready(function () {
                                             $('.btn-group-right-for-reply_' + repliesForComment[j].id).append(
                                                 '<button type="button" ' +
                                                 'class="btn text-white btn-danger ml-3 mt-2" ' +
-                                                'id="delete-reply_' + repliesForComment[i].id + '">' +
+                                                'id="delete-reply_' + repliesForComment[j].id + '">' +
                                                 ' <i class="far fa-trash-alt mr-2"></i><span> Удалить</span></button>');
-                                            let $deleteReplyBtn = $('#delete-reply_' + repliesForComment[i].id);
+                                            let $deleteReplyBtn = $('#delete-reply_' + repliesForComment[j].id);
                                             $deleteReplyBtn.on('click', function () {
                                                 let confirmation = confirm("Вы действительно хотите удалить свой ответ?");
                                                 $.ajax({
@@ -118,7 +150,8 @@ $(document).ready(function () {
                                                     }
                                                 });
                                             });
-                                        } else {
+                                        }
+                                        else {
                                             $('.btn-group-right-for-reply_' + repliesForComment[j].id).append('<button type="button" ' +
                                                 'class="btn text-white btn-warning ml-3 mt-2" id = "report_to_reply_'
                                                 + repliesForComment[j].id + '" data-toggle="modal" data-target="#reportModal"> ' +
@@ -166,7 +199,7 @@ $(document).ready(function () {
                                                         url: "/api/reply/insert",
                                                         type: "POST",
                                                         data: "commentId=" + data.content[i].id +
-                                                            "&text=" + $('#reply_text_for_reply_' + repliesForComment[j].id).val() + "&addressId=" +  repliesForComment[j].id,
+                                                            "&text=" + $('#reply_text_for_reply_' + repliesForComment[j].id).val() + "&addressId=" + repliesForComment[j].id + "&level=" + (repliesForComment[j].level + 1),
                                                         contentType: "application/x-www-form-urlencoded;charset=utf-8",
                                                         beforeSend: function (request) {
                                                             request.setRequestHeader($header, $token);
@@ -378,6 +411,10 @@ $(document).ready(function () {
             d.getDate().toString()) + " " + (d.getHours().toString().length == 2 ? d.getHours().toString() : "0"
             + d.getHours().toString()) + ":" + ((parseInt(d.getMinutes()).toString().length == 2 ?
             (parseInt(d.getMinutes())).toString() : "0" + (parseInt(d.getMinutes())).toString()));
+    }
+
+    function printReplies(reply, commentId, address, level, commentAuthorName, currentProfileId) {
+
     }
 
     function getAllRepliesForComment(commentId) {

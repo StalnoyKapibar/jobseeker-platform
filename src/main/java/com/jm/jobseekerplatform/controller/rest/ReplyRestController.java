@@ -32,7 +32,7 @@ public class ReplyRestController {
         Comment comment = commentService.getById(id);
         Profile profile = ((User) authentication.getPrincipal()).getProfile();
         LocalDateTime dateTime = LocalDateTime.now();
-        replyService.add(new Reply(text, dateTime,  profile, comment));
+        replyService.add(new Reply(text, dateTime, 1L,  profile, comment));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -41,15 +41,16 @@ public class ReplyRestController {
         return new ResponseEntity<>(replyService.getAllRepliesForComment(commentService.getById(id)), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/insert", params = {"commentId", "text", "addressId"}, method = RequestMethod.POST)
+    @RequestMapping(value = "/insert", params = {"commentId", "text", "addressId", "level"}, method = RequestMethod.POST)
     public ResponseEntity<Void> addReplyOnReply(@RequestParam("commentId") Long id,
                                                 @RequestParam("text") String text,
                                                 @RequestParam("addressId") Long address,
+                                                @RequestParam("level") Long level,
                                                 Authentication authentication){
         Comment comment = commentService.getById(id);
         Profile profile = ((User) authentication.getPrincipal()).getProfile();
         LocalDateTime dateTime = LocalDateTime.now();
-        replyService.add(new Reply(text, dateTime, address, profile, comment));
+        replyService.add(new Reply(text, dateTime, address, level,  profile, comment));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
