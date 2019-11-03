@@ -1,0 +1,14 @@
+.progressbar {
+    margin: 20px;
+    width: 200px;
+    height: 200px;
+    position: relative;
+}
+/* Dynamic diagramm styles */
+canvas[id^="dynamic_"]{
+    margin-top: 40px;
+}
+.chart {
+    width: 100%;
+    min-height: 450px;
+}

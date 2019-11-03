@@ -1,5 +1,6 @@
 package com.jm.jobseekerplatform.service.impl;
 
+import com.jm.jobseekerplatform.dao.ResumeDaoI;
 import com.jm.jobseekerplatform.dao.impl.ResumeDAO;
 import com.jm.jobseekerplatform.model.City;
 import com.jm.jobseekerplatform.model.Point;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,6 +27,9 @@ public class ResumeService extends AbstractService<Resume> {
 
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private ResumeDaoI resumeDaoI;
 
     @Autowired
     private PointService pointService;
@@ -87,9 +93,17 @@ public class ResumeService extends AbstractService<Resume> {
         dao.deleteResumeById(id);
     }
 
-    public Page<Resume> getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(Map<String, Object>
-                                                                                                     queryParamsMap,
-                                                                                   int pageNumber, int pageSize) {
-        return dao.getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(queryParamsMap, pageNumber, pageSize);
+    public Page<Resume> getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(Map<String,
+            Object> queryParamsMap, int pageNumber, int pageSize) {
+        return dao.getPageableResumesWithFilterByQueryParamsMapAndPageNumberAndPageSize(queryParamsMap,
+                pageNumber, pageSize);
+    }
+
+    public List<Resume> getResumesByDatePeriod(LocalDateTime startDate, LocalDateTime endDate) {
+        return resumeDaoI.getResumesByDatePeriod(startDate, endDate);
+    }
+
+    public List<Resume> getAllResumesByTagName(String tagName) {
+        return dao.getAllResumesByTagName(tagName);
     }
 }

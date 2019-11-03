@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 
@@ -141,6 +142,7 @@ public class ResumeRestController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public boolean addResume(@RequestBody Resume resume,
                              Authentication authentication) {
+        resume.setDate(LocalDateTime.now());
         if (resumeService.validateResume(resume)) {
             SeekerProfile seekerProfile = (SeekerProfile) Hibernate.unproxy(seekerProfileService
                                                                     .getById(((User) authentication.getPrincipal())
@@ -171,6 +173,7 @@ public class ResumeRestController {
                                                         .validateJobExperiences(resume.getJobExperiences());
             resume.setJobExperiences(validatedExperiences);
             resume.setCreatorProfile(seekerProfile);
+            resume.setDate(LocalDateTime.now());
             resumeService.updateResume(resume);
             seekerProfileService.update(seekerProfile);
             return true;
