@@ -11,7 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 public class NewChatMember {
@@ -26,7 +26,7 @@ public class NewChatMember {
 
     @Column
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Europe/Moscow")
-    private Date timestamp;
+    private LocalDateTime timestamp;
 
     public Profile getParticipant() {
         return participant;
@@ -36,11 +36,11 @@ public class NewChatMember {
         this.participant = participant;
     }
 
-    public Date getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -63,7 +63,7 @@ public class NewChatMember {
     public NewChatMember(Profile participant, Long chatId) {
         this.participant = participant;
         this.chatId = chatId;
-        this.timestamp = new Date();
+        this.timestamp = LocalDateTime.now();
     }
 
     public NewChatMember() {
