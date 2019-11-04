@@ -40,6 +40,7 @@ $(document).ready(function () {
                         $logo.attr("src", "https://image.ibb.co/jw55Ex/def_face.jpg");
                         let $comments = $('#comment_' + data.content[i].id);
                         let $commentBlock = $('#comment_block_' + data.content[i].id);
+                        let replyAuthorName;
                         $commentBlock.append('<div class="btn-group  w-100 d-flex flex-row">' +
                             '<div class="ml-5 btn-group-left_' + data.content[i].id + '"></div>' +
                             '<div class="mr-5  ml-auto btn-group-right_' + data.content[i].id + '"></div></div>');
@@ -52,11 +53,17 @@ $(document).ready(function () {
                             data.content[i].profile.surname;
                         let $countForRepliesForComment = $('#count_replies_for_comment_' + data.content[i].id);
                         let repliesForComment = getAllRepliesForComment(data.content[i].id);
-                        console.log(repliesForComment);
+                        let replliesIdArray = new Array();
+                        let repliesAddressArray = new Array();
+                        let repliesFirstLevelArray = new Array();
                         let $showRepliesForComment = $('#replies_for_comment_' + data.content[i].id);
-                        if (repliesForComment.length != 0) {
+                        for(let k = 0; k < repliesForComment.length; k++){
+                            if(repliesForComment[k].level == 1)
+                            repliesFirstLevelArray.push(repliesForComment[k].level);
+                        }
+                        if (repliesForComment.length > 0) {
                             $('.btn-group-left_' + data.content[i].id).children(".btn").addClass("dropdown-toggle").removeClass("d-none");
-                            $countForRepliesForComment.text(repliesForComment.length);
+                            $countForRepliesForComment.text(repliesFirstLevelArray.length);
                             $commentBlock.append('<div class="m-5 w-100 border-left" ' +
                                 'id="reply_block_for_' + data.content[i].id + '"></div>');
                             $showRepliesForComment.on('click', function () {
@@ -64,11 +71,20 @@ $(document).ready(function () {
                                     $('#reply_block_for_' + data.content[i].id).children().remove();
                                 } else {
                                     for (let j = 0; j < repliesForComment.length; j++) {
-                                        if(repliesForComment[j].level == 1){
+                                        if (repliesForComment.length > 0) {
+                                            for(let k = 0; k < repliesForComment.length; k++){
+                                                replliesIdArray.push(repliesForComment[k].id);
+                                                if(repliesForComment[k].id == repliesForComment[j].address){
+                                                    replyAuthorName = repliesForComment[k].profile.name + repliesForComment[k].profile.surname;
+                                                }
+                                            }
+                                        }
+                                        if (repliesForComment[j].level == 1) {
                                             $('#reply_block_for_' + data.content[i].id).append('<div  class="reply-on-comment"' +
                                                 'id="reply_' + repliesForComment[j].id + '"></div>');
                                         }
-                                        if(repliesForComment[j].address == null){
+
+                                        if (repliesForComment[j].address == null) {
                                             $('#reply_' + repliesForComment[j].id).append('<div class="card-body">' +
                                                 '<div class="row">' +
                                                 '<div class="col-md-2"><img class="img img-rounded img-fluid mb-2 ml-4" ' +
@@ -88,13 +104,12 @@ $(document).ready(function () {
                                                 '<div class="ml-5 btn-group-left-for-reply_' + repliesForComment[j].id + '">' +
                                                 '</div><div class="mr-5  ml-auto btn-group-right-for-reply_' +
                                                 repliesForComment[j].id + '"></div></div></div></div></div>');
-                                        }
-                                       else if(repliesForComment[j].address != null && repliesForComment[j].level > 1){
+                                        } else if (repliesForComment[j].address != null && repliesForComment[j].level > 1) {
                                             let x = repliesForComment[j].level - 1;
-                                            if(!($('#reply_' + repliesForComment[j].address).hasClass("nested-level-" + x))){
+                                            if (!($('#reply_' + repliesForComment[j].address).hasClass("nested-level-" + x))) {
                                                 $('#reply_' + repliesForComment[j].address).addClass("nested-level-" + x);
                                             }
-                                            while (x < repliesForComment[j].level){
+                                            while (x < repliesForComment[j].level) {
                                                 $('#reply_' + repliesForComment[j].address + '.nested-level-' + x).append('<div  class="m-5 w-100 border-left nested-level-' + (x + 1) + '" id="reply_' + repliesForComment[j].id + '"><div class="card-body">' +
                                                     '<div class="row">' +
                                                     '<div class="col-md-2"><img class="img img-rounded img-fluid mb-2 ml-4" ' +
@@ -107,7 +122,7 @@ $(document).ready(function () {
                                                     'class="form-group basic-textarea">' +
                                                     '<div class="form-control z-depth-1 pl-3"' +
                                                     ' style="background: none; border: none;" ' +
-                                                    'id="reply' + repliesForComment[j].id + '"><p><span class="text-primary">'+  +'</span>' + " " + repliesForComment[j].text + ''
+                                                    'id="reply' + repliesForComment[j].id + '"><p><span class="text-primary"></span>' + " " + repliesForComment[j].text + ''
                                                     + '</p></div></div>' +
                                                     '<div class="btn-group  w-100 d-flex flex-row">' +
                                                     '<div class="ml-5 btn-group-left-for-reply_' + repliesForComment[j].id + '">' +
@@ -115,6 +130,7 @@ $(document).ready(function () {
                                                     repliesForComment[j].id + '"></div></div></div></div></div></div>');
                                                 x++;
                                             }
+                                            $('#reply' +  repliesForComment[j].id).children("p").children("span").text(replyAuthorName + ",");
                                         }
                                         $('.btn-group-left-for-reply_' + repliesForComment[j].id).append(
                                             '<button type="button" ' +
@@ -123,6 +139,15 @@ $(document).ready(function () {
                                             '<i class="far fa-comment-dots mr-2"></i>' +
                                             '<span id="count_replies_for_reply_' + repliesForComment[j].id + '">' +
                                             '</span></button>');
+                                        for(let k = 0; k < repliesForComment.length; k++){
+                                            if(repliesForComment[k].address == repliesForComment[j].id){
+                                                repliesAddressArray.push(repliesForComment[k].address);
+                                            }
+                                        }
+                                        if(repliesAddressArray.length > 0){
+                                            $('#replies_for_reply_' + repliesForComment[j].id).addClass("dropdown-toggle").removeClass("d-none");
+                                            $('#count_replies_for_reply_' +  repliesForComment[j].id).text(repliesAddressArray.length);
+                                        }
                                         if ($currentProfileId == repliesForComment[j].profile.id) {
                                             $('.btn-group-right-for-reply_' + repliesForComment[j].id).append(
                                                 '<button type="button"' +
@@ -135,6 +160,21 @@ $(document).ready(function () {
                                                 'class="btn text-white btn-danger ml-3 mt-2" ' +
                                                 'id="delete-reply_' + repliesForComment[j].id + '">' +
                                                 ' <i class="far fa-trash-alt mr-2"></i><span> Удалить</span></button>');
+                                            /*let $editBtn = $('#edit-reply_' + repliesForComment[j].id);
+                                            $editBtn.on('click', function (event) {
+                                                let replyId = repliesForComment[j].id;
+                                                $.ajax({
+                                                    url: "/api/reply",
+                                                    type: "GET",
+                                                    data: {
+                                                        id: commentId
+                                                    },
+                                                    success: function (comment) {
+                                                        $editCommentId.attr("value", comment.id);
+                                                        $editForm.val(comment.text);
+                                                    }
+                                                });
+                                            });*/
                                             let $deleteReplyBtn = $('#delete-reply_' + repliesForComment[j].id);
                                             $deleteReplyBtn.on('click', function () {
                                                 let confirmation = confirm("Вы действительно хотите удалить свой ответ?");
@@ -150,8 +190,7 @@ $(document).ready(function () {
                                                     }
                                                 });
                                             });
-                                        }
-                                        else {
+                                        } else {
                                             $('.btn-group-right-for-reply_' + repliesForComment[j].id).append('<button type="button" ' +
                                                 'class="btn text-white btn-warning ml-3 mt-2" id = "report_to_reply_'
                                                 + repliesForComment[j].id + '" data-toggle="modal" data-target="#reportModal"> ' +
@@ -162,7 +201,7 @@ $(document).ready(function () {
                                                 + repliesForComment[j].id + '" > ' +
                                                 '<i class="fas fa-reply mr-2"></i><span>Ответить</span></button>')
                                         }
-                                        let replyAuthorName = repliesForComment[j].profile.name + " " +
+                                        replyAuthorName = repliesForComment[j].profile.name + " " +
                                             repliesForComment[j].profile.surname;
                                         let $replyToReplyBtn = $('#reply_to_reply_' + repliesForComment[j].id);
                                         $replyToReplyBtn.on('click', function () {
@@ -326,9 +365,6 @@ $(document).ready(function () {
                     pageNumber++;
                 }
             });
-            /*if (pageNumber === totalPages) {
-                $('.comment-block').last().removeClass("m-5").addClass("ml-5 mt-5 mr-5").css({marginBottom: "15vh"});
-            }*/
         }
     });
 
@@ -413,9 +449,6 @@ $(document).ready(function () {
             (parseInt(d.getMinutes())).toString() : "0" + (parseInt(d.getMinutes())).toString()));
     }
 
-    function printReplies(reply, commentId, address, level, commentAuthorName, currentProfileId) {
-
-    }
 
     function getAllRepliesForComment(commentId) {
         let result;
