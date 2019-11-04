@@ -54,16 +54,11 @@ $(document).ready(function () {
                             data.content[i].profile.surname;
                         let $countForRepliesForComment = $('#count_replies_for_comment_' + data.content[i].id);
                         let repliesForComment = getAllRepliesForComment(data.content[i].id);
-                        let repliesFirstLevelArray = new Array();
                         let $showRepliesForComment = $('#replies_for_comment_' + data.content[i].id);
-                        for (let k = 0; k < repliesForComment.length; k++) {
-                            if (repliesForComment[k].level == 1)
-                                repliesFirstLevelArray.push(repliesForComment[k].level);
-                        }
                         if (repliesForComment.length > 0) {
                             $('.btn-group-left_' + data.content[i].id).children(".btn")
                                 .addClass("dropdown-toggle").removeClass("d-none");
-                            $countForRepliesForComment.text(repliesFirstLevelArray.length);
+                            $countForRepliesForComment.text(repliesForComment.length);
                             $commentBlock.append('<div class="m-5 w-100 border-left" ' +
                                 'id="reply_block_for_' + data.content[i].id + '"></div>');
                             $showRepliesForComment.on('click', function () {

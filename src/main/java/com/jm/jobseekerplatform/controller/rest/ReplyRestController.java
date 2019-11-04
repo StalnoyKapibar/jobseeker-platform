@@ -62,6 +62,10 @@ public class ReplyRestController {
 
     @RequestMapping(value = "/delete", params = {"id"}, method = RequestMethod.DELETE)
     public ResponseEntity<Void> deleteReply(@RequestParam("id") Long id) {
+        List<Reply> replies = replyService.getAllRepliesByAddress(id);
+        for(Reply r: replies){
+            replyService.delete(r);
+        }
         replyService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

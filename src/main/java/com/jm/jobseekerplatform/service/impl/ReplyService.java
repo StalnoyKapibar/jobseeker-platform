@@ -20,4 +20,8 @@ public class ReplyService extends AbstractService<Reply> {
     public List<Reply> getAllRepliesForComment(Comment currentComment) {
         return replyDaoI.getAllRepliesForComment(currentComment);
     }
+
+    public List<Reply> getAllRepliesByAddress(Long addressId) {
+        return replyDaoI.getAllRepliesByAddress(addressId);
+    }
 }
