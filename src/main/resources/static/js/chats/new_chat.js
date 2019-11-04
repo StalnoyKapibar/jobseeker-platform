@@ -6,8 +6,8 @@ let currentProfileId;
 //let currentMeetingId;
 //let meeting;
 
-let token = $("meta[name='_csrf']").attr("content");
-let header = $("meta[name='_csrf_header']").attr("content");
+const token = $("meta[name='_csrf']").attr("content");
+const header = $("meta[name='_csrf_header']").attr("content");
 
 let isNewMessages = false;
 

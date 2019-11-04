@@ -7,6 +7,8 @@ import com.jm.jobseekerplatform.model.users.User;
 import com.jm.jobseekerplatform.service.impl.chats.ChatMessageService;
 import com.jm.jobseekerplatform.service.impl.chats.ChatService;
 import com.jm.jobseekerplatform.service.impl.profiles.ProfileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -15,7 +17,9 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -23,28 +27,27 @@ import java.util.List;
 @Controller
 public class WebSocketController {
 
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketController.class);
+
     @Autowired
     ProfileService profileService;
-
-    @Autowired
-    private ChatService chatService;
-
     @Autowired
     SimpMessagingTemplate simpMessagingTemplate;
-
+    @Autowired
+    CacheManager cacheManager;
+    @Autowired
+    private ChatService chatService;
     @Autowired
     private ChatMessageService chatMessageService;
 
-	@Autowired
-	CacheManager cacheManager;
-
     @MessageMapping("/chat/{chatId}")
-    public void sendMessage(@DestinationVariable("chatId") String id, MessageDTO messageDTO,
-                            Authentication authentication) {
+    public void sendMessage(@DestinationVariable("chatId") String id, MessageDTO messageDTO, Authentication authentication) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        logger.trace("Security context: {}", auth != null ? auth.getPrincipal() : null);
         Long chatId = Long.parseLong(id);
         List<BigInteger> membersId = chatService.getChatMembersIds(chatId);
         User user = (User) authentication.getPrincipal();
-		cacheManager.getCache("count").clear();
+        cacheManager.getCache("count").clear();
         if (membersId.contains(BigInteger.valueOf(user.getId()))) {
             Profile creatorProfile = profileService.getById(messageDTO.getCreatorProfileId());
             ChatMessage chatMessage = new ChatMessage(messageDTO.getText(), creatorProfile, new Date());
@@ -56,12 +59,14 @@ public class WebSocketController {
 
     @MessageMapping("/private_chat/{chatId}")
     public void sendPrivateMessage(@DestinationVariable("chatId") String chatId, MessageDTO messageDTO) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        logger.trace("Security context: {}", auth != null ? auth.getPrincipal() : null);
         Profile creatorProfile = profileService.getById(messageDTO.getCreatorProfileId());
         ChatMessage chatMessage = new ChatMessage(messageDTO.getText(), creatorProfile, new Date());
         chatMessageService.add(chatMessage);
         chatService.addChatMessage(Long.parseLong(chatId), chatMessage);
         List<User> userList = chatService.getById(Long.parseLong(chatId)).getChatMembers();
-		cacheManager.getCache("count").clear();
+        cacheManager.getCache("count").clear();
         for (User user : userList) {
             simpMessagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/reply", chatMessage);
         }
@@ -72,4 +77,5 @@ public class WebSocketController {
     public String handleException(Throwable exception) {
         return exception.getMessage();
     }
+
 }
