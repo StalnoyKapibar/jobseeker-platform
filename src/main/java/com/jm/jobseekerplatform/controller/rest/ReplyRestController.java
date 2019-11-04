@@ -32,12 +32,12 @@ public class ReplyRestController {
         Comment comment = commentService.getById(id);
         Profile profile = ((User) authentication.getPrincipal()).getProfile();
         LocalDateTime dateTime = LocalDateTime.now();
-        replyService.add(new Reply(text, dateTime, 1L,  profile, comment));
+        replyService.add(new Reply(text, dateTime, 1L, profile, comment));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<List<Reply>> getAllRepliesForComment(@PathVariable("id") Long id){
+    public ResponseEntity<List<Reply>> getAllRepliesForComment(@PathVariable("id") Long id) {
         return new ResponseEntity<>(replyService.getAllRepliesForComment(commentService.getById(id)), HttpStatus.OK);
     }
 
@@ -46,11 +46,11 @@ public class ReplyRestController {
                                                 @RequestParam("text") String text,
                                                 @RequestParam("addressId") Long address,
                                                 @RequestParam("level") Long level,
-                                                Authentication authentication){
+                                                Authentication authentication) {
         Comment comment = commentService.getById(id);
         Profile profile = ((User) authentication.getPrincipal()).getProfile();
         LocalDateTime dateTime = LocalDateTime.now();
-        replyService.add(new Reply(text, dateTime, address, level,  profile, comment));
+        replyService.add(new Reply(text, dateTime, address, level, profile, comment));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -61,7 +61,7 @@ public class ReplyRestController {
     }
 
     @RequestMapping(value = "/delete", params = {"id"}, method = RequestMethod.DELETE)
-    public ResponseEntity<Void> deleteReply(@RequestParam("id") Long id){
+    public ResponseEntity<Void> deleteReply(@RequestParam("id") Long id) {
         replyService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -69,7 +69,7 @@ public class ReplyRestController {
     @RequestMapping(value = "/update", params = {"id", "text"},
             method = RequestMethod.PUT)
     public ResponseEntity<Reply> updateReply(@RequestParam("id") Long id,
-                                                 @RequestParam("text") String text) {
+                                             @RequestParam("text") String text) {
         Reply reply = replyService.getById(id);
         reply.setText(text);
         replyService.update(reply);

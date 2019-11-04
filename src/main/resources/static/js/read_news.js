@@ -54,8 +54,6 @@ $(document).ready(function () {
                             data.content[i].profile.surname;
                         let $countForRepliesForComment = $('#count_replies_for_comment_' + data.content[i].id);
                         let repliesForComment = getAllRepliesForComment(data.content[i].id);
-                        let replliesIdArray = new Array();
-                        let repliesAddressArray = new Array();
                         let repliesFirstLevelArray = new Array();
                         let $showRepliesForComment = $('#replies_for_comment_' + data.content[i].id);
                         for (let k = 0; k < repliesForComment.length; k++) {
@@ -63,7 +61,8 @@ $(document).ready(function () {
                                 repliesFirstLevelArray.push(repliesForComment[k].level);
                         }
                         if (repliesForComment.length > 0) {
-                            $('.btn-group-left_' + data.content[i].id).children(".btn").addClass("dropdown-toggle").removeClass("d-none");
+                            $('.btn-group-left_' + data.content[i].id).children(".btn")
+                                .addClass("dropdown-toggle").removeClass("d-none");
                             $countForRepliesForComment.text(repliesFirstLevelArray.length);
                             $commentBlock.append('<div class="m-5 w-100 border-left" ' +
                                 'id="reply_block_for_' + data.content[i].id + '"></div>');
@@ -72,26 +71,33 @@ $(document).ready(function () {
                                     $('#reply_block_for_' + data.content[i].id).children().remove();
                                 } else {
                                     for (let j = 0; j < repliesForComment.length; j++) {
+                                        let repliesAddressArray = new Array();
                                         if (repliesForComment.length > 0) {
                                             for (let k = 0; k < repliesForComment.length; k++) {
-                                                replliesIdArray.push(repliesForComment[k].id);
                                                 if (repliesForComment[k].id == repliesForComment[j].address) {
-                                                    replyAuthorName = repliesForComment[k].profile.name + repliesForComment[k].profile.surname;
+                                                    replyAuthorName = repliesForComment[k].profile.name + " " +
+                                                        repliesForComment[k].profile.surname;
+                                                }
+                                            }
+                                            for (let k = repliesForComment.length; k > 0; k--) {
+                                                if (repliesForComment[j].id == repliesForComment[k - 1].address) {
+                                                    repliesAddressArray.push(repliesForComment[k - 1].id);
                                                 }
                                             }
                                         }
                                         if (repliesForComment[j].level == 1) {
-                                            $('#reply_block_for_' + data.content[i].id).append('<div  class="reply-on-comment"' +
+                                            $('#reply_block_for_' + data.content[i].id).append('<div  ' +
+                                                'class="reply-on-comment"' +
                                                 'id="reply_' + repliesForComment[j].id + '"></div>');
                                         }
-
                                         if (repliesForComment[j].address == null) {
                                             $('#reply_' + repliesForComment[j].id).append('<div class="card-body">' +
                                                 '<div class="row">' +
                                                 '<div class="col-md-2"><img class="img img-rounded img-fluid mb-2 ml-4" ' +
                                                 'alt="" src="https://image.ibb.co/jw55Ex/def_face.jpg">' +
                                                 '<p class="text-secondary text-center">'
-                                                + datetimeFormatter(new Date(repliesForComment[j].dateTime)) + '</p></div>' +
+                                                + datetimeFormatter(new Date(repliesForComment[j].dateTime))
+                                                + '</p></div>' +
                                                 '<div class="col-md-10"><p class="pl-3"><strong>' +
                                                 repliesForComment[j].profile.name + " " +
                                                 repliesForComment[j].profile.surname + '</strong></p><div ' +
@@ -102,36 +108,48 @@ $(document).ready(function () {
                                                 + commentAuthorName + "," + '</span>' + " " + repliesForComment[j].text + ''
                                                 + '</p></div></div>' +
                                                 '<div class="btn-group  w-100 d-flex flex-row">' +
-                                                '<div class="ml-5 btn-group-left-for-reply_' + repliesForComment[j].id + '">' +
+                                                '<div class="ml-5 btn-group-left-for-reply_' +
+                                                repliesForComment[j].id + '">' +
                                                 '</div><div class="mr-5  ml-auto btn-group-right-for-reply_' +
                                                 repliesForComment[j].id + '"></div></div></div></div></div>');
-                                        } else if (repliesForComment[j].address != null && repliesForComment[j].level > 1) {
+                                        } else if (repliesForComment[j].address != null &&
+                                            repliesForComment[j].level > 1) {
                                             let x = repliesForComment[j].level - 1;
-                                            if (!($('#reply_' + repliesForComment[j].address).hasClass("nested-level-" + x))) {
-                                                $('#reply_' + repliesForComment[j].address).addClass("nested-level-" + x);
+                                            if (!($('#reply_' + repliesForComment[j].address)
+                                                .hasClass("nested-level-" + x))) {
+                                                $('#reply_' + repliesForComment[j].address)
+                                                    .addClass("nested-level-" + x);
                                             }
                                             while (x < repliesForComment[j].level) {
-                                                $('#reply_' + repliesForComment[j].address + '.nested-level-' + x).append('<div  class="m-5 w-100 border-left nested-level-' + (x + 1) + '" id="reply_' + repliesForComment[j].id + '"><div class="card-body">' +
+                                                $('#reply_' + repliesForComment[j].address + '.nested-level-' + x)
+                                                    .append('<div  class="m-5 w-100 border-left nested-level-'
+                                                        + (x + 1) + '" id="reply_' + repliesForComment[j].id + '">' +
+                                                        '<div class="card-body">' +
                                                     '<div class="row">' +
                                                     '<div class="col-md-2"><img class="img img-rounded img-fluid mb-2 ml-4" ' +
                                                     'alt="" src="https://image.ibb.co/jw55Ex/def_face.jpg">' +
                                                     '<p class="text-secondary text-center">'
-                                                    + datetimeFormatter(new Date(repliesForComment[j].dateTime)) + '</p></div>' +
+                                                    + datetimeFormatter(new Date(repliesForComment[j].dateTime)) +
+                                                        '</p></div>' +
                                                     '<div class="col-md-10"><p class="pl-3"><strong>' +
                                                     repliesForComment[j].profile.name + " " +
                                                     repliesForComment[j].profile.surname + '</strong></p><div ' +
                                                     'class="form-group basic-textarea">' +
                                                     '<div class="form-control z-depth-1 pl-3"' +
                                                     ' style="background: none; border: none;" ' +
-                                                    'id="reply' + repliesForComment[j].id + '"><p><span class="text-primary"></span>' + " " + repliesForComment[j].text + ''
+                                                    'id="reply' + repliesForComment[j].id + '"><p><span ' +
+                                                        'class="text-primary"></span>' + " " +
+                                                        repliesForComment[j].text + ''
                                                     + '</p></div></div>' +
                                                     '<div class="btn-group  w-100 d-flex flex-row">' +
-                                                    '<div class="ml-5 btn-group-left-for-reply_' + repliesForComment[j].id + '">' +
+                                                    '<div class="ml-5 btn-group-left-for-reply_' +
+                                                        repliesForComment[j].id + '">' +
                                                     '</div><div class="mr-5  ml-auto btn-group-right-for-reply_' +
                                                     repliesForComment[j].id + '"></div></div></div></div></div></div>');
                                                 x++;
                                             }
-                                            $('#reply' + repliesForComment[j].id).children("p").children("span").text(replyAuthorName + ",");
+                                            $('#reply' + repliesForComment[j].id).children("p").children("span")
+                                                .text(replyAuthorName + ",");
                                         }
                                         $('.btn-group-left-for-reply_' + repliesForComment[j].id).append(
                                             '<button type="button" ' +
@@ -140,14 +158,11 @@ $(document).ready(function () {
                                             '<i class="far fa-comment-dots mr-2"></i>' +
                                             '<span id="count_replies_for_reply_' + repliesForComment[j].id + '">' +
                                             '</span></button>');
-                                        for (let k = 0; k < repliesForComment.length; k++) {
-                                            if (repliesForComment[k].address == repliesForComment[j].id) {
-                                                repliesAddressArray.push(repliesForComment[k].address);
-                                            }
-                                        }
                                         if (repliesAddressArray.length > 0) {
-                                            $('#replies_for_reply_' + repliesForComment[j].id).addClass("dropdown-toggle").removeClass("d-none");
-                                            $('#count_replies_for_reply_' + repliesForComment[j].id).text(repliesAddressArray.length);
+                                            $('#replies_for_reply_' + repliesForComment[j].id)
+                                                .addClass("dropdown-toggle").removeClass("d-none");
+                                            $('#count_replies_for_reply_' + repliesForComment[j].id)
+                                                .text(repliesAddressArray.length);
                                         }
                                         if ($currentProfileId == repliesForComment[j].profile.id) {
                                             $('.btn-group-right-for-reply_' + repliesForComment[j].id).append(
@@ -194,10 +209,13 @@ $(document).ready(function () {
                                                 });
                                             });
                                         } else {
-                                            $('.btn-group-right-for-reply_' + repliesForComment[j].id).append('<button type="button" ' +
+                                            $('.btn-group-right-for-reply_' + repliesForComment[j].id)
+                                                .append('<button type="button" ' +
                                                 'class="btn text-white btn-warning ml-3 mt-2" id = "report_to_reply_'
-                                                + repliesForComment[j].id + '" data-toggle="modal" data-target="#reportModal"> ' +
-                                                '<i class="fas fa-exclamation-triangle mr-2"></i><span>Пожаловаться</span></button>');
+                                                + repliesForComment[j].id + '" data-toggle="modal"' +
+                                                    ' data-target="#reportModal"> ' +
+                                                '<i class="fas fa-exclamation-triangle mr-2"></i>' +
+                                                    '<span>Пожаловаться</span></button>');
                                             $('.btn-group-right-for-reply_' + repliesForComment[j].id).append(
                                                 '<button type="button" ' +
                                                 'class="btn text-white btn-primary ml-3 mt-2" id = "reply_to_reply_'
@@ -220,28 +238,40 @@ $(document).ready(function () {
                                                 $(this).append('<i class="fas fa-times mr-2"></i><span>Отмена</span>');
                                                 $commentBlock.after('<div class="mx-5" ' +
                                                     'id="write_reply_for_reply' + repliesForComment[j].id + '">' +
-                                                    '<div class="card-body p-0 mx-5"><div class="row"><div class="col-md-2">' +
+                                                    '<div class="card-body p-0 mx-5"><div class="row"><div ' +
+                                                    'class="col-md-2">' +
                                                     '<img class="img img-rounded img-fluid d-block" alt="" ' +
                                                     'src="https://image.ibb.co/jw55Ex/def_face.jpg"/></div>' +
                                                     '<div class="comment_area-body col-md-10"><div class="mt-3">' +
-                                                    '<div class="form-group basic-textarea rounded-corners"><span class="text-primary"' +
+                                                    '<div class="form-group basic-textarea rounded-corners"><span ' +
+                                                    'class="text-primary"' +
                                                     ' id="reply_author_name_' + repliesForComment[j].id + '"></span>' +
-                                                    ' <textarea id="reply_text_for_reply_' + repliesForComment[j].id + '" ' +
-                                                    'class="form-control z-depth-1 pl-3 mt-2" style="min-height: 100px;"' +
+                                                    ' <textarea id="reply_text_for_reply_' +
+                                                    repliesForComment[j].id + '" ' +
+                                                    'class="form-control z-depth-1 pl-3 mt-2" ' +
+                                                    'style="min-height: 100px;"' +
                                                     '></textarea></div></div></div></div></div>' +
-                                                    '<div class="btn-group d-flex flex-row justify-content-end"><div class="mr-5">' +
+                                                    '<div class="btn-group d-flex flex-row justify-content-end"><div ' +
+                                                    'class="mr-5">' +
                                                     '<button type="button" class="btn btn-outline-primary' +
                                                     ' ml-3" id="send_reply_to_reply_' + repliesForComment[j].id + '">' +
-                                                    '<i class="far fa-comment-dots mr-2"></i><span>Отправить</span></button></div>' +
+                                                    '<i class="far fa-comment-dots mr-2"></i><span>Отправить</span>' +
+                                                    '</button></div>' +
                                                     '</div></div>');
-                                                $('#reply_author_name_' + repliesForComment[j].id).text(replyAuthorName + ",");
-                                                let $sendReplyToReply = $('#send_reply_to_reply_' + repliesForComment[j].id);
+                                                $('#reply_author_name_' + repliesForComment[j].id)
+                                                    .text(repliesForComment[j].profile.name + " "
+                                                        + repliesForComment[j].profile.surname + ",");
+                                                let $sendReplyToReply = $('#send_reply_to_reply_'
+                                                    + repliesForComment[j].id);
                                                 $sendReplyToReply.on('click', function () {
                                                     $.ajax({
                                                         url: "/api/reply/insert",
                                                         type: "POST",
                                                         data: "commentId=" + data.content[i].id +
-                                                            "&text=" + $('#reply_text_for_reply_' + repliesForComment[j].id).val() + "&addressId=" + repliesForComment[j].id + "&level=" + (repliesForComment[j].level + 1),
+                                                            "&text=" + $('#reply_text_for_reply_'
+                                                                + repliesForComment[j].id).val() + "&addressId="
+                                                            + repliesForComment[j].id + "&level="
+                                                            + (repliesForComment[j].level + 1),
                                                         contentType: "application/x-www-form-urlencoded;charset=utf-8",
                                                         beforeSend: function (request) {
                                                             request.setRequestHeader($header, $token);
@@ -465,8 +495,10 @@ $(document).ready(function () {
     }
 
     function datetimeFormatter(d) {
-        return d.getFullYear().toString() + "-" + ((d.getMonth() + 1).toString().length == 2 ? (d.getMonth() + 1).toString() : "0"
-            + (d.getMonth() + 1).toString()) + "-" + (d.getDate().toString().length == 2 ? d.getDate().toString() : "0" +
+        return d.getFullYear().toString() + "-" + ((d.getMonth() + 1).toString().length == 2 ?
+            (d.getMonth() + 1).toString() : "0"
+            + (d.getMonth() + 1).toString()) + "-" + (d.getDate().toString().length == 2 ?
+            d.getDate().toString() : "0" +
             d.getDate().toString()) + " " + (d.getHours().toString().length == 2 ? d.getHours().toString() : "0"
             + d.getHours().toString()) + ":" + ((parseInt(d.getMinutes()).toString().length == 2 ?
             (parseInt(d.getMinutes())).toString() : "0" + (parseInt(d.getMinutes())).toString()));
