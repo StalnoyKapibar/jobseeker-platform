@@ -6,6 +6,7 @@ $(document).ready(function () {
     let $editForm = $('#edit-user_comment');
     let $editCommentId = $('#edit_commentId');
     let $saveBtn = $('#save-comment');
+    let $saveReplyBtn = $('#save-reply');
     let $addBtn = $('#submit_comment');
     let $reportReasons = $('input[id^="reportRadios"]');
     let $sendReportBtn = $('#send_report');
@@ -57,9 +58,9 @@ $(document).ready(function () {
                         let repliesAddressArray = new Array();
                         let repliesFirstLevelArray = new Array();
                         let $showRepliesForComment = $('#replies_for_comment_' + data.content[i].id);
-                        for(let k = 0; k < repliesForComment.length; k++){
-                            if(repliesForComment[k].level == 1)
-                            repliesFirstLevelArray.push(repliesForComment[k].level);
+                        for (let k = 0; k < repliesForComment.length; k++) {
+                            if (repliesForComment[k].level == 1)
+                                repliesFirstLevelArray.push(repliesForComment[k].level);
                         }
                         if (repliesForComment.length > 0) {
                             $('.btn-group-left_' + data.content[i].id).children(".btn").addClass("dropdown-toggle").removeClass("d-none");
@@ -72,9 +73,9 @@ $(document).ready(function () {
                                 } else {
                                     for (let j = 0; j < repliesForComment.length; j++) {
                                         if (repliesForComment.length > 0) {
-                                            for(let k = 0; k < repliesForComment.length; k++){
+                                            for (let k = 0; k < repliesForComment.length; k++) {
                                                 replliesIdArray.push(repliesForComment[k].id);
-                                                if(repliesForComment[k].id == repliesForComment[j].address){
+                                                if (repliesForComment[k].id == repliesForComment[j].address) {
                                                     replyAuthorName = repliesForComment[k].profile.name + repliesForComment[k].profile.surname;
                                                 }
                                             }
@@ -130,7 +131,7 @@ $(document).ready(function () {
                                                     repliesForComment[j].id + '"></div></div></div></div></div></div>');
                                                 x++;
                                             }
-                                            $('#reply' +  repliesForComment[j].id).children("p").children("span").text(replyAuthorName + ",");
+                                            $('#reply' + repliesForComment[j].id).children("p").children("span").text(replyAuthorName + ",");
                                         }
                                         $('.btn-group-left-for-reply_' + repliesForComment[j].id).append(
                                             '<button type="button" ' +
@@ -139,14 +140,14 @@ $(document).ready(function () {
                                             '<i class="far fa-comment-dots mr-2"></i>' +
                                             '<span id="count_replies_for_reply_' + repliesForComment[j].id + '">' +
                                             '</span></button>');
-                                        for(let k = 0; k < repliesForComment.length; k++){
-                                            if(repliesForComment[k].address == repliesForComment[j].id){
+                                        for (let k = 0; k < repliesForComment.length; k++) {
+                                            if (repliesForComment[k].address == repliesForComment[j].id) {
                                                 repliesAddressArray.push(repliesForComment[k].address);
                                             }
                                         }
-                                        if(repliesAddressArray.length > 0){
+                                        if (repliesAddressArray.length > 0) {
                                             $('#replies_for_reply_' + repliesForComment[j].id).addClass("dropdown-toggle").removeClass("d-none");
-                                            $('#count_replies_for_reply_' +  repliesForComment[j].id).text(repliesAddressArray.length);
+                                            $('#count_replies_for_reply_' + repliesForComment[j].id).text(repliesAddressArray.length);
                                         }
                                         if ($currentProfileId == repliesForComment[j].profile.id) {
                                             $('.btn-group-right-for-reply_' + repliesForComment[j].id).append(
@@ -160,21 +161,23 @@ $(document).ready(function () {
                                                 'class="btn text-white btn-danger ml-3 mt-2" ' +
                                                 'id="delete-reply_' + repliesForComment[j].id + '">' +
                                                 ' <i class="far fa-trash-alt mr-2"></i><span> Удалить</span></button>');
-                                            /*let $editBtn = $('#edit-reply_' + repliesForComment[j].id);
-                                            $editBtn.on('click', function (event) {
+                                            let $editReplyBtn = $('#edit-reply_' + repliesForComment[j].id);
+                                            $editReplyBtn.on('click', function (event) {
                                                 let replyId = repliesForComment[j].id;
                                                 $.ajax({
                                                     url: "/api/reply",
                                                     type: "GET",
                                                     data: {
-                                                        id: commentId
+                                                        id: replyId
                                                     },
-                                                    success: function (comment) {
-                                                        $editCommentId.attr("value", comment.id);
-                                                        $editForm.val(comment.text);
+                                                    success: function (reply) {
+                                                        $editCommentId.attr("value", reply.id);
+                                                        $editForm.val(reply.text);
                                                     }
                                                 });
-                                            });*/
+                                                $saveBtn.addClass("d-none");
+                                                $saveReplyBtn.removeClass("d-none");
+                                            });
                                             let $deleteReplyBtn = $('#delete-reply_' + repliesForComment[j].id);
                                             $deleteReplyBtn.on('click', function () {
                                                 let confirmation = confirm("Вы действительно хотите удалить свой ответ?");
@@ -290,6 +293,8 @@ $(document).ready(function () {
                                     $editForm.val(comment.text);
                                 }
                             });
+                            $saveBtn.removeClass("d-none");
+                            $saveReplyBtn.addClass("d-none");
                         });
                         let $deleteBtn = $('#delete-comment_' + data.content[i].id);
                         $deleteBtn.on('click', function (event) {
@@ -385,6 +390,24 @@ $(document).ready(function () {
             });
         }
     });
+    $saveReplyBtn.on('click', function (e) {
+        let id = Number($editCommentId.val());
+        if ($editForm.val()) {
+            $.ajax({
+                url: "/api/reply/update",
+                type: "PUT",
+                data: "id=" + id + "&text=" + $editForm.val(),
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                beforeSend: function (request) {
+                    request.setRequestHeader($header, $token);
+                },
+                success: function () {
+                    location.reload();
+                }
+            });
+        }
+    });
+
 
     $addBtn.on('click', function (e) {
         let $commentText = $('#user_comment').val();

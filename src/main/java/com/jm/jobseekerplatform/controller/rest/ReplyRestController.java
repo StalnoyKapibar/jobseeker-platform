@@ -54,9 +54,25 @@ public class ReplyRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @RequestMapping(params = {"id"}, method = RequestMethod.GET)
+    public ResponseEntity<Reply> getComment(@RequestParam("id") Long id) {
+        Reply reply = replyService.getById(id);
+        return new ResponseEntity<>(reply, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/delete", params = {"id"}, method = RequestMethod.DELETE)
     public ResponseEntity<Void> deleteReply(@RequestParam("id") Long id){
         replyService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value = "/update", params = {"id", "text"},
+            method = RequestMethod.PUT)
+    public ResponseEntity<Reply> updateReply(@RequestParam("id") Long id,
+                                                 @RequestParam("text") String text) {
+        Reply reply = replyService.getById(id);
+        reply.setText(text);
+        replyService.update(reply);
+        return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 }
