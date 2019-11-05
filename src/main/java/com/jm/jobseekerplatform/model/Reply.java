@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "replies")
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Reply implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,42 +20,20 @@ public class Reply implements Serializable {
     @Column(name = "text")
     private String text;
 
-    @Column(name ="date_time")
+    @Column(name = "date_time")
     private LocalDateTime dateTime;
-
-    @Column(name ="address")
-    private Long address;
-
-    @Column(name="level")
-    private Long level;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Profile profile;
 
-    @JsonManagedReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
-    private Comment comment;
-
     public Reply() {
     }
 
-    public Reply(String text, LocalDateTime dateTime, Long address, Long level, Profile profile, Comment comment) {
+    public Reply(String text, LocalDateTime dateTime, Profile profile) {
         this.text = text;
         this.dateTime = dateTime;
-        this.address = address;
-        this.level = level;
         this.profile = profile;
-        this.comment = comment;
-    }
-
-    public Reply(String text, LocalDateTime dateTime, Long level, Profile profile, Comment comment) {
-        this.text = text;
-        this.dateTime = dateTime;
-        this.level = level;
-        this.profile = profile;
-        this.comment = comment;
     }
 
     public Long getId() {
@@ -82,14 +60,6 @@ public class Reply implements Serializable {
         this.dateTime = dateTime;
     }
 
-    public Long getAddress() {
-        return address;
-    }
-
-    public void setAddress(Long address) {
-        this.address = address;
-    }
-
     public Profile getProfile() {
         return profile;
     }
@@ -98,19 +68,4 @@ public class Reply implements Serializable {
         this.profile = profile;
     }
 
-    public Comment getComment() {
-        return comment;
-    }
-
-    public void setComment(Comment comment) {
-        this.comment = comment;
-    }
-
-    public Long getLevel() {
-        return level;
-    }
-
-    public void setLevel(Long level) {
-        this.level = level;
-    }
 }

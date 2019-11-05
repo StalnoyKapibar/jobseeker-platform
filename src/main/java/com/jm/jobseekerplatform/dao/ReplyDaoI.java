@@ -11,9 +11,9 @@ import java.util.List;
 @Repository
 public interface ReplyDaoI extends JpaRepository<Reply, Long> {
 
-    @Query("SELECT distinct r FROM Reply r JOIN r.comment rc where rc=:currentComment")
+   /* @Query("SELECT distinct r FROM Reply r JOIN r.comment rc where rc=:currentComment")
     List<Reply> getAllRepliesForComment(Comment currentComment);
 
     @Query("SELECT distinct r FROM Reply r where r.address=:addressId")
-    List<Reply> getAllRepliesByAddress(Long addressId);
+    List<Reply> getAllRepliesByAddress(Long addressId);*/
 }

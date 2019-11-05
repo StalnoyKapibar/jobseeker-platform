@@ -17,11 +17,11 @@ public class ReplyService extends AbstractService<Reply> {
     @Autowired
     private ReplyDaoI replyDaoI;
 
-    public List<Reply> getAllRepliesForComment(Comment currentComment) {
+    /*public List<Reply> getAllRepliesForComment(Comment currentComment) {
         return replyDaoI.getAllRepliesForComment(currentComment);
     }
 
     public List<Reply> getAllRepliesByAddress(Long addressId) {
         return replyDaoI.getAllRepliesByAddress(addressId);
-    }
+    }*/
 }

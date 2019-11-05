@@ -24,24 +24,26 @@ $(document).ready(function () {
                     if (data.content.length === 0) {
                         return
                     }
+                    console.log(data.content);
                     totalPages = data.totalPages;
                     $.each(data.content, function (i, comment) {
-                        $('#user_comments').after('<div class="m-5 comment-block" ' +
-                            'id="comment_block_' + data.content[i].id + '"><div class="card-body"><div class="row">' +
-                            '<div class="col-md-2"><img id="logo_' + data.content[i].id + '" ' +
-                            'class="img img-rounded img-fluid mb-2 ml-4" alt="">' +
-                            '<p class="text-secondary text-center">'
-                            + datetimeFormatter(new Date(data.content[i].dateTime)) + '</p></div>' +
-                            '<div class="col-md-10"><p class="pl-3"><strong>' + data.content[i].profile.name + " " +
-                            data.content[i].profile.surname + '</strong></p><div class="form-group basic-textarea">' +
-                            '<textarea class="form-control z-depth-1 pl-3" style="background: none; border: none;" ' +
-                            'id="comment_' + data.content[i].id + '"  rows="3" disabled>' + data.content[i].text + '' +
-                            '</textarea></div></div></div></div></div>');
+                        if(data.content[i].level == 0){
+                            $('#user_comments').after('<div class="m-5 comment-block" ' +
+                                'id="comment_block_' + data.content[i].id + '"><div class="card-body"><div class="row">' +
+                                '<div class="col-md-2"><img id="logo_' + data.content[i].id + '" ' +
+                                'class="img img-rounded img-fluid mb-2 ml-4" alt="">' +
+                                '<p class="text-secondary text-center">'
+                                + datetimeFormatter(new Date(data.content[i].dateTime)) + '</p></div>' +
+                                '<div class="col-md-10"><p class="pl-3"><strong>' + data.content[i].profile.name + " " +
+                                data.content[i].profile.surname + '</strong></p><div class="form-group basic-textarea">' +
+                                '<textarea class="form-control z-depth-1 pl-3" style="background: none; border: none;" ' +
+                                'id="comment_' + data.content[i].id + '"  rows="3" disabled>' + data.content[i].text + '' +
+                                '</textarea></div></div></div></div></div>');
+                        }
                         let $logo = $('#logo_' + data.content[i].id);
                         $logo.attr("src", "https://image.ibb.co/jw55Ex/def_face.jpg");
                         let $comments = $('#comment_' + data.content[i].id);
                         let $commentBlock = $('#comment_block_' + data.content[i].id);
-                        let replyAuthorName;
                         $commentBlock.append('<div class="btn-group  w-100 d-flex flex-row">' +
                             '<div class="ml-5 btn-group-left_' + data.content[i].id + '"></div>' +
                             '<div class="mr-5  ml-auto btn-group-right_' + data.content[i].id + '"></div></div>');
@@ -53,20 +55,26 @@ $(document).ready(function () {
                         let commentAuthorName = data.content[i].profile.name + " " +
                             data.content[i].profile.surname;
                         let $countForRepliesForComment = $('#count_replies_for_comment_' + data.content[i].id);
-                        let repliesForComment = getAllRepliesForComment(data.content[i].id);
+                        //let repliesForComment = data.content[i].replies.length;
+                        /*let repliesForComment = getAllRepliesForComment(data.content[i].id);*/
                         let $showRepliesForComment = $('#replies_for_comment_' + data.content[i].id);
-                        if (repliesForComment.length > 0) {
+                        if (data.content[i].replies.length > 0) {
                             $('.btn-group-left_' + data.content[i].id).children(".btn")
                                 .addClass("dropdown-toggle").removeClass("d-none");
-                            $countForRepliesForComment.text(repliesForComment.length);
+                            $countForRepliesForComment.text(data.content[i].replies.length);
                             $commentBlock.append('<div class="m-5 w-100 border-left" ' +
                                 'id="reply_block_for_' + data.content[i].id + '"></div>');
+                        }
                             $showRepliesForComment.on('click', function () {
                                 if ($('#reply_block_for_' + data.content[i].id).children().length > 0) {
                                     $('#reply_block_for_' + data.content[i].id).children().remove();
                                 } else {
-                                    for (let j = 0; j < repliesForComment.length; j++) {
-                                        let repliesAddressArray = new Array();
+                                    for (let j = 0; j < data.content[i].replies.length; j++) {
+
+                                        }
+                                    }
+                                    });
+                                        /*let repliesAddressArray = new Array();
                                         if (repliesForComment.length > 0) {
                                             for (let k = 0; k < repliesForComment.length; k++) {
                                                 if (repliesForComment[k].id == repliesForComment[j].address) {
@@ -282,7 +290,7 @@ $(document).ready(function () {
 
                                 }
                             });
-                        }
+                        }*/
                         if ($currentProfileId == data.content[i].profile.id) {
                             $('.btn-group-right_' + data.content[i].id).append('<button type="button"' +
                                 ' class="btn text-white btn-info ml-3 mt-2"' +
@@ -379,8 +387,8 @@ $(document).ready(function () {
                                 $.ajax({
                                     url: "/api/reply/add",
                                     type: "POST",
-                                    data: "commentId=" + data.content[i].id +
-                                        "&text=" + $('#reply_text_' + data.content[i].id).val(),
+                                    data: "newsId=" + $newsId +
+                                        "&text=" + $('#reply_text_' + data.content[i].id).val() + "&commentId=" + data.content[i].id + "&level=" + (data.content[i].level + 1),
                                     contentType: "application/x-www-form-urlencoded;charset=utf-8",
                                     beforeSend: function (request) {
                                         request.setRequestHeader($header, $token);
@@ -500,7 +508,7 @@ $(document).ready(function () {
     }
 
 
-    function getAllRepliesForComment(commentId) {
+    /*function getAllRepliesForComment(commentId) {
         let result;
         $.ajax({
             url: "/api/reply/" + commentId,
@@ -511,7 +519,7 @@ $(document).ready(function () {
             }
         });
         return result;
-    }
+    }*/
 
 
 });

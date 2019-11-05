@@ -784,7 +784,7 @@ public class InitData {
         List<News> newsList = newsService.getAll();
         LocalDateTime dateTime = LocalDateTime.now();
         for (News n : newsList) {
-            n.getComments().add(new Comment("Отличная новость", n, profile1, dateTime));
+            n.getComments().add(new Comment("Отличная новость", n, profile1, dateTime, false, 0L));
             newsService.update(n);
         }
     }

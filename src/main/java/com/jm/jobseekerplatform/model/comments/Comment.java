@@ -26,6 +26,12 @@ public class Comment implements Serializable {
     @Column(name ="date")
     private LocalDateTime dateTime;
 
+    @Column(name = "isReply")
+    private boolean isReply;
+
+    @Column(name = "level")
+    private Long level;
+
     @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "news_id")
@@ -39,8 +45,8 @@ public class Comment implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "comment", orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<CommentReport> commentReport;
 
-    @JsonBackReference
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comment", orphanRemoval = true, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "comment_replies", joinColumns = {@JoinColumn(name = "comment_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "replies_id", referencedColumnName = "id")})
     private Set<Reply> replies;
 
     public Comment() {
@@ -62,6 +68,31 @@ public class Comment implements Serializable {
         this.news = news;
         this.profile= profile;
         this.dateTime = dateTime;
+    }
+
+    public Comment(String text, News news, Profile profile, LocalDateTime dateTime, Long level) {
+        this.text = text;
+        this.news = news;
+        this.profile= profile;
+        this.dateTime = dateTime;
+        this.level = level;
+    }
+
+    public Comment(String text, News news, Profile profile, LocalDateTime dateTime, boolean isReply) {
+        this.text = text;
+        this.news = news;
+        this.profile= profile;
+        this.dateTime = dateTime;
+        this.isReply = isReply;
+    }
+
+    public Comment(String text, News news, Profile profile, LocalDateTime dateTime, boolean isReply, Long level) {
+        this.text = text;
+        this.news = news;
+        this.profile= profile;
+        this.dateTime = dateTime;
+        this.isReply = isReply;
+        this.level = level;
     }
 
     public Set<Reply> getReplies() {
@@ -118,5 +149,21 @@ public class Comment implements Serializable {
 
     public void setCommentReport(Set<CommentReport> commentReport) {
         this.commentReport = commentReport;
+    }
+
+    public boolean isReply() {
+        return isReply;
+    }
+
+    public void setReply(boolean reply) {
+        isReply = reply;
+    }
+
+    public Long getLevel() {
+        return level;
+    }
+
+    public void setLevel(Long level) {
+        this.level = level;
     }
 }

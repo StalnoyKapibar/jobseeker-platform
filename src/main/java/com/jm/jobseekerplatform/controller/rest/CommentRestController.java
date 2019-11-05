@@ -61,7 +61,7 @@ public class CommentRestController {
                                               Authentication authentication) {
         News news = newsService.getById(id);
         Profile profile = ((User) authentication.getPrincipal()).getProfile();
-        Comment comment = new Comment(text, news, profile, LocalDateTime.now());
+        Comment comment = new Comment(text, news, profile, LocalDateTime.now(), false, 0L);
         commentService.add(comment);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
