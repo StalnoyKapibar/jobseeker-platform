@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
@@ -58,6 +59,7 @@ public class MainController {
 
     private GrantedAuthority roleSeeker = new SimpleGrantedAuthority("ROLE_SEEKER");
     private GrantedAuthority roleEmployer = new SimpleGrantedAuthority("ROLE_EMPLOYER");
+    private GrantedAuthority roleAdmin = new SimpleGrantedAuthority("ROLE_ADMIN");
 
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
@@ -82,12 +84,13 @@ public class MainController {
                     model.addAttribute("vacMess", "Доступные вакансии: " +
                             "(Создайте свой профиль, чтобы увидеть вакансии с учетом Вашего опыта)");
                 }
-            } else {
-                model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-            }
-            if (authentication.getAuthorities().contains(roleEmployer)) {
+            } else if (authentication.getAuthorities().contains(roleEmployer)) {
                 Profile profile = ((User) authentication.getPrincipal()).getProfile();
                 model.addAttribute("employerProfileId", profile.getId());
+            } else if (authentication.getAuthorities().contains(roleAdmin)) {
+                model.addAttribute("role", roleAdmin);
+            } else {
+                model.addAttribute("googleMapsApiKey", googleMapsApiKey);
             }
         }
         return "index";
@@ -152,7 +155,7 @@ public class MainController {
 
     @RolesAllowed({"ROLE_EMPLOYER", "ROLE_ADMIN"})
     @RequestMapping(value = "/new_vacancy", method = RequestMethod.GET)
-    public String new_vacancyPage(Model model,  Authentication authentication) {
+    public String new_vacancyPage(Model model, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         model.addAttribute("employerProfileId", user.getProfile().getId());
