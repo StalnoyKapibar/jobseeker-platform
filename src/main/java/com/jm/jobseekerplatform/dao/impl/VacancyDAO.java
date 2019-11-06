@@ -62,7 +62,8 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
 
         Query query = (Query) entityManager.createQuery(
                 "select v from Vacancy v join v.city c join CityDistance cd on c=cd.to " +
-                        "where cd.from.name=:city and v.state='ACCESS' order by cd.distance", Vacancy.class);
+                        "where cd.from.name=:city and v.state='ACCESS' and v.removalTime='1995-05-23T00:00' " +
+                        "order by cd.distance", Vacancy.class);
 
         long totalElements = (Long) entityManager.createQuery(
                 "select count(v) from Vacancy v where v.state='ACCESS'")
@@ -71,6 +72,26 @@ public class VacancyDAO extends AbstractDAO<Vacancy> {
         int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
         List<Vacancy> vacancies = query.setFirstResult(page * limit).setMaxResults(limit).setParameter("city", city)
                 .setHint(QueryHints.FETCHGRAPH, entityManager.getEntityGraph("vacancy-all-nodes")).getResultList();
+
+        return new VacancyPageDTO(vacancies, totalPages);
+    }
+
+    public Page<Vacancy> getVacanciesSortByCityForAdmin(String city, int limit, int page) {
+        page = (page == 0) ? page : --page;
+
+        Query query = entityManager.createQuery("select v from Vacancy v join v.city c " +
+                "join CityDistance cd on c=cd.to where cd.from.name=:city and v.state='ACCESS' " +
+                "order by cd.distance", Vacancy.class);
+
+        long totalElements = (Long) entityManager.createQuery("select count(v) from Vacancy v " +
+                "where v.state='ACCESS'")
+                .setHint("org.hibernate.cacheable", true).getSingleResult();
+
+        int totalPages = (int) (Math.ceil((double) totalElements / (double) limit));
+        List<Vacancy> vacancies = query.setFirstResult(page * limit).setMaxResults(limit)
+                .setParameter("city", city)
+                .setHint(QueryHints.FETCHGRAPH, entityManager.getEntityGraph("vacancy-all-nodes"))
+                .getResultList();
 
         return new VacancyPageDTO(vacancies, totalPages);
     }
