@@ -133,6 +133,12 @@ public class VacancyService extends AbstractService<Vacancy> {
         return dao.getVacanciesSortByCity(city, limit, page);
     }
 
+    public Page<Vacancy> findVacanciesByPointWithLimitAndPagingForAdmin(
+            String currentCity, Point point, int limit, int page) {
+        String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
+        return dao.getVacanciesSortByCityForAdmin(city, limit, page);
+    }
+
     public Page<Vacancy> getVacanciesSortedByCityTagsViews(long seekerId, String currentCity, Point point, int limit, int page) {
         String city = cityService.checkCityOrGetNearest(currentCity, point).getName();
         return dao.getVacanciesSortedByCityTagsViews(seekerId, city, limit, page);

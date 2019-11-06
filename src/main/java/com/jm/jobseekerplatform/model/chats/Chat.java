@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.users.User;
 import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,7 +18,8 @@ import java.util.List;
 @Entity
 @Inheritance
 @Table(name = "chats")
-public class Chat implements Serializable {
+@Where(clause = "removal_time = '1995-05-23T00:00'")
+public class Chat extends AbstractChatEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

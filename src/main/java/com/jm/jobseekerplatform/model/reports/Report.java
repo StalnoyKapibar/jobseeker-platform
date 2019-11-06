@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.model.reports;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reports")
@@ -17,6 +18,18 @@ public abstract class Report implements Serializable {
 
     @Column(name = "description", nullable = false)
     private String description;
+
+    @Column(name = "removal_time")
+    private LocalDateTime removalTime = LocalDateTime
+            .of(1995, 5,23, 0,0);
+
+    public LocalDateTime getRemovalTime() {
+        return removalTime;
+    }
+
+    public void setRemovalTime(LocalDateTime removalTime) {
+        this.removalTime = removalTime;
+    }
 
     public Report() {
     }

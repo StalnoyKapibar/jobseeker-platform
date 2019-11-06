@@ -418,6 +418,11 @@ function printVacancies(data) {
                             ',$(this));event.stopPropagation();">блок</span>';
                     }
 
+                    let str = "";
+                    if (role === "ROLE_ADMIN") {
+                        str = value.removalTime === "1995-05-23T00:00:00" ? "" : "удалена " + value.removalTime;
+                    }
+
                     $('#searchList')
                         .append(
                             '<li class="list-group-item clearfix" data-toggle="modal"' +
@@ -429,6 +434,7 @@ function printVacancies(data) {
                             '</span>' +
                             '   ' +
                             favVac +
+                            '<span class="badge badge-danger">' + str + '</span>' +
                             '</div>' +
                             '<div class="vacancyTags">' +
                             vacancyTags +

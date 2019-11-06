@@ -1,12 +1,15 @@
 package com.jm.jobseekerplatform.model;
 
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "seeker_status_news")
+@Where(clause = "removal_time = '1995-05-23T00:00'")
 public class SeekerStatusNews implements Serializable {
 
     @Id
@@ -25,6 +28,10 @@ public class SeekerStatusNews implements Serializable {
     @Column(name = "state", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private NewsStatus newsStatus;
+
+    @Column(name = "removal_time")
+    private LocalDateTime removalTime = LocalDateTime
+            .of(1995, 5,23, 0,0);
 
     public SeekerStatusNews() {}
 
@@ -73,5 +80,13 @@ public class SeekerStatusNews implements Serializable {
 
     public void setNewsStatus(NewsStatus newsStatus) {
         this.newsStatus = newsStatus;
+    }
+
+    public LocalDateTime getRemovalTime() {
+        return removalTime;
+    }
+
+    public void setRemovalTime(LocalDateTime removalTime) {
+        this.removalTime = removalTime;
     }
 }

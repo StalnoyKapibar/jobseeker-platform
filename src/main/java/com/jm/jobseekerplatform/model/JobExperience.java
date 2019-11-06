@@ -1,11 +1,15 @@
 package com.jm.jobseekerplatform.model;
 
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 @Table(name = "JobExperience")
+@Where(clause = "removal_time = '1995-05-23T00:00'")
 public class JobExperience implements Serializable {
 
     @Id
@@ -26,6 +30,10 @@ public class JobExperience implements Serializable {
 
     @Column(name = "responsibilities",  columnDefinition = "mediumtext")
     private String responsibilities;
+
+    @Column(name = "removal_time")
+    private LocalDateTime removalTime = LocalDateTime
+            .of(1995, 5,23, 0,0);
 
     public JobExperience() {
     }
@@ -80,5 +88,13 @@ public class JobExperience implements Serializable {
 
     public void setLastWorkDay(Date lastWorkDay) {
         this.lastWorkDay = lastWorkDay;
+    }
+
+    public LocalDateTime getRemovalTime() {
+        return removalTime;
+    }
+
+    public void setRemovalTime(LocalDateTime removalTime) {
+        this.removalTime = removalTime;
     }
 }

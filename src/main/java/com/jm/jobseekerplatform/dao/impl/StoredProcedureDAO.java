@@ -18,7 +18,7 @@ public class StoredProcedureDAO {
                 "(select count(*) from vacancies_tags vt join profile_tags pt where vt.vacancy_id=v.id and pt.tags_id=vt.tags_id and pt.seeker_profile_id=seekerProfileId ) as countTags, " +
                 "(select count(*) from seeker_vacancy_record svr where svr.vacancy_id=v.id and svr.seeker_id=seekerProfileId) as countViews, " +
                 "(select distance from city_distances cd join city c where cd.from_city_id=v.city_id and c.name=cityName and cd.to_city_id=c.id) as distance " +
-                "from vacancies v " +
+                "from vacancies v where v.removal_time = '1995-05-23 00:00:00.000000'" +
                 "group by v.id " +
                 "order by " +
                 "distance asc, countTags desc, countViews desc " +

@@ -1,10 +1,14 @@
 package com.jm.jobseekerplatform.model;
 
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "offers")
+@Where(clause = "removal_time = '1995-05-23T00:00'")
 public class Offer implements Serializable {
 
     @Id
@@ -22,6 +26,10 @@ public class Offer implements Serializable {
 
     @Column(name = "salary", nullable = false)
     private Integer salary;
+
+    @Column(name = "removal_time")
+    private LocalDateTime removalTime = LocalDateTime
+            .of(1995, 5,23, 0,0);
 
     public Offer() {
     }
@@ -71,5 +79,13 @@ public class Offer implements Serializable {
 
     public void setSalary(Integer salary) {
         this.salary = salary;
+    }
+
+    public LocalDateTime getRemovalTime() {
+        return removalTime;
+    }
+
+    public void setRemovalTime(LocalDateTime removalTime) {
+        this.removalTime = removalTime;
     }
 }

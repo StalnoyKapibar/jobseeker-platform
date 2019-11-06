@@ -3,11 +3,14 @@ package com.jm.jobseekerplatform.model.reports;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.comments.Comment;
 import com.jm.jobseekerplatform.model.profiles.Profile;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @DiscriminatorValue("Comment")
+@Where(clause = "removal_time = '1995-05-23T00:00'")
 public class CommentReport extends Report implements Serializable {
 
     @JsonManagedReference
