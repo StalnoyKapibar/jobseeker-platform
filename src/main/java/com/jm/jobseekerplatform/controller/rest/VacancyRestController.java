@@ -43,18 +43,19 @@ public class VacancyRestController {
     private SeekerProfileService seekerProfileService;
 
     private GrantedAuthority roleSeeker = new SimpleGrantedAuthority("ROLE_SEEKER");
+    private GrantedAuthority roleEmployer = new SimpleGrantedAuthority("ROLE_EMPLOYER");
 
     @Autowired
     private SeekerHistoryService seekerHistoryService;
 
-	@Autowired
-	private MailService mailService;
+    @Autowired
+    private MailService mailService;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@Autowired
-	private EmployerUserService employerUserService;
+    @Autowired
+    private EmployerUserService employerUserService;
 
     @RequestMapping("/")
     public List<Vacancy> getAll() {
@@ -137,21 +138,24 @@ public class VacancyRestController {
             if (authentication.getAuthorities().contains(roleSeeker)) {
                 SeekerProfile profile = (SeekerProfile) ((User) authentication.getPrincipal()).getProfile();
                 return vacancyService.getVacanciesSortedByCityTagsViews(profile.getId(), city, point, limit, page);
+            } else if (authentication.getAuthorities().contains(roleEmployer)) {
+                return vacancyService.findVacanciesByPointWithLimitAndPaging(city, point, limit, page);
+            } else {
+                return vacancyService.findVacanciesByPointWithLimitAndPagingForAdmin(city, point, limit, page);
             }
         }
-        return vacancyService.findVacanciesByPointWithLimitAndPaging(city, point, limit, page);
     }
 
-	@RolesAllowed({"ROLE_SEEKER"})
-	@PostMapping("/sendmailvac")
-	public ResponseEntity sendMailToEmployer(@RequestParam("dataID") long vacancyID) {
-		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		SeekerProfile seekerProfile = (((SeekerUser) userService.findByEmail(userName)).getProfile());
-		EmployerProfile employerProfile = employerUserService.getEmployerProfileByVacancyID(vacancyID);
-		String seekerFullName = seekerProfile.getFullName();
-		EmployerUser employerUser = employerUserService.getByProfileId(employerProfile.getId());
-		mailService.sendFeedBackEMailVacancy(employerUser.getEmail(), seekerFullName, seekerProfile.getId());
-		return new ResponseEntity(HttpStatus.OK);
-	}
+    @RolesAllowed({"ROLE_SEEKER"})
+    @PostMapping("/sendmailvac")
+    public ResponseEntity sendMailToEmployer(@RequestParam("dataID") long vacancyID) {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        SeekerProfile seekerProfile = (((SeekerUser) userService.findByEmail(userName)).getProfile());
+        EmployerProfile employerProfile = employerUserService.getEmployerProfileByVacancyID(vacancyID);
+        String seekerFullName = seekerProfile.getFullName();
+        EmployerUser employerUser = employerUserService.getByProfileId(employerProfile.getId());
+        mailService.sendFeedBackEMailVacancy(employerUser.getEmail(), seekerFullName, seekerProfile.getId());
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
 }
