@@ -6,8 +6,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jm.jobseekerplatform.model.State;
 import com.jm.jobseekerplatform.model.comments.Comment;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -19,6 +22,7 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Where(clause = "removal_time = '1995-05-23T00:00'")
 public abstract class Profile implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +38,18 @@ public abstract class Profile implements Serializable {
 
     @Column(name = "expiry_block")
     private Date expiryBlock;
+
+    @Column(name = "removal_time")
+    private LocalDateTime removalTime = LocalDateTime
+            .of(1995, 5,23, 0,0);
+
+    public LocalDateTime getRemovalTime() {
+        return removalTime;
+    }
+
+    public void setRemovalTime(LocalDateTime removalTime) {
+        this.removalTime = removalTime;
+    }
 
     public Profile() {
         this.state = State.NO_ACCESS;

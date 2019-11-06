@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.jm.jobseekerplatform.model.profiles.Profile;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,7 +16,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "chatmessages")
-public class ChatMessage implements Serializable, Comparable<ChatMessage> {
+@Where(clause = "removal_time = '1995-05-23T00:00'")
+public class ChatMessage extends AbstractChatEntity implements Serializable, Comparable<ChatMessage> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

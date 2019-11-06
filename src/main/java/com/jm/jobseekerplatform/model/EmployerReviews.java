@@ -2,6 +2,7 @@ package com.jm.jobseekerplatform.model;
 
 import com.jm.jobseekerplatform.model.createdByProfile.CreatedBySeekerProfileBase;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "employer_reviews")
+@Where(clause = "removal_time = '1995-05-23T00:00'")
 public class EmployerReviews extends CreatedBySeekerProfileBase implements Serializable, Comparable<EmployerReviews> {
 
     @Column(name = "reviews")

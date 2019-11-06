@@ -3,8 +3,11 @@ package com.jm.jobseekerplatform.model;
 import com.jm.jobseekerplatform.model.createdByProfile.CreatedByEmployerProfileBase;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -18,6 +21,7 @@ import java.util.Set;
         @NamedAttributeNode("tags"),
         @NamedAttributeNode("coordinates")
 })
+@Where(clause = "removal_time = '1995-05-23T00:00'")
 public class Vacancy extends CreatedByEmployerProfileBase implements Serializable {
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -57,6 +61,10 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Meeting> meetings;
+
+    @Column(name = "removal_time")
+    private LocalDateTime removalTime = LocalDateTime
+            .of(1995, 5,23, 0,0);
 
     public Vacancy() {
     }
@@ -192,5 +200,15 @@ public class Vacancy extends CreatedByEmployerProfileBase implements Serializabl
     @Override
     public String getTypeName() {
         return "Вакансия";
+    }
+
+    @Override
+    public LocalDateTime getRemovalTime() {
+        return removalTime;
+    }
+
+    @Override
+    public void setRemovalTime(LocalDateTime removalTime) {
+        this.removalTime = removalTime;
     }
 }

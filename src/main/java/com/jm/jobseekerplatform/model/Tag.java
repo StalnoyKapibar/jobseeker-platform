@@ -2,14 +2,17 @@ package com.jm.jobseekerplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "tags")
+@Where(clause = "removal_time = '1995-05-23T00:00'")
 public class Tag implements Serializable {
 
     @Id
@@ -61,6 +64,10 @@ public class Tag implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "subscription_id"))
     @JsonIgnore
     private Set<Subscription> subscriptions;
+
+    @Column(name = "removal_time")
+    private LocalDateTime removalTime = LocalDateTime
+            .of(1995, 5,23, 0,0);
 
     public Tag() {
     }
@@ -149,5 +156,13 @@ public class Tag implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    public LocalDateTime getRemovalTime() {
+        return removalTime;
+    }
+
+    public void setRemovalTime(LocalDateTime removalTime) {
+        this.removalTime = removalTime;
     }
 }

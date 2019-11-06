@@ -1,12 +1,15 @@
 package com.jm.jobseekerplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "review_vote")
+@Where(clause = "removal_time = '1995-05-23T00:00'")
 public class ReviewVote implements Serializable {
 
     @Id
@@ -29,6 +32,10 @@ public class ReviewVote implements Serializable {
     @Column(name = "is_dislike")
     @JsonProperty
     private boolean isDislike;
+
+    @Column(name = "removal_time")
+    private LocalDateTime removalTime = LocalDateTime
+            .of(1995, 5,23, 0,0);
 
     public ReviewVote() {
     }
@@ -87,5 +94,13 @@ public class ReviewVote implements Serializable {
 
     public void setDislike(boolean dislike) {
         isDislike = dislike;
+    }
+
+    public LocalDateTime getRemovalTime() {
+        return removalTime;
+    }
+
+    public void setRemovalTime(LocalDateTime removalTime) {
+        this.removalTime = removalTime;
     }
 }

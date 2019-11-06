@@ -2,12 +2,14 @@ package com.jm.jobseekerplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
 @Entity
+@Where(clause = "removal_time = '1995-05-23T00:00'")
 public class Meeting implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +31,10 @@ public class Meeting implements Serializable {
     @Column(name = "status", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Status status;
+
+    @Column(name = "removal_time")
+    private LocalDateTime removalTime = LocalDateTime
+            .of(1995, 5,23, 0,0);
 
     public Meeting() {
     }
@@ -89,5 +95,13 @@ public class Meeting implements Serializable {
                 ", date='" + date + '\'' +
                 ", status=" + status +
                 '}';
+    }
+
+    public LocalDateTime getRemovalTime() {
+        return removalTime;
+    }
+
+    public void setRemovalTime(LocalDateTime removalTime) {
+        this.removalTime = removalTime;
     }
 }

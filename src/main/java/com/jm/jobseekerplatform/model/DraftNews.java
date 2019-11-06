@@ -1,10 +1,14 @@
 package com.jm.jobseekerplatform.model;
 
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "draft_news")
+@Where(clause = "removal_time = '1995-05-23T00:00'")
 public class DraftNews implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +22,10 @@ public class DraftNews implements Serializable {
 
     @Column
     private Boolean isValid;
+
+    @Column(name = "removal_time")
+    private LocalDateTime removalTime = LocalDateTime
+            .of(1995, 5,23, 0,0);
 
     @ManyToOne
     private News original;
@@ -60,5 +68,13 @@ public class DraftNews implements Serializable {
 
     public void setValid(boolean isValid) {
         this.isValid = isValid;
+    }
+
+    public LocalDateTime getRemovalTime() {
+        return removalTime;
+    }
+
+    public void setRemovalTime(LocalDateTime removalTime) {
+        this.removalTime = removalTime;
     }
 }

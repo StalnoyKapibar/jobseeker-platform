@@ -3,6 +3,7 @@ package com.jm.jobseekerplatform.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.jm.jobseekerplatform.model.createdByProfile.CreatedByProfileBase;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "resumes")
+@Where(clause = "removal_time = '1995-05-23T00:00'")
 public class Resume extends CreatedByProfileBase<SeekerProfile> implements Serializable {
 
     @Id

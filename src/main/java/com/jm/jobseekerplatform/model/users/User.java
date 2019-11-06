@@ -49,6 +49,10 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
     @Column(name = "confirm", nullable = false)
     private boolean confirm;
 
+    @Column(name = "removal_time")
+    private LocalDateTime removalTime = LocalDateTime
+            .of(1995, 5,23, 0,0);
+
     public User() {
     }
 
@@ -184,4 +188,11 @@ public abstract class User<T extends Profile> implements Serializable, UserDetai
         return result;
     }
 
+    public LocalDateTime getRemovalTime() {
+        return removalTime;
+    }
+
+    public void setRemovalTime(LocalDateTime removalTime) {
+        this.removalTime = removalTime;
+    }
 }

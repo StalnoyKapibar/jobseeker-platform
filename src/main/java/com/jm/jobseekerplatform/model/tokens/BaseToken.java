@@ -4,6 +4,7 @@ import com.jm.jobseekerplatform.model.users.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -22,6 +23,18 @@ public abstract class BaseToken implements Serializable {
 
     @Column(name = "expiry_date", nullable = false)
     private Date expiryDate;
+
+    @Column(name = "removal_time")
+    private LocalDateTime removalTime = LocalDateTime
+            .of(1995, 5,23, 0,0);
+
+    public LocalDateTime getRemovalTime() {
+        return removalTime;
+    }
+
+    public void setRemovalTime(LocalDateTime removalTime) {
+        this.removalTime = removalTime;
+    }
 
     public BaseToken() {
     }
