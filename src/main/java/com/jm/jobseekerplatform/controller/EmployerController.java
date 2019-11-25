@@ -1,8 +1,10 @@
 package com.jm.jobseekerplatform.controller;
 
+import com.jm.jobseekerplatform.dto.SeekerReviewDTO;
 import com.jm.jobseekerplatform.model.EmployerReviews;
 import com.jm.jobseekerplatform.model.Vacancy;
 import com.jm.jobseekerplatform.model.profiles.EmployerProfile;
+import com.jm.jobseekerplatform.model.profiles.Profile;
 import com.jm.jobseekerplatform.model.profiles.SeekerProfile;
 import com.jm.jobseekerplatform.model.users.EmployerUser;
 import com.jm.jobseekerplatform.model.users.SeekerUser;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,6 +38,9 @@ public class EmployerController {
 
     @Autowired
     private EmployerProfileService employerProfileService;
+
+    @Autowired
+    private SeekerProfileService seekerProfileService;
 
     @Autowired
     private EmployerUserService employerUserService;
@@ -88,19 +94,17 @@ public class EmployerController {
         }
 
         if (!employerProfile.getReviews().isEmpty()) {
-            Set<EmployerReviews> reviews = employerProfile.getReviews();
-            reviews.forEach(item -> item.setCreatorProfile((SeekerProfile) Hibernate.unproxy(item.getCreatorProfile())));
-            model.addAttribute("employerProfileReviews", reviews);
+            Set<EmployerReviews> employerReviews = employerProfile.getReviews();
+            employerReviews.forEach(item -> item.setCreatorProfile((SeekerProfile) Hibernate.unproxy(item.getCreatorProfile())));
+            model.addAttribute("employerProfileReviews", employerReviews);
             model.addAttribute("reviewStatus", true);
             model.addAttribute("averageRating", employerProfile.getAverageRating());
         } else {
             model.addAttribute("reviewStatus", false);
         }
-
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             model.addAttribute("employerUser", employerUserService.getByProfileId(employerProfileId));
         }
-
         model.addAttribute("isOwner", isOwner);
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
 
